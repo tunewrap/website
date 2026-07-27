@@ -34,7 +34,7 @@
 
 // ---------- track players with live analyser waveform ----------
 (function(){
-  const tracks = ['days127','mainroad','natalia65','growold','amsterdam','mychoice','tbilisi','goodvibe','pulse','amsterdamen','mychoiceen','yayaya','iwant','justfive'];
+  const tracks = ['days127','mainroad','natalia65','growold','amsterdam','mychoice','tbilisi','goodvibe','pulse','amsterdamen','mychoiceen','yayaya','iwant','53','justfive'];
   let audioCtx = null;
   const nodes = {};
   let currentPlaying = null;
@@ -273,6 +273,7 @@
       author_pulse_desc:"Музыка была рядом со мной всю жизнь. Бас-гитара, сцена, свет софитов и тысячи сердец, бьющихся в одном ритме. Есть моменты, которые невозможно описать словами — их можно только почувствовать. Это история о свободе, энергии музыки и пульсе ночи, частью которого я являюсь.",
       author_yayaya_desc:"Иногда песня рождается не из боли, а из чистой энергии. Ya Ya Ya — про момент, когда перестаёшь оглядываться на чужое мнение и просто идёшь своим ритмом. Гитарный драйв, дорога и припев, который хочется петь всей компанией.",
       author_iwant_desc:"После долгих лет жизни по чужому расписанию однажды наступает тишина — и впервые никто не говорит, что ты должен делать. Эта песня родилась из простого, почти дерзкого ощущения свободы: сегодня я сам выбираю свой день, свой путь и свою жизнь. «Я роблю що хочу» — не про каприз, а про возвращение к себе.",
+      author_53_desc:"53 — число двух молодых людей, которые идут по жизни своим путём, не обращая внимания на чужие правила и мнения. Это история о свободе выбора, верности друг другу и силе настоящей любви. Главный посыл истории — Our Way. Our Choice.",
       author_signature:"Автор песен, продюсер и основатель TuneWrap.",
     },
     uk: {
@@ -398,6 +399,7 @@
       author_pulse_desc:"Музика була поруч зі мною все життя. Бас-гітара, сцена, світло софітів і тисячі сердець, що б'ються в одному ритмі. Є моменти, які неможливо описати словами — їх можна лише відчути. Це історія про свободу, енергію музики та пульс ночі, частиною якого я є.",
       author_yayaya_desc:"Іноді пісня народжується не з болю, а з чистої енергії. Ya Ya Ya — про мить, коли перестаєш озиратися на чужу думку й просто йдеш у власному ритмі. Гітарний драйв, дорога та приспів, який хочеться співати всією компанією.",
       author_iwant_desc:"Після довгих років життя за чужим розкладом одного дня настає тиша — і вперше ніхто не говорить, що ти повинен робити. Ця пісня народилася з простого, майже зухвалого відчуття свободи: сьогодні я сам обираю свій день, свій шлях і своє життя. «Я роблю що хочу» — не про примху, а про повернення до себе.",
+      author_53_desc:"53 — число двох молодих людей, які йдуть життям власним шляхом, не зважаючи на чужі правила та думки. Це історія про свободу вибору, вірність одне одному та силу справжнього кохання. Головний сенс історії — Our Way. Our Choice.",
       author_signature:"Автор пісень, продюсер і засновник TuneWrap.",
     },
     ka: {
@@ -523,6 +525,7 @@
       author_pulse_desc:"მუსიკა მთელი ცხოვრება ჩემ გვერდით იყო. ბას-გიტარა, სცენა, პროჟექტორების შუქი და ათასობით გული, რომლებიც ერთ რიტმში ცემენ. არის მომენტები, რომელთა სიტყვებით აღწერა შეუძლებელია — ისინი მხოლოდ უნდა იგრძნო. ეს არის ისტორია თავისუფლებაზე, მუსიკის ენერგიასა და ღამის პულსზე, რომლის ნაწილიც დღესაც ვარ.",
       author_yayaya_desc:"ზოგჯერ სიმღერა ტკივილისგან კი არა, სუფთა ენერგიისგან იბადება. Ya Ya Ya იმ წამზეა, როცა სხვების აზრს აღარ უყურებ და საკუთარ რიტმში მიდიხარ. გიტარის დრაივი, გზა და მისამღერი, რომლის ერთად სიმღერაც ყველას მოუნდება.",
       author_iwant_desc:"სხვისი განრიგით ცხოვრების მრავალი წლის შემდეგ ერთხელ სიჩუმე დგება — და პირველად აღარავინ გეუბნება, რა უნდა გააკეთო. ეს სიმღერა თავისუფლების უბრალო, თითქმის თამამმა განცდამ დაბადა: დღეს მე თავად ვირჩევ ჩემს დღეს, გზას და ცხოვრებას. „Я роблю що хочу“ ახირება კი არა, საკუთარ თავთან დაბრუნებაა.",
+      author_53_desc:"53 — ორი ახალგაზრდა ადამიანის რიცხვია, რომლებიც ცხოვრებაში საკუთარ გზას მიჰყვებიან და სხვის წესებსა თუ აზრებს არ ემორჩილებიან. ეს არის ისტორია არჩევანის თავისუფლებაზე, ერთმანეთის ერთგულებასა და ნამდვილი სიყვარულის ძალაზე. მთავარი გზავნილია — Our Way. Our Choice.",
       author_signature:"სიმღერების ავტორი, პროდიუსერი და TuneWrap-ის დამფუძნებელი.",
     },
     en: {
@@ -648,6 +651,7 @@
       author_pulse_desc:"Music has been with me all my life. Bass guitar, the stage, spotlights and thousands of hearts beating in one rhythm. Some moments cannot be described in words — they can only be felt. This is a story about freedom, the energy of music and the pulse of the night that I am still part of.",
       author_yayaya_desc:"Sometimes a song is born not from pain, but from pure energy. Ya Ya Ya is about the moment you stop looking back at other people’s opinions and move in your own rhythm. Guitar drive, the open road and a chorus made to be sung together.",
       author_iwant_desc:"After years of living by someone else’s schedule, silence finally arrives—and for the first time nobody tells you what you must do. This song was born from a simple, almost defiant feeling of freedom: today I choose my own day, my own path and my own life. “I do what I want” is not a whim; it is a return to yourself.",
+      author_53_desc:"53 is the number shared by two young people who follow their own path, regardless of other people’s rules or opinions. It is a story of freedom of choice, loyalty to one another, and the power of true love. Its central message is: Our Way. Our Choice.",
       author_signature:"Songwriter, producer and founder of TuneWrap.",
     },
     de: {
@@ -773,6 +777,7 @@
       author_pulse_desc:"Musik war mein ganzes Leben lang an meiner Seite. Bassgitarre, Bühne, Scheinwerfer und Tausende Herzen, die im gleichen Rhythmus schlagen. Manche Momente lassen sich nicht in Worte fassen — man kann sie nur fühlen. Dies ist eine Geschichte über Freiheit, die Energie der Musik und den Puls der Nacht, zu dem ich bis heute gehöre.",
       author_yayaya_desc:"Manchmal entsteht ein Song nicht aus Schmerz, sondern aus reiner Energie. Ya Ya Ya handelt von dem Moment, in dem man nicht mehr auf die Meinung anderer zurückblickt und im eigenen Rhythmus weitergeht. Gitarrendrive, Straße und ein Refrain, den man gemeinsam singen möchte.",
       author_iwant_desc:"Nach vielen Jahren nach dem Zeitplan anderer kommt plötzlich Stille—und zum ersten Mal sagt niemand mehr, was man tun muss. Dieser Song entstand aus einem einfachen, fast trotzigen Gefühl von Freiheit: Heute bestimme ich meinen Tag, meinen Weg und mein Leben selbst. „Ich mache, was ich will“ ist keine Laune, sondern die Rückkehr zu sich selbst.",
+      author_53_desc:"53 ist die gemeinsame Zahl zweier junger Menschen, die ihren eigenen Weg gehen, ohne sich nach den Regeln oder Meinungen anderer zu richten. Es ist eine Geschichte über freie Entscheidungen, Treue zueinander und die Kraft wahrer Liebe. Ihre zentrale Botschaft lautet: Our Way. Our Choice.",
       author_signature:"Songwriter, Produzent und Gründer von TuneWrap.",
     }
   };
