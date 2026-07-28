@@ -3344,28 +3344,46 @@
 /* ---------- STAGE 4 · MOBILE APP LAYOUT ---------- */
 @media(max-width:620px){
   :root{
-    --app-viewport:100svh;
-    --app-screen:calc(var(--app-viewport) - var(--mobile-header));
-    --app-safe-bottom:calc(var(--mobile-stack) + 12px);
+    --app-header-height:84px;
+    --app-bottom-nav-height:72px;
+    --app-bottom-nav-total:calc(var(--app-bottom-nav-height) + env(safe-area-inset-bottom));
+    --app-player-height:78px;
+    --app-screen:calc(100dvh - var(--app-header-height) - var(--app-bottom-nav-total));
+    --app-safe-bottom:calc(var(--app-player-height) + 12px);
     --app-side:16px;
-  }
-
-  @supports(height:100dvh){
-    :root{
-      --app-viewport:100dvh;
-    }
+    --mobile-header:var(--app-header-height);
   }
 
   html{
     scroll-behavior:smooth;
-    scroll-padding-top:var(--mobile-header);
+    scroll-padding-top:var(--app-header-height);
     scroll-padding-bottom:0;
     scroll-snap-type:y mandatory;
   }
 
   body{
-    padding-bottom:0;
+    padding-top:var(--app-header-height);
+    padding-bottom:var(--app-bottom-nav-total);
     overscroll-behavior-y:auto;
+  }
+
+  body > nav{
+    position:fixed;
+    top:0;
+    right:0;
+    left:0;
+    width:100%;
+    height:var(--app-header-height);
+  }
+
+  body > nav .wrap{
+    height:100%;
+  }
+
+  .mobile-bottom-nav{
+    height:var(--app-bottom-nav-total);
+    min-height:var(--app-bottom-nav-total);
+    max-height:var(--app-bottom-nav-total);
   }
 
   .hero,
@@ -3385,7 +3403,7 @@
     padding-top:0;
     padding-bottom:0;
     overflow:hidden;
-    scroll-margin-top:var(--mobile-header);
+    scroll-margin-top:var(--app-header-height);
     scroll-margin-bottom:0;
     scroll-snap-align:start;
     scroll-snap-stop:always;
