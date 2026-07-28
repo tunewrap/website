@@ -3851,3 +3851,64 @@
     margin-bottom:0;
   }
 }
+
+/* ---------- MOBILE SCREEN HEIGHT FIX ---------- */
+@media(max-width:620px){
+  :root{
+    --app-content-gap:18px;
+  }
+
+  .hero,
+  #philosophy,
+  #how,
+  #tracks,
+  #pricing,
+  #contact,
+  #corporate,
+  #author{
+    scroll-margin-top:0;
+  }
+
+  .hero .wrap,
+  .philosophy-inner,
+  #how > .wrap,
+  #tracks > .wrap,
+  #pricing > .wrap,
+  #contact > .wrap,
+  #corporate > .wrap,
+  #author > .wrap{
+    min-height:0;
+    max-height:100%;
+    margin-top:0;
+    margin-bottom:0;
+  }
+
+  .hero-grid,
+  .philosophy-inner,
+  #how > .wrap,
+  #tracks > .wrap,
+  #pricing > .wrap,
+  #contact > .wrap,
+  #corporate > .wrap,
+  #author > .wrap{
+    padding-top:var(--app-content-gap);
+    padding-bottom:var(--app-content-gap);
+    align-content:flex-start;
+    justify-content:flex-start;
+  }
+
+  .hero-grid > div,
+  .philosophy-kicker,
+  #how .sec-head,
+  #pricing .sec-head,
+  #corporate .corporate-box{
+    margin-top:0;
+  }
+
+  .philosophy-text,
+  #how .steps,
+  #pricing .tiers-grid,
+  #corporate .corporate-box{
+    margin-bottom:0;
+  }
+}
