@@ -3340,3 +3340,462 @@
     scroll-snap-type:none;
   }
 }
+
+/* ---------- STAGE 4 · MOBILE APP LAYOUT ---------- */
+@media(max-width:620px){
+  :root{
+    --app-viewport:100svh;
+    --app-screen:calc(var(--app-viewport) - var(--mobile-header));
+    --app-safe-bottom:calc(var(--mobile-stack) + 12px);
+    --app-side:16px;
+  }
+
+  @supports(height:100dvh){
+    :root{
+      --app-viewport:100dvh;
+    }
+  }
+
+  html{
+    scroll-behavior:smooth;
+    scroll-padding-top:var(--mobile-header);
+    scroll-padding-bottom:0;
+    scroll-snap-type:y mandatory;
+  }
+
+  body{
+    padding-bottom:0;
+    overscroll-behavior-y:auto;
+  }
+
+  .hero,
+  #philosophy,
+  #how,
+  #tracks,
+  #pricing,
+  #contact,
+  #corporate,
+  #author{
+    width:100%;
+    height:var(--app-screen);
+    min-height:var(--app-screen);
+    max-height:var(--app-screen);
+    margin-top:0;
+    margin-bottom:0;
+    padding-top:0;
+    padding-bottom:0;
+    overflow:hidden;
+    scroll-margin-top:var(--mobile-header);
+    scroll-margin-bottom:0;
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+  }
+
+  #philosophy{
+    width:calc(100% - 20px);
+    margin-right:10px;
+    margin-left:10px;
+  }
+
+  .hero{
+    padding:8px 0;
+  }
+
+  .hero .wrap{
+    height:100%;
+  }
+
+  .hero-grid{
+    width:100%;
+    height:100%;
+    min-height:0;
+    max-height:none;
+    padding:24px 22px calc(var(--app-safe-bottom) + 6px);
+    overflow-x:hidden;
+    overflow-y:auto;
+    scrollbar-width:none;
+    overscroll-behavior-y:auto;
+    justify-content:flex-start;
+  }
+
+  .hero-grid::-webkit-scrollbar{
+    display:none;
+  }
+
+  .hero-grid > div{
+    margin-top:auto;
+  }
+
+  #ambientWave{
+    top:42px;
+    height:min(31vh,252px);
+  }
+
+  .hero h1{
+    font-size:clamp(41px,12.4vw,50px);
+  }
+
+  .hero p.lead{
+    margin-bottom:15px;
+    font-size:12.5px;
+    line-height:1.5;
+  }
+
+  .hero-actions .btn-primary{
+    min-height:58px;
+    padding:16px 20px;
+  }
+
+  #philosophy{
+    display:flex;
+    align-items:stretch;
+    padding:0;
+  }
+
+  .philosophy-inner{
+    display:flex;
+    width:100%;
+    height:100%;
+    min-height:0;
+    flex-direction:column;
+    justify-content:flex-start;
+    padding:24px 21px var(--app-safe-bottom);
+    overflow-y:auto;
+    scrollbar-width:none;
+    overscroll-behavior-y:auto;
+  }
+
+  .philosophy-inner::-webkit-scrollbar{
+    display:none;
+  }
+
+  .philosophy-kicker{
+    margin-top:auto;
+    margin-bottom:13px;
+  }
+
+  .philosophy-quote{
+    font-size:clamp(29px,8.7vw,36px);
+  }
+
+  .philosophy-text{
+    margin-bottom:auto;
+    line-height:1.52;
+  }
+
+  #how,
+  #tracks,
+  #pricing,
+  #corporate,
+  #author{
+    display:block;
+  }
+
+  #how > .wrap,
+  #tracks > .wrap,
+  #pricing > .wrap,
+  #corporate > .wrap,
+  #author > .wrap{
+    width:100%;
+    height:100%;
+    min-height:0;
+    padding:24px var(--app-side) var(--app-safe-bottom);
+  }
+
+  #how > .wrap,
+  #corporate > .wrap{
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    overflow-y:auto;
+    scrollbar-width:none;
+    overscroll-behavior-y:auto;
+  }
+
+  #how > .wrap::-webkit-scrollbar,
+  #corporate > .wrap::-webkit-scrollbar{
+    display:none;
+  }
+
+  #how .sec-head{
+    margin-top:auto;
+    margin-bottom:14px;
+  }
+
+  #how .steps{
+    flex:none;
+    margin-bottom:auto;
+  }
+
+  #how .step{
+    padding:12px 13px;
+  }
+
+  #how .step p{
+    line-height:1.42;
+  }
+
+  #tracks > .wrap{
+    display:flex;
+    flex-direction:column;
+  }
+
+  #tracks .sec-head{
+    flex:none;
+    margin-bottom:13px;
+  }
+
+  #tracks .sec-head p{
+    max-width:37ch;
+    line-height:1.48;
+  }
+
+  #tracks .tracks{
+    display:grid;
+    min-height:0;
+    flex:1;
+    align-content:start;
+    padding:1px 3px 18px 0;
+    overflow-x:hidden;
+    overflow-y:auto;
+    scrollbar-width:none;
+    overscroll-behavior-y:auto;
+    scroll-padding-block:8px;
+    -webkit-overflow-scrolling:touch;
+    -webkit-mask-image:linear-gradient(180deg,#000 0,#000 calc(100% - 24px),transparent 100%);
+    mask-image:linear-gradient(180deg,#000 0,#000 calc(100% - 24px),transparent 100%);
+  }
+
+  #tracks .tracks::-webkit-scrollbar{
+    display:none;
+  }
+
+  #tracks .track{
+    scroll-margin-block:8px;
+  }
+
+  #pricing > .wrap{
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    overflow-y:auto;
+    scrollbar-width:none;
+    overscroll-behavior-y:auto;
+  }
+
+  #pricing > .wrap::-webkit-scrollbar{
+    display:none;
+  }
+
+  #pricing .sec-head{
+    flex:none;
+    margin-top:auto;
+    margin-bottom:10px;
+  }
+
+  #pricing .tiers-grid{
+    position:relative;
+    display:grid;
+    width:100%;
+    min-height:286px;
+    max-height:356px;
+    flex:1;
+    grid-template-columns:none;
+    grid-auto-columns:calc(100% - 30px);
+    grid-auto-flow:column;
+    align-items:stretch;
+    gap:10px;
+    margin:0 0 auto;
+    padding:14px 24px 18px 14px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    border:1px solid rgba(217,164,65,.13);
+    border-radius:25px;
+    background:
+      radial-gradient(circle at 82% 12%,rgba(217,164,65,.09),transparent 36%),
+      linear-gradient(145deg,rgba(24,23,27,.8),rgba(12,12,14,.88));
+    box-shadow:
+      inset 0 1px rgba(255,255,255,.035),
+      inset -28px 0 44px rgba(0,0,0,.16),
+      0 18px 44px rgba(0,0,0,.2);
+    scroll-padding-inline:14px 24px;
+    scroll-snap-type:x mandatory;
+    touch-action:pan-x pan-y;
+  }
+
+  #pricing .tier-card{
+    width:100%;
+    height:100%;
+    min-height:0;
+    padding:17px 16px 15px;
+    align-self:stretch;
+    border-radius:19px;
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+  }
+
+  #pricing .tier-card.featured{
+    box-shadow:
+      0 18px 40px rgba(0,0,0,.34),
+      0 0 30px rgba(217,164,65,.085),
+      inset 0 1px rgba(255,255,255,.06);
+  }
+
+  #pricing .tier-features{
+    margin-top:10px;
+    margin-bottom:12px;
+  }
+
+  #pricing .tier-select{
+    min-height:44px;
+  }
+
+  #contact{
+    position:relative;
+    background:
+      radial-gradient(circle at 94% 9%,rgba(217,164,65,.065),transparent 34%),
+      transparent;
+  }
+
+  #contact > .wrap{
+    width:100%;
+    height:100%;
+    min-height:0;
+    padding:24px var(--app-side) var(--app-safe-bottom);
+    overflow-x:hidden;
+    overflow-y:auto;
+    scrollbar-width:none;
+    overscroll-behavior-y:auto;
+    scroll-padding-block:18px;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  #contact > .wrap::-webkit-scrollbar{
+    display:none;
+  }
+
+  #contact .sec-head{
+    margin-bottom:15px;
+  }
+
+  #contact .order-box{
+    padding:15px;
+  }
+
+  #contact .contact-alternatives{
+    margin-bottom:2px;
+  }
+
+  #corporate .corporate-box{
+    flex:none;
+    width:100%;
+    margin-top:auto;
+    margin-bottom:auto;
+    padding:17px;
+  }
+
+  #corporate .corp-controls{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  #corporate .corp-actions .btn-primary{
+    min-height:50px;
+  }
+
+  #author > .wrap{
+    display:flex;
+    flex-direction:column;
+  }
+
+  #author .author-intro{
+    flex:none;
+    margin-bottom:12px;
+  }
+
+  #author .author-intro p{
+    font-size:11px;
+    line-height:1.46;
+  }
+
+  #author .author-grid{
+    display:grid;
+    min-height:0;
+    flex:1;
+    align-content:start;
+    padding:1px 3px 18px 0;
+    overflow-x:hidden;
+    overflow-y:auto;
+    scrollbar-width:none;
+    overscroll-behavior-y:auto;
+    scroll-padding-block:8px;
+    -webkit-overflow-scrolling:touch;
+    -webkit-mask-image:linear-gradient(180deg,#000 0,#000 calc(100% - 24px),transparent 100%);
+    mask-image:linear-gradient(180deg,#000 0,#000 calc(100% - 24px),transparent 100%);
+  }
+
+  #author .author-grid::-webkit-scrollbar{
+    display:none;
+  }
+
+  #author .author-card{
+    scroll-margin-block:8px;
+  }
+
+  #author .author-signature{
+    flex:none;
+    margin-top:10px;
+    padding:13px 15px;
+  }
+
+  #author .author-signature strong{
+    font-size:17px;
+  }
+
+  #author .author-signature p{
+    font-size:10px;
+    line-height:1.42;
+  }
+
+  footer{
+    display:none;
+  }
+
+  .mobile-bottom-nav a[aria-current="page"]{
+    color:#e3ad47;
+    text-shadow:0 0 16px rgba(217,164,65,.24);
+  }
+}
+
+@media(max-width:370px){
+  #how > .wrap,
+  #tracks > .wrap,
+  #pricing > .wrap,
+  #contact > .wrap,
+  #corporate > .wrap,
+  #author > .wrap{
+    padding-top:18px;
+  }
+
+  .sec-head h2{
+    font-size:26px;
+  }
+
+  #pricing .tiers-grid{
+    min-height:276px;
+    grid-auto-columns:calc(100% - 22px);
+    padding-right:18px;
+    padding-left:10px;
+    scroll-padding-inline:10px 18px;
+  }
+
+  #corporate .corp-controls{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (prefers-reduced-motion:reduce) and (max-width:620px){
+  html{
+    scroll-behavior:auto;
+    scroll-snap-type:y proximity;
+  }
+}

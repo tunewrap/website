@@ -993,6 +993,7 @@
 
   function renderTiers(lang){
     const grid = document.getElementById('tiersGrid');
+    const previousScrollLeft = grid.scrollLeft;
     grid.innerHTML = '';
     TIERS[lang].forEach((tier, i)=>{
       const card = document.createElement('div');
@@ -1010,6 +1011,9 @@
         renderTiers(currentLang);
       });
       grid.appendChild(card);
+    });
+    window.requestAnimationFrame(() => {
+      grid.scrollLeft = previousScrollLeft;
     });
   }
 
@@ -1410,26 +1414,53 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const bottomLinks = Array.from(document.querySelectorAll('.mobile-bottom-nav a[data-mobile-section]'));
+  function setActiveBottomLink(sectionId){
+    bottomLinks.forEach(link => {
+      const isActive = link.dataset.mobileSection === sectionId;
+      link.classList.toggle('active', isActive);
+      if(isActive){
+        link.setAttribute('aria-current','page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+  }
+
   bottomLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      bottomLinks.forEach(item => item.classList.toggle('active', item === link));
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      const sectionId = link.dataset.mobileSection;
+      const target = sectionId === 'top'
+        ? document.querySelector('.hero')
+        : document.getElementById(sectionId);
+      if(!target) return;
+
+      setActiveBottomLink(sectionId);
+      if(sectionId === 'top'){
+        window.scrollTo({top:0, behavior:'smooth'});
+      } else {
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+      }
     });
   });
+  setActiveBottomLink('top');
 
   if('IntersectionObserver' in window){
-    const observedSections = bottomLinks
-      .map(link => document.getElementById(link.dataset.mobileSection))
-      .filter(Boolean);
+    const observedSections = bottomLinks.map(link => ({
+      id:link.dataset.mobileSection,
+      element:link.dataset.mobileSection === 'top'
+        ? document.querySelector('.hero')
+        : document.getElementById(link.dataset.mobileSection)
+    })).filter(item => item.element);
+    const sectionIds = new Map(observedSections.map(item => [item.element,item.id]));
     const sectionObserver = new IntersectionObserver(entries => {
       const visible = entries
         .filter(entry => entry.isIntersecting)
         .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
       if(!visible) return;
-      bottomLinks.forEach(link => {
-        link.classList.toggle('active', link.dataset.mobileSection === visible.target.id);
-      });
-    }, {rootMargin:'-18% 0px -60% 0px', threshold:[0,.15,.4]});
-    observedSections.forEach(section => sectionObserver.observe(section));
+      setActiveBottomLink(sectionIds.get(visible.target));
+    }, {rootMargin:'-22% 0px -56% 0px', threshold:[0,.2,.45]});
+    observedSections.forEach(item => sectionObserver.observe(item.element));
   }
 
   updateMobileTrack(currentTrack);
