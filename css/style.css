@@ -3817,3 +3817,37 @@
     scroll-snap-type:y proximity;
   }
 }
+
+/* ---------- STAGE 5 · MOBILE SCREEN COMPOSITION ---------- */
+@media(max-width:620px){
+  :root{
+    --app-player-height:0px;
+    --app-safe-bottom:24px;
+  }
+
+  .mobile-player{
+    display:none !important;
+  }
+
+  .hero-grid{
+    padding-bottom:var(--app-safe-bottom);
+  }
+
+  .hero-grid > div,
+  .philosophy-kicker,
+  #how .sec-head,
+  #pricing .sec-head{
+    margin-top:0;
+  }
+
+  .philosophy-text,
+  #how .steps,
+  #pricing .tiers-grid{
+    margin-bottom:0;
+  }
+
+  #corporate .corporate-box{
+    margin-top:0;
+    margin-bottom:0;
+  }
+}
