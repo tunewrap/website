@@ -23,7 +23,7 @@
       const bw = gap*0.5;
       const grad = ctx.createLinearGradient(0, h/2-bh/2, 0, h/2+bh/2);
       grad.addColorStop(0, 'rgba(217,164,65,0.9)');
-      grad.addColorStop(1, 'rgba(184,84,58,0.35)');
+      grad.addColorStop(1, 'rgba(217,164,65,0.08)');
       ctx.fillStyle = grad;
       ctx.fillRect(x, h/2 - bh/2, bw, bh);
     }
@@ -97,7 +97,7 @@
         const bh = Math.max(3, v*h*0.95);
         const grad = ctx2d.createLinearGradient(0,h/2-bh/2,0,h/2+bh/2);
         grad.addColorStop(0,'rgba(217,164,65,0.95)');
-        grad.addColorStop(1,'rgba(184,84,58,0.5)');
+        grad.addColorStop(1,'rgba(217,164,65,0.16)');
         ctx2d.fillStyle = grad;
         ctx2d.fillRect(i*gap+gap*0.15, h/2-bh/2, gap*0.7, bh);
       }
@@ -151,6 +151,14 @@
 (function(){
   const I18N = {
     ru: {
+      mobile_hero_h1:"История становится <em>песней</em>",
+      mobile_menu_philosophy:"Философия",
+      mobile_nav_home:"Главная",
+      mobile_nav_stories:"Истории",
+      mobile_nav_author:"Авторские",
+      mobile_nav_packages:"Пакеты",
+      mobile_nav_contacts:"Контакты",
+      mobile_story_label:"Музыкальная история",
       philosophy_kicker:"Философия TuneWrap",
       philosophy_quote:"«Сначала рождается история. Потом текст. Потом музыка.»",
       philosophy_credit:"— Философия TuneWrap",
@@ -277,6 +285,14 @@
       author_signature:"Автор песен, продюсер и основатель TuneWrap.",
     },
     uk: {
+      mobile_hero_h1:"Історія стає <em>піснею</em>",
+      mobile_menu_philosophy:"Філософія",
+      mobile_nav_home:"Головна",
+      mobile_nav_stories:"Історії",
+      mobile_nav_author:"Авторські",
+      mobile_nav_packages:"Пакети",
+      mobile_nav_contacts:"Контакти",
+      mobile_story_label:"Музична історія",
       philosophy_kicker:"Філософія TuneWrap",
       philosophy_quote:"«Спочатку народжується історія. Потім текст. Потім музика.»",
       philosophy_credit:"— Філософія TuneWrap",
@@ -403,6 +419,14 @@
       author_signature:"Автор пісень, продюсер і засновник TuneWrap.",
     },
     ka: {
+      mobile_hero_h1:"ისტორია <em>სიმღერად იქცევა</em>",
+      mobile_menu_philosophy:"ფილოსოფია",
+      mobile_nav_home:"მთავარი",
+      mobile_nav_stories:"ისტორიები",
+      mobile_nav_author:"საავტორო",
+      mobile_nav_packages:"პაკეტები",
+      mobile_nav_contacts:"კონტაქტი",
+      mobile_story_label:"მუსიკალური ისტორია",
       philosophy_kicker:"TuneWrap-ის ფილოსოფია",
       philosophy_quote:"„ჯერ იბადება ისტორია. შემდეგ ტექსტი. შემდეგ მუსიკა.“",
       philosophy_credit:"— TuneWrap-ის ფილოსოფია",
@@ -529,6 +553,14 @@
       author_signature:"სიმღერების ავტორი, პროდიუსერი და TuneWrap-ის დამფუძნებელი.",
     },
     en: {
+      mobile_hero_h1:"A story becomes <em>a song</em>",
+      mobile_menu_philosophy:"Philosophy",
+      mobile_nav_home:"Home",
+      mobile_nav_stories:"Stories",
+      mobile_nav_author:"Originals",
+      mobile_nav_packages:"Packages",
+      mobile_nav_contacts:"Contact",
+      mobile_story_label:"Musical story",
       philosophy_kicker:"TuneWrap Philosophy",
       philosophy_quote:"“First comes the story. Then the words. Then the music.”",
       philosophy_credit:"— TuneWrap Philosophy",
@@ -655,6 +687,14 @@
       author_signature:"Songwriter, producer and founder of TuneWrap.",
     },
     de: {
+      mobile_hero_h1:"Eine Geschichte wird <em>zum Lied</em>",
+      mobile_menu_philosophy:"Philosophie",
+      mobile_nav_home:"Start",
+      mobile_nav_stories:"Geschichten",
+      mobile_nav_author:"Originale",
+      mobile_nav_packages:"Pakete",
+      mobile_nav_contacts:"Kontakt",
+      mobile_story_label:"Musikgeschichte",
       philosophy_kicker:"Die Philosophie von TuneWrap",
       philosophy_quote:"„Zuerst entsteht die Geschichte. Dann der Text. Dann die Musik.“",
       philosophy_credit:"— Philosophie von TuneWrap",
@@ -1234,4 +1274,158 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 650);
     });
   });
+});
+
+// ---------- mobile app player, menu and bottom navigation ----------
+document.addEventListener('DOMContentLoaded', () => {
+  const trackOrder = [
+    'days127','mainroad','natalia65','growold','justfive',
+    'amsterdam','mychoice','tbilisi','goodvibe','pulse',
+    'amsterdamen','mychoiceen','yayaya','iwant','53'
+  ];
+  const player = document.getElementById('mobilePlayer');
+  const titleEl = document.getElementById('mobilePlayerTitle');
+  const artistEl = document.getElementById('mobilePlayerArtist');
+  const coverWrap = document.getElementById('mobilePlayerCoverWrap');
+  const coverEl = document.getElementById('mobilePlayerCover');
+  const progressEl = document.getElementById('mobilePlayerProgress');
+  const playControl = document.getElementById('mobilePlay');
+  const prevControl = document.getElementById('mobilePrev');
+  const nextControl = document.getElementById('mobileNext');
+  let currentTrack = 'days127';
+
+  if(!player || !titleEl || !artistEl || !coverWrap || !coverEl || !progressEl || !playControl) return;
+
+  function getCard(name){
+    const button = document.querySelector('.play-btn[data-track="' + name + '"]');
+    return button ? button.closest('.track, .author-card') : null;
+  }
+
+  function updateMobileTrack(name){
+    const card = getCard(name);
+    if(!card) return;
+    currentTrack = name;
+
+    const title = card.querySelector('.track-title');
+    const cover = card.querySelector('.story-cover, .author-cover');
+    const category = card.querySelector('.story-meta span');
+    titleEl.textContent = title ? title.textContent.trim() : 'TuneWrap';
+
+    if(card.classList.contains('author-card')){
+      artistEl.removeAttribute('data-i18n');
+      artistEl.textContent = 'Kosta Trufakin';
+    } else {
+      artistEl.removeAttribute('data-i18n');
+      artistEl.textContent = category ? category.textContent.trim() : 'TuneWrap';
+    }
+
+    if(cover){
+      coverEl.src = cover.getAttribute('src');
+      coverEl.alt = '';
+      coverWrap.classList.remove('is-wave');
+    } else {
+      coverEl.removeAttribute('src');
+      coverEl.alt = '';
+      coverWrap.classList.add('is-wave');
+    }
+  }
+
+  function toggleCurrent(){
+    const button = document.querySelector('.play-btn[data-track="' + currentTrack + '"]');
+    if(button) button.click();
+  }
+
+  function stepTrack(direction){
+    const index = Math.max(0, trackOrder.indexOf(currentTrack));
+    const nextIndex = (index + direction + trackOrder.length) % trackOrder.length;
+    const name = trackOrder[nextIndex];
+    const audio = document.getElementById('audio-' + name);
+    const button = document.querySelector('.play-btn[data-track="' + name + '"]');
+    updateMobileTrack(name);
+    progressEl.style.width = '0%';
+    if(audio && button && audio.paused) button.click();
+  }
+
+  playControl.addEventListener('click', toggleCurrent);
+  prevControl.addEventListener('click', () => stepTrack(-1));
+  nextControl.addEventListener('click', () => stepTrack(1));
+
+  trackOrder.forEach(name => {
+    const audio = document.getElementById('audio-' + name);
+    const timeEl = document.querySelector('[data-time="' + name + '"]');
+    if(!audio) return;
+
+    audio.addEventListener('loadedmetadata', () => {
+      if(!timeEl || !Number.isFinite(audio.duration)) return;
+      const minutes = Math.floor(audio.duration / 60);
+      const seconds = String(Math.floor(audio.duration % 60)).padStart(2,'0');
+      if(!timeEl.textContent.includes('/')){
+        timeEl.textContent = '0:00 / ' + minutes + ':' + seconds;
+      }
+    });
+
+    audio.addEventListener('play', () => {
+      updateMobileTrack(name);
+      playControl.classList.add('playing');
+      playControl.setAttribute('aria-label','Пауза');
+    });
+
+    audio.addEventListener('pause', () => {
+      if(name !== currentTrack) return;
+      playControl.classList.remove('playing');
+      playControl.setAttribute('aria-label','Воспроизвести');
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      if(name !== currentTrack) return;
+      const ratio = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+      progressEl.style.width = Math.max(0, Math.min(100, ratio)) + '%';
+    });
+
+    audio.addEventListener('ended', () => {
+      if(name !== currentTrack) return;
+      progressEl.style.width = '0%';
+      playControl.classList.remove('playing');
+    });
+  });
+
+  document.querySelectorAll('.mobile-menu a').forEach(link => {
+    link.addEventListener('click', () => {
+      const menu = link.closest('details');
+      if(menu) menu.removeAttribute('open');
+    });
+  });
+
+  document.querySelectorAll('.mobile-lang .lang-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const menu = button.closest('details');
+      if(menu) menu.removeAttribute('open');
+      window.setTimeout(() => updateMobileTrack(currentTrack), 0);
+    });
+  });
+
+  const bottomLinks = Array.from(document.querySelectorAll('.mobile-bottom-nav a[data-mobile-section]'));
+  bottomLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      bottomLinks.forEach(item => item.classList.toggle('active', item === link));
+    });
+  });
+
+  if('IntersectionObserver' in window){
+    const observedSections = bottomLinks
+      .map(link => document.getElementById(link.dataset.mobileSection))
+      .filter(Boolean);
+    const sectionObserver = new IntersectionObserver(entries => {
+      const visible = entries
+        .filter(entry => entry.isIntersecting)
+        .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if(!visible) return;
+      bottomLinks.forEach(link => {
+        link.classList.toggle('active', link.dataset.mobileSection === visible.target.id);
+      });
+    }, {rootMargin:'-18% 0px -60% 0px', threshold:[0,.15,.4]});
+    observedSections.forEach(section => sectionObserver.observe(section));
+  }
+
+  updateMobileTrack(currentTrack);
 });

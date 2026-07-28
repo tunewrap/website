@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<nav>
+<nav id="top">
   <div class="wrap">
     <div class="logo-block">
       <div class="logo">Tune<span>Wrap</span></div>
@@ -25,11 +25,40 @@
         <button class="lang-btn" data-lang="en">EN</button>
         <button class="lang-btn" data-lang="de">DE</button>
       </div>
+      <details class="mobile-lang">
+        <summary aria-label="Выбрать язык">
+          <span class="mobile-lang-icon" aria-hidden="true">◎</span>
+          <span class="mobile-lang-current" aria-hidden="true"></span>
+        </summary>
+        <div class="mobile-lang-options">
+          <button class="lang-btn" data-lang="ru">RU</button>
+          <button class="lang-btn" data-lang="uk">UA</button>
+          <button class="lang-btn" data-lang="ka">GE</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="de">DE</button>
+        </div>
+      </details>
+      <details class="mobile-menu">
+        <summary aria-label="Открыть меню">
+          <span></span>
+          <span></span>
+          <span></span>
+        </summary>
+        <div class="mobile-menu-panel">
+          <a href="#philosophy" data-i18n="mobile_menu_philosophy">Философия</a>
+          <a href="#how" data-i18n="how_eyebrow">Как это работает</a>
+          <a href="#tracks" data-i18n="tracks_eyebrow">Музыкальные истории</a>
+          <a href="#pricing" data-i18n="pricing_eyebrow">Стоимость и форматы</a>
+          <a href="#author" data-i18n="mobile_nav_author">Авторские</a>
+          <a href="#contact" data-i18n="hero_btn_order">Рассказать свою историю</a>
+        </div>
+      </details>
       <a class="nav-cta" href="#contact" data-i18n="nav_cta">Рассказать свою историю</a>
     </div>
   </div>
 </nav>
 
+<div class="mobile-top-stack">
 <div class="story-ribbon" aria-label="Музыкальные истории">
   <div class="story-ribbon-track">
         <a class="story-ribbon-card" href="#story-grow-old" data-start-track="growold">
@@ -58,7 +87,10 @@
     <div>
       <div class="eyebrow" data-i18n="hero_eyebrow">ВАША ИСТОРИЯ</div>
       <p class="brand-manifesto" data-i18n="brand_manifesto">Мы сохраняем самые важные моменты вашей жизни языком музыки.</p>
-      <h1 data-i18n="hero_h1">У каждой истории есть <em>своя мелодия</em></h1>
+      <h1 class="hero-title">
+        <span class="desktop-hero-title" data-i18n="hero_h1">У каждой истории есть <em>своя мелодия</em></span>
+        <span class="mobile-hero-title" data-i18n="mobile_hero_h1">История становится <em>песней</em></span>
+      </h1>
       <p class="lead" data-i18n="hero_lead">Первая встреча. Любимая фраза мамы. Семейная шутка. Число на обручальном кольце. Расскажите нам самое важное — и мы превратим вашу историю в песню, которую захочется включить спустя годы.</p>
       <div class="hero-actions">
         <a class="btn-primary" href="#contact" data-i18n="hero_btn_order">Рассказать свою историю</a>
@@ -69,6 +101,7 @@
     <canvas id="ambientWave"></canvas>
   </div>
 </header>
+</div>
 
 
 
@@ -362,7 +395,7 @@
           <div class="track-title">Amsterdam</div>
           <div class="track-desc" data-i18n="author_amsterdam_desc">Эта история началась глубокой ночью в Амстердаме. Мы с сыном просто шли вперёд по пустому городу, не зная, что запомним эту ночь навсегда. Красные огни, каналы и ощущение абсолютной свободы однажды стали песней.</div>
           <canvas data-canvas="amsterdam"></canvas>
-          <div class="track-time" data-time="amsterdam">0:00</div>
+          <div class="track-time" data-time="amsterdam">0:00 / 3:30</div>
         </div>
       </div>
 
@@ -372,7 +405,7 @@
           <div class="track-title">Мій вибір</div>
           <div class="track-desc" data-i18n="author_mychoice_desc">Иногда нужно потерять привычную жизнь, чтобы обрести свою собственную. Эта песня появилась в день, когда я понял, что свобода — это право выбирать свой путь и оставаться верным самому себе.</div>
           <canvas data-canvas="mychoice"></canvas>
-          <div class="track-time" data-time="mychoice">0:00</div>
+          <div class="track-time" data-time="mychoice">0:00 / 3:24</div>
         </div>
       </div>
 
@@ -382,7 +415,7 @@
           <div class="track-title">Tbilisi</div>
           <div class="track-desc" data-i18n="author_tbilisi_desc">Иногда чужой город становится родным. Тбилиси подарил мне новую главу жизни, новых людей и веру в то, что никогда не поздно начать всё сначала.</div>
           <canvas data-canvas="tbilisi"></canvas>
-          <div class="track-time" data-time="tbilisi">0:00</div>
+          <div class="track-time" data-time="tbilisi">0:00 / 2:41</div>
         </div>
       </div>
 
@@ -392,7 +425,7 @@
           <div class="track-title">Good Vibe</div>
           <div class="track-desc" data-i18n="author_goodvibe_desc">Иногда несколько месяцев поддержки, улыбок и тёплых разговоров превращаются в хорошую музыку. Эта песня — благодарность жизни и одному человеку за её светлые моменты.</div>
           <canvas data-canvas="goodvibe"></canvas>
-          <div class="track-time" data-time="goodvibe">0:00</div>
+          <div class="track-time" data-time="goodvibe">0:00 / 5:33</div>
         </div>
       </div>
 
@@ -402,7 +435,7 @@
           <div class="track-title">Pulse of the Night</div>
           <div class="track-desc" data-i18n="author_pulse_desc">Музика була поруч зі мною все життя. Бас-гітара, сцена, світло софітів і тисячі сердець, що б'ються в одному ритмі. Є моменти, які неможливо описати словами — їх можна лише відчути. Це історія про свободу, енергію музики та пульс ночі, частиною якого я є.</div>
           <canvas data-canvas="pulse"></canvas>
-          <div class="track-time" data-time="pulse">0:00</div>
+          <div class="track-time" data-time="pulse">0:00 / 3:29</div>
         </div>
       </div>
 
@@ -412,7 +445,7 @@
           <div class="track-title">Amsterdam — English Version</div>
           <div class="track-desc" data-i18n="author_amsterdamen_desc">Та же ночь, те же каналы и красные огни — история, рассказанная на английском языке.</div>
           <canvas data-canvas="amsterdamen"></canvas>
-          <div class="track-time" data-time="amsterdamen">0:00</div>
+          <div class="track-time" data-time="amsterdamen">0:00 / 3:21</div>
         </div>
       </div>
 
@@ -422,7 +455,7 @@
           <div class="track-title">I Do Whatever I Want!</div>
           <div class="track-desc" data-i18n="author_mychoiceen_desc">Английская версия личной истории о свободе, новом пути и праве жить по собственному выбору.</div>
           <canvas data-canvas="mychoiceen"></canvas>
-          <div class="track-time" data-time="mychoiceen">0:00</div>
+          <div class="track-time" data-time="mychoiceen">0:00 / 3:04</div>
         </div>
       </div>
 
@@ -432,7 +465,7 @@
           <div class="track-title">Ya Ya Ya</div>
           <div class="track-desc" data-i18n="author_yayaya_desc">Иногда песня рождается не из боли, а из чистой энергии. Ya Ya Ya — про момент, когда перестаёшь оглядываться на чужое мнение и просто идёшь своим ритмом. Гитарный драйв, дорога и припев, который хочется петь всей компанией.</div>
           <canvas data-canvas="yayaya"></canvas>
-          <div class="track-time" data-time="yayaya">0:00</div>
+          <div class="track-time" data-time="yayaya">0:00 / 2:46</div>
         </div>
       </div>
 
@@ -442,7 +475,7 @@
           <div class="track-title">Я РОБЛЮ ЩО ХОЧУ</div>
           <div class="track-desc" data-i18n="author_iwant_desc">После долгих лет жизни по чужому расписанию однажды наступает тишина — и впервые никто не говорит, что ты должен делать. Эта песня родилась из простого, почти дерзкого ощущения свободы: сегодня я сам выбираю свой день, свой путь и свою жизнь. «Я роблю що хочу» — не про каприз, а про возвращение к себе.</div>
           <canvas data-canvas="iwant"></canvas>
-          <div class="track-time" data-time="iwant">0:00</div>
+          <div class="track-time" data-time="iwant">0:00 / 2:52</div>
         </div>
       </div>
 
@@ -472,6 +505,51 @@
     <div data-i18n="footer_location">Тбилиси · Киев · онлайн</div>
   </div>
 </footer>
+
+<div class="mobile-player" id="mobilePlayer" aria-live="polite">
+  <div class="mobile-player-progress" aria-hidden="true"><span id="mobilePlayerProgress"></span></div>
+  <div class="mobile-player-cover" id="mobilePlayerCoverWrap" aria-hidden="true">
+    <img id="mobilePlayerCover" src="assets/covers/image-b08c7250134f.png" alt="">
+  </div>
+  <div class="mobile-player-copy">
+    <strong id="mobilePlayerTitle">127</strong>
+    <span id="mobilePlayerArtist" data-i18n="mobile_story_label">Музыкальная история</span>
+  </div>
+  <div class="mobile-player-controls">
+    <button type="button" id="mobilePrev" aria-label="Предыдущая песня">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M18 6l-9 6 9 6V6z"/></svg>
+    </button>
+    <button type="button" id="mobilePlay" class="mobile-main-play" aria-label="Воспроизвести">
+      <span class="mobile-play-icon" aria-hidden="true"></span>
+    </button>
+    <button type="button" id="mobileNext" aria-label="Следующая песня">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M6 6l9 6-9 6V6z"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="mobile-bottom-nav" role="navigation" aria-label="Основная навигация">
+  <a href="#top" class="active" data-mobile-section="top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5L12 4l9 7.5V21h-6v-6H9v6H3v-9.5z"/></svg>
+    <span data-i18n="mobile_nav_home">Главная</span>
+  </a>
+  <a href="#tracks" data-mobile-section="tracks">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v12H9l-4 4V4zM9 8h6M9 12h4"/></svg>
+    <span data-i18n="mobile_nav_stories">Истории</span>
+  </a>
+  <a href="#author" data-mobile-section="author">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12M9 10l10-2M6.5 21A2.5 2.5 0 106.5 16a2.5 2.5 0 000 5zm10-2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"/></svg>
+    <span data-i18n="mobile_nav_author">Авторские</span>
+  </a>
+  <a href="#pricing" data-mobile-section="pricing">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v13H4V7zm3-3h10v3H7V4zm5 6v7m-3.5-3.5h7"/></svg>
+    <span data-i18n="mobile_nav_packages">Пакеты</span>
+  </a>
+  <a href="#contact" data-mobile-section="contact">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H8l-4 4V5zm4 4h8m-8 3h6"/></svg>
+    <span data-i18n="mobile_nav_contacts">Контакты</span>
+  </a>
+</div>
 
 <audio id="audio-growold" src="assets/audio/audio-071ef6697656.mp3" preload="none"></audio>
 <audio id="audio-days127" src="assets/audio/audio-188f96c94cb4.mp3" preload="none"></audio>
