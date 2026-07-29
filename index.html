@@ -541,6 +541,59 @@
   </div>
 </footer>
 
+<section class="song-player-screen" id="songPlayerScreen" aria-hidden="true" aria-modal="true" role="dialog" aria-labelledby="songPlayerTitle">
+  <div class="song-player-shell">
+    <div class="song-player-topbar">
+      <button class="song-player-back" id="songPlayerBack" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        <span data-player-i18n="back">Назад</span>
+      </button>
+      <div class="song-player-brand">Tune<span>Wrap</span></div>
+      <span class="song-player-topbar-spacer" aria-hidden="true"></span>
+    </div>
+
+    <div class="song-player-scroll">
+      <div class="song-player-cover" id="songPlayerCoverWrap">
+        <img id="songPlayerCover" alt="">
+        <div class="song-player-cover-fallback" aria-hidden="true">
+          <span>TuneWrap</span>
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+      </div>
+
+      <div class="song-player-copy">
+        <h1 id="songPlayerTitle">TuneWrap</h1>
+        <p id="songPlayerDescription"></p>
+      </div>
+
+      <div class="song-player-controls">
+        <button class="song-player-toggle" id="songPlayerToggle" type="button" aria-label="Воспроизвести">
+          <span class="song-player-toggle-icon" aria-hidden="true"></span>
+        </button>
+        <div class="song-player-timeline">
+          <input id="songPlayerSeek" type="range" min="0" max="0" step="0.01" value="0" aria-label="Перемотка песни">
+          <div class="song-player-times" aria-live="off">
+            <span id="songPlayerCurrentTime">0:00</span>
+            <span id="songPlayerDuration">0:00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="song-player-text-block">
+        <h2 data-player-i18n="lyrics">Текст песни</h2>
+        <div class="song-player-text" id="songPlayerLyrics"></div>
+      </div>
+
+      <div class="song-player-text-block" id="songPlayerTranslationBlock" hidden>
+        <h2 data-player-i18n="translation">Перевод</h2>
+        <div class="song-player-text" id="songPlayerTranslation"></div>
+      </div>
+
+      <a class="song-player-order" id="songPlayerOrder" href="#contact" data-player-i18n="order">Заказать похожую историю</a>
+    </div>
+  </div>
+</section>
+
 <div class="mobile-player" id="mobilePlayer" aria-live="polite">
   <div class="mobile-player-progress" aria-hidden="true"><span id="mobilePlayerProgress"></span></div>
   <div class="mobile-player-cover" id="mobilePlayerCoverWrap" aria-hidden="true">

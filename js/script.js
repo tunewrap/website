@@ -1465,3 +1465,336 @@ document.addEventListener('DOMContentLoaded', () => {
 
   updateMobileTrack(currentTrack);
 });
+
+// ---------- Stage 7: full screen song player ----------
+document.addEventListener('DOMContentLoaded', () => {
+  const screen = document.getElementById('songPlayerScreen');
+  const backButton = document.getElementById('songPlayerBack');
+  const coverWrap = document.getElementById('songPlayerCoverWrap');
+  const cover = document.getElementById('songPlayerCover');
+  const title = document.getElementById('songPlayerTitle');
+  const description = document.getElementById('songPlayerDescription');
+  const toggle = document.getElementById('songPlayerToggle');
+  const seek = document.getElementById('songPlayerSeek');
+  const currentTime = document.getElementById('songPlayerCurrentTime');
+  const duration = document.getElementById('songPlayerDuration');
+  const lyrics = document.getElementById('songPlayerLyrics');
+  const translation = document.getElementById('songPlayerTranslation');
+  const translationBlock = document.getElementById('songPlayerTranslationBlock');
+  const orderButton = document.getElementById('songPlayerOrder');
+  const appScroll = document.getElementById('appScroll');
+  const bottomNav = document.querySelector('.mobile-bottom-nav');
+  const mobileViewport = window.matchMedia('(max-width:620px)');
+
+  if(
+    !screen || !backButton || !coverWrap || !cover || !title || !description ||
+    !toggle || !seek || !currentTime || !duration || !lyrics ||
+    !translation || !translationBlock || !orderButton
+  ) return;
+
+  const UI = {
+    ru:{
+      back:'Назад',
+      lyrics:'Текст песни',
+      translation:'Перевод',
+      order:'Заказать похожую историю',
+      play:'Воспроизвести',
+      pause:'Пауза',
+      seek:'Перемотка песни',
+      empty:'Текст песни пока не добавлен в проект.'
+    },
+    uk:{
+      back:'Назад',
+      lyrics:'Текст пісні',
+      translation:'Переклад',
+      order:'Замовити схожу історію',
+      play:'Відтворити',
+      pause:'Пауза',
+      seek:'Перемотування пісні',
+      empty:'Текст пісні поки не додано до проєкту.'
+    },
+    ka:{
+      back:'უკან',
+      lyrics:'სიმღერის ტექსტი',
+      translation:'თარგმანი',
+      order:'მსგავსი ისტორიის შეკვეთა',
+      play:'დაკვრა',
+      pause:'პაუზა',
+      seek:'სიმღერის გადახვევა',
+      empty:'სიმღერის ტექსტი პროექტში ჯერ არ არის დამატებული.'
+    },
+    en:{
+      back:'Back',
+      lyrics:'Lyrics',
+      translation:'Translation',
+      order:'Order a similar story',
+      play:'Play',
+      pause:'Pause',
+      seek:'Seek through song',
+      empty:'The lyrics have not been added to the project yet.'
+    },
+    de:{
+      back:'Zurück',
+      lyrics:'Songtext',
+      translation:'Übersetzung',
+      order:'Eine ähnliche Geschichte bestellen',
+      play:'Abspielen',
+      pause:'Pause',
+      seek:'Im Song spulen',
+      empty:'Der Songtext wurde dem Projekt noch nicht hinzugefügt.'
+    }
+  };
+
+  let activeCard = null;
+  let activeAudio = null;
+  let activeButton = null;
+  let restoreFocus = null;
+  let suppressCardOpen = false;
+  let isSeeking = false;
+
+  function language(){
+    const lang = document.documentElement.getAttribute('lang') || 'ru';
+    return UI[lang] ? lang : 'ru';
+  }
+
+  function ui(){
+    return UI[language()];
+  }
+
+  function formatTime(value){
+    const safe = Number.isFinite(value) && value > 0 ? Math.floor(value) : 0;
+    return Math.floor(safe / 60) + ':' + String(safe % 60).padStart(2,'0');
+  }
+
+  function songNode(card, attribute){
+    if(!card) return null;
+    return card.querySelector('[' + attribute + ']');
+  }
+
+  function songText(card, attribute){
+    const node = songNode(card, attribute);
+    if(node) return node.textContent.trim();
+    const dataKey = attribute === 'data-song-lyrics' ? 'songLyrics' : 'songTranslation';
+    return (card.dataset[dataKey] || '').trim();
+  }
+
+  function setSeekVisual(value, max){
+    const ratio = max > 0 ? Math.max(0, Math.min(100, (value / max) * 100)) : 0;
+    seek.style.setProperty('--seek-progress', ratio + '%');
+  }
+
+  function syncTimeline(){
+    if(!activeAudio) return;
+    const total = Number.isFinite(activeAudio.duration) ? activeAudio.duration : 0;
+    const position = Number.isFinite(activeAudio.currentTime) ? activeAudio.currentTime : 0;
+    seek.max = total || 0;
+    if(!isSeeking) seek.value = Math.min(position, total || 0);
+    currentTime.textContent = formatTime(position);
+    duration.textContent = formatTime(total);
+    setSeekVisual(Number(seek.value) || 0, total);
+  }
+
+  function syncPlaybackState(){
+    const playing = Boolean(activeAudio && !activeAudio.paused && !activeAudio.ended);
+    toggle.classList.toggle('playing', playing);
+    toggle.setAttribute('aria-label', playing ? ui().pause : ui().play);
+  }
+
+  function syncLanguage(){
+    const labels = ui();
+    screen.querySelectorAll('[data-player-i18n]').forEach(element => {
+      const key = element.getAttribute('data-player-i18n');
+      if(labels[key]) element.textContent = labels[key];
+    });
+    seek.setAttribute('aria-label', labels.seek);
+    syncPlaybackState();
+
+    if(activeCard){
+      const cardTitle = activeCard.querySelector('.track-title');
+      const cardDescription = activeCard.querySelector('.track-desc');
+      title.textContent = cardTitle ? cardTitle.textContent.trim() : 'TuneWrap';
+      description.textContent = cardDescription ? cardDescription.textContent.trim() : '';
+      const lyricText = songText(activeCard,'data-song-lyrics');
+      lyrics.textContent = lyricText || labels.empty;
+      lyrics.classList.toggle('is-empty', !lyricText);
+      const translationText = songText(activeCard,'data-song-translation');
+      translation.textContent = translationText;
+      translationBlock.hidden = !translationText;
+    }
+  }
+
+  function setCover(card){
+    const image = card ? card.querySelector('.story-cover, .author-cover') : null;
+    if(image){
+      cover.src = image.getAttribute('src');
+      cover.alt = title.textContent;
+      coverWrap.classList.remove('is-wave');
+    } else {
+      cover.removeAttribute('src');
+      cover.alt = '';
+      coverWrap.classList.add('is-wave');
+    }
+  }
+
+  function pauseOtherTracks(selectedAudio){
+    document.querySelectorAll('audio[id^="audio-"]').forEach(audio => {
+      if(audio === selectedAudio || audio.paused) return;
+      const name = audio.id.replace(/^audio-/,'');
+      const button = document.querySelector('.play-btn[data-track="' + name + '"]');
+      if(button){
+        suppressCardOpen = true;
+        button.click();
+        suppressCardOpen = false;
+      } else {
+        audio.pause();
+      }
+    });
+  }
+
+  function fillScreen(card, name){
+    const audio = document.getElementById('audio-' + name);
+    const button = card.querySelector('.play-btn[data-track="' + name + '"]');
+    if(!audio || !button) return false;
+
+    pauseOtherTracks(audio);
+    activeCard = card;
+    activeAudio = audio;
+    activeButton = button;
+
+    const cardTitle = card.querySelector('.track-title');
+    const cardDescription = card.querySelector('.track-desc');
+    title.textContent = cardTitle ? cardTitle.textContent.trim() : 'TuneWrap';
+    description.textContent = cardDescription ? cardDescription.textContent.trim() : '';
+    setCover(card);
+    syncLanguage();
+    syncTimeline();
+
+    if(audio.readyState === 0) audio.load();
+    return true;
+  }
+
+  function openPlayer(card, origin){
+    if(!mobileViewport.matches || suppressCardOpen) return;
+    const button = card.querySelector('.play-btn[data-track]');
+    const name = button ? button.dataset.track : '';
+    if(!name || !fillScreen(card,name)) return;
+
+    restoreFocus = origin || card;
+    screen.classList.add('is-open');
+    screen.setAttribute('aria-hidden','false');
+    document.body.classList.add('song-player-open');
+    if(appScroll) appScroll.setAttribute('inert','');
+    if(bottomNav) bottomNav.setAttribute('inert','');
+    window.requestAnimationFrame(() => backButton.focus({preventScroll:true}));
+  }
+
+  function closePlayer(){
+    if(!screen.classList.contains('is-open')) return;
+    screen.classList.remove('is-open');
+    screen.setAttribute('aria-hidden','true');
+    document.body.classList.remove('song-player-open');
+    if(appScroll) appScroll.removeAttribute('inert');
+    if(bottomNav) bottomNav.removeAttribute('inert');
+
+    if(restoreFocus && typeof restoreFocus.focus === 'function'){
+      window.requestAnimationFrame(() => restoreFocus.focus({preventScroll:true}));
+    }
+  }
+
+  document.querySelectorAll('.track, .author-card').forEach(card => {
+    card.setAttribute('tabindex','0');
+
+    card.addEventListener('click', event => {
+      if(suppressCardOpen) return;
+      openPlayer(card,event.target.closest('.play-btn') || card);
+    });
+
+    card.addEventListener('keydown', event => {
+      if(event.target !== card || (event.key !== 'Enter' && event.key !== ' ')) return;
+      event.preventDefault();
+      openPlayer(card,card);
+    });
+  });
+
+  backButton.addEventListener('click',closePlayer);
+
+  toggle.addEventListener('click', () => {
+    if(!activeButton) return;
+    suppressCardOpen = true;
+    activeButton.click();
+    suppressCardOpen = false;
+    syncPlaybackState();
+  });
+
+  seek.addEventListener('pointerdown', () => {
+    isSeeking = true;
+  });
+
+  seek.addEventListener('input', () => {
+    if(!activeAudio || !Number.isFinite(activeAudio.duration)) return;
+    const nextTime = Math.max(0,Math.min(activeAudio.duration,Number(seek.value) || 0));
+    activeAudio.currentTime = nextTime;
+    currentTime.textContent = formatTime(nextTime);
+    setSeekVisual(nextTime,activeAudio.duration);
+  });
+
+  function finishSeeking(){
+    isSeeking = false;
+    syncTimeline();
+  }
+
+  seek.addEventListener('change',finishSeeking);
+  seek.addEventListener('pointerup',finishSeeking);
+  seek.addEventListener('pointercancel',finishSeeking);
+
+  document.querySelectorAll('audio[id^="audio-"]').forEach(audio => {
+    audio.addEventListener('loadedmetadata', () => {
+      if(audio === activeAudio) syncTimeline();
+    });
+    audio.addEventListener('durationchange', () => {
+      if(audio === activeAudio) syncTimeline();
+    });
+    audio.addEventListener('timeupdate', () => {
+      if(audio === activeAudio && !isSeeking) syncTimeline();
+    });
+    audio.addEventListener('play', () => {
+      if(audio === activeAudio) syncPlaybackState();
+    });
+    audio.addEventListener('pause', () => {
+      if(audio === activeAudio) syncPlaybackState();
+    });
+    audio.addEventListener('ended', () => {
+      if(audio !== activeAudio) return;
+      audio.currentTime = 0;
+      seek.value = 0;
+      isSeeking = false;
+      syncTimeline();
+      syncPlaybackState();
+    });
+  });
+
+  orderButton.addEventListener('click', event => {
+    event.preventDefault();
+    const contact = document.getElementById('contact');
+    closePlayer();
+    if(contact){
+      window.setTimeout(() => contact.scrollIntoView({behavior:'smooth',block:'start'}),80);
+    }
+  });
+
+  document.addEventListener('keydown', event => {
+    if(event.key === 'Escape' && screen.classList.contains('is-open')) closePlayer();
+  });
+
+  document.querySelectorAll('.lang-btn').forEach(button => {
+    button.addEventListener('click', () => window.setTimeout(syncLanguage,0));
+  });
+
+  if(typeof mobileViewport.addEventListener === 'function'){
+    mobileViewport.addEventListener('change', event => {
+      if(!event.matches) closePlayer();
+    });
+  }
+
+  syncLanguage();
+});
