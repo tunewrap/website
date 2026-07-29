@@ -692,10 +692,6 @@
     --line:rgba(245,241,232,.1);
   }
 
-  html{
-    scroll-padding-top:78px;
-  }
-
   body{
     background:
       radial-gradient(circle at 78% 7%,rgba(217,164,65,.07),transparent 28rem),
@@ -895,7 +891,6 @@
 
   section{
     padding:44px 0;
-    scroll-margin-top:78px;
   }
 
   section > .wrap,
@@ -1635,10 +1630,6 @@
     --premium-shadow-deep:0 30px 80px rgba(0,0,0,.52);
   }
 
-  html{
-    scroll-padding-top:92px;
-  }
-
   body{
     background:
       radial-gradient(circle at 82% 3%,rgba(217,164,65,.105),transparent 22rem),
@@ -1882,7 +1873,6 @@
 
   section{
     padding:56px 0;
-    scroll-margin-top:92px;
   }
 
   section > .wrap,
@@ -2651,12 +2641,6 @@
     --stage3-section-space:38px;
   }
 
-  html{
-    scroll-padding-top:var(--mobile-header);
-    scroll-padding-bottom:var(--mobile-stack);
-    scroll-snap-type:y proximity;
-  }
-
   body{
     padding-bottom:calc(var(--mobile-stack) + 16px);
   }
@@ -2744,8 +2728,6 @@
 
   section{
     padding:var(--stage3-section-space) 0;
-    scroll-margin-top:var(--mobile-header);
-    scroll-margin-bottom:var(--mobile-stack);
   }
 
   #philosophy,
@@ -3335,12 +3317,6 @@
   }
 }
 
-@media (prefers-reduced-motion:reduce) and (max-width:620px){
-  html{
-    scroll-snap-type:none;
-  }
-}
-
 /* ---------- STAGE 4 · MOBILE APP LAYOUT ---------- */
 @media(max-width:620px){
   :root{
@@ -3356,9 +3332,6 @@
 
   html{
     scroll-behavior:smooth;
-    scroll-padding-top:var(--app-header-height);
-    scroll-padding-bottom:0;
-    scroll-snap-type:y mandatory;
   }
 
   body{
@@ -3403,8 +3376,6 @@
     padding-top:0;
     padding-bottom:0;
     overflow:hidden;
-    scroll-margin-top:var(--app-header-height);
-    scroll-margin-bottom:0;
     scroll-snap-align:start;
     scroll-snap-stop:always;
   }
@@ -3811,13 +3782,6 @@
   }
 }
 
-@media (prefers-reduced-motion:reduce) and (max-width:620px){
-  html{
-    scroll-behavior:auto;
-    scroll-snap-type:y proximity;
-  }
-}
-
 /* ---------- STAGE 5 · MOBILE SCREEN COMPOSITION ---------- */
 @media(max-width:620px){
   :root{
@@ -3856,17 +3820,6 @@
 @media(max-width:620px){
   :root{
     --app-content-gap:18px;
-  }
-
-  .hero,
-  #philosophy,
-  #how,
-  #tracks,
-  #pricing,
-  #contact,
-  #corporate,
-  #author{
-    scroll-margin-top:0;
   }
 
   .hero .wrap,
@@ -3910,5 +3863,64 @@
   #pricing .tiers-grid,
   #corporate .corporate-box{
     margin-bottom:0;
+  }
+}
+
+/* ---------- STAGE 6 · SCROLL SNAP ARCHITECTURE ---------- */
+@media(max-width:620px){
+  html,
+  body{
+    width:100%;
+    height:100dvh;
+    overflow:hidden;
+  }
+
+  body{
+    padding-top:0;
+    padding-bottom:0;
+  }
+
+  .app-scroll{
+    position:fixed;
+    z-index:1;
+    top:var(--app-header-height);
+    right:0;
+    left:0;
+    width:100%;
+    height:var(--app-screen);
+    overflow-x:hidden;
+    overflow-y:auto;
+    overscroll-behavior-y:contain;
+    scroll-behavior:smooth;
+    scroll-snap-type:y mandatory;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .app-scroll::-webkit-scrollbar{
+    display:none;
+  }
+
+  .mobile-top-stack{
+    display:contents;
+  }
+
+  .hero,
+  #philosophy,
+  #how,
+  #tracks,
+  #pricing,
+  #contact,
+  #corporate,
+  #author{
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+  }
+}
+
+@media (prefers-reduced-motion:reduce) and (max-width:620px){
+  .app-scroll{
+    scroll-behavior:auto;
+    scroll-snap-type:y proximity;
   }
 }
