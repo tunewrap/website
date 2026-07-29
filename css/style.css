@@ -6024,3 +6024,93 @@
     font-size:12px;
   }
 }
+
+/* ---------- STAGE 8.4 · PHILOSOPHY PREMIUM REFINEMENT ---------- */
+@media(max-width:620px){
+  #philosophy::after{
+    bottom:5%;
+    opacity:.3;
+    -webkit-mask-image:linear-gradient(90deg,transparent,rgba(0,0,0,.78) 18%,rgba(0,0,0,.78) 82%,transparent);
+    mask-image:linear-gradient(90deg,transparent,rgba(0,0,0,.78) 18%,rgba(0,0,0,.78) 82%,transparent);
+  }
+
+  .philosophy-section::before{
+    top:17%;
+    right:5%;
+    opacity:.34;
+  }
+
+  .philosophy-inner{
+    padding:16px 21px max(18px,var(--app-safe-bottom));
+    overflow-x:hidden;
+  }
+
+  .philosophy-kicker{
+    margin:0 0 7px;
+    color:rgba(231,186,96,.86);
+    font-size:11px;
+    letter-spacing:.17em;
+  }
+
+  .philosophy-wave{
+    position:relative;
+    z-index:2;
+    display:block;
+    flex:0 0 72px;
+    width:114%;
+    height:72px;
+    margin:0 -7% 9px;
+    opacity:.53;
+    mix-blend-mode:screen;
+    filter:
+      contrast(1.08)
+      saturate(.94)
+      drop-shadow(0 0 14px rgba(217,164,65,.18));
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+    pointer-events:none;
+  }
+
+  .philosophy-quote{
+    max-width:10.8ch;
+    margin:0 0 13px;
+    font-size:clamp(28px,8.65vw,34px);
+    line-height:1.07;
+    letter-spacing:-.034em;
+    text-wrap:balance;
+    text-shadow:
+      0 4px 24px rgba(0,0,0,.48),
+      0 0 22px rgba(217,164,65,.035);
+  }
+
+  .philosophy-text{
+    max-width:43ch;
+    margin:0;
+    color:rgba(226,221,225,.76);
+    font-size:12px;
+    line-height:1.58;
+    letter-spacing:.002em;
+  }
+}
+
+@media(max-width:350px){
+  .philosophy-inner{
+    padding-right:18px;
+    padding-left:18px;
+  }
+
+  .philosophy-wave{
+    flex-basis:66px;
+    height:66px;
+    margin-bottom:7px;
+  }
+
+  .philosophy-quote{
+    font-size:27px;
+  }
+
+  .philosophy-text{
+    font-size:11.5px;
+    line-height:1.55;
+  }
+}

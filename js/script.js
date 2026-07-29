@@ -1,16 +1,21 @@
 
-// ---------- ambient hero waveform (idle animation) ----------
+// ---------- shared TuneWrap brand waveform ----------
 (function(){
-  const canvas = document.getElementById('ambientWave');
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  if(!ctx) return;
+  const canvases = Array.from(document.querySelectorAll('[data-brand-wave]'));
+  if(!canvases.length) return;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion:reduce)');
+  const waves = canvases.map(canvas => ({
+    canvas,
+    ctx:canvas.getContext('2d'),
+    isVisible:true
+  })).filter(wave => wave.ctx);
+  if(!waves.length) return;
+
   let animationFrame = 0;
-  let isVisible = true;
   let t = 0;
 
-  function resize(){
+  function resize(wave){
+    const {canvas} = wave;
     const ratio = Math.min(window.devicePixelRatio || 1,2);
     const width = Math.max(1,Math.round(canvas.clientWidth * ratio));
     const height = Math.max(1,Math.round(canvas.clientHeight * ratio));
@@ -19,9 +24,8 @@
     canvas.height = height;
   }
 
-  function draw(){
-    animationFrame = 0;
-    t += 0.02;
+  function drawWave(wave){
+    const {canvas,ctx} = wave;
     const w = canvas.width, h = canvas.height;
     ctx.clearRect(0,0,w,h);
     const bars = 64;
@@ -37,45 +41,71 @@
       ctx.fillStyle = grad;
       ctx.fillRect(x, h/2 - bh/2, bw, bh);
     }
-    if(isVisible && !document.hidden && !reducedMotion.matches){
+  }
+
+  function hasVisibleWave(){
+    return waves.some(wave => wave.isVisible);
+  }
+
+  function draw(){
+    animationFrame = 0;
+    t += 0.02;
+    waves.forEach(wave => {
+      if(wave.isVisible) drawWave(wave);
+    });
+    if(hasVisibleWave() && !document.hidden && !reducedMotion.matches){
       animationFrame = requestAnimationFrame(draw);
     }
   }
 
   function start(){
-    if(animationFrame || !isVisible || document.hidden) return;
+    if(animationFrame || !hasVisibleWave() || document.hidden || reducedMotion.matches) return;
     animationFrame = requestAnimationFrame(draw);
   }
 
   function stop(){
-    if(!animationFrame) return;
-    cancelAnimationFrame(animationFrame);
-    animationFrame = 0;
+    if(animationFrame){
+      cancelAnimationFrame(animationFrame);
+      animationFrame = 0;
+    }
   }
 
-  resize();
-  draw();
+  waves.forEach(wave => {
+    resize(wave);
+    drawWave(wave);
+  });
+  start();
 
   if('ResizeObserver' in window){
-    const resizeObserver = new ResizeObserver(() => {
-      resize();
-      if(!animationFrame) draw();
+    const waveByCanvas = new Map(waves.map(wave => [wave.canvas,wave]));
+    const resizeObserver = new ResizeObserver(entries => {
+      entries.forEach(entry => {
+        const wave = waveByCanvas.get(entry.target);
+        if(!wave) return;
+        resize(wave);
+        drawWave(wave);
+      });
     });
-    resizeObserver.observe(canvas);
+    waves.forEach(wave => resizeObserver.observe(wave.canvas));
   } else {
     window.addEventListener('resize', () => {
-      resize();
-      if(!animationFrame) draw();
+      waves.forEach(wave => {
+        resize(wave);
+        drawWave(wave);
+      });
     },{passive:true});
   }
 
   if('IntersectionObserver' in window){
     const visibilityObserver = new IntersectionObserver(entries => {
-      isVisible = Boolean(entries[0] && entries[0].isIntersecting);
-      if(isVisible) start();
+      entries.forEach(entry => {
+        const wave = waves.find(item => item.canvas === entry.target);
+        if(wave) wave.isVisible = entry.isIntersecting;
+      });
+      if(hasVisibleWave()) start();
       else stop();
     },{rootMargin:'120px 0px'});
-    visibilityObserver.observe(canvas);
+    waves.forEach(wave => visibilityObserver.observe(wave.canvas));
   }
 
   document.addEventListener('visibilitychange', () => {
@@ -87,7 +117,7 @@
     reducedMotion.addEventListener('change', () => {
       if(reducedMotion.matches){
         stop();
-        draw();
+        waves.forEach(drawWave);
       } else {
         start();
       }
