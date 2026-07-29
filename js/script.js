@@ -142,6 +142,53 @@
     return audioCtx;
   }
 
+  function nodeFor(audio){
+    const name = audio && audio.id ? audio.id.replace(/^audio-/,'') : '';
+    return name ? nodes[name] : null;
+  }
+
+  function holdGain(parameter,time){
+    if(typeof parameter.cancelAndHoldAtTime === 'function'){
+      parameter.cancelAndHoldAtTime(time);
+      return;
+    }
+    const value = parameter.value;
+    parameter.cancelScheduledValues(time);
+    parameter.setValueAtTime(value,time);
+  }
+
+  window.__tuneWrapAudioTransitions = {
+    async ramp(audio,target,durationMs){
+      const node = nodeFor(audio);
+      if(!node) return false;
+      const {context,gain} = node;
+      if(context.state === 'suspended'){
+        try{
+          await context.resume();
+        } catch(error){}
+      }
+      const duration = Math.max(0,durationMs || 0) / 1000;
+      const now = context.currentTime;
+      holdGain(gain.gain,now);
+      gain.gain.linearRampToValueAtTime(
+        Math.max(0,Math.min(1,target)),
+        now + duration
+      );
+      if(durationMs > 0){
+        await new Promise(resolve => window.setTimeout(resolve,durationMs + 4));
+      }
+      return true;
+    },
+    reset(audio){
+      const node = nodeFor(audio);
+      if(!node) return false;
+      const now = node.context.currentTime;
+      node.gain.gain.cancelScheduledValues(now);
+      node.gain.gain.setValueAtTime(1,now);
+      return true;
+    }
+  };
+
   tracks.forEach(name=>{
     const audio = document.getElementById('audio-'+name);
     const canvas = document.querySelector('canvas[data-canvas="'+name+'"]');
@@ -175,17 +222,20 @@
       if(audio.paused) drawIdle();
     });
 
-    let analyser, source, dataArray, rafId;
+    let analyser, source, gain, dataArray, rafId;
 
     function setupAnalyser(){
       if(analyser) return;
       const ac = getCtx();
       source = ac.createMediaElementSource(audio);
       analyser = ac.createAnalyser();
+      gain = ac.createGain();
       analyser.fftSize = 128;
       dataArray = new Uint8Array(analyser.frequencyBinCount);
       source.connect(analyser);
-      analyser.connect(ac.destination);
+      analyser.connect(gain);
+      gain.connect(ac.destination);
+      nodes[name] = {context:ac,gain};
     }
 
     function drawLive(){
@@ -1798,13 +1848,16 @@ document.addEventListener('DOMContentLoaded', () => {
   let isSeeking = false;
   let seekCommitted = false;
   let pendingSeekTime = null;
-  let seekReleaseTimer = 0;
+  let seekOperationId = 0;
+  let seekResumePlayback = false;
   let isSwitching = false;
   let swipeStartX = 0;
   let swipeStartY = 0;
   let swipeAllowed = false;
   const portableMediaSources = new Map();
   const originalMediaSources = new Map();
+  const fallbackAudioVolumes = new WeakMap();
+  const audioTransitions = window.__tuneWrapAudioTransitions;
 
   const trackItems = Array.from(document.querySelectorAll('.track, .author-card'))
     .map(card => {
@@ -1943,50 +1996,133 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if(record.url) URL.revokeObjectURL(record.url);
     portableMediaSources.delete(audio);
+    resetAudioGain(audio);
   }
 
-  async function seekThroughPortableSource(audio,targetTime){
-    const wasPlaying = !audio.paused;
-    if(wasPlaying) audio.pause();
-    let portableUrl = '';
-    try{
-      portableUrl = await portableSourceFor(audio);
-    } catch(error){
-      if(wasPlaying && audio === activeAudio){
-        const playRequest = audio.play();
-        if(playRequest && typeof playRequest.catch === 'function'){
-          playRequest.catch(() => syncPlaybackState());
-        }
+  async function rampFallbackVolume(audio,target,durationMs){
+    if(target === 0 && !fallbackAudioVolumes.has(audio)){
+      fallbackAudioVolumes.set(audio,audio.volume);
+    }
+    const baseVolume = fallbackAudioVolumes.get(audio) ?? audio.volume;
+    const destination = target === 0 ? 0 : baseVolume;
+    const start = audio.volume;
+    const steps = Math.max(1,Math.ceil(durationMs / 5));
+    for(let step = 1; step <= steps; step += 1){
+      audio.volume = start + (destination - start) * (step / steps);
+      if(step < steps){
+        await new Promise(resolve => window.setTimeout(resolve,5));
       }
-      throw error;
     }
-    if(audio !== activeAudio || !isSeeking || pendingSeekTime === null){
-      releasePortableSource(audio);
-      return;
-    }
+    if(target === 1) fallbackAudioVolumes.delete(audio);
+  }
 
-    if(audio.currentSrc !== portableUrl){
-      const ready = waitForMediaReady(audio);
-      audio.src = portableUrl;
-      audio.preload = 'auto';
-      audio.load();
-      await ready;
+  async function rampAudioGain(audio,target,durationMs){
+    if(audioTransitions && await audioTransitions.ramp(audio,target,durationMs)) return;
+    await rampFallbackVolume(audio,target,durationMs);
+  }
+
+  function resetAudioGain(audio){
+    if(!audio) return;
+    if(audioTransitions && audioTransitions.reset(audio)) return;
+    if(fallbackAudioVolumes.has(audio)){
+      audio.volume = fallbackAudioVolumes.get(audio);
+      fallbackAudioVolumes.delete(audio);
     }
-    if(audio !== activeAudio || !isSeeking || pendingSeekTime === null) return;
+  }
+
+  function waitForConfirmedSeek(audio,targetTime){
+    return new Promise((resolve,reject) => {
+      let timer = 0;
+      const closeEnough = () => {
+        const difference = Math.abs(audio.currentTime - targetTime);
+        const nearEnd = targetTime >= mediaDuration(audio) - .5 &&
+          audio.currentTime >= mediaDuration(audio) - 1;
+        return difference <= .75 || nearEnd;
+      };
+      const cleanup = () => {
+        window.clearTimeout(timer);
+        audio.removeEventListener('seeked',onSeeked);
+        audio.removeEventListener('error',onError);
+      };
+      const onSeeked = () => {
+        if(!closeEnough()) return;
+        cleanup();
+        resolve();
+      };
+      const onError = () => {
+        cleanup();
+        reject(new Error('Audio seek failed'));
+      };
+      timer = window.setTimeout(() => {
+        cleanup();
+        if(closeEnough()) resolve();
+        else reject(new Error('Audio seek timed out'));
+      },1800);
+      audio.addEventListener('seeked',onSeeked);
+      audio.addEventListener('error',onError,{once:true});
+    });
+  }
+
+  async function installPortableSource(audio,portableUrl){
+    if(audio.currentSrc === portableUrl) return;
+    const ready = waitForMediaReady(audio);
+    audio.src = portableUrl;
+    audio.preload = 'auto';
+    audio.load();
+    await ready;
+  }
+
+  async function performSeekTransition(audio,targetTime,operation,shouldResume){
+    let portableUrl = '';
+    if(!canSeekTo(audio,targetTime)){
+      portableUrl = await portableSourceFor(audio);
+    }
+    if(operation !== seekOperationId || audio !== activeAudio) return;
+
+    if(shouldResume){
+      await rampAudioGain(audio,0,24);
+    }
+    if(operation !== seekOperationId || audio !== activeAudio) return;
+
+    if(!audio.paused) audio.pause();
+    if(portableUrl){
+      await installPortableSource(audio,portableUrl);
+    }
+    if(operation !== seekOperationId || audio !== activeAudio) return;
 
     const requestedTime = Math.max(0,Math.min(mediaDuration(audio),targetTime));
+    const confirmed = waitForConfirmedSeek(audio,requestedTime);
     audio.currentTime = requestedTime;
     currentTime.textContent = formatTime(requestedTime);
     setSeekVisual(requestedTime,mediaDuration(audio));
-    if(wasPlaying){
-      const playRequest = audio.play();
-      if(playRequest && typeof playRequest.catch === 'function'){
-        playRequest.catch(() => syncPlaybackState());
-      }
-    }
+    await confirmed;
+    if(operation !== seekOperationId || audio !== activeAudio) return;
 
-    window.clearTimeout(seekReleaseTimer);
-    seekReleaseTimer = window.setTimeout(completeSeeking,1800);
+    if(shouldResume){
+      const playRequest = audio.play();
+      if(playRequest && typeof playRequest.then === 'function'){
+        await playRequest;
+      }
+      if(operation !== seekOperationId || audio !== activeAudio) return;
+      await rampAudioGain(audio,1,32);
+    } else {
+      resetAudioGain(audio);
+    }
+    completeSeeking(operation);
+  }
+
+  async function recoverSeekTransition(audio,operation,shouldResume){
+    if(operation !== seekOperationId || audio !== activeAudio) return;
+    if(shouldResume && audio.paused){
+      try{
+        const playRequest = audio.play();
+        if(playRequest && typeof playRequest.then === 'function'){
+          await playRequest;
+        }
+      } catch(error){}
+    }
+    await rampAudioGain(audio,1,24);
+    completeSeeking(operation);
   }
 
   function requestMetadata(audio){
@@ -2136,6 +2272,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const previousAudio = activeAudio;
     pauseOtherTracks(audio);
     if(previousAudio && previousAudio !== audio){
+      seekOperationId += 1;
+      isSeeking = false;
+      seekCommitted = false;
+      pendingSeekTime = null;
+      seekResumePlayback = false;
+      resetAudioGain(previousAudio);
       releasePortableSource(previousAudio);
     }
     if(resetPosition){
@@ -2155,7 +2297,7 @@ document.addEventListener('DOMContentLoaded', () => {
     syncLanguage();
     syncTimeline();
 
-    requestMetadata(audio);
+    if(audio.paused) requestMetadata(audio);
     return true;
   }
 
@@ -2205,6 +2347,8 @@ document.addEventListener('DOMContentLoaded', () => {
       : (currentIndex + direction + queue.length) % queue.length;
     const nextItem = queue[nextIndex];
     if(!nextItem) return;
+    const outgoingAudio = activeAudio;
+    const fadeOutgoing = !outgoingAudio.paused && !outgoingAudio.ended;
 
     isSwitching = true;
     previousButton.disabled = true;
@@ -2218,6 +2362,9 @@ document.addEventListener('DOMContentLoaded', () => {
       {opacity:.68,transform:'translateX(' + exitX + 'px)'}
     ],180);
 
+    if(fadeOutgoing && outgoingAudio === activeAudio){
+      await rampAudioGain(outgoingAudio,0,24);
+    }
     fillScreen(nextItem.card,nextItem.name,true);
     playerScroll.scrollTop = 0;
     autoplayActive();
@@ -2239,7 +2386,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const button = card.querySelector('.play-btn[data-track]');
     const name = button ? button.dataset.track : '';
     const selectedAudio = name ? document.getElementById('audio-' + name) : null;
-    const resetPosition = activeAudio !== selectedAudio;
+    const openedFromPlayButton = Boolean(origin && origin.closest('.play-btn'));
+    const resetPosition = activeAudio !== selectedAudio && !openedFromPlayButton;
     if(!name || !fillScreen(card,name,resetPosition)) return;
 
     restoreFocus = origin || card;
@@ -2309,7 +2457,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     card.addEventListener('click', event => {
       if(suppressCardOpen) return;
-      openPlayer(card,event.target.closest('.play-btn') || card);
+      const playButton = event.target.closest('.play-btn');
+      openPlayer(card,playButton || card,!playButton);
     });
 
     card.addEventListener('keydown', event => {
@@ -2374,7 +2523,16 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function beginSeeking(event){
-    window.clearTimeout(seekReleaseTimer);
+    const startsGesture = !isSeeking ||
+      event?.type === 'pointerdown' ||
+      event?.type === 'touchstart' ||
+      event?.type === 'mousedown';
+    if(startsGesture){
+      if(!isSeeking){
+        seekResumePlayback = Boolean(activeAudio && !activeAudio.paused && !activeAudio.ended);
+      }
+      seekOperationId += 1;
+    }
     isSeeking = true;
     seekCommitted = false;
     pendingSeekTime = Number(seek.value) || 0;
@@ -2416,12 +2574,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if(Number.isFinite(point?.clientX)) updateSeekFromClientX(point.clientX);
   }
 
-  function completeSeeking(){
-    window.clearTimeout(seekReleaseTimer);
-    seekReleaseTimer = 0;
+  function completeSeeking(operation = seekOperationId){
+    if(operation !== seekOperationId) return;
     isSeeking = false;
     seekCommitted = false;
     pendingSeekTime = null;
+    seekResumePlayback = false;
     syncTimeline();
   }
 
@@ -2438,30 +2596,15 @@ document.addEventListener('DOMContentLoaded', () => {
     ));
     seekCommitted = true;
     pendingSeekTime = nextTime;
-    if(!canSeekTo(activeAudio,nextTime)){
-      seekThroughPortableSource(activeAudio,nextTime).catch(() => {
-        seekCommitted = false;
-        requestMetadata(activeAudio);
-        window.clearTimeout(seekReleaseTimer);
-        seekReleaseTimer = window.setTimeout(completeSeeking,1200);
-      });
+    if(Math.abs(activeAudio.currentTime - nextTime) <= .2){
+      completeSeeking(seekOperationId);
       return;
     }
-    try{
-      activeAudio.currentTime = nextTime;
-    } catch(error){
-      seekCommitted = false;
-      requestMetadata(activeAudio);
-      return;
-    }
-    currentTime.textContent = formatTime(nextTime);
-    setSeekVisual(nextTime,total);
-    if(!isSeeking) return;
-
-    // Some mobile engines omit `seeked` when the requested position is
-    // already very close to currentTime. Never leave the range locked.
-    window.clearTimeout(seekReleaseTimer);
-    seekReleaseTimer = window.setTimeout(completeSeeking,1200);
+    const audio = activeAudio;
+    const operation = seekOperationId;
+    const shouldResume = seekResumePlayback;
+    performSeekTransition(audio,nextTime,operation,shouldResume)
+      .catch(() => recoverSeekTransition(audio,operation,shouldResume));
   }
 
   function releaseSeeking(){
@@ -2470,31 +2613,38 @@ document.addEventListener('DOMContentLoaded', () => {
     commitSeeking();
   }
 
-  seek.addEventListener('pointerdown',beginSeeking);
-  seek.addEventListener('pointermove',moveSeeking);
   seek.addEventListener('input',previewSeek);
   seek.addEventListener('change',releaseSeeking);
-  seek.addEventListener('pointerup',releaseSeeking);
-  seek.addEventListener('pointercancel',releaseSeeking);
-
-  seek.addEventListener('touchstart',beginSeeking,{passive:true});
-  seek.addEventListener('touchmove',moveSeeking,{passive:true});
-  seek.addEventListener('touchend',releaseSeeking,{passive:true});
-  seek.addEventListener('touchcancel',releaseSeeking,{passive:true});
-
-  seek.addEventListener('mousedown',beginSeeking);
-  document.addEventListener('mousemove',moveSeeking,{capture:true});
-  document.addEventListener('mouseup',releaseSeeking,{capture:true});
-  document.addEventListener('pointerup',event => {
-    if(isSeeking && (event.target === seek || seek.hasPointerCapture?.(event.pointerId))){
-      releaseSeeking();
-    }
-  },{capture:true});
-  document.addEventListener('touchend',event => {
-    if(isSeeking && (event.target === seek || event.composedPath().includes(seek))){
-      releaseSeeking();
-    }
-  },{passive:true,capture:true});
+  if('PointerEvent' in window){
+    seek.addEventListener('pointerdown',beginSeeking);
+    seek.addEventListener('pointermove',moveSeeking);
+    seek.addEventListener('pointerup',releaseSeeking);
+    seek.addEventListener('pointercancel',releaseSeeking);
+    document.addEventListener('pointerup',() => {
+      if(isSeeking) releaseSeeking();
+    },{capture:true});
+  } else {
+    let lastTouchAt = 0;
+    seek.addEventListener('touchstart',event => {
+      lastTouchAt = Date.now();
+      beginSeeking(event);
+    },{passive:true});
+    seek.addEventListener('touchmove',moveSeeking,{passive:true});
+    seek.addEventListener('touchend',releaseSeeking,{passive:true});
+    seek.addEventListener('touchcancel',releaseSeeking,{passive:true});
+    seek.addEventListener('mousedown',event => {
+      if(Date.now() - lastTouchAt < 700) return;
+      beginSeeking(event);
+    });
+    document.addEventListener('mousemove',event => {
+      if(Date.now() - lastTouchAt < 700) return;
+      moveSeeking(event);
+    },{capture:true});
+    document.addEventListener('mouseup',event => {
+      if(Date.now() - lastTouchAt < 700) return;
+      releaseSeeking(event);
+    },{capture:true});
+  }
 
   document.querySelectorAll('audio[id^="audio-"]').forEach(audio => {
     audio.addEventListener('loadedmetadata', () => {
@@ -2511,10 +2661,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     audio.addEventListener('seeked', () => {
       if(audio !== activeAudio) return;
-      if(isSeeking){
-        if(seekCommitted) completeSeeking();
-        return;
-      }
+      if(isSeeking) return;
       syncTimeline();
     });
     audio.addEventListener('timeupdate', () => {
