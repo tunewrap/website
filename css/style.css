@@ -6025,6 +6025,88 @@
   }
 }
 
+/* ---------- STAGE 8.5 · PROCESS REFINEMENT ---------- */
+@media(max-width:620px){
+  #how > .wrap{
+    padding-top:15px;
+    padding-right:20px;
+    padding-left:20px;
+    overflow-x:hidden;
+  }
+
+  #how .sec-head{
+    margin-bottom:13px;
+  }
+
+  #how .sec-head .eyebrow{
+    margin:0 0 5px;
+    color:rgba(231,186,96,.86);
+    font-size:11px;
+    letter-spacing:.17em;
+  }
+
+  .process-wave{
+    position:relative;
+    z-index:2;
+    display:block;
+    width:112%;
+    height:52px;
+    margin:0 -6% 7px;
+    opacity:.42;
+    mix-blend-mode:screen;
+    filter:
+      contrast(1.06)
+      saturate(.9)
+      drop-shadow(0 0 12px rgba(217,164,65,.14));
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 13%,#000 87%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 13%,#000 87%,transparent);
+    pointer-events:none;
+  }
+
+  #how .sec-head h2{
+    max-width:12ch;
+    margin:0;
+    font-size:clamp(27px,8.1vw,32px);
+    line-height:1.04;
+    letter-spacing:-.034em;
+    text-wrap:balance;
+    text-shadow:0 4px 22px rgba(0,0,0,.4);
+  }
+
+  #how .steps{
+    gap:9px;
+  }
+
+  #how .step{
+    padding-top:13px;
+    padding-bottom:13px;
+  }
+}
+
+@media(max-width:350px){
+  #how > .wrap{
+    padding-right:17px;
+    padding-left:17px;
+  }
+
+  .process-wave{
+    height:46px;
+    margin-bottom:6px;
+  }
+
+  #how .sec-head h2{
+    font-size:26px;
+  }
+
+  #how .steps{
+    gap:8px;
+  }
+
+  #how .step{
+    padding:11px 12px;
+  }
+}
+
 /* ---------- STAGE 8.4 · PHILOSOPHY PREMIUM REFINEMENT ---------- */
 @media(max-width:620px){
   #philosophy::after{

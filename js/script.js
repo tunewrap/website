@@ -1796,8 +1796,26 @@ document.addEventListener('DOMContentLoaded', () => {
       return name && audio ? {name,card,button,audio} : null;
     })
     .filter(Boolean);
-  const trackOrder = trackItems.map(item => item.name);
   const tracksByName = new Map(trackItems.map(item => [item.name,item]));
+
+  function playbackQueue(){
+    const currentIsLibraryTrack = Boolean(activeCard && activeCard.matches('#tracks .track'));
+    const currentIsAuthorTrack = Boolean(activeCard && activeCard.matches('#author .author-card'));
+    let queue = trackItems;
+
+    if(currentIsLibraryTrack){
+      queue = trackItems.filter(item =>
+        item.card.matches('#tracks .track') && !item.card.hidden
+      );
+    } else if(currentIsAuthorTrack){
+      queue = trackItems.filter(item => item.card.matches('#author .author-card'));
+    }
+
+    if(queue.length) return queue;
+    const currentName = activeAudio ? activeAudio.id.replace(/^audio-/,'') : '';
+    const currentItem = tracksByName.get(currentName);
+    return currentItem ? [currentItem] : [];
+  }
 
   function language(){
     const lang = document.documentElement.getAttribute('lang') || 'ru';
@@ -2003,11 +2021,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function switchTrack(direction){
-    if(isSwitching || !activeAudio || trackOrder.length < 2) return;
+    if(isSwitching || !activeAudio) return;
+    const queue = playbackQueue();
+    if(!queue.length) return;
     const currentName = activeAudio.id.replace(/^audio-/,'');
-    const currentIndex = Math.max(0,trackOrder.indexOf(currentName));
-    const nextIndex = (currentIndex + direction + trackOrder.length) % trackOrder.length;
-    const nextItem = tracksByName.get(trackOrder[nextIndex]);
+    const currentIndex = queue.findIndex(item => item.name === currentName);
+    const nextIndex = currentIndex < 0
+      ? (direction > 0 ? 0 : queue.length - 1)
+      : (currentIndex + direction + queue.length) % queue.length;
+    const nextItem = queue[nextIndex];
     if(!nextItem) return;
 
     isSwitching = true;
@@ -2223,6 +2245,7 @@ document.addEventListener('DOMContentLoaded', () => {
       isSeeking = false;
       syncTimeline();
       syncPlaybackState();
+      switchTrack(1);
     });
   });
 
