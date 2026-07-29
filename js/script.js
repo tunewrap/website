@@ -1803,6 +1803,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let swipeStartX = 0;
   let swipeStartY = 0;
   let swipeAllowed = false;
+  const portableMediaSources = new Map();
+  const originalMediaSources = new Map();
 
   const trackItems = Array.from(document.querySelectorAll('.track, .author-card'))
     .map(card => {
@@ -1813,6 +1815,10 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .filter(Boolean);
   const tracksByName = new Map(trackItems.map(item => [item.name,item]));
+  trackItems.forEach(({audio}) => {
+    const source = audio.getAttribute('src');
+    if(source) originalMediaSources.set(audio,new URL(source,document.baseURI).href);
+  });
 
   function playbackQueue(){
     const currentIsLibraryTrack = Boolean(activeCard && activeCard.matches('#tracks .track'));
@@ -1857,6 +1863,132 @@ document.addEventListener('DOMContentLoaded', () => {
     return 0;
   }
 
+  function canSeekTo(audio,time){
+    if(!audio || !Number.isFinite(time)) return false;
+    if(time <= 0) return true;
+    const tolerance = .35;
+    for(let index = 0; index < audio.seekable.length; index += 1){
+      const start = audio.seekable.start(index) - tolerance;
+      const end = audio.seekable.end(index) + tolerance;
+      if(time >= start && time <= end) return true;
+    }
+    return false;
+  }
+
+  function waitForMediaReady(audio){
+    return new Promise((resolve,reject) => {
+      let timer = 0;
+      const cleanup = () => {
+        window.clearTimeout(timer);
+        audio.removeEventListener('loadedmetadata',onReady);
+        audio.removeEventListener('error',onError);
+      };
+      const onReady = () => {
+        cleanup();
+        resolve();
+      };
+      const onError = () => {
+        cleanup();
+        reject(new Error('Audio source could not be loaded'));
+      };
+      timer = window.setTimeout(() => {
+        cleanup();
+        reject(new Error('Audio metadata timed out'));
+      },12000);
+      audio.addEventListener('loadedmetadata',onReady,{once:true});
+      audio.addEventListener('error',onError,{once:true});
+    });
+  }
+
+  function portableSourceFor(audio){
+    const existing = portableMediaSources.get(audio);
+    if(existing) return existing.promise;
+
+    const source = originalMediaSources.get(audio);
+    const record = {url:'',promise:null};
+    record.promise = fetch(source,{cache:'force-cache'})
+      .then(response => {
+        if(!response.ok) throw new Error('Audio request failed');
+        return response.blob();
+      })
+      .then(blob => {
+        if(!blob.size) throw new Error('Audio response was empty');
+        record.url = URL.createObjectURL(
+          blob.type ? blob : new Blob([blob],{type:'audio/mpeg'})
+        );
+        if(portableMediaSources.get(audio) !== record){
+          URL.revokeObjectURL(record.url);
+          record.url = '';
+          throw new Error('Audio source is no longer active');
+        }
+        return record.url;
+      })
+      .catch(error => {
+        portableMediaSources.delete(audio);
+        throw error;
+      });
+    portableMediaSources.set(audio,record);
+    return record.promise;
+  }
+
+  function releasePortableSource(audio){
+    const record = portableMediaSources.get(audio);
+    if(!record) return;
+    const originalSource = originalMediaSources.get(audio);
+    if(record.url && audio.currentSrc === record.url && originalSource){
+      audio.pause();
+      audio.src = originalSource;
+      audio.preload = 'none';
+      audio.load();
+    }
+    if(record.url) URL.revokeObjectURL(record.url);
+    portableMediaSources.delete(audio);
+  }
+
+  async function seekThroughPortableSource(audio,targetTime){
+    const wasPlaying = !audio.paused;
+    if(wasPlaying) audio.pause();
+    let portableUrl = '';
+    try{
+      portableUrl = await portableSourceFor(audio);
+    } catch(error){
+      if(wasPlaying && audio === activeAudio){
+        const playRequest = audio.play();
+        if(playRequest && typeof playRequest.catch === 'function'){
+          playRequest.catch(() => syncPlaybackState());
+        }
+      }
+      throw error;
+    }
+    if(audio !== activeAudio || !isSeeking || pendingSeekTime === null){
+      releasePortableSource(audio);
+      return;
+    }
+
+    if(audio.currentSrc !== portableUrl){
+      const ready = waitForMediaReady(audio);
+      audio.src = portableUrl;
+      audio.preload = 'auto';
+      audio.load();
+      await ready;
+    }
+    if(audio !== activeAudio || !isSeeking || pendingSeekTime === null) return;
+
+    const requestedTime = Math.max(0,Math.min(mediaDuration(audio),targetTime));
+    audio.currentTime = requestedTime;
+    currentTime.textContent = formatTime(requestedTime);
+    setSeekVisual(requestedTime,mediaDuration(audio));
+    if(wasPlaying){
+      const playRequest = audio.play();
+      if(playRequest && typeof playRequest.catch === 'function'){
+        playRequest.catch(() => syncPlaybackState());
+      }
+    }
+
+    window.clearTimeout(seekReleaseTimer);
+    seekReleaseTimer = window.setTimeout(completeSeeking,1800);
+  }
+
   function requestMetadata(audio){
     if(!audio) return;
     audio.preload = 'metadata';
@@ -1886,10 +2018,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if(!activeAudio) return;
     const total = mediaDuration(activeAudio);
     const position = Number.isFinite(activeAudio.currentTime) ? activeAudio.currentTime : 0;
+    const displayPosition = isSeeking && pendingSeekTime !== null
+      ? pendingSeekTime
+      : position;
     seek.max = total || 0;
     seek.disabled = total <= 0;
     if(!isSeeking) seek.value = Math.min(position, total || 0);
-    currentTime.textContent = formatTime(position);
+    currentTime.textContent = formatTime(displayPosition);
     duration.textContent = formatTime(total);
     setSeekVisual(Number(seek.value) || 0, total);
   }
@@ -1998,7 +2133,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if(!item || item.card !== card) return false;
     const {audio,button} = item;
 
+    const previousAudio = activeAudio;
     pauseOtherTracks(audio);
+    if(previousAudio && previousAudio !== audio){
+      releasePortableSource(previousAudio);
+    }
     if(resetPosition){
       try{
         audio.currentTime = 0;
@@ -2162,6 +2301,7 @@ document.addEventListener('DOMContentLoaded', () => {
     syncPlaybackState();
     miniTitle.textContent = 'TuneWrap';
     hideMiniPlayer();
+    portableMediaSources.forEach((record,audio) => releasePortableSource(audio));
   }
 
   trackItems.forEach(({card}) => {
@@ -2298,6 +2438,15 @@ document.addEventListener('DOMContentLoaded', () => {
     ));
     seekCommitted = true;
     pendingSeekTime = nextTime;
+    if(!canSeekTo(activeAudio,nextTime)){
+      seekThroughPortableSource(activeAudio,nextTime).catch(() => {
+        seekCommitted = false;
+        requestMetadata(activeAudio);
+        window.clearTimeout(seekReleaseTimer);
+        seekReleaseTimer = window.setTimeout(completeSeeking,1200);
+      });
+      return;
+    }
     try{
       activeAudio.currentTime = nextTime;
     } catch(error){
@@ -2390,6 +2539,13 @@ document.addEventListener('DOMContentLoaded', () => {
       switchTrack(1);
     });
   });
+
+  window.addEventListener('pagehide',() => {
+    portableMediaSources.forEach(record => {
+      if(record.url) URL.revokeObjectURL(record.url);
+    });
+    portableMediaSources.clear();
+  },{once:true});
 
   orderButton.addEventListener('click', event => {
     event.preventDefault();
