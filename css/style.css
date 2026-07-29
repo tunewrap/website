@@ -5366,7 +5366,9 @@
   gap:8px;
   padding:4px;
   overflow-x:auto;
-  overscroll-behavior-inline:contain;
+  overscroll-behavior-x:contain;
+  overscroll-behavior-y:auto;
+  touch-action:pan-x pan-y;
   border:1px solid rgba(245,225,181,.1);
   border-radius:18px;
   background:
@@ -5619,6 +5621,13 @@
     width:100%;
     min-height:0;
     flex:1;
+    overflow-y:visible;
+    overscroll-behavior-y:auto;
+    touch-action:pan-y;
+  }
+
+  #tracks .songs-library-stage .tracks.is-scrollable{
+    overflow-y:auto;
   }
 
   .songs-library-empty{
@@ -5646,5 +5655,23 @@
   .songs-language-tab::after,
   .songs-library-stage{
     transition-duration:.01ms;
+  }
+}
+
+/* ---------- STAGE 8.1.2 · REGRESSION QA ---------- */
+@media(max-width:620px){
+  /*
+    Long screens keep their own vertical scroll, but release the gesture to
+    appScroll at either boundary so screen-to-screen swiping never dead-ends.
+  */
+  .hero-grid,
+  .philosophy-inner,
+  #how > .wrap,
+  #pricing > .wrap,
+  #contact > .wrap,
+  #corporate > .wrap,
+  #author .author-grid,
+  #tracks .songs-library-stage .tracks.is-scrollable{
+    overscroll-behavior-y:auto;
   }
 }

@@ -1143,9 +1143,14 @@
   function renderOccasions(lang){
     const sel = document.getElementById('fieldOccasion');
     const prevValue = sel.value;
+    const prevIndex = sel.selectedIndex;
     sel.innerHTML = '<option value="" disabled selected>'+t('occasion_placeholder')+'</option>' +
       OCCASIONS[lang].map(o=>'<option value="'+o+'">'+o+'</option>').join('');
-    if(OCCASIONS[lang].includes(prevValue)) sel.value = prevValue;
+    if(prevIndex > 0 && prevIndex < sel.options.length){
+      sel.selectedIndex = prevIndex;
+    } else if(OCCASIONS[lang].includes(prevValue)){
+      sel.value = prevValue;
+    }
   }
 
 
@@ -1222,6 +1227,7 @@
     renderTiers(lang);
     renderStyles(lang);
     renderOccasions(lang);
+    updateOtherOccasion();
     renderGolden(lang);
     renderStoryExamples(lang);
     renderCorpTiers(lang);
@@ -2275,6 +2281,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion:reduce)');
   let activeLanguage = '';
   let switchTimer = 0;
+  let scrollCheckFrame = 0;
 
   function interfaceLanguage(){
     const value = document.documentElement.getAttribute('lang') || 'ru';
@@ -2296,6 +2303,21 @@ document.addEventListener('DOMContentLoaded', () => {
     rail.scrollTo({
       left,
       behavior:animate && !reducedMotion.matches ? 'smooth' : 'auto'
+    });
+  }
+
+  /*
+    The Songs list owns vertical gestures only when its content genuinely
+    overflows. This keeps the parent screen scroller in control for short and
+    empty language views, while preserving an internal list for a large
+    catalogue.
+  */
+  function syncScrollOwnership(){
+    window.cancelAnimationFrame(scrollCheckFrame);
+    scrollCheckFrame = window.requestAnimationFrame(() => {
+      list.classList.remove('is-scrollable');
+      const isScrollable = list.scrollHeight > list.clientHeight + 1;
+      list.classList.toggle('is-scrollable',isScrollable);
     });
   }
 
@@ -2321,6 +2343,7 @@ document.addEventListener('DOMContentLoaded', () => {
     stage.classList.toggle('is-empty',visibleCount === 0);
     stage.setAttribute('aria-busy','false');
     updateCopy(visibleCount);
+    syncScrollOwnership();
 
     const activeTab = tabs.find(tab => tab.dataset.songLanguageFilter === language);
     if(activeTab) stage.setAttribute('aria-labelledby',activeTab.id);
@@ -2375,6 +2398,14 @@ document.addEventListener('DOMContentLoaded', () => {
       },0);
     });
   });
+
+  if('ResizeObserver' in window){
+    const scrollOwnershipObserver = new ResizeObserver(syncScrollOwnership);
+    scrollOwnershipObserver.observe(stage);
+    scrollOwnershipObserver.observe(list);
+  } else {
+    window.addEventListener('resize',syncScrollOwnership,{passive:true});
+  }
 
   selectLanguage(languageMap[interfaceLanguage()] || 'RU',{animate:false});
 });
