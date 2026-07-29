@@ -1535,6 +1535,156 @@
   }
 }
 
+/* ---------- STAGE 8.2 · MOBILE UX REFINEMENT ---------- */
+.story-path-picker,
+.story-path-back{
+  display:none;
+}
+
+@media(max-width:620px){
+  .app-scroll{
+    scroll-snap-type:y mandatory;
+  }
+
+  .hero,
+  #philosophy,
+  #how,
+  #tracks,
+  #pricing,
+  #contact,
+  #corporate,
+  #author{
+    scroll-snap-stop:always;
+  }
+
+  #pricing .tiers-grid{
+    overscroll-behavior-x:contain;
+    overscroll-behavior-y:auto;
+    touch-action:pan-x pan-y;
+  }
+
+  #pricing .tier-card,
+  #pricing .tier-card :where(button,a){
+    touch-action:pan-x pan-y;
+  }
+
+  .story-path-picker{
+    display:grid;
+    min-height:0;
+    flex:1;
+    grid-template-columns:1fr;
+    align-content:start;
+    gap:10px;
+    padding:1px 1px 14px;
+    overflow-y:auto;
+    overscroll-behavior-y:auto;
+    scrollbar-width:none;
+  }
+
+  .story-path-picker::-webkit-scrollbar{
+    display:none;
+  }
+
+  .story-path-card{
+    display:grid;
+    min-height:124px;
+    grid-template-columns:48px minmax(0,1fr);
+    grid-template-rows:auto auto;
+    align-items:center;
+    gap:8px 13px;
+    padding:14px;
+    border:1px solid rgba(217,164,65,.14);
+    border-radius:var(--tw-radius-card);
+    background:
+      radial-gradient(circle at 0 0,rgba(217,164,65,.09),transparent 42%),
+      linear-gradient(145deg,rgba(27,26,30,.92),rgba(13,13,15,.96));
+    box-shadow:var(--tw-shadow-card);
+  }
+
+  .story-path-icon{
+    display:grid;
+    width:48px;
+    height:48px;
+    grid-row:1;
+    place-items:center;
+    border:1px solid rgba(217,164,65,.18);
+    border-radius:15px;
+    background:rgba(217,164,65,.07);
+    font-size:23px;
+  }
+
+  .story-path-card h3{
+    margin:0 0 4px;
+    color:var(--ink);
+    font-family:'Fraunces',serif;
+    font-size:18px;
+    line-height:1.16;
+    letter-spacing:-.018em;
+  }
+
+  .story-path-card p{
+    margin:0;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.48;
+  }
+
+  .story-path-card > button{
+    min-height:46px;
+    grid-column:1/-1;
+    padding:11px 16px;
+    border:1px solid rgba(244,214,150,.3);
+    border-radius:var(--tw-radius-control);
+    background:linear-gradient(135deg,#edbd58,#c98b29);
+    color:#171106;
+    box-shadow:0 10px 24px rgba(217,164,65,.16);
+    font:800 12px/1.2 'Manrope',sans-serif;
+    cursor:pointer;
+    touch-action:manipulation;
+    transition:
+      transform var(--tw-motion-fast) var(--tw-ease),
+      filter var(--tw-motion-fast) ease;
+  }
+
+  .story-path-card > button:active{
+    transform:scale(.975);
+    filter:brightness(.95);
+  }
+
+  #contact:not(.is-story-path-form) #storyOrderForm{
+    display:none;
+  }
+
+  #contact.is-story-path-form .story-path-picker,
+  #contact.is-story-path-form > .wrap > .sec-head{
+    display:none;
+  }
+
+  #contact.is-story-path-form #storyOrderForm{
+    display:block;
+  }
+
+  .story-path-back{
+    display:inline-flex;
+    min-height:44px;
+    align-items:center;
+    gap:7px;
+    margin:0 0 12px;
+    padding:8px 11px;
+    border:1px solid rgba(217,164,65,.15);
+    border-radius:12px;
+    background:rgba(255,255,255,.025);
+    color:#d8d1c5;
+    font:700 11px/1 'Manrope',sans-serif;
+    cursor:pointer;
+    touch-action:manipulation;
+  }
+
+  #contact.is-story-path-form > .wrap{
+    scroll-padding-top:12px;
+  }
+}
+
 @media(max-width:370px){
   .hero-grid{
     min-height:590px;
@@ -5673,5 +5823,23 @@
   #author .author-grid,
   #tracks .songs-library-stage .tracks.is-scrollable{
     overscroll-behavior-y:auto;
+  }
+}
+
+/* Stage 8.2 gesture ownership must remain last in the mobile cascade. */
+@media(max-width:620px){
+  .app-scroll{
+    scroll-snap-type:y mandatory;
+  }
+
+  #pricing .tiers-grid{
+    overscroll-behavior-x:contain;
+    overscroll-behavior-y:auto;
+    touch-action:none;
+  }
+
+  #pricing .tier-card,
+  #pricing .tier-card :where(button,a){
+    touch-action:none;
   }
 }

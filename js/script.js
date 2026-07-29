@@ -303,6 +303,16 @@
       contact_eyebrow:"Начать свою историю",
       contact_h2:"Расскажите нам свою историю",
       contact_p:"Выберите пакет и стиль, расскажите о человеке — и мы отправим готовую заявку в один клик.",
+      path_order_title:"Заказать песню",
+      path_order_desc:"Расскажите историю человека — мы превратим её в личную песню.",
+      path_order_action:"Начать заказ",
+      path_certificate_title:"Подарочный сертификат",
+      path_certificate_desc:"Подарите возможность сохранить важную историю в собственной песне.",
+      path_certificate_action:"Выбрать сертификат",
+      path_corporate_title:"Корпоративная песня",
+      path_corporate_desc:"Песни для команды, компании, партнёров и важных корпоративных событий.",
+      path_corporate_action:"Перейти к форме",
+      path_back:"Назад к выбору",
       contact_tg:"Написать в Telegram",
       contact_wa:"WhatsApp",
       contact_alternatives:"Или свяжитесь с нами любым удобным способом.",
@@ -438,6 +448,16 @@
       contact_eyebrow:"Почати свою історію",
       contact_h2:"Розкажіть нам свою історію",
       contact_p:"Оберіть пакет і стиль, розкажіть про людину — і ми надішлемо готову заявку в один клік.",
+      path_order_title:"Замовити пісню",
+      path_order_desc:"Розкажіть історію людини — ми перетворимо її на особисту пісню.",
+      path_order_action:"Почати замовлення",
+      path_certificate_title:"Подарунковий сертифікат",
+      path_certificate_desc:"Подаруйте можливість зберегти важливу історію у власній пісні.",
+      path_certificate_action:"Обрати сертифікат",
+      path_corporate_title:"Корпоративна пісня",
+      path_corporate_desc:"Пісні для команди, компанії, партнерів і важливих корпоративних подій.",
+      path_corporate_action:"Перейти до форми",
+      path_back:"Назад до вибору",
       contact_tg:"Написати в Telegram",
       contact_wa:"WhatsApp",
       contact_alternatives:"Або зв’яжіться з нами будь-яким зручним способом.",
@@ -573,6 +593,16 @@
       contact_eyebrow:"დაიწყეთ თქვენი ისტორია",
       contact_h2:"მოგვიყევით თქვენი ისტორია",
       contact_p:"აირჩიეთ პაკეტი და სტილი, მოგვიყევით ადამიანის შესახებ — და ერთი დაწკაპუნებით გამზადებულ განაცხადს გამოგიგზავნით.",
+      path_order_title:"სიმღერის შეკვეთა",
+      path_order_desc:"მოგვიყევით ადამიანის ისტორია — ჩვენ მას პირად სიმღერად ვაქცევთ.",
+      path_order_action:"შეკვეთის დაწყება",
+      path_certificate_title:"სასაჩუქრე სერტიფიკატი",
+      path_certificate_desc:"აჩუქეთ შესაძლებლობა, მნიშვნელოვანი ისტორია საკუთარ სიმღერაში შეინახონ.",
+      path_certificate_action:"სერტიფიკატის არჩევა",
+      path_corporate_title:"კორპორაციული სიმღერა",
+      path_corporate_desc:"სიმღერები გუნდისთვის, კომპანიისთვის, პარტნიორებისა და მნიშვნელოვანი ღონისძიებებისთვის.",
+      path_corporate_action:"ფორმაზე გადასვლა",
+      path_back:"არჩევანზე დაბრუნება",
       contact_tg:"დაწერეთ Telegram-ში",
       contact_wa:"WhatsApp",
       contact_alternatives:"ან დაგვიკავშირდით თქვენთვის მოსახერხებელი ნებისმიერი გზით.",
@@ -708,6 +738,16 @@
       contact_eyebrow:"Begin your story",
       contact_h2:"Tell us your story",
       contact_p:"Pick a package and style, tell us about the person — and we'll send a ready order in one click.",
+      path_order_title:"Order a song",
+      path_order_desc:"Tell us someone’s story and we’ll turn it into a personal song.",
+      path_order_action:"Start your order",
+      path_certificate_title:"Gift certificate",
+      path_certificate_desc:"Give someone the chance to preserve an important story in their own song.",
+      path_certificate_action:"Choose a certificate",
+      path_corporate_title:"Corporate song",
+      path_corporate_desc:"Songs for teams, companies, partners and meaningful corporate occasions.",
+      path_corporate_action:"Open the form",
+      path_back:"Back to choices",
       contact_tg:"Message on Telegram",
       contact_wa:"WhatsApp",
       contact_alternatives:"Or contact us in whichever way is most convenient for you.",
@@ -843,6 +883,16 @@
       contact_eyebrow:"Ihre Geschichte beginnen",
       contact_h2:"Erzählen Sie uns Ihre Geschichte",
       contact_p:"Wähle Paket und Stil, erzähl uns von der Person — und wir schicken dir eine fertige Bestellung per Klick.",
+      path_order_title:"Song bestellen",
+      path_order_desc:"Erzählen Sie uns die Geschichte eines Menschen – wir machen daraus einen persönlichen Song.",
+      path_order_action:"Bestellung starten",
+      path_certificate_title:"Geschenkgutschein",
+      path_certificate_desc:"Verschenken Sie die Möglichkeit, eine wichtige Geschichte im eigenen Song festzuhalten.",
+      path_certificate_action:"Gutschein auswählen",
+      path_corporate_title:"Firmensong",
+      path_corporate_desc:"Songs für Teams, Unternehmen, Partner und besondere Firmenevents.",
+      path_corporate_action:"Formular öffnen",
+      path_back:"Zurück zur Auswahl",
       contact_tg:"Auf Telegram schreiben",
       contact_wa:"WhatsApp",
       contact_alternatives:"Oder kontaktieren Sie uns auf dem für Sie bequemsten Weg.",
@@ -2408,4 +2458,222 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   selectLanguage(languageMap[interfaceLanguage()] || 'RU',{animate:false});
+});
+
+// ---------- Stage 8.2: mobile story path selection ----------
+document.addEventListener('DOMContentLoaded', () => {
+  const contact = document.getElementById('contact');
+  const picker = document.getElementById('storyPathPicker');
+  const form = document.getElementById('storyOrderForm');
+  const back = document.getElementById('storyPathBack');
+  const corporate = document.getElementById('corporate');
+  const mobileViewport = window.matchMedia('(max-width:620px)');
+
+  if(!contact || !picker || !form || !back) return;
+
+  function contactScroll(){
+    return contact.querySelector(':scope > .wrap');
+  }
+
+  function openForm(mode){
+    const modeButton = form.querySelector('.mode-btn[data-mode="' + mode + '"]');
+    if(modeButton) modeButton.click();
+    contact.classList.add('is-story-path-form');
+    const scroll = contactScroll();
+    if(scroll) scroll.scrollTop = 0;
+    window.requestAnimationFrame(() => back.focus({preventScroll:true}));
+  }
+
+  picker.querySelectorAll('[data-story-path]').forEach(button => {
+    button.addEventListener('click',() => {
+      const path = button.dataset.storyPath;
+      if(path === 'corporate'){
+        if(corporate) corporate.scrollIntoView({behavior:'smooth',block:'start'});
+        return;
+      }
+      openForm(path === 'certificate' ? 'certificate' : 'order');
+    });
+  });
+
+  back.addEventListener('click',() => {
+    contact.classList.remove('is-story-path-form');
+    const scroll = contactScroll();
+    if(scroll) scroll.scrollTop = 0;
+    const firstAction = picker.querySelector('[data-story-path="order"]');
+    if(firstAction) window.requestAnimationFrame(() => firstAction.focus({preventScroll:true}));
+  });
+
+  if(typeof mobileViewport.addEventListener === 'function'){
+    mobileViewport.addEventListener('change',event => {
+      if(!event.matches) contact.classList.remove('is-story-path-form');
+    });
+  }
+});
+
+// ---------- Stage 8.2: tariff gesture axis arbiter ----------
+document.addEventListener('DOMContentLoaded', () => {
+  const appScroll = document.getElementById('appScroll');
+  const rail = document.querySelector('#pricing .tiers-grid');
+  const mobileViewport = window.matchMedia('(max-width:620px)');
+  if(!appScroll || !rail) return;
+
+  let gesture = null;
+
+  function finishGesture(event){
+    if(!gesture) return;
+    const touch = event.changedTouches && event.changedTouches[0];
+    const currentX = touch ? touch.clientX : gesture.lastX;
+    const currentY = touch ? touch.clientY : gesture.lastY;
+    const deltaX = gesture.startX - currentX;
+    const deltaY = gesture.startY - currentY;
+    const vertical = Math.abs(deltaY) > Math.abs(deltaX);
+
+    if(vertical && Math.abs(deltaY) >= 44){
+      const target = deltaY > 0
+        ? document.getElementById('contact')
+        : document.getElementById('tracks');
+      if(target){
+        appScroll.scrollTo({
+          top:target.offsetTop,
+          behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth'
+        });
+      }
+    } else if(Math.abs(deltaX) >= 20){
+      const cards = Array.from(rail.querySelectorAll('.tier-card'));
+      const nearest = cards
+        .map(card => ({card,distance:Math.abs(card.offsetLeft - rail.scrollLeft)}))
+        .sort((a,b) => a.distance - b.distance)[0];
+      if(nearest) rail.scrollTo({left:nearest.card.offsetLeft,behavior:'smooth'});
+    } else {
+      const action = gesture.startTarget && gesture.startTarget.closest('.tier-select');
+      if(action) action.click();
+    }
+
+    gesture = null;
+  }
+
+  rail.addEventListener('touchstart',event => {
+    if(!mobileViewport.matches || event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    gesture = {
+      startX:touch.clientX,
+      startY:touch.clientY,
+      startTarget:event.target,
+      startScrollLeft:rail.scrollLeft,
+      lastX:touch.clientX,
+      lastY:touch.clientY
+    };
+  },{passive:true});
+
+  rail.addEventListener('touchmove',event => {
+    if(!gesture || event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    gesture.lastX = touch.clientX;
+    gesture.lastY = touch.clientY;
+    const deltaX = gesture.startX - touch.clientX;
+    const deltaY = gesture.startY - touch.clientY;
+    event.preventDefault();
+    if(Math.abs(deltaX) >= Math.abs(deltaY)){
+      rail.scrollLeft = gesture.startScrollLeft + deltaX;
+    }
+  },{passive:false});
+
+  rail.addEventListener('touchend',finishGesture,{passive:true});
+  rail.addEventListener('touchcancel',finishGesture,{passive:true});
+});
+
+// ---------- Stage 8.2: deterministic one-gesture screen snap ----------
+document.addEventListener('DOMContentLoaded', () => {
+  const appScroll = document.getElementById('appScroll');
+  const mobileViewport = window.matchMedia('(max-width:620px)');
+  if(!appScroll) return;
+
+  const screenSelector = '.hero,#philosophy,#how,#tracks,#pricing,#contact,#corporate,#author';
+  let gesture = null;
+  let settleTimer = 0;
+
+  function screens(){
+    return Array.from(appScroll.querySelectorAll(screenSelector));
+  }
+
+  function nearestScreenIndex(scrollTop){
+    return screens().reduce((bestIndex,screen,index,list) => {
+      const bestDistance = Math.abs(list[bestIndex].offsetTop - scrollTop);
+      const distance = Math.abs(screen.offsetTop - scrollTop);
+      return distance < bestDistance ? index : bestIndex;
+    },0);
+  }
+
+  function settleGesture(){
+    window.clearTimeout(settleTimer);
+    if(!gesture || !gesture.ended || !mobileViewport.matches) return;
+
+    const scrollDelta = appScroll.scrollTop - gesture.startScrollTop;
+    if(Math.abs(scrollDelta) < 6 && !gesture.forceScreenNavigation){
+      gesture = null;
+      return;
+    }
+
+    const direction = gesture.deltaY > 0 ? 1 : -1;
+    const items = screens();
+    const targetIndex = Math.max(0,Math.min(items.length - 1,gesture.startIndex + direction));
+    const targetTop = items[targetIndex].offsetTop;
+    gesture = null;
+    appScroll.scrollTo({
+      top:targetTop,
+      behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth'
+    });
+  }
+
+  appScroll.addEventListener('touchstart',event => {
+    if(!mobileViewport.matches || event.touches.length !== 1) return;
+    window.clearTimeout(settleTimer);
+    const touch = event.touches[0];
+    gesture = {
+      startX:touch.clientX,
+      startY:touch.clientY,
+      startScrollTop:appScroll.scrollTop,
+      startIndex:nearestScreenIndex(appScroll.scrollTop),
+      forceScreenNavigation:Boolean(event.target.closest('#pricing .tiers-grid')),
+      deltaX:0,
+      deltaY:0,
+      ended:false
+    };
+  },{passive:true,capture:true});
+
+  appScroll.addEventListener('touchend',event => {
+    if(!gesture) return;
+    const touch = event.changedTouches[0];
+    gesture.deltaX = gesture.startX - touch.clientX;
+    gesture.deltaY = gesture.startY - touch.clientY;
+    const vertical = Math.abs(gesture.deltaY) > Math.abs(gesture.deltaX);
+    if(Math.abs(gesture.deltaY) < 44 || !vertical){
+      gesture = null;
+      return;
+    }
+    gesture.ended = true;
+    settleTimer = window.setTimeout(settleGesture,90);
+  },{passive:true,capture:true});
+
+  appScroll.addEventListener('touchcancel',event => {
+    window.clearTimeout(settleTimer);
+    if(gesture && gesture.forceScreenNavigation && event.changedTouches.length){
+      const touch = event.changedTouches[0];
+      gesture.deltaX = gesture.startX - touch.clientX;
+      gesture.deltaY = gesture.startY - touch.clientY;
+      const vertical = Math.abs(gesture.deltaY) > Math.abs(gesture.deltaX);
+      if(vertical && Math.abs(gesture.deltaY) >= 44){
+        gesture.ended = true;
+        settleTimer = window.setTimeout(settleGesture,0);
+        return;
+      }
+    }
+    gesture = null;
+  },{passive:true,capture:true});
+
+  appScroll.addEventListener('scroll',() => {
+    if(!gesture || !gesture.ended) return;
+    window.clearTimeout(settleTimer);
+    settleTimer = window.setTimeout(settleGesture,90);
+  },{passive:true});
 });

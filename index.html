@@ -328,7 +328,38 @@
       <p data-i18n="contact_p">Выберите пакет и стиль, расскажите о человеке — и мы отправим готовую заявку в один клик.</p>
     </div>
 
-    <div class="order-box">
+    <div class="story-path-picker" id="storyPathPicker">
+      <article class="story-path-card">
+        <span class="story-path-icon" aria-hidden="true">❤️</span>
+        <div>
+          <h3 data-i18n="path_order_title">Заказать песню</h3>
+          <p data-i18n="path_order_desc">Расскажите историю человека — мы превратим её в личную песню.</p>
+        </div>
+        <button type="button" data-story-path="order" data-i18n="path_order_action">Начать заказ</button>
+      </article>
+      <article class="story-path-card">
+        <span class="story-path-icon" aria-hidden="true">🎁</span>
+        <div>
+          <h3 data-i18n="path_certificate_title">Подарочный сертификат</h3>
+          <p data-i18n="path_certificate_desc">Подарите возможность сохранить важную историю в собственной песне.</p>
+        </div>
+        <button type="button" data-story-path="certificate" data-i18n="path_certificate_action">Выбрать сертификат</button>
+      </article>
+      <article class="story-path-card">
+        <span class="story-path-icon" aria-hidden="true">🏢</span>
+        <div>
+          <h3 data-i18n="path_corporate_title">Корпоративная песня</h3>
+          <p data-i18n="path_corporate_desc">Песни для команды, компании, партнёров и важных корпоративных событий.</p>
+        </div>
+        <button type="button" data-story-path="corporate" data-i18n="path_corporate_action">Перейти к форме</button>
+      </article>
+    </div>
+
+    <div class="order-box" id="storyOrderForm">
+      <button class="story-path-back" id="storyPathBack" type="button">
+        <span aria-hidden="true">←</span>
+        <span data-i18n="path_back">Назад к выбору</span>
+      </button>
       <div class="mode-switch" id="modeSwitch">
         <button type="button" class="mode-btn active" data-mode="order" data-i18n="mode_order">Заказать песню</button>
         <button type="button" class="mode-btn" data-mode="certificate" data-i18n="mode_certificate">Подарить сертификат</button>
