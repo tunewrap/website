@@ -127,7 +127,11 @@
 
 // ---------- track players with live analyser waveform ----------
 (function(){
-  const tracks = ['days127','mainroad','natalia65','growold','amsterdam','mychoice','tbilisi','goodvibe','pulse','amsterdamen','mychoiceen','yayaya','iwant','53','justfive'];
+  const tracks = Array.from(new Set(
+    Array.from(document.querySelectorAll('.play-btn[data-track]'))
+      .map(button => button.dataset.track)
+      .filter(Boolean)
+  ));
   let audioCtx = null;
   const nodes = {};
   let currentPlaying = null;
@@ -207,9 +211,18 @@
       return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
     }
 
+    function syncCardTimeline(){
+      const total = Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 0;
+      timeEl.textContent = fmt(audio.currentTime)+' / '+fmt(total);
+    }
+
     audio.addEventListener('timeupdate', ()=>{
-      timeEl.textContent = fmt(audio.currentTime)+' / '+fmt(audio.duration||45);
+      syncCardTimeline();
     });
+    audio.addEventListener('loadedmetadata',syncCardTimeline);
+    audio.addEventListener('durationchange',syncCardTimeline);
+    audio.addEventListener('canplay',syncCardTimeline);
+    audio.addEventListener('seeked',syncCardTimeline);
     audio.addEventListener('ended', ()=>{
       btn.classList.remove('playing');
       cancelAnimationFrame(rafId);
@@ -1480,11 +1493,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ---------- mobile app player, menu and bottom navigation ----------
 document.addEventListener('DOMContentLoaded', () => {
-  const trackOrder = [
-    'days127','mainroad','natalia65','growold','justfive',
-    'amsterdam','mychoice','tbilisi','goodvibe','pulse',
-    'amsterdamen','mychoiceen','yayaya','iwant','53'
-  ];
+  const trackOrder = Array.from(new Set(
+    Array.from(document.querySelectorAll('.play-btn[data-track]'))
+      .map(button => button.dataset.track)
+      .filter(Boolean)
+  ));
   const player = document.getElementById('mobilePlayer');
   const titleEl = document.getElementById('mobilePlayerTitle');
   const artistEl = document.getElementById('mobilePlayerArtist');
@@ -1831,6 +1844,24 @@ document.addEventListener('DOMContentLoaded', () => {
     return Math.floor(safe / 60) + ':' + String(safe % 60).padStart(2,'0');
   }
 
+  function mediaDuration(audio){
+    if(!audio) return 0;
+    if(Number.isFinite(audio.duration) && audio.duration > 0) return audio.duration;
+    if(audio.seekable && audio.seekable.length){
+      const end = audio.seekable.end(audio.seekable.length - 1);
+      if(Number.isFinite(end) && end > 0) return end;
+    }
+    return 0;
+  }
+
+  function requestMetadata(audio){
+    if(!audio) return;
+    audio.preload = 'metadata';
+    if(audio.readyState === HTMLMediaElement.HAVE_NOTHING){
+      audio.load();
+    }
+  }
+
   function songNode(card, attribute){
     if(!card) return null;
     return card.querySelector('[' + attribute + ']');
@@ -1850,9 +1881,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function syncTimeline(){
     if(!activeAudio) return;
-    const total = Number.isFinite(activeAudio.duration) ? activeAudio.duration : 0;
+    const total = mediaDuration(activeAudio);
     const position = Number.isFinite(activeAudio.currentTime) ? activeAudio.currentTime : 0;
     seek.max = total || 0;
+    seek.disabled = total <= 0;
     if(!isSeeking) seek.value = Math.min(position, total || 0);
     currentTime.textContent = formatTime(position);
     duration.textContent = formatTime(total);
@@ -1981,7 +2013,7 @@ document.addEventListener('DOMContentLoaded', () => {
     syncLanguage();
     syncTimeline();
 
-    if(audio.readyState === 0) audio.load();
+    requestMetadata(audio);
     return true;
   }
 
@@ -2203,11 +2235,21 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   seek.addEventListener('input', () => {
-    if(!activeAudio || !Number.isFinite(activeAudio.duration)) return;
-    const nextTime = Math.max(0,Math.min(activeAudio.duration,Number(seek.value) || 0));
-    activeAudio.currentTime = nextTime;
+    if(!activeAudio) return;
+    const total = mediaDuration(activeAudio);
+    if(!total){
+      requestMetadata(activeAudio);
+      return;
+    }
+    const nextTime = Math.max(0,Math.min(total,Number(seek.value) || 0));
+    try{
+      activeAudio.currentTime = nextTime;
+    } catch(error){
+      requestMetadata(activeAudio);
+      return;
+    }
     currentTime.textContent = formatTime(nextTime);
-    setSeekVisual(nextTime,activeAudio.duration);
+    setSeekVisual(nextTime,total);
   });
 
   function finishSeeking(){
@@ -2225,6 +2267,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     audio.addEventListener('durationchange', () => {
       if(audio === activeAudio) syncTimeline();
+    });
+    audio.addEventListener('canplay', () => {
+      if(audio === activeAudio) syncTimeline();
+    });
+    audio.addEventListener('progress', () => {
+      if(audio === activeAudio && !isSeeking) syncTimeline();
+    });
+    audio.addEventListener('seeked', () => {
+      if(audio !== activeAudio) return;
+      isSeeking = false;
+      syncTimeline();
     });
     audio.addEventListener('timeupdate', () => {
       if(audio === activeAudio && !isSeeking) syncTimeline();
