@@ -1486,6 +1486,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
   const screen = document.getElementById('songPlayerScreen');
   const backButton = document.getElementById('songPlayerBack');
+  const minimizeButton = document.getElementById('songPlayerMinimize');
   const coverWrap = document.getElementById('songPlayerCoverWrap');
   const cover = document.getElementById('songPlayerCover');
   const title = document.getElementById('songPlayerTitle');
@@ -1503,18 +1504,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const appScroll = document.getElementById('appScroll');
   const bottomNav = document.querySelector('.mobile-bottom-nav');
   const playerScroll = screen ? screen.querySelector('.song-player-scroll') : null;
+  const miniPlayer = document.getElementById('topMiniPlayer');
+  const miniExpand = document.getElementById('topMiniExpand');
+  const miniTitle = document.getElementById('topMiniTitle');
+  const miniPrevious = document.getElementById('topMiniPrevious');
+  const miniToggle = document.getElementById('topMiniToggle');
+  const miniNext = document.getElementById('topMiniNext');
+  const miniStop = document.getElementById('topMiniStop');
   const mobileViewport = window.matchMedia('(max-width:620px)');
 
   if(
-    !screen || !backButton || !coverWrap || !cover || !title || !description ||
-    !toggle || !previousButton || !nextButton || !seek || !currentTime ||
-    !duration || !lyrics || !translation || !translationBlock || !orderButton ||
-    !playerScroll
+    !screen || !backButton || !minimizeButton || !coverWrap || !cover ||
+    !title || !description || !toggle || !previousButton || !nextButton ||
+    !seek || !currentTime || !duration || !lyrics || !translation ||
+    !translationBlock || !orderButton || !playerScroll || !miniPlayer ||
+    !miniExpand || !miniTitle || !miniPrevious || !miniToggle || !miniNext ||
+    !miniStop
   ) return;
 
   const UI = {
     ru:{
       back:'Назад',
+      minimize:'Свернуть',
       lyrics:'Текст песни',
       translation:'Перевод',
       order:'Заказать похожую историю',
@@ -1522,11 +1533,14 @@ document.addEventListener('DOMContentLoaded', () => {
       pause:'Пауза',
       previous:'Предыдущий трек',
       next:'Следующий трек',
+      expand:'Развернуть плеер',
+      stop:'Остановить музыку',
       seek:'Перемотка песни',
       empty:'Текст песни пока не добавлен в проект.'
     },
     uk:{
       back:'Назад',
+      minimize:'Згорнути',
       lyrics:'Текст пісні',
       translation:'Переклад',
       order:'Замовити схожу історію',
@@ -1534,11 +1548,14 @@ document.addEventListener('DOMContentLoaded', () => {
       pause:'Пауза',
       previous:'Попередній трек',
       next:'Наступний трек',
+      expand:'Розгорнути плеєр',
+      stop:'Зупинити музику',
       seek:'Перемотування пісні',
       empty:'Текст пісні поки не додано до проєкту.'
     },
     ka:{
       back:'უკან',
+      minimize:'ჩაკეცვა',
       lyrics:'სიმღერის ტექსტი',
       translation:'თარგმანი',
       order:'მსგავსი ისტორიის შეკვეთა',
@@ -1546,11 +1563,14 @@ document.addEventListener('DOMContentLoaded', () => {
       pause:'პაუზა',
       previous:'წინა სიმღერა',
       next:'შემდეგი სიმღერა',
+      expand:'პლეერის გაშლა',
+      stop:'მუსიკის შეჩერება',
       seek:'სიმღერის გადახვევა',
       empty:'სიმღერის ტექსტი პროექტში ჯერ არ არის დამატებული.'
     },
     en:{
       back:'Back',
+      minimize:'Minimize',
       lyrics:'Lyrics',
       translation:'Translation',
       order:'Order a similar story',
@@ -1558,11 +1578,14 @@ document.addEventListener('DOMContentLoaded', () => {
       pause:'Pause',
       previous:'Previous track',
       next:'Next track',
+      expand:'Expand player',
+      stop:'Stop music',
       seek:'Seek through song',
       empty:'The lyrics have not been added to the project yet.'
     },
     de:{
       back:'Zurück',
+      minimize:'Minimieren',
       lyrics:'Songtext',
       translation:'Übersetzung',
       order:'Eine ähnliche Geschichte bestellen',
@@ -1570,6 +1593,8 @@ document.addEventListener('DOMContentLoaded', () => {
       pause:'Pause',
       previous:'Vorheriger Titel',
       next:'Nächster Titel',
+      expand:'Player öffnen',
+      stop:'Musik stoppen',
       seek:'Im Song spulen',
       empty:'Der Songtext wurde dem Projekt noch nicht hinzugefügt.'
     }
@@ -1643,6 +1668,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const playing = Boolean(activeAudio && !activeAudio.paused && !activeAudio.ended);
     toggle.classList.toggle('playing', playing);
     toggle.setAttribute('aria-label', playing ? ui().pause : ui().play);
+    miniToggle.classList.toggle('playing', playing);
+    miniToggle.setAttribute('aria-label', playing ? ui().pause : ui().play);
+  }
+
+  function syncMiniTrack(){
+    const cardTitle = activeCard ? activeCard.querySelector('.track-title') : null;
+    miniTitle.textContent = cardTitle ? cardTitle.textContent.trim() : 'TuneWrap';
   }
 
   function syncLanguage(){
@@ -1654,6 +1686,10 @@ document.addEventListener('DOMContentLoaded', () => {
     seek.setAttribute('aria-label', labels.seek);
     previousButton.setAttribute('aria-label', labels.previous);
     nextButton.setAttribute('aria-label', labels.next);
+    miniExpand.setAttribute('aria-label', labels.expand);
+    miniPrevious.setAttribute('aria-label', labels.previous);
+    miniNext.setAttribute('aria-label', labels.next);
+    miniStop.setAttribute('aria-label', labels.stop);
     syncPlaybackState();
 
     if(activeCard){
@@ -1667,7 +1703,25 @@ document.addEventListener('DOMContentLoaded', () => {
       const translationText = songText(activeCard,'data-song-translation');
       translation.textContent = translationText;
       translationBlock.hidden = !translationText;
+      syncMiniTrack();
     }
+  }
+
+  function showMiniPlayer(){
+    if(!activeAudio || !activeCard || !mobileViewport.matches) return;
+    syncMiniTrack();
+    syncPlaybackState();
+    miniPlayer.classList.add('is-active');
+    miniPlayer.setAttribute('aria-hidden','false');
+    miniPlayer.removeAttribute('inert');
+    document.body.classList.add('mini-player-active');
+  }
+
+  function hideMiniPlayer(){
+    miniPlayer.classList.remove('is-active');
+    miniPlayer.setAttribute('aria-hidden','true');
+    miniPlayer.removeAttribute('inert');
+    document.body.classList.remove('mini-player-active');
   }
 
   function setCover(card){
@@ -1746,7 +1800,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function animateTrack(frames, durationMs){
     const reducedMotion = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-    if(reducedMotion || typeof playerScroll.animate !== 'function') return Promise.resolve();
+    if(
+      !screen.classList.contains('is-open') ||
+      reducedMotion ||
+      typeof playerScroll.animate !== 'function'
+    ) return Promise.resolve();
     const animation = playerScroll.animate(frames,{
       duration:durationMs,
       easing:'cubic-bezier(.22,.78,.22,1)',
@@ -1766,6 +1824,8 @@ document.addEventListener('DOMContentLoaded', () => {
     isSwitching = true;
     previousButton.disabled = true;
     nextButton.disabled = true;
+    miniPrevious.disabled = true;
+    miniNext.disabled = true;
     const exitX = direction > 0 ? -42 : 42;
 
     await animateTrack([
@@ -1784,10 +1844,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     previousButton.disabled = false;
     nextButton.disabled = false;
+    miniPrevious.disabled = false;
+    miniNext.disabled = false;
     isSwitching = false;
   }
 
-  function openPlayer(card, origin){
+  function openPlayer(card, origin, shouldAutoplay = true){
     if(!mobileViewport.matches || suppressCardOpen) return;
     const button = card.querySelector('.play-btn[data-track]');
     const name = button ? button.dataset.track : '';
@@ -1801,21 +1863,57 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('song-player-open');
     if(appScroll) appScroll.setAttribute('inert','');
     if(bottomNav) bottomNav.setAttribute('inert','');
+    miniPlayer.setAttribute('inert','');
     window.requestAnimationFrame(() => backButton.focus({preventScroll:true}));
-    autoplayActive();
+    if(shouldAutoplay) autoplayActive();
   }
 
-  function closePlayer(){
+  function closePlayer(showMini = true){
     if(!screen.classList.contains('is-open')) return;
     screen.classList.remove('is-open');
     screen.setAttribute('aria-hidden','true');
     document.body.classList.remove('song-player-open');
     if(appScroll) appScroll.removeAttribute('inert');
     if(bottomNav) bottomNav.removeAttribute('inert');
+    miniPlayer.removeAttribute('inert');
+    if(showMini){
+      showMiniPlayer();
+    } else {
+      hideMiniPlayer();
+    }
 
     if(restoreFocus && typeof restoreFocus.focus === 'function'){
       window.requestAnimationFrame(() => restoreFocus.focus({preventScroll:true}));
     }
+  }
+
+  function stopPlayback(){
+    document.querySelectorAll('audio[id^="audio-"]').forEach(audio => {
+      const name = audio.id.replace(/^audio-/,'');
+      const button = document.querySelector('.play-btn[data-track="' + name + '"]');
+      if(button && !audio.paused){
+        suppressCardOpen = true;
+        button.click();
+        suppressCardOpen = false;
+      } else if(!audio.paused){
+        audio.pause();
+      }
+      if(button) button.classList.remove('playing');
+      try{
+        audio.currentTime = 0;
+      } catch(error){}
+    });
+
+    activeCard = null;
+    activeAudio = null;
+    activeButton = null;
+    seek.value = 0;
+    currentTime.textContent = '0:00';
+    duration.textContent = '0:00';
+    setSeekVisual(0,0);
+    syncPlaybackState();
+    miniTitle.textContent = 'TuneWrap';
+    hideMiniPlayer();
   }
 
   trackItems.forEach(({card}) => {
@@ -1833,16 +1931,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  backButton.addEventListener('click',closePlayer);
-  previousButton.addEventListener('click',() => switchTrack(-1));
-  nextButton.addEventListener('click',() => switchTrack(1));
-
-  toggle.addEventListener('click', () => {
+  function toggleActivePlayback(){
     if(!activeButton) return;
     suppressCardOpen = true;
     activeButton.click();
     suppressCardOpen = false;
     syncPlaybackState();
+  }
+
+  backButton.addEventListener('click',() => closePlayer(true));
+  minimizeButton.addEventListener('click',() => closePlayer(true));
+  previousButton.addEventListener('click',() => switchTrack(-1));
+  nextButton.addEventListener('click',() => switchTrack(1));
+  toggle.addEventListener('click',toggleActivePlayback);
+
+  miniPrevious.addEventListener('click',() => switchTrack(-1));
+  miniToggle.addEventListener('click',toggleActivePlayback);
+  miniNext.addEventListener('click',() => switchTrack(1));
+  miniStop.addEventListener('click',stopPlayback);
+
+  miniPlayer.addEventListener('click', event => {
+    if(event.target.closest('.top-mini-controls, .top-mini-stop')) return;
+    if(activeCard) openPlayer(activeCard,miniExpand,false);
   });
 
   playerScroll.addEventListener('pointerdown', event => {
@@ -1948,9 +2058,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if(typeof mobileViewport.addEventListener === 'function'){
     mobileViewport.addEventListener('change', event => {
-      if(!event.matches) closePlayer();
+      if(!event.matches){
+        closePlayer(false);
+        hideMiniPlayer();
+      } else if(activeAudio && !screen.classList.contains('is-open')){
+        showMiniPlayer();
+      }
     });
   }
 
+  hideMiniPlayer();
   syncLanguage();
 });

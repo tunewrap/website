@@ -58,6 +58,30 @@
   </div>
 </nav>
 
+<section class="top-mini-player" id="topMiniPlayer" aria-hidden="true" aria-label="TuneWrap Mini Player">
+  <button class="top-mini-expand" id="topMiniExpand" type="button" aria-label="Развернуть плеер">
+    <span class="top-mini-brand">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12M9 10l10-2M6.5 21A2.5 2.5 0 106.5 16a2.5 2.5 0 000 5zm10-2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"/></svg>
+      <span>Tune<em>Wrap</em></span>
+    </span>
+    <strong id="topMiniTitle">TuneWrap</strong>
+  </button>
+  <div class="top-mini-controls">
+    <button id="topMiniPrevious" type="button" aria-label="Предыдущий трек">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M18 6l-9 6 9 6V6z"/></svg>
+    </button>
+    <button class="top-mini-toggle" id="topMiniToggle" type="button" aria-label="Воспроизвести">
+      <span class="top-mini-toggle-icon" aria-hidden="true"></span>
+    </button>
+    <button id="topMiniNext" type="button" aria-label="Следующий трек">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M6 6l9 6-9 6V6z"/></svg>
+    </button>
+  </div>
+  <button class="top-mini-stop" id="topMiniStop" type="button" aria-label="Остановить музыку">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+</section>
+
 <main class="app-scroll" id="appScroll">
 <div class="mobile-top-stack">
 <div class="story-ribbon" aria-label="Музыкальные истории">
@@ -549,7 +573,7 @@
         <span data-player-i18n="back">Назад</span>
       </button>
       <div class="song-player-brand">Tune<span>Wrap</span></div>
-      <span class="song-player-topbar-spacer" aria-hidden="true"></span>
+      <button class="song-player-minimize" id="songPlayerMinimize" type="button" data-player-i18n="minimize">Свернуть</button>
     </div>
 
     <div class="song-player-scroll">
