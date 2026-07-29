@@ -1796,6 +1796,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let restoreFocus = null;
   let suppressCardOpen = false;
   let isSeeking = false;
+  let seekCommitted = false;
+  let pendingSeekTime = null;
+  let seekReleaseTimer = 0;
   let isSwitching = false;
   let swipeStartX = 0;
   let swipeStartY = 0;
@@ -2230,36 +2233,119 @@ document.addEventListener('DOMContentLoaded', () => {
     swipeAllowed = false;
   });
 
-  seek.addEventListener('pointerdown', () => {
+  function beginSeeking(event){
+    window.clearTimeout(seekReleaseTimer);
     isSeeking = true;
-  });
+    seekCommitted = false;
+    pendingSeekTime = Number(seek.value) || 0;
+    if(event && event.pointerId !== undefined && typeof seek.setPointerCapture === 'function'){
+      try{
+        seek.setPointerCapture(event.pointerId);
+      } catch(error){}
+    }
+    const point = event?.touches?.[0] || event;
+    if(Number.isFinite(point?.clientX)) updateSeekFromClientX(point.clientX);
+  }
 
-  seek.addEventListener('input', () => {
+  function previewSeek(){
     if(!activeAudio) return;
     const total = mediaDuration(activeAudio);
     if(!total){
       requestMetadata(activeAudio);
       return;
     }
-    const nextTime = Math.max(0,Math.min(total,Number(seek.value) || 0));
+    if(!isSeeking) beginSeeking();
+    pendingSeekTime = Math.max(0,Math.min(total,Number(seek.value) || 0));
+    currentTime.textContent = formatTime(pendingSeekTime);
+    setSeekVisual(pendingSeekTime,total);
+  }
+
+  function updateSeekFromClientX(clientX){
+    if(!activeAudio) return;
+    const total = mediaDuration(activeAudio);
+    const bounds = seek.getBoundingClientRect();
+    if(!total || bounds.width <= 0) return;
+    const ratio = Math.max(0,Math.min(1,(clientX - bounds.left) / bounds.width));
+    seek.value = ratio * total;
+    previewSeek();
+  }
+
+  function moveSeeking(event){
+    if(!isSeeking) return;
+    const point = event?.touches?.[0] || event;
+    if(Number.isFinite(point?.clientX)) updateSeekFromClientX(point.clientX);
+  }
+
+  function completeSeeking(){
+    window.clearTimeout(seekReleaseTimer);
+    seekReleaseTimer = 0;
+    isSeeking = false;
+    seekCommitted = false;
+    pendingSeekTime = null;
+    syncTimeline();
+  }
+
+  function commitSeeking(){
+    if(!activeAudio || !isSeeking || seekCommitted) return;
+    const total = mediaDuration(activeAudio);
+    if(!total){
+      requestMetadata(activeAudio);
+      return;
+    }
+    const nextTime = Math.max(0,Math.min(
+      total,
+      pendingSeekTime === null ? Number(seek.value) || 0 : pendingSeekTime
+    ));
+    seekCommitted = true;
+    pendingSeekTime = nextTime;
     try{
       activeAudio.currentTime = nextTime;
     } catch(error){
+      seekCommitted = false;
       requestMetadata(activeAudio);
       return;
     }
     currentTime.textContent = formatTime(nextTime);
     setSeekVisual(nextTime,total);
-  });
+    if(!isSeeking) return;
 
-  function finishSeeking(){
-    isSeeking = false;
-    syncTimeline();
+    // Some mobile engines omit `seeked` when the requested position is
+    // already very close to currentTime. Never leave the range locked.
+    window.clearTimeout(seekReleaseTimer);
+    seekReleaseTimer = window.setTimeout(completeSeeking,1200);
   }
 
-  seek.addEventListener('change',finishSeeking);
-  seek.addEventListener('pointerup',finishSeeking);
-  seek.addEventListener('pointercancel',finishSeeking);
+  function releaseSeeking(){
+    if(!isSeeking) return;
+    previewSeek();
+    commitSeeking();
+  }
+
+  seek.addEventListener('pointerdown',beginSeeking);
+  seek.addEventListener('pointermove',moveSeeking);
+  seek.addEventListener('input',previewSeek);
+  seek.addEventListener('change',releaseSeeking);
+  seek.addEventListener('pointerup',releaseSeeking);
+  seek.addEventListener('pointercancel',releaseSeeking);
+
+  seek.addEventListener('touchstart',beginSeeking,{passive:true});
+  seek.addEventListener('touchmove',moveSeeking,{passive:true});
+  seek.addEventListener('touchend',releaseSeeking,{passive:true});
+  seek.addEventListener('touchcancel',releaseSeeking,{passive:true});
+
+  seek.addEventListener('mousedown',beginSeeking);
+  document.addEventListener('mousemove',moveSeeking,{capture:true});
+  document.addEventListener('mouseup',releaseSeeking,{capture:true});
+  document.addEventListener('pointerup',event => {
+    if(isSeeking && (event.target === seek || seek.hasPointerCapture?.(event.pointerId))){
+      releaseSeeking();
+    }
+  },{capture:true});
+  document.addEventListener('touchend',event => {
+    if(isSeeking && (event.target === seek || event.composedPath().includes(seek))){
+      releaseSeeking();
+    }
+  },{passive:true,capture:true});
 
   document.querySelectorAll('audio[id^="audio-"]').forEach(audio => {
     audio.addEventListener('loadedmetadata', () => {
@@ -2276,7 +2362,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     audio.addEventListener('seeked', () => {
       if(audio !== activeAudio) return;
-      isSeeking = false;
+      if(isSeeking){
+        if(seekCommitted) completeSeeking();
+        return;
+      }
       syncTimeline();
     });
     audio.addEventListener('timeupdate', () => {
