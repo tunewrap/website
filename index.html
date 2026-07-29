@@ -567,9 +567,17 @@
       </div>
 
       <div class="song-player-controls">
-        <button class="song-player-toggle" id="songPlayerToggle" type="button" aria-label="Воспроизвести">
-          <span class="song-player-toggle-icon" aria-hidden="true"></span>
-        </button>
+        <div class="song-player-transport">
+          <button class="song-player-skip" id="songPlayerPrevious" type="button" aria-label="Предыдущий трек">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5.5L9 12l6.5 6.5"/></svg>
+          </button>
+          <button class="song-player-toggle" id="songPlayerToggle" type="button" aria-label="Воспроизвести">
+            <span class="song-player-toggle-icon" aria-hidden="true"></span>
+          </button>
+          <button class="song-player-skip" id="songPlayerNext" type="button" aria-label="Следующий трек">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.5L15 12l-6.5 6.5"/></svg>
+          </button>
+        </div>
         <div class="song-player-timeline">
           <input id="songPlayerSeek" type="range" min="0" max="0" step="0.01" value="0" aria-label="Перемотка песни">
           <div class="song-player-times" aria-live="off">

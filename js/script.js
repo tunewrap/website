@@ -132,10 +132,26 @@
       }
 
       if(audio.paused){
-        audio.play();
-        btn.classList.add('playing');
-        currentPlaying = name;
-        drawLive();
+        const playRequest = audio.play();
+        const confirmPlayback = () => {
+          if(audio.paused) return;
+          btn.classList.add('playing');
+          currentPlaying = name;
+          drawLive();
+        };
+        const rejectPlayback = () => {
+          btn.classList.remove('playing');
+          cancelAnimationFrame(rafId);
+          drawIdle();
+          if(currentPlaying === name) currentPlaying = null;
+          audio.dispatchEvent(new CustomEvent('tunewrap:playblocked'));
+        };
+
+        if(playRequest && typeof playRequest.then === 'function'){
+          playRequest.then(confirmPlayback).catch(rejectPlayback);
+        } else {
+          confirmPlayback();
+        }
       } else {
         audio.pause();
         btn.classList.remove('playing');
@@ -1475,6 +1491,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const title = document.getElementById('songPlayerTitle');
   const description = document.getElementById('songPlayerDescription');
   const toggle = document.getElementById('songPlayerToggle');
+  const previousButton = document.getElementById('songPlayerPrevious');
+  const nextButton = document.getElementById('songPlayerNext');
   const seek = document.getElementById('songPlayerSeek');
   const currentTime = document.getElementById('songPlayerCurrentTime');
   const duration = document.getElementById('songPlayerDuration');
@@ -1484,12 +1502,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const orderButton = document.getElementById('songPlayerOrder');
   const appScroll = document.getElementById('appScroll');
   const bottomNav = document.querySelector('.mobile-bottom-nav');
+  const playerScroll = screen ? screen.querySelector('.song-player-scroll') : null;
   const mobileViewport = window.matchMedia('(max-width:620px)');
 
   if(
     !screen || !backButton || !coverWrap || !cover || !title || !description ||
-    !toggle || !seek || !currentTime || !duration || !lyrics ||
-    !translation || !translationBlock || !orderButton
+    !toggle || !previousButton || !nextButton || !seek || !currentTime ||
+    !duration || !lyrics || !translation || !translationBlock || !orderButton ||
+    !playerScroll
   ) return;
 
   const UI = {
@@ -1500,6 +1520,8 @@ document.addEventListener('DOMContentLoaded', () => {
       order:'Заказать похожую историю',
       play:'Воспроизвести',
       pause:'Пауза',
+      previous:'Предыдущий трек',
+      next:'Следующий трек',
       seek:'Перемотка песни',
       empty:'Текст песни пока не добавлен в проект.'
     },
@@ -1510,6 +1532,8 @@ document.addEventListener('DOMContentLoaded', () => {
       order:'Замовити схожу історію',
       play:'Відтворити',
       pause:'Пауза',
+      previous:'Попередній трек',
+      next:'Наступний трек',
       seek:'Перемотування пісні',
       empty:'Текст пісні поки не додано до проєкту.'
     },
@@ -1520,6 +1544,8 @@ document.addEventListener('DOMContentLoaded', () => {
       order:'მსგავსი ისტორიის შეკვეთა',
       play:'დაკვრა',
       pause:'პაუზა',
+      previous:'წინა სიმღერა',
+      next:'შემდეგი სიმღერა',
       seek:'სიმღერის გადახვევა',
       empty:'სიმღერის ტექსტი პროექტში ჯერ არ არის დამატებული.'
     },
@@ -1530,6 +1556,8 @@ document.addEventListener('DOMContentLoaded', () => {
       order:'Order a similar story',
       play:'Play',
       pause:'Pause',
+      previous:'Previous track',
+      next:'Next track',
       seek:'Seek through song',
       empty:'The lyrics have not been added to the project yet.'
     },
@@ -1540,6 +1568,8 @@ document.addEventListener('DOMContentLoaded', () => {
       order:'Eine ähnliche Geschichte bestellen',
       play:'Abspielen',
       pause:'Pause',
+      previous:'Vorheriger Titel',
+      next:'Nächster Titel',
       seek:'Im Song spulen',
       empty:'Der Songtext wurde dem Projekt noch nicht hinzugefügt.'
     }
@@ -1551,6 +1581,21 @@ document.addEventListener('DOMContentLoaded', () => {
   let restoreFocus = null;
   let suppressCardOpen = false;
   let isSeeking = false;
+  let isSwitching = false;
+  let swipeStartX = 0;
+  let swipeStartY = 0;
+  let swipeAllowed = false;
+
+  const trackItems = Array.from(document.querySelectorAll('.track, .author-card'))
+    .map(card => {
+      const button = card.querySelector('.play-btn[data-track]');
+      const name = button ? button.dataset.track : '';
+      const audio = name ? document.getElementById('audio-' + name) : null;
+      return name && audio ? {name,card,button,audio} : null;
+    })
+    .filter(Boolean);
+  const trackOrder = trackItems.map(item => item.name);
+  const tracksByName = new Map(trackItems.map(item => [item.name,item]));
 
   function language(){
     const lang = document.documentElement.getAttribute('lang') || 'ru';
@@ -1607,6 +1652,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if(labels[key]) element.textContent = labels[key];
     });
     seek.setAttribute('aria-label', labels.seek);
+    previousButton.setAttribute('aria-label', labels.previous);
+    nextButton.setAttribute('aria-label', labels.next);
     syncPlaybackState();
 
     if(activeCard){
@@ -1638,25 +1685,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function pauseOtherTracks(selectedAudio){
     document.querySelectorAll('audio[id^="audio-"]').forEach(audio => {
-      if(audio === selectedAudio || audio.paused) return;
-      const name = audio.id.replace(/^audio-/,'');
-      const button = document.querySelector('.play-btn[data-track="' + name + '"]');
-      if(button){
-        suppressCardOpen = true;
-        button.click();
-        suppressCardOpen = false;
-      } else {
-        audio.pause();
+      if(audio === selectedAudio) return;
+      if(!audio.paused){
+        const name = audio.id.replace(/^audio-/,'');
+        const button = document.querySelector('.play-btn[data-track="' + name + '"]');
+        if(button){
+          suppressCardOpen = true;
+          button.click();
+          suppressCardOpen = false;
+        } else {
+          audio.pause();
+        }
       }
+      try{
+        audio.currentTime = 0;
+      } catch(error){}
     });
   }
 
-  function fillScreen(card, name){
-    const audio = document.getElementById('audio-' + name);
-    const button = card.querySelector('.play-btn[data-track="' + name + '"]');
-    if(!audio || !button) return false;
+  function fillScreen(card, name, resetPosition){
+    const item = tracksByName.get(name);
+    if(!item || item.card !== card) return false;
+    const {audio,button} = item;
 
     pauseOtherTracks(audio);
+    if(resetPosition){
+      try{
+        audio.currentTime = 0;
+      } catch(error){}
+    }
     activeCard = card;
     activeAudio = audio;
     activeButton = button;
@@ -1673,11 +1730,70 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   }
 
+  function autoplayActive(){
+    if(!activeAudio || !activeButton) return;
+    if(!activeAudio.paused){
+      syncPlaybackState();
+      return;
+    }
+
+    suppressCardOpen = true;
+    activeButton.click();
+    suppressCardOpen = false;
+    syncPlaybackState();
+    window.setTimeout(syncPlaybackState,0);
+  }
+
+  function animateTrack(frames, durationMs){
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    if(reducedMotion || typeof playerScroll.animate !== 'function') return Promise.resolve();
+    const animation = playerScroll.animate(frames,{
+      duration:durationMs,
+      easing:'cubic-bezier(.22,.78,.22,1)',
+      fill:'both'
+    });
+    return animation.finished.catch(() => {});
+  }
+
+  async function switchTrack(direction){
+    if(isSwitching || !activeAudio || trackOrder.length < 2) return;
+    const currentName = activeAudio.id.replace(/^audio-/,'');
+    const currentIndex = Math.max(0,trackOrder.indexOf(currentName));
+    const nextIndex = (currentIndex + direction + trackOrder.length) % trackOrder.length;
+    const nextItem = tracksByName.get(trackOrder[nextIndex]);
+    if(!nextItem) return;
+
+    isSwitching = true;
+    previousButton.disabled = true;
+    nextButton.disabled = true;
+    const exitX = direction > 0 ? -42 : 42;
+
+    await animateTrack([
+      {opacity:1,transform:'translateX(0)'},
+      {opacity:.24,transform:'translateX(' + exitX + 'px)'}
+    ],145);
+
+    fillScreen(nextItem.card,nextItem.name,true);
+    playerScroll.scrollTop = 0;
+    autoplayActive();
+
+    await animateTrack([
+      {opacity:.24,transform:'translateX(' + (-exitX) + 'px)'},
+      {opacity:1,transform:'translateX(0)'}
+    ],185);
+
+    previousButton.disabled = false;
+    nextButton.disabled = false;
+    isSwitching = false;
+  }
+
   function openPlayer(card, origin){
     if(!mobileViewport.matches || suppressCardOpen) return;
     const button = card.querySelector('.play-btn[data-track]');
     const name = button ? button.dataset.track : '';
-    if(!name || !fillScreen(card,name)) return;
+    const selectedAudio = name ? document.getElementById('audio-' + name) : null;
+    const resetPosition = activeAudio !== selectedAudio;
+    if(!name || !fillScreen(card,name,resetPosition)) return;
 
     restoreFocus = origin || card;
     screen.classList.add('is-open');
@@ -1686,6 +1802,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(appScroll) appScroll.setAttribute('inert','');
     if(bottomNav) bottomNav.setAttribute('inert','');
     window.requestAnimationFrame(() => backButton.focus({preventScroll:true}));
+    autoplayActive();
   }
 
   function closePlayer(){
@@ -1701,7 +1818,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  document.querySelectorAll('.track, .author-card').forEach(card => {
+  trackItems.forEach(({card}) => {
     card.setAttribute('tabindex','0');
 
     card.addEventListener('click', event => {
@@ -1717,6 +1834,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   backButton.addEventListener('click',closePlayer);
+  previousButton.addEventListener('click',() => switchTrack(-1));
+  nextButton.addEventListener('click',() => switchTrack(1));
 
   toggle.addEventListener('click', () => {
     if(!activeButton) return;
@@ -1724,6 +1843,33 @@ document.addEventListener('DOMContentLoaded', () => {
     activeButton.click();
     suppressCardOpen = false;
     syncPlaybackState();
+  });
+
+  playerScroll.addEventListener('pointerdown', event => {
+    const interactive = event.target.closest('button,a,input,select,textarea,[contenteditable="true"]');
+    const pointerIsMouse = event.pointerType === 'mouse';
+    swipeAllowed = Boolean(
+      screen.classList.contains('is-open') &&
+      !isSwitching &&
+      !interactive &&
+      !pointerIsMouse
+    );
+    if(!swipeAllowed) return;
+    swipeStartX = event.clientX;
+    swipeStartY = event.clientY;
+  });
+
+  playerScroll.addEventListener('pointerup', event => {
+    if(!swipeAllowed) return;
+    swipeAllowed = false;
+    const deltaX = event.clientX - swipeStartX;
+    const deltaY = event.clientY - swipeStartY;
+    const horizontal = Math.abs(deltaX) >= 60 && Math.abs(deltaX) > Math.abs(deltaY);
+    if(horizontal) switchTrack(deltaX < 0 ? 1 : -1);
+  });
+
+  playerScroll.addEventListener('pointercancel',() => {
+    swipeAllowed = false;
   });
 
   seek.addEventListener('pointerdown', () => {
@@ -1763,6 +1909,9 @@ document.addEventListener('DOMContentLoaded', () => {
     audio.addEventListener('pause', () => {
       if(audio === activeAudio) syncPlaybackState();
     });
+    audio.addEventListener('tunewrap:playblocked', () => {
+      if(audio === activeAudio) syncPlaybackState();
+    });
     audio.addEventListener('ended', () => {
       if(audio !== activeAudio) return;
       audio.currentTime = 0;
@@ -1783,7 +1932,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.addEventListener('keydown', event => {
-    if(event.key === 'Escape' && screen.classList.contains('is-open')) closePlayer();
+    if(!screen.classList.contains('is-open')) return;
+    if(event.key === 'Escape'){
+      closePlayer();
+    } else if(event.key === 'ArrowLeft' && event.target !== seek){
+      switchTrack(-1);
+    } else if(event.key === 'ArrowRight' && event.target !== seek){
+      switchTrack(1);
+    }
   });
 
   document.querySelectorAll('.lang-btn').forEach(button => {
