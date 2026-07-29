@@ -203,8 +203,34 @@
       <h2 data-i18n="tracks_h2">Истории, которые можно услышать</h2>
       <p data-i18n="tracks_p">Сначала — человек и важные детали его жизни. Потом — текст, музыка и момент, в котором близкие узнают себя.</p>
     </div>
+
+    <div class="songs-library-filters" data-songs-filter-root>
+      <div class="songs-language-rail" role="tablist" aria-label="Язык песен" data-filter-level="language">
+        <button class="songs-language-tab" id="songsLangGE" type="button" role="tab" aria-selected="false" aria-controls="songsLibraryPanel" tabindex="-1" data-song-language-filter="GE">
+          <span aria-hidden="true">🇬🇪</span><strong>GE</strong>
+        </button>
+        <button class="songs-language-tab" id="songsLangUA" type="button" role="tab" aria-selected="false" aria-controls="songsLibraryPanel" tabindex="-1" data-song-language-filter="UA">
+          <span aria-hidden="true">🇺🇦</span><strong>UA</strong>
+        </button>
+        <button class="songs-language-tab" id="songsLangEN" type="button" role="tab" aria-selected="false" aria-controls="songsLibraryPanel" tabindex="-1" data-song-language-filter="EN">
+          <span aria-hidden="true">🇬🇧</span><strong>EN</strong>
+        </button>
+        <button class="songs-language-tab" id="songsLangDE" type="button" role="tab" aria-selected="false" aria-controls="songsLibraryPanel" tabindex="-1" data-song-language-filter="DE">
+          <span aria-hidden="true">🇩🇪</span><strong>DE</strong>
+        </button>
+        <button class="songs-language-tab is-active" id="songsLangRU" type="button" role="tab" aria-selected="true" aria-controls="songsLibraryPanel" tabindex="0" data-song-language-filter="RU">
+          <span aria-hidden="true">🇷🇺</span><strong>RU</strong>
+        </button>
+      </div>
+      <div class="songs-library-context" role="status" aria-live="polite">
+        <span class="songs-library-language" id="songsLibraryLanguage">Русский</span>
+        <span class="songs-library-count" id="songsLibraryCount">3 истории</span>
+      </div>
+    </div>
+
+    <div class="songs-library-stage" id="songsLibraryPanel" role="tabpanel" aria-labelledby="songsLangRU" aria-live="polite">
     <div class="tracks">
-      <div class="track" id="story-127">
+      <div class="track" id="story-127" data-song-language="RU">
         <img class="story-cover" src="assets/covers/image-b08c7250134f.png" alt="127 — история любви" loading="lazy">
         <div class="track-body">
           <div class="track-title" data-i18n="track_127_title">127</div>
@@ -217,7 +243,7 @@
         </div>
       </div>
 
-      <div class="track" id="story-main-road">
+      <div class="track" id="story-main-road" data-song-language="RU">
         <img class="story-cover" src="assets/covers/image-5c7073df3d12.png" alt="Главный путь" loading="lazy">
         <div class="track-body">
           <div class="track-title" data-i18n="track_main_title">Главный путь</div>
@@ -230,7 +256,7 @@
         </div>
       </div>
 
-      <div class="track" id="story-65">
+      <div class="track" id="story-65" data-song-language="RU">
         <img class="story-cover" src="assets/covers/image-284c2b3a71b9.png" alt="65 — история благодарности" loading="lazy">
         <div class="track-body">
           <div class="track-title" data-i18n="track_65_title">65</div>
@@ -243,7 +269,7 @@
         </div>
       </div>
 
-<div class="track" id="story-grow-old">
+<div class="track" id="story-grow-old" data-song-language="UA">
         <img class="story-cover" src="assets/covers/image-a1f0d25aaa9f.png" alt="Ми будемо старіти разом" loading="lazy">
         <div class="track-body">
           <div class="track-title" data-i18n="track_growold_title">Ми будемо старіти разом</div>
@@ -259,7 +285,7 @@
           </div>
         </div>
 </div>
-<div class="track" id="story-just-five">
+<div class="track" id="story-just-five" data-song-language="EN">
   <img class="story-cover" src="assets/covers/just-five-more-minutes.png" alt="Just Five More Minutes" loading="lazy">
   <div class="track-body">
     <div class="track-title" data-i18n="track_justfive_title">Just Five More Minutes</div>
@@ -274,6 +300,12 @@
 </div>
 
       </div>
+      <div class="songs-library-empty" id="songsLibraryEmpty" hidden>
+        <span class="songs-library-empty-mark" aria-hidden="true">♪</span>
+        <strong id="songsLibraryEmptyTitle">Песни скоро появятся</strong>
+        <p id="songsLibraryEmptyText">Библиотека TuneWrap постоянно пополняется новыми музыкальными историями.</p>
+      </div>
+    </div>
 </div>
 </section>
 

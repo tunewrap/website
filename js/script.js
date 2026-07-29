@@ -2,15 +2,25 @@
 // ---------- ambient hero waveform (idle animation) ----------
 (function(){
   const canvas = document.getElementById('ambientWave');
+  if(!canvas) return;
   const ctx = canvas.getContext('2d');
-  function resize(){
-    canvas.width = canvas.clientWidth * devicePixelRatio;
-    canvas.height = canvas.clientHeight * devicePixelRatio;
-  }
-  resize();
-  window.addEventListener('resize', resize);
+  if(!ctx) return;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion:reduce)');
+  let animationFrame = 0;
+  let isVisible = true;
   let t = 0;
+
+  function resize(){
+    const ratio = Math.min(window.devicePixelRatio || 1,2);
+    const width = Math.max(1,Math.round(canvas.clientWidth * ratio));
+    const height = Math.max(1,Math.round(canvas.clientHeight * ratio));
+    if(canvas.width === width && canvas.height === height) return;
+    canvas.width = width;
+    canvas.height = height;
+  }
+
   function draw(){
+    animationFrame = 0;
     t += 0.02;
     const w = canvas.width, h = canvas.height;
     ctx.clearRect(0,0,w,h);
@@ -27,9 +37,62 @@
       ctx.fillStyle = grad;
       ctx.fillRect(x, h/2 - bh/2, bw, bh);
     }
-    requestAnimationFrame(draw);
+    if(isVisible && !document.hidden && !reducedMotion.matches){
+      animationFrame = requestAnimationFrame(draw);
+    }
   }
+
+  function start(){
+    if(animationFrame || !isVisible || document.hidden) return;
+    animationFrame = requestAnimationFrame(draw);
+  }
+
+  function stop(){
+    if(!animationFrame) return;
+    cancelAnimationFrame(animationFrame);
+    animationFrame = 0;
+  }
+
+  resize();
   draw();
+
+  if('ResizeObserver' in window){
+    const resizeObserver = new ResizeObserver(() => {
+      resize();
+      if(!animationFrame) draw();
+    });
+    resizeObserver.observe(canvas);
+  } else {
+    window.addEventListener('resize', () => {
+      resize();
+      if(!animationFrame) draw();
+    },{passive:true});
+  }
+
+  if('IntersectionObserver' in window){
+    const visibilityObserver = new IntersectionObserver(entries => {
+      isVisible = Boolean(entries[0] && entries[0].isIntersecting);
+      if(isVisible) start();
+      else stop();
+    },{rootMargin:'120px 0px'});
+    visibilityObserver.observe(canvas);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if(document.hidden) stop();
+    else start();
+  });
+
+  if(typeof reducedMotion.addEventListener === 'function'){
+    reducedMotion.addEventListener('change', () => {
+      if(reducedMotion.matches){
+        stop();
+        draw();
+      } else {
+        start();
+      }
+    });
+  }
 })();
 
 // ---------- track players with live analyser waveform ----------
@@ -38,6 +101,7 @@
   let audioCtx = null;
   const nodes = {};
   let currentPlaying = null;
+  const resizeHandlers = [];
 
   function getCtx(){
     if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -53,11 +117,11 @@
     const ctx2d = canvas.getContext('2d');
 
     function resizeCanvas(){
-      canvas.width = canvas.clientWidth * devicePixelRatio;
-      canvas.height = canvas.clientHeight * devicePixelRatio;
+      const ratio = Math.min(window.devicePixelRatio || 1,2);
+      canvas.width = Math.max(1,Math.round(canvas.clientWidth * ratio));
+      canvas.height = Math.max(1,Math.round(canvas.clientHeight * ratio));
     }
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
 
     // static idle bars until played
     function drawIdle(){
@@ -72,6 +136,10 @@
       }
     }
     drawIdle();
+    resizeHandlers.push(() => {
+      resizeCanvas();
+      if(audio.paused) drawIdle();
+    });
 
     let analyser, source, dataArray, rafId;
 
@@ -161,6 +229,15 @@
       }
     });
   });
+
+  let resizeFrame = 0;
+  window.addEventListener('resize', () => {
+    if(resizeFrame) return;
+    resizeFrame = requestAnimationFrame(() => {
+      resizeFrame = 0;
+      resizeHandlers.forEach(resizeTrack => resizeTrack());
+    });
+  },{passive:true});
 })();
 
 // ---------- i18n ----------
@@ -1301,6 +1378,20 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// ---------- Stage 8: stable cover loading ----------
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.story-ribbon-card img, .story-cover, .author-cover').forEach(image => {
+    image.decoding = 'async';
+    const reveal = () => image.classList.add('is-loaded');
+    if(image.complete){
+      reveal();
+    } else {
+      image.addEventListener('load',reveal,{once:true});
+      image.addEventListener('error',reveal,{once:true});
+    }
+  });
+});
+
 // ---------- mobile app player, menu and bottom navigation ----------
 document.addEventListener('DOMContentLoaded', () => {
   const trackOrder = [
@@ -1459,7 +1550,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
-  setActiveBottomLink('top');
+  setActiveBottomLink('hero');
 
   if('IntersectionObserver' in window){
     const observedSections = bottomLinks.map(link => ({
@@ -1720,19 +1811,25 @@ document.addEventListener('DOMContentLoaded', () => {
   function hideMiniPlayer(){
     miniPlayer.classList.remove('is-active');
     miniPlayer.setAttribute('aria-hidden','true');
-    miniPlayer.removeAttribute('inert');
+    miniPlayer.setAttribute('inert','');
     document.body.classList.remove('mini-player-active');
   }
 
   function setCover(card){
     const image = card ? card.querySelector('.story-cover, .author-cover') : null;
     if(image){
+      cover.classList.remove('is-loaded');
       cover.src = image.getAttribute('src');
       cover.alt = title.textContent;
+      cover.decoding = 'async';
+      if(cover.complete){
+        window.requestAnimationFrame(() => cover.classList.add('is-loaded'));
+      }
       coverWrap.classList.remove('is-wave');
     } else {
       cover.removeAttribute('src');
       cover.alt = '';
+      cover.classList.remove('is-loaded');
       coverWrap.classList.add('is-wave');
     }
   }
@@ -1805,12 +1902,18 @@ document.addEventListener('DOMContentLoaded', () => {
       reducedMotion ||
       typeof playerScroll.animate !== 'function'
     ) return Promise.resolve();
+    playerScroll.style.willChange = 'transform, opacity';
     const animation = playerScroll.animate(frames,{
       duration:durationMs,
       easing:'cubic-bezier(.22,.78,.22,1)',
       fill:'both'
     });
-    return animation.finished.catch(() => {});
+    return animation.finished
+      .catch(() => {})
+      .finally(() => {
+        animation.cancel();
+        playerScroll.style.willChange = '';
+      });
   }
 
   async function switchTrack(direction){
@@ -1826,21 +1929,21 @@ document.addEventListener('DOMContentLoaded', () => {
     nextButton.disabled = true;
     miniPrevious.disabled = true;
     miniNext.disabled = true;
-    const exitX = direction > 0 ? -42 : 42;
+    const exitX = direction > 0 ? -24 : 24;
 
     await animateTrack([
       {opacity:1,transform:'translateX(0)'},
-      {opacity:.24,transform:'translateX(' + exitX + 'px)'}
-    ],145);
+      {opacity:.68,transform:'translateX(' + exitX + 'px)'}
+    ],180);
 
     fillScreen(nextItem.card,nextItem.name,true);
     playerScroll.scrollTop = 0;
     autoplayActive();
 
     await animateTrack([
-      {opacity:.24,transform:'translateX(' + (-exitX) + 'px)'},
+      {opacity:.68,transform:'translateX(' + (-exitX) + 'px)'},
       {opacity:1,transform:'translateX(0)'}
-    ],185);
+    ],220);
 
     previousButton.disabled = false;
     nextButton.disabled = false;
@@ -1858,6 +1961,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(!name || !fillScreen(card,name,resetPosition)) return;
 
     restoreFocus = origin || card;
+    screen.removeAttribute('inert');
     screen.classList.add('is-open');
     screen.setAttribute('aria-hidden','false');
     document.body.classList.add('song-player-open');
@@ -1872,6 +1976,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(!screen.classList.contains('is-open')) return;
     screen.classList.remove('is-open');
     screen.setAttribute('aria-hidden','true');
+    screen.setAttribute('inert','');
     document.body.classList.remove('song-player-open');
     if(appScroll) appScroll.removeAttribute('inert');
     if(bottomNav) bottomNav.removeAttribute('inert');
@@ -1954,6 +2059,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if(event.target.closest('.top-mini-controls, .top-mini-stop')) return;
     if(activeCard) openPlayer(activeCard,miniExpand,false);
   });
+
+  cover.addEventListener('load', () => cover.classList.add('is-loaded'));
+  cover.addEventListener('error', () => cover.classList.add('is-loaded'));
 
   playerScroll.addEventListener('pointerdown', event => {
     const interactive = event.target.closest('button,a,input,select,textarea,[contenteditable="true"]');
@@ -2068,5 +2176,205 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   hideMiniPlayer();
+  screen.setAttribute('inert','');
   syncLanguage();
+});
+
+// ---------- Stage 8: stable mobile form focus ----------
+document.addEventListener('DOMContentLoaded', () => {
+  const mobileViewport = window.matchMedia('(max-width:620px)');
+  const contact = document.getElementById('contact');
+  if(!contact) return;
+
+  const fieldSelector = 'input, select, textarea, button';
+  let focusTimer = 0;
+
+  contact.addEventListener('focusin', event => {
+    if(!mobileViewport.matches || !event.target.matches(fieldSelector)) return;
+    window.clearTimeout(focusTimer);
+    document.body.classList.add('form-input-active');
+
+    if(!event.target.matches('input, select, textarea')) return;
+    focusTimer = window.setTimeout(() => {
+      if(document.activeElement !== event.target) return;
+      const behavior = window.matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth';
+      event.target.scrollIntoView({behavior,block:'center',inline:'nearest'});
+    },180);
+  });
+
+  contact.addEventListener('focusout', () => {
+    window.clearTimeout(focusTimer);
+    focusTimer = window.setTimeout(() => {
+      if(!contact.contains(document.activeElement)){
+        document.body.classList.remove('form-input-active');
+      }
+    },80);
+  });
+});
+
+// ---------- Stage 8.1: scalable Songs language shelf ----------
+document.addEventListener('DOMContentLoaded', () => {
+  const section = document.getElementById('tracks');
+  const filterRoot = section ? section.querySelector('[data-songs-filter-root]') : null;
+  const rail = filterRoot ? filterRoot.querySelector('[data-filter-level="language"]') : null;
+  const stage = document.getElementById('songsLibraryPanel');
+  const list = stage ? stage.querySelector('.tracks') : null;
+  const empty = document.getElementById('songsLibraryEmpty');
+  const activeLanguageLabel = document.getElementById('songsLibraryLanguage');
+  const visibleCountLabel = document.getElementById('songsLibraryCount');
+  const emptyTitle = document.getElementById('songsLibraryEmptyTitle');
+  const emptyText = document.getElementById('songsLibraryEmptyText');
+
+  if(
+    !section || !filterRoot || !rail || !stage || !list || !empty ||
+    !activeLanguageLabel || !visibleCountLabel || !emptyTitle || !emptyText
+  ) return;
+
+  const languageMap = {ka:'GE',uk:'UA',en:'EN',de:'DE',ru:'RU'};
+  const languageNames = {
+    GE:'ქართული',
+    UA:'Українська',
+    EN:'English',
+    DE:'Deutsch',
+    RU:'Русский'
+  };
+  const copy = {
+    ru:{
+      rail:'Язык песен',
+      emptyTitle:'Песни скоро появятся',
+      emptyText:'Библиотека TuneWrap постоянно пополняется новыми музыкальными историями.',
+      count:value => value === 1 ? '1 история' : value > 1 && value < 5 ? value + ' истории' : value + ' историй'
+    },
+    uk:{
+      rail:'Мова пісень',
+      emptyTitle:'Пісні незабаром з’являться',
+      emptyText:'Бібліотека TuneWrap постійно поповнюється новими музичними історіями.',
+      count:value => value === 1 ? '1 історія' : value > 1 && value < 5 ? value + ' історії' : value + ' історій'
+    },
+    ka:{
+      rail:'სიმღერების ენა',
+      emptyTitle:'სიმღერები მალე გამოჩნდება',
+      emptyText:'TuneWrap-ის ბიბლიოთეკა მუდმივად ივსება ახალი მუსიკალური ისტორიებით.',
+      count:value => value + ' სიმღერა'
+    },
+    en:{
+      rail:'Song language',
+      emptyTitle:'Songs are coming soon',
+      emptyText:'The TuneWrap library is always growing with new musical stories.',
+      count:value => value === 1 ? '1 story' : value + ' stories'
+    },
+    de:{
+      rail:'Sprache der Songs',
+      emptyTitle:'Songs folgen in Kürze',
+      emptyText:'Die TuneWrap-Bibliothek wächst ständig um neue musikalische Geschichten.',
+      count:value => value === 1 ? '1 Song' : value + ' Songs'
+    }
+  };
+  const tabs = Array.from(rail.querySelectorAll('[data-song-language-filter]'));
+  const cards = Array.from(list.querySelectorAll('.track[data-song-language]'));
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion:reduce)');
+  let activeLanguage = '';
+  let switchTimer = 0;
+
+  function interfaceLanguage(){
+    const value = document.documentElement.getAttribute('lang') || 'ru';
+    return copy[value] ? value : 'ru';
+  }
+
+  function updateCopy(visibleCount){
+    const labels = copy[interfaceLanguage()];
+    rail.setAttribute('aria-label',labels.rail);
+    activeLanguageLabel.textContent = languageNames[activeLanguage] || activeLanguage;
+    visibleCountLabel.textContent = labels.count(visibleCount);
+    emptyTitle.textContent = labels.emptyTitle;
+    emptyText.textContent = labels.emptyText;
+  }
+
+  function centerActiveTab(tab, animate){
+    if(!tab || typeof rail.scrollTo !== 'function') return;
+    const left = Math.max(0,tab.offsetLeft - (rail.clientWidth - tab.offsetWidth) / 2);
+    rail.scrollTo({
+      left,
+      behavior:animate && !reducedMotion.matches ? 'smooth' : 'auto'
+    });
+  }
+
+  function commitLanguage(language, animate){
+    activeLanguage = language;
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+      const visible = card.dataset.songLanguage === language;
+      card.hidden = !visible;
+      if(visible) visibleCount += 1;
+    });
+
+    tabs.forEach(tab => {
+      const selected = tab.dataset.songLanguageFilter === language;
+      tab.classList.toggle('is-active',selected);
+      tab.setAttribute('aria-selected',String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+    });
+
+    list.scrollTop = 0;
+    empty.hidden = visibleCount !== 0;
+    stage.classList.toggle('is-empty',visibleCount === 0);
+    stage.setAttribute('aria-busy','false');
+    updateCopy(visibleCount);
+
+    const activeTab = tabs.find(tab => tab.dataset.songLanguageFilter === language);
+    if(activeTab) stage.setAttribute('aria-labelledby',activeTab.id);
+    centerActiveTab(activeTab,animate);
+    window.requestAnimationFrame(() => stage.classList.remove('is-switching'));
+  }
+
+  function selectLanguage(language, options = {}){
+    if(!languageNames[language]) return;
+    const animate = options.animate !== false && activeLanguage && activeLanguage !== language;
+    window.clearTimeout(switchTimer);
+
+    if(language === activeLanguage){
+      updateCopy(cards.filter(card => !card.hidden).length);
+      return;
+    }
+
+    stage.setAttribute('aria-busy','true');
+    if(animate && !reducedMotion.matches){
+      stage.classList.add('is-switching');
+      switchTimer = window.setTimeout(() => commitLanguage(language,true),140);
+    } else {
+      commitLanguage(language,false);
+    }
+  }
+
+  tabs.forEach((tab,index) => {
+    tab.addEventListener('click',() => {
+      selectLanguage(tab.dataset.songLanguageFilter);
+    });
+
+    tab.addEventListener('keydown',event => {
+      let nextIndex = index;
+      if(event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
+      else if(event.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length;
+      else if(event.key === 'Home') nextIndex = 0;
+      else if(event.key === 'End') nextIndex = tabs.length - 1;
+      else return;
+
+      event.preventDefault();
+      const nextTab = tabs[nextIndex];
+      nextTab.focus({preventScroll:true});
+      selectLanguage(nextTab.dataset.songLanguageFilter);
+    });
+  });
+
+  document.querySelectorAll('.lang-btn[data-lang]').forEach(button => {
+    button.addEventListener('click',() => {
+      window.setTimeout(() => {
+        const language = languageMap[interfaceLanguage()] || 'RU';
+        selectLanguage(language);
+      },0);
+    });
+  });
+
+  selectLanguage(languageMap[interfaceLanguage()] || 'RU',{animate:false});
 });
