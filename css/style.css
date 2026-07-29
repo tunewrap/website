@@ -5843,3 +5843,184 @@
     touch-action:none;
   }
 }
+
+/* ---------- STAGE 8.3 · PREMIUM HERO REFINEMENT ---------- */
+@media(max-width:620px){
+  body > nav{
+    border-bottom-color:rgba(217,164,65,.095);
+    background:linear-gradient(180deg,rgba(11,11,12,.96),rgba(9,9,10,.92));
+    box-shadow:
+      inset 0 -1px rgba(255,255,255,.012),
+      0 8px 28px rgba(0,0,0,.22);
+    backdrop-filter:blur(22px) saturate(1.12);
+    -webkit-backdrop-filter:blur(22px) saturate(1.12);
+  }
+
+  body > nav .wrap{
+    padding-right:17px;
+    padding-left:17px;
+  }
+
+  .logo{
+    font-size:30px;
+    letter-spacing:-.03em;
+    text-shadow:0 3px 18px rgba(0,0,0,.46);
+  }
+
+  .logo span{
+    text-shadow:0 0 22px rgba(217,164,65,.22);
+  }
+
+  .nav-right{
+    gap:7px;
+  }
+
+  .mobile-lang summary,
+  .mobile-menu summary{
+    height:40px;
+    border-color:rgba(245,225,181,.105);
+    background:rgba(255,255,255,.018);
+    box-shadow:
+      inset 0 1px rgba(255,255,255,.025),
+      0 5px 16px rgba(0,0,0,.14);
+  }
+
+  .mobile-lang summary{
+    min-width:62px;
+  }
+
+  .mobile-menu summary{
+    width:40px;
+  }
+
+  .mobile-menu summary span{
+    width:16px;
+  }
+
+  .hero .wrap{
+    padding-right:10px;
+    padding-left:10px;
+  }
+
+  .hero-grid{
+    padding:18px 20px 18px;
+    border-color:rgba(234,190,101,.17);
+    border-radius:27px;
+    background:
+      radial-gradient(ellipse at 76% 15%,rgba(232,184,80,.27),transparent 20%),
+      radial-gradient(ellipse at 34% 36%,rgba(217,164,65,.09),transparent 37%),
+      radial-gradient(ellipse at 0 94%,rgba(217,164,65,.055),transparent 37%),
+      linear-gradient(153deg,#18161a 0%,#0c0c0e 57%,#131007 100%);
+    box-shadow:
+      0 24px 60px rgba(0,0,0,.43),
+      0 7px 25px rgba(217,164,65,.035),
+      inset 0 1px rgba(255,255,255,.06),
+      inset 0 -1px rgba(217,164,65,.055);
+  }
+
+  .hero-grid::before{
+    background:
+      linear-gradient(180deg,rgba(5,5,6,.015) 18%,rgba(7,7,8,.04) 43%,rgba(7,7,8,.72) 72%,rgba(7,7,8,.96) 100%),
+      linear-gradient(118deg,rgba(255,255,255,.018),transparent 32%),
+      repeating-linear-gradient(115deg,rgba(255,255,255,.009) 0 1px,transparent 1px 14px);
+  }
+
+  .hero-grid::after{
+    top:45px;
+    right:-92px;
+    width:286px;
+    height:286px;
+    border-color:rgba(232,184,80,.13);
+    background:radial-gradient(circle,rgba(217,164,65,.105),transparent 62%);
+    box-shadow:
+      0 0 0 36px rgba(217,164,65,.018),
+      0 0 0 78px rgba(217,164,65,.009),
+      0 0 84px rgba(217,164,65,.08);
+  }
+
+  #ambientWave{
+    top:42px;
+    left:-10%;
+    width:120%;
+    height:min(31vh,252px);
+    opacity:.94;
+    mix-blend-mode:screen;
+    filter:
+      contrast(1.18)
+      saturate(1.08)
+      drop-shadow(0 0 18px rgba(217,164,65,.3));
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);
+  }
+
+  .hero-grid > div{
+    width:100%;
+    margin-top:auto;
+    padding-bottom:8px;
+  }
+
+  .hero h1{
+    max-width:8.8ch;
+    margin-bottom:12px;
+    font-size:clamp(39px,11.8vw,46px);
+    font-weight:600;
+    line-height:.95;
+    letter-spacing:-.045em;
+    text-shadow:
+      0 4px 24px rgba(0,0,0,.72),
+      0 1px rgba(255,255,255,.045);
+  }
+
+  .hero h1 .mobile-hero-title em{
+    margin-top:3px;
+    text-shadow:
+      0 0 24px rgba(217,164,65,.16),
+      0 4px 20px rgba(0,0,0,.64);
+  }
+
+  .hero p.lead{
+    max-width:34ch;
+    margin-bottom:16px;
+    color:rgba(226,221,225,.82);
+    font-size:12.5px;
+    font-weight:450;
+    line-height:1.54;
+    letter-spacing:.006em;
+    text-shadow:0 2px 13px rgba(0,0,0,.68);
+  }
+
+  .hero-actions .btn-primary{
+    min-height:61px;
+    padding:17px 21px;
+    border-color:rgba(255,230,177,.2);
+    border-radius:18px;
+    background:linear-gradient(135deg,#efc05b 0%,#d9a441 48%,#bd7f20 100%);
+    box-shadow:
+      0 13px 30px rgba(217,164,65,.21),
+      0 3px 11px rgba(0,0,0,.22),
+      inset 0 1px rgba(255,255,255,.4),
+      inset 0 -1px rgba(95,55,6,.18);
+    font-size:14px;
+    letter-spacing:-.005em;
+  }
+
+  .hero-actions .btn-primary::before{
+    margin-right:9px;
+    font-size:15px;
+  }
+}
+
+@media(max-width:350px){
+  .hero-grid{
+    padding-right:17px;
+    padding-left:17px;
+  }
+
+  .hero h1{
+    font-size:38px;
+  }
+
+  .hero p.lead{
+    font-size:12px;
+  }
+}
