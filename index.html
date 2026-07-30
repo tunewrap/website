@@ -201,6 +201,7 @@
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow" data-i18n="tracks_eyebrow">Музыкальные истории</div>
+      <canvas id="storiesWave" class="music-showcase-wave" data-brand-wave aria-hidden="true"></canvas>
       <h2 data-i18n="tracks_h2">Истории, которые можно услышать</h2>
       <p data-i18n="tracks_p">Сначала — человек и важные детали его жизни. Потом — текст, музыка и момент, в котором близкие узнают себя.</p>
     </div>
@@ -626,7 +627,8 @@
 <section id="author">
   <div class="wrap">
     <div class="sec-head author-intro">
-      <div class="eyebrow">Kosta Trufakin</div>
+      <div class="eyebrow" data-i18n="author_eyebrow">Авторские песни</div>
+      <canvas id="authorWave" class="music-showcase-wave" data-brand-wave aria-hidden="true"></canvas>
       <h2 data-i18n="author_h2">Автор проекта и его песни</h2>
       <p data-i18n="author_showcase_p">Авторские песни из путешествий, встреч, свободы выбора и любви к жизни.</p>
     </div>
@@ -839,17 +841,27 @@
         <h2 id="storiesLibraryTitle" data-i18n="stories_library_title">Все музыкальные истории</h2>
         <p data-i18n="stories_library_subtitle">Выберите язык или откройте любую историю из полного каталога.</p>
       </header>
-      <div class="music-library-filters" role="tablist" aria-label="Язык песен" data-library-filters>
-        <button type="button" role="tab" data-library-language="RU">RU</button>
-        <button type="button" role="tab" data-library-language="UA">UA</button>
-        <button type="button" role="tab" data-library-language="EN">EN</button>
-        <button type="button" role="tab" data-library-language="DE">DE</button>
-        <button type="button" role="tab" data-library-language="GE">GE</button>
+      <div class="music-library-sticky" data-library-controls>
+        <label class="music-library-search" for="storiesLibrarySearch">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.75" cy="10.75" r="6.75"/><path d="m16 16 4 4"/></svg>
+          <span class="sr-only" data-i18n="library_search_label">Поиск песен</span>
+          <input id="storiesLibrarySearch" type="search" autocomplete="off" enterkeyhint="search" data-library-search data-i18n-ph="library_search_placeholder" placeholder="Поиск песен">
+        </label>
+        <div class="music-library-filters" role="tablist" aria-label="Язык песен" data-library-filters>
+          <button type="button" role="tab" data-library-language="ALL" data-i18n="library_filter_all">Все</button>
+          <button type="button" role="tab" data-library-language="RU">RU</button>
+          <button type="button" role="tab" data-library-language="UA">UA</button>
+          <button type="button" role="tab" data-library-language="EN">EN</button>
+          <button type="button" role="tab" data-library-language="DE">DE</button>
+          <button type="button" role="tab" data-library-language="GE">GE</button>
+        </div>
       </div>
+      <p class="music-library-result-count" data-library-result-count role="status" aria-live="polite"></p>
       <div class="music-library-results" id="storiesLibraryList"></div>
       <div class="music-library-empty" data-library-empty hidden>
         <span aria-hidden="true">♪</span>
-        <p data-i18n="library_empty">В этом языковом разделе пока нет песен.</p>
+        <strong data-i18n="library_no_results">Песни не найдены</strong>
+        <button type="button" data-library-reset-search data-i18n="library_reset_search">Сбросить поиск</button>
       </div>
     </div>
   </div>
@@ -867,21 +879,31 @@
     </div>
     <div class="music-library-scroll">
       <header class="music-library-heading">
-        <p class="eyebrow">Kosta Trufakin</p>
+        <p class="eyebrow" data-i18n="author_eyebrow">Авторские песни</p>
         <h2 id="authorLibraryTitle" data-i18n="author_library_title">Авторская библиотека</h2>
         <p data-i18n="author_library_subtitle">Полный каталог песен автора TuneWrap.</p>
       </header>
-      <div class="music-library-filters" role="tablist" aria-label="Язык песен" data-library-filters>
-        <button type="button" role="tab" data-library-language="RU">RU</button>
-        <button type="button" role="tab" data-library-language="UA">UA</button>
-        <button type="button" role="tab" data-library-language="EN">EN</button>
-        <button type="button" role="tab" data-library-language="DE">DE</button>
-        <button type="button" role="tab" data-library-language="GE">GE</button>
+      <div class="music-library-sticky" data-library-controls>
+        <label class="music-library-search" for="authorLibrarySearch">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.75" cy="10.75" r="6.75"/><path d="m16 16 4 4"/></svg>
+          <span class="sr-only" data-i18n="library_search_label">Поиск песен</span>
+          <input id="authorLibrarySearch" type="search" autocomplete="off" enterkeyhint="search" data-library-search data-i18n-ph="library_search_placeholder" placeholder="Поиск песен">
+        </label>
+        <div class="music-library-filters" role="tablist" aria-label="Язык песен" data-library-filters>
+          <button type="button" role="tab" data-library-language="ALL" data-i18n="library_filter_all">Все</button>
+          <button type="button" role="tab" data-library-language="RU">RU</button>
+          <button type="button" role="tab" data-library-language="UA">UA</button>
+          <button type="button" role="tab" data-library-language="EN">EN</button>
+          <button type="button" role="tab" data-library-language="DE">DE</button>
+          <button type="button" role="tab" data-library-language="GE">GE</button>
+        </div>
       </div>
+      <p class="music-library-result-count" data-library-result-count role="status" aria-live="polite"></p>
       <div class="music-library-results" id="authorLibraryList"></div>
       <div class="music-library-empty" data-library-empty hidden>
         <span aria-hidden="true">♪</span>
-        <p data-i18n="library_empty">В этом языковом разделе пока нет песен.</p>
+        <strong data-i18n="library_no_results">Песни не найдены</strong>
+        <button type="button" data-library-reset-search data-i18n="library_reset_search">Сбросить поиск</button>
       </div>
     </div>
   </div>

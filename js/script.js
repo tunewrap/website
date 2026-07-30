@@ -500,6 +500,17 @@ const TUNEWRAP_LISTEN_LABELS = {
   de:"Anhören"
 };
 
+const TUNEWRAP_TRACK_ORIGINAL_TITLES = Object.freeze(
+  Array.from(document.querySelectorAll('.play-btn[data-track]')).reduce((titles,button) => {
+    const card = button.closest('.track, .author-card');
+    const title = card?.querySelector('.track-title')?.textContent.trim();
+    if(button.dataset.track && title && !titles[button.dataset.track]){
+      titles[button.dataset.track] = title;
+    }
+    return titles;
+  },{})
+);
+
 function applyTuneWrapTrackTitles(language){
   const titles = TUNEWRAP_TRACK_TITLES[language] || TUNEWRAP_TRACK_TITLES.ru;
   const listen = TUNEWRAP_LISTEN_LABELS[language] || TUNEWRAP_LISTEN_LABELS.ru;
@@ -580,6 +591,11 @@ function applyTuneWrapTrackTitles(language){
       stories_library_subtitle:"Выберите язык или откройте любую историю из полного каталога.",
       library_close:"Назад",
       library_empty:"В этом языковом разделе пока нет песен.",
+      library_search_label:"Поиск песен",
+      library_search_placeholder:"Поиск песен",
+      library_filter_all:"Все",
+      library_no_results:"Песни не найдены",
+      library_reset_search:"Сбросить поиск",
       track_127_title:"127",
       track_127_desc:"Она заплатила за его кофе. Через неделю он написал: «Верну кофе?» Через 127 дней понял, что хочет прожить с ней всю жизнь. Теперь это число — на их кольцах.",
       track_main_title:"Главный путь",
@@ -681,6 +697,7 @@ function applyTuneWrapTrackTitles(language){
       corp_msg:"Здравствуйте! Интересует корпоративный заказ: {qty} песен, пакет «{tier}». Расчётная сумма: ${total} (скидка {discount}%).",
       footer_location:"Тбилиси · Киев · онлайн",
 
+      author_eyebrow:"Авторские песни",
       author_h2:"Автор проекта и его песни",
       author_p:"Это песни, написанные не на заказ. Они рождались вместе с путешествиями, встречами, потерями, надеждой, свободой выбора и любовью к жизни. Каждая из них — глава одной большой истории, которая продолжается и сегодня.",
       author_showcase_p:"Авторские песни из путешествий, встреч, свободы выбора и любви к жизни.",
@@ -746,6 +763,11 @@ function applyTuneWrapTrackTitles(language){
       stories_library_subtitle:"Оберіть мову або відкрийте будь-яку історію з повного каталогу.",
       library_close:"Назад",
       library_empty:"У цьому мовному розділі поки немає пісень.",
+      library_search_label:"Пошук пісень",
+      library_search_placeholder:"Пошук пісень",
+      library_filter_all:"Усі",
+      library_no_results:"Пісень не знайдено",
+      library_reset_search:"Скинути пошук",
       track_127_title:"127",
       track_127_desc:"Вона заплатила за його каву. Через тиждень він написав: «Повернути каву?» Через 127 днів зрозумів, що хоче прожити з нею все життя. Тепер це число — на їхніх обручках.",
       track_main_title:"Головний шлях",
@@ -847,6 +869,7 @@ function applyTuneWrapTrackTitles(language){
       corp_msg:"Вітаю! Цікавить корпоративне замовлення: {qty} пісень, пакет «{tier}». Орієнтовна сума: ${total} (знижка {discount}%).",
       footer_location:"Тбілісі · Київ · онлайн",
 
+      author_eyebrow:"Авторські пісні",
       author_h2:"Автор проєкту та його пісні",
       author_p:"Це пісні, написані не на замовлення. Вони народжувалися разом із подорожами, зустрічами, втратами, надією, свободою вибору та любов’ю до життя. Кожна з них — розділ однієї великої історії, що триває й сьогодні.",
       author_showcase_p:"Авторські пісні з подорожей, зустрічей, свободи вибору та любові до життя.",
@@ -912,6 +935,11 @@ function applyTuneWrapTrackTitles(language){
       stories_library_subtitle:"აირჩიეთ ენა ან გახსენით ნებისმიერი ისტორია სრული კატალოგიდან.",
       library_close:"უკან",
       library_empty:"ამ ენის განყოფილებაში სიმღერები ჯერ არ არის.",
+      library_search_label:"სიმღერების ძიება",
+      library_search_placeholder:"სიმღერების ძიება",
+      library_filter_all:"ყველა",
+      library_no_results:"სიმღერები ვერ მოიძებნა",
+      library_reset_search:"ძიების გასუფთავება",
       track_127_title:"127",
       track_127_desc:"მან მისი ყავა გადაიხადა. ერთი კვირის შემდეგ მან მისწერა: „ყავა დაგიბრუნო?“ 127 დღეში მიხვდა, რომ მასთან მთელი ცხოვრების გატარება სურდა. ახლა ეს რიცხვი მათ ბეჭდებზეა.",
       track_main_title:"მთავარი გზა",
@@ -1013,6 +1041,7 @@ function applyTuneWrapTrackTitles(language){
       corp_msg:"გამარჯობა! მაინტერესებს კორპორატიული შეკვეთა: {qty} სიმღერა, პაკეტი «{tier}». სავარაუდო თანხა: ${total} (ფასდაკლება {discount}%).",
       footer_location:"თბილისი · კიევი · ონლაინ",
 
+      author_eyebrow:"საავტორო სიმღერები",
       author_h2:"პროექტის ავტორი და მისი სიმღერები",
       author_p:"ეს სიმღერები შეკვეთით არ დაწერილა. ისინი მოგზაურობებთან, შეხვედრებთან, დანაკარგებთან, იმედთან, არჩევანის თავისუფლებასთან და სიცოცხლის სიყვარულთან ერთად დაიბადა. თითოეული მათგანი ერთი დიდი ისტორიის თავია, რომელიც დღესაც გრძელდება.",
       author_showcase_p:"საავტორო სიმღერები მოგზაურობებზე, შეხვედრებზე, არჩევანის თავისუფლებასა და სიცოცხლის სიყვარულზე.",
@@ -1078,6 +1107,11 @@ function applyTuneWrapTrackTitles(language){
       stories_library_subtitle:"Choose a language or open any story from the complete catalog.",
       library_close:"Back",
       library_empty:"There are no songs in this language section yet.",
+      library_search_label:"Search songs",
+      library_search_placeholder:"Search songs",
+      library_filter_all:"All",
+      library_no_results:"No songs found",
+      library_reset_search:"Reset search",
       track_127_title:"127",
       track_127_desc:"She paid for his coffee. A week later he wrote, “Can I pay you back?” After 127 days, he knew he wanted to spend his life with her. That number is now engraved on their rings.",
       track_main_title:"The Main Journey",
@@ -1179,6 +1213,7 @@ function applyTuneWrapTrackTitles(language){
       corp_msg:"Hi! Interested in a corporate order: {qty} songs, {tier} package. Estimated total: ${total} ({discount}% discount).",
       footer_location:"Tbilisi · Kyiv · online",
 
+      author_eyebrow:"Original songs",
       author_h2:"The project author and his songs",
       author_p:"These songs were not written to order. They were born from journeys, encounters, losses, hope, freedom of choice and a love of life. Each one is a chapter in one continuing story.",
       author_showcase_p:"Original songs shaped by travel, encounters, freedom of choice, and a love of life.",
@@ -1244,6 +1279,11 @@ function applyTuneWrapTrackTitles(language){
       stories_library_subtitle:"Wählen Sie eine Sprache oder öffnen Sie eine beliebige Geschichte aus dem vollständigen Katalog.",
       library_close:"Zurück",
       library_empty:"In diesem Sprachbereich gibt es noch keine Songs.",
+      library_search_label:"Songs suchen",
+      library_search_placeholder:"Songs suchen",
+      library_filter_all:"Alle",
+      library_no_results:"Keine Songs gefunden",
+      library_reset_search:"Suche zurücksetzen",
       track_127_title:"127",
       track_127_desc:"Sie bezahlte seinen Kaffee. Eine Woche später schrieb er: „Darf ich den Kaffee zurückzahlen?“ Nach 127 Tagen wusste er, dass er sein Leben mit ihr verbringen wollte. Heute steht diese Zahl in ihren Ringen.",
       track_main_title:"Der wichtigste Weg",
@@ -1345,6 +1385,7 @@ function applyTuneWrapTrackTitles(language){
       corp_msg:"Hallo! Interesse an einer Firmenbestellung: {qty} Songs, Paket „{tier}“. Geschätzte Summe: ${total} ({discount}% Rabatt).",
       footer_location:"Tiflis · Kiew · online",
 
+      author_eyebrow:"Eigene Songs",
       author_h2:"Der Autor des Projekts und seine Songs",
       author_p:"Diese Songs wurden nicht im Auftrag geschrieben. Sie entstanden aus Reisen, Begegnungen, Verlusten, Hoffnung, Entscheidungsfreiheit und Liebe zum Leben. Jeder von ihnen ist ein Kapitel einer großen Geschichte, die bis heute weitergeht.",
       author_showcase_p:"Eigene Songs über Reisen, Begegnungen, Entscheidungsfreiheit und die Liebe zum Leben.",
@@ -2799,6 +2840,20 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   }
 
+  window.__tuneWrapPlayerBridge = {
+    adoptLibraryPlayback(card,origin){
+      if(!mobileViewport.matches || !card) return false;
+      const button = card.querySelector('.play-btn[data-track]');
+      const name = button?.dataset.track || '';
+      if(!name || !fillScreen(card,name,false)) return false;
+      restoreFocus = origin || card;
+      showMiniPlayer();
+      syncPlaybackState();
+      window.setTimeout(syncPlaybackState,0);
+      return true;
+    }
+  };
+
   function autoplayActive(){
     if(!activeAudio || !activeButton) return;
     if(!activeAudio.paused){
@@ -3751,7 +3806,7 @@ document.addEventListener('DOMContentLoaded', () => {
   },{passive:true});
 });
 
-// ---------- Stage 8.9: showcase screens and fullscreen music libraries ----------
+// ---------- Stage 8.10: showcase screens and searchable fullscreen libraries ----------
 document.addEventListener('DOMContentLoaded', () => {
   const appScroll = document.getElementById('appScroll');
   const bottomNav = document.querySelector('.mobile-bottom-nav');
@@ -3771,7 +3826,6 @@ document.addEventListener('DOMContentLoaded', () => {
     !storiesResults || !authorResults || !storiesCount || !authorCount
   ) return;
 
-  const languageByInterface = {ru:'RU',uk:'UA',en:'EN',de:'DE',ka:'GE'};
   const authorLanguages = {
     amsterdam:'RU',
     mychoice:'UA',
@@ -3789,6 +3843,45 @@ document.addEventListener('DOMContentLoaded', () => {
     newflight:'UA',
     noretreat:'UA',
     '53':'EN'
+  };
+  const searchLanguageAliases = {
+    RU:'RU Russian русский російська რუსული Russisch',
+    UA:'UA Ukrainian українська украинский უკრაინული Ukrainisch',
+    EN:'EN English английский англійська ინგლისური Englisch',
+    DE:'DE German немецкий німецька გერმანული Deutsch',
+    GE:'GE Georgian грузинский грузинська ქართული Georgisch'
+  };
+  const countCopy = {
+    ru(count){
+      const mod10 = count % 10;
+      const mod100 = count % 100;
+      const word = mod10 === 1 && mod100 !== 11
+        ? 'песня'
+        : mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)
+          ? 'песни'
+          : 'песен';
+      return count + ' ' + word;
+    },
+    uk(count){
+      const mod10 = count % 10;
+      const mod100 = count % 100;
+      const word = mod10 === 1 && mod100 !== 11
+        ? 'пісня'
+        : mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)
+          ? 'пісні'
+          : 'пісень';
+      return count + ' ' + word;
+    },
+    ka:count => count + ' სიმღერა',
+    en:count => count + (count === 1 ? ' song' : ' songs'),
+    de:count => count + (count === 1 ? ' Song' : ' Songs')
+  };
+  const filterLabels = {
+    ru:'Язык песен',
+    uk:'Мова пісень',
+    ka:'სიმღერის ენა',
+    en:'Song language',
+    de:'Sprache der Songs'
   };
   const panels = [storiesPanel,authorPanel];
   const panelState = new Map();
@@ -3811,7 +3904,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function interfaceLanguage(){
     const code = document.documentElement.getAttribute('lang') || 'ru';
-    return languageByInterface[code] || 'RU';
+    return countCopy[code] ? code : 'ru';
+  }
+
+  function normalizeSearch(value){
+    return String(value || '')
+      .toLocaleLowerCase()
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu,'')
+      .replace(/[^\p{Letter}\p{Number}]+/gu,' ')
+      .trim();
   }
 
   function cardsFor(panel){
@@ -3824,30 +3926,107 @@ document.addEventListener('DOMContentLoaded', () => {
       : card.dataset.libraryLanguage;
   }
 
-  function refreshFilter(panel,language,manual = false){
+  function trackName(card){
+    return card.querySelector('.play-btn[data-track]')?.dataset.track || '';
+  }
+
+  function cardDuration(card){
+    const values = Array.from(card.querySelectorAll('.story-meta span, .author-track-meta span'))
+      .map(span => span.textContent.trim());
+    const metadataDuration = values.find(value => /^\d{1,2}:\d{2}$/.test(value));
+    if(metadataDuration) return metadataDuration;
+    const timeline = card.querySelector('.track-time')?.textContent || '';
+    return timeline.split('/').pop()?.trim() || '';
+  }
+
+  function cardCategory(panel,card){
+    if(panel === authorPanel) return '';
+    const language = cardLanguage(panel,card);
+    const values = Array.from(card.querySelectorAll('.story-meta span'))
+      .map(span => span.textContent.trim());
+    return values.find(value => (
+      value &&
+      value !== language &&
+      !/^\d{1,2}:\d{2}$/.test(value)
+    )) || '';
+  }
+
+  function syncCardMetadata(panel){
+    cardsFor(panel).forEach(card => {
+      const name = trackName(card);
+      const language = cardLanguage(panel,card);
+      const category = cardCategory(panel,card);
+      const duration = cardDuration(card);
+      let metadata = card.querySelector('.music-library-card-meta');
+      if(!metadata){
+        metadata = document.createElement('div');
+        metadata.className = 'music-library-card-meta';
+        card.querySelector('.track-body')?.append(metadata);
+      }
+      metadata.textContent = [category,language,duration].filter(Boolean).join(' · ');
+      card.dataset.libraryCategory = category;
+      card.dataset.libraryOriginalTitle = TUNEWRAP_TRACK_ORIGINAL_TITLES[name] || '';
+    });
+  }
+
+  function searchMatches(panel,card,query){
+    if(!query) return true;
+    const language = cardLanguage(panel,card);
+    const currentTitle = card.querySelector('.track-title')?.textContent || '';
+    const originalTitle = card.dataset.libraryOriginalTitle || '';
+    const category = card.dataset.libraryCategory || '';
+    const type = panel === authorPanel
+      ? panel.querySelector('.music-library-heading .eyebrow')?.textContent || ''
+      : category;
+    const haystack = normalizeSearch([
+      currentTitle,
+      originalTitle,
+      language,
+      searchLanguageAliases[language],
+      category,
+      type
+    ].join(' '));
+    return normalizeSearch(query).split(/\s+/).every(token => haystack.includes(token));
+  }
+
+  function refreshLibrary(panel){
     const state = panelState.get(panel);
     if(!state) return;
-    state.language = language;
-    if(manual) state.manual = true;
+    syncCardMetadata(panel);
 
     const tabs = Array.from(panel.querySelectorAll('[data-library-language]'));
     const cards = cardsFor(panel);
     let visibleCount = 0;
 
     tabs.forEach(tab => {
-      const active = tab.dataset.libraryLanguage === language;
+      const active = tab.dataset.libraryLanguage === state.language;
       tab.classList.toggle('is-active',active);
       tab.setAttribute('aria-selected',String(active));
       tab.tabIndex = active ? 0 : -1;
     });
 
     cards.forEach(card => {
-      const visible = cardLanguage(panel,card) === language;
+      const languageMatches = state.language === 'ALL' || cardLanguage(panel,card) === state.language;
+      const visible = languageMatches && searchMatches(panel,card,state.query);
       card.hidden = !visible;
       if(visible) visibleCount += 1;
     });
 
-    panel.querySelector('[data-library-empty]').hidden = visibleCount !== 0;
+    const empty = panel.querySelector('[data-library-empty]');
+    if(empty) empty.hidden = visibleCount !== 0;
+    const resultCount = panel.querySelector('[data-library-result-count]');
+    if(resultCount) resultCount.textContent = countCopy[interfaceLanguage()](visibleCount);
+    if(panel === authorPanel && authorSignature){
+      authorSignature.hidden = visibleCount === 0;
+    }
+  }
+
+  function syncPlayingCards(){
+    [...storyCards,...authorCards].forEach(card => {
+      const name = trackName(card);
+      const audio = name ? document.getElementById('audio-' + name) : null;
+      card.classList.toggle('is-active-track',Boolean(audio && !audio.paused && !audio.ended));
+    });
   }
 
   function syncUnderlyingInert(){
@@ -3867,14 +4046,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if(other !== panel && other.classList.contains('is-open')) closeLibrary(other,false);
     });
     const state = panelState.get(panel);
+    const scroller = panel.querySelector('.music-library-scroll');
     state.trigger = trigger;
-    if(!state.manual) refreshFilter(panel,interfaceLanguage(),false);
+    refreshLibrary(panel);
     panel.removeAttribute('inert');
     panel.setAttribute('aria-hidden','false');
     panel.classList.add('is-open');
     document.body.classList.add('music-library-open');
     syncUnderlyingInert();
     window.requestAnimationFrame(() => {
+      if(scroller) scroller.scrollTop = state.scrollTop;
       panel.querySelector('[data-library-close]')?.focus({preventScroll:true});
       window.dispatchEvent(new Event('resize'));
     });
@@ -3883,6 +4064,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function closeLibrary(panel,restoreFocus = true){
     if(!panel.classList.contains('is-open')) return;
     const state = panelState.get(panel);
+    const scroller = panel.querySelector('.music-library-scroll');
+    if(state && scroller) state.scrollTop = scroller.scrollTop;
     panel.classList.remove('is-open');
     panel.setAttribute('aria-hidden','true');
     panel.setAttribute('inert','');
@@ -3896,14 +4079,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   panels.forEach(panel => {
+    const input = panel.querySelector('[data-library-search]');
     panelState.set(panel,{
-      language:interfaceLanguage(),
-      manual:false,
-      trigger:null
+      language:'ALL',
+      query:'',
+      trigger:null,
+      scrollTop:0
     });
+
     panel.querySelectorAll('[data-library-language]').forEach(tab => {
       tab.addEventListener('click',() => {
-        refreshFilter(panel,tab.dataset.libraryLanguage,true);
+        panelState.get(panel).language = tab.dataset.libraryLanguage;
+        refreshLibrary(panel);
       });
       tab.addEventListener('keydown',event => {
         if(event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
@@ -3913,11 +4100,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const index = tabs.indexOf(tab);
         const next = tabs[(index + direction + tabs.length) % tabs.length];
         next.focus();
-        refreshFilter(panel,next.dataset.libraryLanguage,true);
+        panelState.get(panel).language = next.dataset.libraryLanguage;
+        refreshLibrary(panel);
       });
     });
+
+    input?.addEventListener('input',() => {
+      panelState.get(panel).query = input.value;
+      refreshLibrary(panel);
+    });
+
+    panel.querySelector('[data-library-reset-search]')?.addEventListener('click',() => {
+      const state = panelState.get(panel);
+      state.query = '';
+      state.language = 'ALL';
+      if(input) input.value = '';
+      refreshLibrary(panel);
+      input?.focus({preventScroll:true});
+    });
+
     panel.querySelector('[data-library-close]')?.addEventListener('click',() => closeLibrary(panel));
-    refreshFilter(panel,interfaceLanguage(),false);
+    refreshLibrary(panel);
   });
 
   document.getElementById('openStoriesLibrary')?.addEventListener('click',event => {
@@ -3941,6 +4144,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  [...storyCards,...authorCards].forEach(card => {
+    const button = card.querySelector('.play-btn[data-track]');
+    const audio = button ? document.getElementById('audio-' + button.dataset.track) : null;
+    button?.addEventListener('click',event => {
+      if(!event.isTrusted) return;
+      event.stopPropagation();
+      window.__tuneWrapPlayerBridge?.adoptLibraryPlayback(card,button);
+      window.setTimeout(syncPlayingCards,0);
+    });
+    audio?.addEventListener('play',syncPlayingCards);
+    audio?.addEventListener('pause',syncPlayingCards);
+    audio?.addEventListener('ended',syncPlayingCards);
+  });
+
   function syncFeaturedTitles(){
     const code = document.documentElement.getAttribute('lang') || 'ru';
     const titles = TUNEWRAP_TRACK_TITLES[code] || TUNEWRAP_TRACK_TITLES.ru;
@@ -3952,14 +4169,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function syncLibraryLanguage(){
+    const code = interfaceLanguage();
+    panels.forEach(panel => {
+      const filters = panel.querySelector('[data-library-filters]');
+      if(filters) filters.setAttribute('aria-label',filterLabels[code]);
+      refreshLibrary(panel);
+    });
+  }
+
   document.addEventListener('tunewrap:languagechange',() => {
     syncFeaturedTitles();
-    panels.forEach(panel => {
-      const state = panelState.get(panel);
-      if(state && !state.manual) refreshFilter(panel,interfaceLanguage(),false);
-    });
+    syncLibraryLanguage();
   });
   syncFeaturedTitles();
+  syncLibraryLanguage();
+  syncPlayingCards();
 
   document.addEventListener('keydown',event => {
     if(event.key !== 'Escape' || playerScreen?.classList.contains('is-open')) return;
