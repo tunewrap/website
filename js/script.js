@@ -1541,13 +1541,38 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// ---------- Stage 8.7: one catalog-wide playback queue ----------
+function buildGlobalPlaybackQueue(items){
+  const languageOrder = ['GE','UA','EN','DE','RU'];
+  const libraryItems = items.filter(item => item.card.matches('#tracks .track'));
+  const authorItems = items.filter(item => item.card.matches('#author .author-card'));
+  const knownLanguages = new Set(languageOrder);
+  const orderedLibrary = languageOrder.flatMap(language =>
+    libraryItems.filter(item => item.card.dataset.songLanguage === language)
+  );
+  const futureLibraryItems = libraryItems.filter(item =>
+    !knownLanguages.has(item.card.dataset.songLanguage)
+  );
+  const otherItems = items.filter(item =>
+    !item.card.matches('#tracks .track, #author .author-card')
+  );
+  return [...orderedLibrary,...futureLibraryItems,...authorItems,...otherItems];
+}
+
 // ---------- mobile app player, menu and bottom navigation ----------
 document.addEventListener('DOMContentLoaded', () => {
-  const trackOrder = Array.from(new Set(
-    Array.from(document.querySelectorAll('.play-btn[data-track]'))
-      .map(button => button.dataset.track)
-      .filter(Boolean)
-  ));
+  const mobileTrackItems = Array.from(document.querySelectorAll('.play-btn[data-track]'))
+    .map(button => {
+      const name = button.dataset.track;
+      const card = button.closest('.track, .author-card');
+      return name && card ? {name,card} : null;
+    })
+    .filter(Boolean);
+  const uniqueMobileTrackItems = Array.from(
+    new Map(mobileTrackItems.map(item => [item.name,item])).values()
+  );
+  const trackOrder = buildGlobalPlaybackQueue(uniqueMobileTrackItems)
+    .map(item => item.name);
   const player = document.getElementById('mobilePlayer');
   const titleEl = document.getElementById('mobilePlayerTitle');
   const artistEl = document.getElementById('mobilePlayerArtist');
@@ -1868,25 +1893,14 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .filter(Boolean);
   const tracksByName = new Map(trackItems.map(item => [item.name,item]));
+  const globalPlaybackQueue = buildGlobalPlaybackQueue(trackItems);
   trackItems.forEach(({audio}) => {
     const source = audio.getAttribute('src');
     if(source) originalMediaSources.set(audio,new URL(source,document.baseURI).href);
   });
 
   function playbackQueue(){
-    const currentIsLibraryTrack = Boolean(activeCard && activeCard.matches('#tracks .track'));
-    const currentIsAuthorTrack = Boolean(activeCard && activeCard.matches('#author .author-card'));
-    let queue = trackItems;
-
-    if(currentIsLibraryTrack){
-      queue = trackItems.filter(item =>
-        item.card.matches('#tracks .track') && !item.card.hidden
-      );
-    } else if(currentIsAuthorTrack){
-      queue = trackItems.filter(item => item.card.matches('#author .author-card'));
-    }
-
-    if(queue.length) return queue;
+    if(globalPlaybackQueue.length) return globalPlaybackQueue;
     const currentName = activeAudio ? activeAudio.id.replace(/^audio-/,'') : '';
     const currentItem = tracksByName.get(currentName);
     return currentItem ? [currentItem] : [];
