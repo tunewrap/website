@@ -333,6 +333,204 @@
   },{passive:true});
 })();
 
+// ---------- Stage 8.8: localized track titles ----------
+const TUNEWRAP_TRACK_TITLES = {
+  ru:{
+    days127:"127",
+    mainroad:"Главный путь",
+    natalia65:"Наталья — 65 лет",
+    growold:"Мы будем стареть вместе",
+    justfive:"Ещё пять минут",
+    diana:"Диана!",
+    bestdad:"Лучший муж и папа",
+    allbegins:"Всё только начинается!",
+    fiveua:"Ещё пять минут",
+    growolden:"Мы будем стареть вместе",
+    neuesleben:"Новая жизнь",
+    growoldge:"Мы будем стареть вместе",
+    fivege:"Ещё пять минут",
+    amsterdam:"Амстердам",
+    mychoice:"Мой выбор",
+    tbilisiua:"Тбилиси (UA)",
+    tbilisige:"Тбилиси (GE)",
+    goodvibe:"Хорошее настроение",
+    pulse:"Пульс ночи",
+    amsterdamen:"Амстердам — английская версия",
+    mychoiceen:"Я делаю что хочу!",
+    yayaya:"Ya Ya Ya",
+    iwant:"Я делаю что хочу",
+    yayayaalt:"YA YA YA (альтернативная версия)",
+    dayspass:"Проходят дни",
+    ashes:"На пепелище",
+    newflight:"Новый полёт",
+    noretreat:"Пути назад нет",
+    "53":"53"
+  },
+  uk:{
+    days127:"127",
+    mainroad:"Головний шлях",
+    natalia65:"Наталія — 65 років",
+    growold:"Ми будемо старіти разом",
+    justfive:"Ще п'ять хвилин",
+    diana:"Діана!",
+    bestdad:"Найкращий чоловік і тато",
+    allbegins:"Все тільки починається!",
+    fiveua:"Ще п'ять хвилин",
+    growolden:"Ми будемо старіти разом",
+    neuesleben:"Нове життя",
+    growoldge:"Ми будемо старіти разом",
+    fivege:"Ще п'ять хвилин",
+    amsterdam:"Амстердам",
+    mychoice:"Мій вибір",
+    tbilisiua:"Тбілісі (UA)",
+    tbilisige:"Тбілісі (GE)",
+    goodvibe:"Гарний настрій",
+    pulse:"Пульс ночі",
+    amsterdamen:"Амстердам — англійська версія",
+    mychoiceen:"Я роблю що хочу!",
+    yayaya:"Ya Ya Ya",
+    iwant:"Я роблю що хочу",
+    yayayaalt:"YA YA YA (альтернативна версія)",
+    dayspass:"Минають дні",
+    ashes:"На попелі",
+    newflight:"Новий політ",
+    noretreat:"Шляху назад нема",
+    "53":"53"
+  },
+  ka:{
+    days127:"127",
+    mainroad:"მთავარი გზა",
+    natalia65:"ნატალია — 65 წელი",
+    growold:"ჩვენ ერთად დავბერდებით",
+    justfive:"კიდევ ხუთი წუთი",
+    diana:"დიანა!",
+    bestdad:"საუკეთესო ქმარი და მამა",
+    allbegins:"ყველაფერი მხოლოდ იწყება!",
+    fiveua:"კიდევ ხუთი წუთი",
+    growolden:"ჩვენ ერთად დავბერდებით",
+    neuesleben:"ახალი ცხოვრება",
+    growoldge:"ჩვენ ერთად დავბერდებით",
+    fivege:"კიდევ ხუთი წუთი",
+    amsterdam:"ამსტერდამი",
+    mychoice:"ჩემი არჩევანი",
+    tbilisiua:"თბილისი (UA)",
+    tbilisige:"თბილისი (GE)",
+    goodvibe:"კარგი განწყობა",
+    pulse:"ღამის პულსი",
+    amsterdamen:"ამსტერდამი — ინგლისური ვერსია",
+    mychoiceen:"ვაკეთებ იმას, რაც მინდა!",
+    yayaya:"Ya Ya Ya",
+    iwant:"ვაკეთებ იმას, რაც მინდა",
+    yayayaalt:"YA YA YA (ალტერნატიული ვერსია)",
+    dayspass:"დღეები გადის",
+    ashes:"ფერფლზე",
+    newflight:"ახალი ფრენა",
+    noretreat:"უკან დასახევი გზა არ არის",
+    "53":"53"
+  },
+  en:{
+    days127:"127",
+    mainroad:"The Main Path",
+    natalia65:"Natalia — 65",
+    growold:"We'll Grow Old Together",
+    justfive:"Just Five More Minutes",
+    diana:"Diana!",
+    bestdad:"The Best Husband and Dad",
+    allbegins:"Everything Is Just Beginning!",
+    fiveua:"Five More Minutes",
+    growolden:"We'll Grow Old Together",
+    neuesleben:"New Life",
+    growoldge:"We'll Grow Old Together",
+    fivege:"Five More Minutes",
+    amsterdam:"Amsterdam",
+    mychoice:"My Choice",
+    tbilisiua:"Tbilisi (UA)",
+    tbilisige:"Tbilisi (GE)",
+    goodvibe:"Good Vibe",
+    pulse:"Pulse of the Night",
+    amsterdamen:"Amsterdam — English Version",
+    mychoiceen:"I Do Whatever I Want!",
+    yayaya:"Ya Ya Ya",
+    iwant:"I Do Whatever I Want",
+    yayayaalt:"YA YA YA (Alternative Version)",
+    dayspass:"Days Go By",
+    ashes:"On the Ashes",
+    newflight:"New Flight",
+    noretreat:"No Way Back",
+    "53":"53"
+  },
+  de:{
+    days127:"127",
+    mainroad:"Der wichtigste Weg",
+    natalia65:"Natalia — 65 Jahre",
+    growold:"Wir werden gemeinsam alt",
+    justfive:"Noch fünf Minuten",
+    diana:"Diana!",
+    bestdad:"Der beste Ehemann und Papa",
+    allbegins:"Alles fängt gerade erst an!",
+    fiveua:"Noch fünf Minuten",
+    growolden:"Wir werden gemeinsam alt",
+    neuesleben:"Neues Leben",
+    growoldge:"Wir werden gemeinsam alt",
+    fivege:"Noch fünf Minuten",
+    amsterdam:"Amsterdam",
+    mychoice:"Meine Wahl",
+    tbilisiua:"Tbilisi (UA)",
+    tbilisige:"Tbilisi (GE)",
+    goodvibe:"Gute Stimmung",
+    pulse:"Puls der Nacht",
+    amsterdamen:"Amsterdam — englische Version",
+    mychoiceen:"Ich mache, was ich will!",
+    yayaya:"Ya Ya Ya",
+    iwant:"Ich mache, was ich will",
+    yayayaalt:"YA YA YA (Alternative Version)",
+    dayspass:"Die Tage vergehen",
+    ashes:"Auf der Asche",
+    newflight:"Neuer Flug",
+    noretreat:"Kein Weg zurück",
+    "53":"53"
+  }
+};
+
+const TUNEWRAP_LISTEN_LABELS = {
+  ru:"Слушать",
+  uk:"Слухати",
+  ka:"მოსმენა",
+  en:"Listen to",
+  de:"Anhören"
+};
+
+function applyTuneWrapTrackTitles(language){
+  const titles = TUNEWRAP_TRACK_TITLES[language] || TUNEWRAP_TRACK_TITLES.ru;
+  const listen = TUNEWRAP_LISTEN_LABELS[language] || TUNEWRAP_LISTEN_LABELS.ru;
+
+  document.querySelectorAll('.play-btn[data-track]').forEach(button => {
+    const track = button.dataset.track;
+    const localizedTitle = titles[track];
+    const card = button.closest('.track, .author-card');
+    if(!localizedTitle || !card) return;
+    const title = card.querySelector('.track-title');
+    const image = card.querySelector('.story-cover, .author-cover');
+    if(title) title.textContent = localizedTitle;
+    if(image) image.alt = localizedTitle;
+    button.setAttribute('aria-label',listen + ' ' + localizedTitle);
+  });
+
+  document.querySelectorAll('.story-ribbon-card[data-start-track]').forEach(card => {
+    const localizedTitle = titles[card.dataset.startTrack];
+    if(!localizedTitle) return;
+    const label = card.querySelector('.story-ribbon-label, span');
+    const image = card.querySelector('img');
+    if(label) label.textContent = localizedTitle;
+    if(image) image.alt = localizedTitle;
+    card.setAttribute('aria-label',listen + ' ' + localizedTitle);
+  });
+
+  document.dispatchEvent(new CustomEvent('tunewrap:languagechange',{
+    detail:{language}
+  }));
+}
+
 // ---------- i18n ----------
 (function(){
   const I18N = {
@@ -392,6 +590,12 @@
       pricing_eyebrow:"Стоимость и форматы",
       pricing_h2:"Выберите свой формат",
       pricing_p:"Выберите глубину работы: от песни по готовому тексту до полного создания истории, текста и музыкальной концепции.",
+      pricing_promo_title:"Ограниченная стартовая акция",
+      pricing_promo_until:"Только до 31 августа",
+      tier_open_btn:"Подробнее",
+      tier_detail_close:"Закрыть",
+      tier_detail_label:"Формат песни",
+      tier_detail_select:"Выбрать тариф и продолжить",
       tier_select_btn:"Выбрать",
       contact_eyebrow:"Начать свою историю",
       contact_h2:"Расскажите нам свою историю",
@@ -457,6 +661,8 @@
       review2_author:"Гиорги — Тбилиси",
       review3_quote:"«Заказал в подарок родителям на годовщину свадьбы — мама сказала, что это лучший подарок за 30 лет.»",
       review3_author:"Алекс — Киев",
+      corp_close:"Закрыть",
+      corp_panel_label:"Для компаний",
       corp_eyebrow:"Для компаний",
       corp_h2:"Нужно несколько песен?",
       corp_p:"Поздравления сотрудникам, подарки партнёрам, корпоративный гимн — при заказе от 5 песен действует скидка.",
@@ -537,6 +743,12 @@
       pricing_eyebrow:"Вартість і формати",
       pricing_h2:"Оберіть свій формат",
       pricing_p:"Оберіть глибину роботи: від пісні за готовим текстом до повного створення історії, тексту та музичної концепції.",
+      pricing_promo_title:"Обмежена стартова акція",
+      pricing_promo_until:"Лише до 31 серпня",
+      tier_open_btn:"Докладніше",
+      tier_detail_close:"Закрити",
+      tier_detail_label:"Формат пісні",
+      tier_detail_select:"Обрати тариф і продовжити",
       tier_select_btn:"Обрати",
       contact_eyebrow:"Почати свою історію",
       contact_h2:"Розкажіть нам свою історію",
@@ -602,6 +814,8 @@
       review2_author:"Гіоргі — Тбілісі",
       review3_quote:"«Замовив у подарунок батькам на річницю весілля — мама сказала, що це найкращий подарунок за 30 років.»",
       review3_author:"Алекс — Київ",
+      corp_close:"Закрити",
+      corp_panel_label:"Для компаній",
       corp_eyebrow:"Для компаній",
       corp_h2:"Потрібно кілька пісень?",
       corp_p:"Привітання співробітникам, подарунки партнерам, корпоративний гімн — від 5 пісень діє знижка.",
@@ -682,6 +896,12 @@
       pricing_eyebrow:"ფასი და ფორმატები",
       pricing_h2:"აირჩიეთ თქვენი ფორმატი",
       pricing_p:"აირჩიეთ მუშაობის სიღრმე: მზა ტექსტის გახმოვანებიდან ისტორიის, ტექსტისა და მუსიკალური კონცეფციის სრულ შექმნამდე.",
+      pricing_promo_title:"შეზღუდული საწყისი აქცია",
+      pricing_promo_until:"მხოლოდ 31 აგვისტომდე",
+      tier_open_btn:"დეტალურად",
+      tier_detail_close:"დახურვა",
+      tier_detail_label:"სიმღერის ფორმატი",
+      tier_detail_select:"ტარიფის არჩევა და გაგრძელება",
       tier_select_btn:"არჩევა",
       contact_eyebrow:"დაიწყეთ თქვენი ისტორია",
       contact_h2:"მოგვიყევით თქვენი ისტორია",
@@ -747,6 +967,8 @@
       review2_author:"გიორგი — თბილისი",
       review3_quote:"„მშობლებს ქორწილის წლისთავზე შევუკვეთე — დედამ თქვა, ეს 30 წლის საუკეთესო საჩუქარია.“",
       review3_author:"ალექსი — კიევი",
+      corp_close:"დახურვა",
+      corp_panel_label:"კომპანიებისთვის",
       corp_eyebrow:"კომპანიებისთვის",
       corp_h2:"რამდენიმე სიმღერა გჭირდებათ?",
       corp_p:"მილოცვები თანამშრომლებისთვის, საჩუქრები პარტნიორებისთვის, კორპორატიული ჰიმნი — 5 სიმღერიდან მოქმედებს ფასდაკლება.",
@@ -827,6 +1049,12 @@
       pricing_eyebrow:"Formats and pricing",
       pricing_h2:"Choose your format",
       pricing_p:"Choose the depth of the work: from producing a song from ready lyrics to creating the full story, lyrics, and musical concept.",
+      pricing_promo_title:"Limited launch offer",
+      pricing_promo_until:"Only until August 31",
+      tier_open_btn:"View details",
+      tier_detail_close:"Close",
+      tier_detail_label:"Song format",
+      tier_detail_select:"Choose this plan and continue",
       tier_select_btn:"Choose",
       contact_eyebrow:"Begin your story",
       contact_h2:"Tell us your story",
@@ -892,6 +1120,8 @@
       review2_author:"Giorgi — Tbilisi",
       review3_quote:"\"Ordered it for my parents' wedding anniversary — Mom said it was the best gift in 30 years.\"",
       review3_author:"Alex — Kyiv",
+      corp_close:"Close",
+      corp_panel_label:"For companies",
       corp_eyebrow:"For companies",
       corp_h2:"Need more than one song?",
       corp_p:"Shout-outs for employees, gifts for partners, a company anthem — orders of 5+ songs get a discount.",
@@ -972,6 +1202,12 @@
       pricing_eyebrow:"Formate und Preise",
       pricing_h2:"Wählen Sie Ihr Format",
       pricing_p:"Wählen Sie die Arbeitstiefe: vom Song nach einem fertigen Text bis zur vollständigen Entwicklung von Geschichte, Liedtext und musikalischem Konzept.",
+      pricing_promo_title:"Zeitlich begrenztes Startangebot",
+      pricing_promo_until:"Nur bis 31. August",
+      tier_open_btn:"Details ansehen",
+      tier_detail_close:"Schließen",
+      tier_detail_label:"Songformat",
+      tier_detail_select:"Tarif wählen und fortfahren",
       tier_select_btn:"Wählen",
       contact_eyebrow:"Ihre Geschichte beginnen",
       contact_h2:"Erzählen Sie uns Ihre Geschichte",
@@ -1037,6 +1273,8 @@
       review2_author:"Giorgi — Tiflis",
       review3_quote:"„Für das Hochzeitsjubiläum meiner Eltern bestellt — Mama meinte, es sei das beste Geschenk seit 30 Jahren.“",
       review3_author:"Alex — Kiew",
+      corp_close:"Schließen",
+      corp_panel_label:"Für Unternehmen",
       corp_eyebrow:"Für Unternehmen",
       corp_h2:"Mehrere Songs gesucht?",
       corp_p:"Grüße an Mitarbeitende, Geschenke für Partner, eine Firmenhymne — ab 5 Songs gibt es einen Rabatt.",
@@ -1065,29 +1303,29 @@
 
   const TIERS = {
     ru: [
-      {name:"Просто", price:"39", badge:null, features:["Ваш текст или идея — в песне","1 стиль на выбор","Базовый монтаж дублей","Доставка 48–72 часа"]},
-      {name:"Продвинутый", price:"89", badge:"Популярный", features:["Всё из тарифа «Просто»","Ручной отбор дублей и сведение","До 2 бесплатных правок текста","Доставка 24–48 часов"]},
-      {name:"Хит", price:"179", badge:null, features:["Всё из тарифа «Продвинутый»","Углублённая продюсерская работа","Правки текста до утверждения","Инструментальная версия в подарок"]}
+      {name:"Просто", oldPrice:"39", price:"19", badge:null, features:["Ваш текст или идея — в песне","1 стиль на выбор","Базовый монтаж дублей","Доставка 48–72 часа"]},
+      {name:"Продвинутый", oldPrice:"99", price:"49", badge:"Популярный", features:["Всё из тарифа «Просто»","Ручной отбор дублей и сведение","До 2 бесплатных правок текста","Доставка 24–48 часов"]},
+      {name:"Хит", oldPrice:"199", price:"139", badge:null, features:["Всё из тарифа «Продвинутый»","Углублённая продюсерская работа","Правки текста до утверждения","Инструментальная версия в подарок"]}
     ],
     uk: [
-      {name:"Просто", price:"39", badge:null, features:["Ваш текст або ідея — у пісні","1 стиль на вибір","Базовий монтаж дублів","Доставка 48–72 години"]},
-      {name:"Просунутий", price:"89", badge:"Популярний", features:["Все з тарифу «Просто»","Ручний відбір дублів і зведення","До 2 безкоштовних правок тексту","Доставка 24–48 годин"]},
-      {name:"Хіт", price:"179", badge:null, features:["Все з тарифу «Просунутий»","Поглиблена продюсерська робота","Правки тексту до затвердження","Інструментальна версія в подарунок"]}
+      {name:"Просто", oldPrice:"39", price:"19", badge:null, features:["Ваш текст або ідея — у пісні","1 стиль на вибір","Базовий монтаж дублів","Доставка 48–72 години"]},
+      {name:"Просунутий", oldPrice:"99", price:"49", badge:"Популярний", features:["Все з тарифу «Просто»","Ручний відбір дублів і зведення","До 2 безкоштовних правок тексту","Доставка 24–48 годин"]},
+      {name:"Хіт", oldPrice:"199", price:"139", badge:null, features:["Все з тарифу «Просунутий»","Поглиблена продюсерська робота","Правки тексту до затвердження","Інструментальна версія в подарунок"]}
     ],
     ka: [
-      {name:"მარტივი", price:"39", badge:null, features:["თქვენი ტექსტი ან იდეა — სიმღერაში","1 სტილი არჩევანით","დუბლების საბაზისო მონტაჟი","მიწოდება 48–72 საათში"]},
-      {name:"გაძლიერებული", price:"89", badge:"პოპულარული", features:["ყველაფერი «მარტივიდან»","საუკეთესო დუბლების ხელით შერჩევა","ტექსტის 2 უფასო შესწორებამდე","მიწოდება 24–48 საათში"]},
-      {name:"ჰიტი", price:"179", badge:null, features:["ყველაფერი «გაძლიერებულიდან»","ღრმა პროდიუსერული მუშაობა","ტექსტის შესწორება დამტკიცებამდე","საჩუქრად საკარაოკე ვერსია"]}
+      {name:"მარტივი", oldPrice:"39", price:"19", badge:null, features:["თქვენი ტექსტი ან იდეა — სიმღერაში","1 სტილი არჩევანით","დუბლების საბაზისო მონტაჟი","მიწოდება 48–72 საათში"]},
+      {name:"გაძლიერებული", oldPrice:"99", price:"49", badge:"პოპულარული", features:["ყველაფერი «მარტივიდან»","საუკეთესო დუბლების ხელით შერჩევა","ტექსტის 2 უფასო შესწორებამდე","მიწოდება 24–48 საათში"]},
+      {name:"ჰიტი", oldPrice:"199", price:"139", badge:null, features:["ყველაფერი «გაძლიერებულიდან»","ღრმა პროდიუსერული მუშაობა","ტექსტის შესწორება დამტკიცებამდე","საჩუქრად საკარაოკე ვერსია"]}
     ],
     en: [
-      {name:"Simple", price:"39", badge:null, features:["Your text or idea, turned into a song","1 style of your choice","Basic take editing","Delivery in 48–72 hours"]},
-      {name:"Advanced", price:"89", badge:"Popular", features:["Everything in Simple","Hand-picked takes and mixing","Up to 2 free lyric revisions","Delivery in 24–48 hours"]},
-      {name:"Hit", price:"179", badge:null, features:["Everything in Advanced","Deeper production work","Revisions until you approve","Free instrumental version"]}
+      {name:"Simple", oldPrice:"39", price:"19", badge:null, features:["Your text or idea, turned into a song","1 style of your choice","Basic take editing","Delivery in 48–72 hours"]},
+      {name:"Advanced", oldPrice:"99", price:"49", badge:"Popular", features:["Everything in Simple","Hand-picked takes and mixing","Up to 2 free lyric revisions","Delivery in 24–48 hours"]},
+      {name:"Hit", oldPrice:"199", price:"139", badge:null, features:["Everything in Advanced","Deeper production work","Revisions until you approve","Free instrumental version"]}
     ],
     de: [
-      {name:"Einfach", price:"39", badge:null, features:["Dein Text oder deine Idee wird zum Song","1 Stil deiner Wahl","Einfaches Take-Editing","Lieferung in 48–72 Stunden"]},
-      {name:"Fortgeschritten", price:"89", badge:"Beliebt", features:["Alles aus „Einfach“","Handverlesene Takes und Mixing","Bis zu 2 kostenlose Textkorrekturen","Lieferung in 24–48 Stunden"]},
-      {name:"Hit", price:"179", badge:null, features:["Alles aus „Fortgeschritten“","Vertiefte Produktionsarbeit","Korrekturen bis zur Freigabe","Instrumentalversion gratis"]}
+      {name:"Einfach", oldPrice:"39", price:"19", badge:null, features:["Dein Text oder deine Idee wird zum Song","1 Stil deiner Wahl","Einfaches Take-Editing","Lieferung in 48–72 Stunden"]},
+      {name:"Fortgeschritten", oldPrice:"99", price:"49", badge:"Beliebt", features:["Alles aus „Einfach“","Handverlesene Takes und Mixing","Bis zu 2 kostenlose Textkorrekturen","Lieferung in 24–48 Stunden"]},
+      {name:"Hit", oldPrice:"199", price:"139", badge:null, features:["Alles aus „Fortgeschritten“","Vertiefte Produktionsarbeit","Korrekturen bis zur Freigabe","Instrumentalversion gratis"]}
     ]
   };
 
@@ -1224,33 +1462,105 @@
   let selectedTierIdx = null;
   let selectedStyles = [];
   let currentMode = 'order';
+  let activeTierPanelIdx = 0;
+  let tierPanelRestoreFocus = null;
+
+  const tierPanel = document.getElementById('tierDetailPanel');
+  const tierPanelClose = document.getElementById('tierDetailClose');
+  const tierPanelTitle = document.getElementById('tierDetailTitle');
+  const tierPanelBadge = document.getElementById('tierDetailBadge');
+  const tierPanelOldPrice = document.getElementById('tierDetailOldPrice');
+  const tierPanelPrice = document.getElementById('tierDetailPrice');
+  const tierPanelFeatures = document.getElementById('tierDetailFeatures');
+  const tierPanelSelect = document.getElementById('tierDetailSelect');
 
   function t(key){ return (I18N[currentLang] || I18N.ru)[key] || ''; }
 
+  function renderTierPanel(index = activeTierPanelIdx){
+    if(
+      !tierPanel || !tierPanelTitle || !tierPanelBadge || !tierPanelOldPrice ||
+      !tierPanelPrice || !tierPanelFeatures || !tierPanelSelect
+    ) return;
+    const tier = TIERS[currentLang][index];
+    if(!tier) return;
+    activeTierPanelIdx = index;
+    tierPanelTitle.textContent = tier.name;
+    tierPanelBadge.textContent = tier.badge || '';
+    tierPanelBadge.hidden = !tier.badge;
+    tierPanelOldPrice.textContent = '$' + tier.oldPrice;
+    tierPanelPrice.textContent = '$' + tier.price;
+    tierPanelFeatures.innerHTML = tier.features.map(feature => '<li>' + feature + '</li>').join('');
+  }
+
+  function openTierPanel(index,trigger){
+    if(!tierPanel) return;
+    renderTierPanel(index);
+    tierPanelRestoreFocus = trigger || null;
+    tierPanel.removeAttribute('inert');
+    tierPanel.classList.add('is-open');
+    tierPanel.setAttribute('aria-hidden','false');
+    document.body.classList.add('tier-panel-open');
+    window.requestAnimationFrame(() => tierPanelClose?.focus({preventScroll:true}));
+  }
+
+  function closeTierPanel(){
+    if(!tierPanel || !tierPanel.classList.contains('is-open')) return;
+    tierPanel.classList.remove('is-open');
+    tierPanel.setAttribute('aria-hidden','true');
+    tierPanel.setAttribute('inert','');
+    document.body.classList.remove('tier-panel-open');
+    if(tierPanelRestoreFocus && typeof tierPanelRestoreFocus.focus === 'function'){
+      window.requestAnimationFrame(() => tierPanelRestoreFocus.focus({preventScroll:true}));
+    }
+  }
+
+  function applySelectedTier(index){
+    const tier = TIERS[currentLang][index];
+    if(!tier) return;
+    selectedTierIdx = index;
+    document.getElementById('sumTier').textContent = tier.name + ' ($' + tier.price + ')';
+    updateSummaryTotal();
+    renderTiers(currentLang);
+  }
+
+  function continueWithSelectedTier(){
+    applySelectedTier(activeTierPanelIdx);
+    closeTierPanel();
+    const contact = document.getElementById('contact');
+    const orderMode = document.querySelector('.mode-btn[data-mode="order"]');
+    if(orderMode) orderMode.click();
+    if(contact) contact.classList.add('is-story-path-form');
+    window.setTimeout(() => {
+      contact?.scrollIntoView({behavior:'smooth',block:'start'});
+    },80);
+  }
+
   function renderTiers(lang){
     const grid = document.getElementById('tiersGrid');
-    const previousScrollLeft = grid.scrollLeft;
     grid.innerHTML = '';
     TIERS[lang].forEach((tier, i)=>{
-      const card = document.createElement('div');
+      const card = document.createElement('article');
       card.className = 'tier-card' + (i===1 ? ' featured' : '') + (selectedTierIdx===i ? ' selected' : '');
+      card.tabIndex = 0;
+      card.setAttribute('role','button');
+      card.setAttribute('aria-label',tier.name + ', $' + tier.price + '. ' + t('tier_open_btn'));
+      card.dataset.tierIndex = String(i);
       card.innerHTML =
         (tier.badge ? '<div class="tier-badge">'+tier.badge+'</div>' : '') +
         '<div class="tier-name">'+tier.name+'</div>' +
-        '<div class="tier-price">$'+tier.price+' <small>USD</small></div>' +
-        '<ul class="tier-features">' + tier.features.map(f=>'<li>'+f+'</li>').join('') + '</ul>' +
-        '<button type="button" class="tier-select" data-idx="'+i+'">'+t('tier_select_btn')+'</button>';
-      card.querySelector('.tier-select').addEventListener('click', ()=>{
-        selectedTierIdx = i;
-        document.getElementById('sumTier').textContent = TIERS[currentLang][i].name + ' ($' + TIERS[currentLang][i].price + ')';
-        updateSummaryTotal();
-        renderTiers(currentLang);
+        '<div class="tier-price tier-price-promo"><s>$'+tier.oldPrice+'</s><strong>$'+tier.price+'</strong><small>USD</small></div>' +
+        '<span class="tier-card-open">'+t('tier_open_btn')+'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span>';
+      card.addEventListener('click',()=>{
+        openTierPanel(i,card);
+      });
+      card.addEventListener('keydown',event => {
+        if(event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        openTierPanel(i,card);
       });
       grid.appendChild(card);
     });
-    window.requestAnimationFrame(() => {
-      grid.scrollLeft = previousScrollLeft;
-    });
+    if(tierPanel?.classList.contains('is-open')) renderTierPanel(activeTierPanelIdx);
   }
 
   function updateSummaryTotal(){
@@ -1405,10 +1715,22 @@
     document.body.classList.toggle('lang-ka', lang === 'ka');
     buttons.forEach(b=> b.classList.toggle('active', b.getAttribute('data-lang') === lang));
     renderDynamic(lang);
+    applyTuneWrapTrackTitles(lang);
   }
 
   buttons.forEach(btn=>{
     btn.addEventListener('click', ()=> applyLang(btn.getAttribute('data-lang')));
+  });
+
+  tierPanelClose?.addEventListener('click',closeTierPanel);
+  tierPanel?.querySelectorAll('[data-tier-panel-close]').forEach(button => {
+    button.addEventListener('click',closeTierPanel);
+  });
+  tierPanelSelect?.addEventListener('click',continueWithSelectedTier);
+  document.addEventListener('keydown',event => {
+    if(event.key === 'Escape' && tierPanel?.classList.contains('is-open')){
+      closeTierPanel();
+    }
   });
 
   // mode switch (order vs gift certificate)
@@ -1693,6 +2015,9 @@ document.addEventListener('DOMContentLoaded', () => {
       window.setTimeout(() => updateMobileTrack(currentTrack), 0);
     });
   });
+  document.addEventListener('tunewrap:languagechange',() => {
+    updateMobileTrack(currentTrack);
+  });
 
   const bottomLinks = Array.from(document.querySelectorAll('.mobile-bottom-nav a[data-mobile-section]'));
   function setActiveBottomLink(sectionId){
@@ -1756,6 +2081,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const cover = document.getElementById('songPlayerCover');
   const title = document.getElementById('songPlayerTitle');
   const description = document.getElementById('songPlayerDescription');
+  const languageLabel = document.getElementById('songPlayerLanguage');
+  const descriptionToggle = document.getElementById('songPlayerDescriptionToggle');
+  const descriptionSheet = document.getElementById('songPlayerDescriptionSheet');
+  const descriptionCollapse = document.getElementById('songPlayerDescriptionCollapse');
+  const descriptionFull = document.getElementById('songPlayerDescriptionFull');
   const toggle = document.getElementById('songPlayerToggle');
   const previousButton = document.getElementById('songPlayerPrevious');
   const nextButton = document.getElementById('songPlayerNext');
@@ -1780,7 +2110,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if(
     !screen || !backButton || !minimizeButton || !coverWrap || !cover ||
-    !title || !description || !toggle || !previousButton || !nextButton ||
+    !title || !description || !languageLabel || !descriptionToggle ||
+    !descriptionSheet || !descriptionCollapse || !descriptionFull ||
+    !toggle || !previousButton || !nextButton ||
     !seek || !currentTime || !duration || !lyrics || !translation ||
     !translationBlock || !orderButton || !playerScroll || !miniPlayer ||
     !miniExpand || !miniTitle || !miniPrevious || !miniToggle || !miniNext ||
@@ -1801,6 +2133,9 @@ document.addEventListener('DOMContentLoaded', () => {
       expand:'Развернуть плеер',
       stop:'Остановить музыку',
       seek:'Перемотка песни',
+      showFull:'Показать полностью',
+      fullDescription:'Описание песни',
+      collapse:'Свернуть',
       empty:'Текст песни пока не добавлен в проект.'
     },
     uk:{
@@ -1816,6 +2151,9 @@ document.addEventListener('DOMContentLoaded', () => {
       expand:'Розгорнути плеєр',
       stop:'Зупинити музику',
       seek:'Перемотування пісні',
+      showFull:'Показати повністю',
+      fullDescription:'Опис пісні',
+      collapse:'Згорнути',
       empty:'Текст пісні поки не додано до проєкту.'
     },
     ka:{
@@ -1831,6 +2169,9 @@ document.addEventListener('DOMContentLoaded', () => {
       expand:'პლეერის გაშლა',
       stop:'მუსიკის შეჩერება',
       seek:'სიმღერის გადახვევა',
+      showFull:'სრულად ჩვენება',
+      fullDescription:'სიმღერის აღწერა',
+      collapse:'ჩაკეცვა',
       empty:'სიმღერის ტექსტი პროექტში ჯერ არ არის დამატებული.'
     },
     en:{
@@ -1846,6 +2187,9 @@ document.addEventListener('DOMContentLoaded', () => {
       expand:'Expand player',
       stop:'Stop music',
       seek:'Seek through song',
+      showFull:'Show more',
+      fullDescription:'Song description',
+      collapse:'Collapse',
       empty:'The lyrics have not been added to the project yet.'
     },
     de:{
@@ -1861,6 +2205,9 @@ document.addEventListener('DOMContentLoaded', () => {
       expand:'Player öffnen',
       stop:'Musik stoppen',
       seek:'Im Song spulen',
+      showFull:'Vollständig anzeigen',
+      fullDescription:'Songbeschreibung',
+      collapse:'Einklappen',
       empty:'Der Songtext wurde dem Projekt noch nicht hinzugefügt.'
     }
   };
@@ -1879,6 +2226,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let swipeStartX = 0;
   let swipeStartY = 0;
   let swipeAllowed = false;
+  let descriptionMeasureFrame = 0;
   const portableMediaSources = new Map();
   const originalMediaSources = new Map();
   const fallbackAudioVolumes = new WeakMap();
@@ -1894,6 +2242,24 @@ document.addEventListener('DOMContentLoaded', () => {
     .filter(Boolean);
   const tracksByName = new Map(trackItems.map(item => [item.name,item]));
   const globalPlaybackQueue = buildGlobalPlaybackQueue(trackItems);
+  const authorTrackLanguages = {
+    amsterdam:'RU',
+    mychoice:'UA',
+    tbilisiua:'UA',
+    tbilisige:'GE',
+    goodvibe:'EN',
+    pulse:'EN',
+    amsterdamen:'EN',
+    mychoiceen:'EN',
+    yayaya:'EN',
+    iwant:'UA',
+    yayayaalt:'EN',
+    dayspass:'UA',
+    ashes:'UA',
+    newflight:'UA',
+    noretreat:'UA',
+    '53':'EE / EN'
+  };
   trackItems.forEach(({audio}) => {
     const source = audio.getAttribute('src');
     if(source) originalMediaSources.set(audio,new URL(source,document.baseURI).href);
@@ -2192,6 +2558,51 @@ document.addEventListener('DOMContentLoaded', () => {
     miniTitle.textContent = cardTitle ? cardTitle.textContent.trim() : 'TuneWrap';
   }
 
+  function activeTrackLanguage(){
+    if(!activeCard) return '';
+    if(activeCard.dataset.songLanguage) return activeCard.dataset.songLanguage;
+    const name = activeAudio ? activeAudio.id.replace(/^audio-/,'') : '';
+    return authorTrackLanguages[name] || 'TuneWrap';
+  }
+
+  function closeDescriptionSheet(restoreToggleFocus = false){
+    if(!descriptionSheet.classList.contains('is-open')) return;
+    descriptionSheet.classList.remove('is-open');
+    descriptionSheet.setAttribute('aria-hidden','true');
+    descriptionSheet.setAttribute('inert','');
+    descriptionToggle.setAttribute('aria-expanded','false');
+    screen.classList.remove('is-description-open');
+    if(restoreToggleFocus && !descriptionToggle.hidden){
+      window.requestAnimationFrame(() => descriptionToggle.focus({preventScroll:true}));
+    }
+  }
+
+  function updateDescriptionAvailability(){
+    descriptionMeasureFrame = 0;
+    const hasText = Boolean(description.textContent.trim());
+    description.parentElement.hidden = !hasText;
+    const overflows = hasText && description.scrollHeight > description.clientHeight + 1;
+    descriptionToggle.hidden = !overflows;
+    if(!overflows) closeDescriptionSheet(false);
+  }
+
+  function scheduleDescriptionMeasurement(){
+    window.cancelAnimationFrame(descriptionMeasureFrame);
+    descriptionMeasureFrame = window.requestAnimationFrame(updateDescriptionAvailability);
+  }
+
+  function openDescriptionSheet(){
+    if(descriptionToggle.hidden || !description.textContent.trim()) return;
+    descriptionFull.textContent = description.textContent.trim();
+    descriptionSheet.removeAttribute('inert');
+    descriptionSheet.classList.add('is-open');
+    descriptionSheet.setAttribute('aria-hidden','false');
+    descriptionToggle.setAttribute('aria-expanded','true');
+    screen.classList.add('is-description-open');
+    descriptionFull.scrollTop = 0;
+    window.requestAnimationFrame(() => descriptionCollapse.focus({preventScroll:true}));
+  }
+
   function syncLanguage(){
     const labels = ui();
     screen.querySelectorAll('[data-player-i18n]').forEach(element => {
@@ -2212,6 +2623,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const cardDescription = activeCard.querySelector('.track-desc');
       title.textContent = cardTitle ? cardTitle.textContent.trim() : 'TuneWrap';
       description.textContent = cardDescription ? cardDescription.textContent.trim() : '';
+      languageLabel.textContent = activeTrackLanguage();
+      if(descriptionSheet.classList.contains('is-open')){
+        descriptionFull.textContent = description.textContent.trim();
+      }
       const lyricText = songText(activeCard,'data-song-lyrics');
       lyrics.textContent = lyricText || labels.empty;
       lyrics.classList.toggle('is-empty', !lyricText);
@@ -2219,6 +2634,7 @@ document.addEventListener('DOMContentLoaded', () => {
       translation.textContent = translationText;
       translationBlock.hidden = !translationText;
       syncMiniTrack();
+      scheduleDescriptionMeasurement();
     }
   }
 
@@ -2282,6 +2698,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const item = tracksByName.get(name);
     if(!item || item.card !== card) return false;
     const {audio,button} = item;
+    closeDescriptionSheet(false);
+    descriptionToggle.hidden = true;
 
     const previousAudio = activeAudio;
     pauseOtherTracks(audio);
@@ -2413,11 +2831,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if(bottomNav) bottomNav.setAttribute('inert','');
     miniPlayer.setAttribute('inert','');
     window.requestAnimationFrame(() => backButton.focus({preventScroll:true}));
+    scheduleDescriptionMeasurement();
     if(shouldAutoplay) autoplayActive();
   }
 
   function closePlayer(showMini = true){
     if(!screen.classList.contains('is-open')) return;
+    closeDescriptionSheet(false);
     screen.classList.remove('is-open');
     screen.setAttribute('aria-hidden','true');
     screen.setAttribute('inert','');
@@ -2495,6 +2915,8 @@ document.addEventListener('DOMContentLoaded', () => {
   previousButton.addEventListener('click',() => switchTrack(-1));
   nextButton.addEventListener('click',() => switchTrack(1));
   toggle.addEventListener('click',toggleActivePlayback);
+  descriptionToggle.addEventListener('click',openDescriptionSheet);
+  descriptionCollapse.addEventListener('click',() => closeDescriptionSheet(true));
 
   miniPrevious.addEventListener('click',() => switchTrack(-1));
   miniToggle.addEventListener('click',toggleActivePlayback);
@@ -2720,6 +3142,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', event => {
     if(!screen.classList.contains('is-open')) return;
     if(event.key === 'Escape'){
+      if(descriptionSheet.classList.contains('is-open')){
+        closeDescriptionSheet(true);
+        return;
+      }
       closePlayer();
     } else if(event.key === 'ArrowLeft' && event.target !== seek){
       switchTrack(-1);
@@ -2731,6 +3157,13 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.lang-btn').forEach(button => {
     button.addEventListener('click', () => window.setTimeout(syncLanguage,0));
   });
+
+  if('ResizeObserver' in window){
+    const descriptionObserver = new ResizeObserver(scheduleDescriptionMeasurement);
+    descriptionObserver.observe(description);
+  } else {
+    window.addEventListener('resize',scheduleDescriptionMeasurement,{passive:true});
+  }
 
   if(typeof mobileViewport.addEventListener === 'function'){
     mobileViewport.addEventListener('change', event => {
@@ -2979,9 +3412,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('storyOrderForm');
   const back = document.getElementById('storyPathBack');
   const corporate = document.getElementById('corporate');
+  const corporateClose = document.getElementById('corporatePanelClose');
+  const appScroll = document.getElementById('appScroll');
+  const bottomNav = document.querySelector('.mobile-bottom-nav');
+  const siteHeader = document.querySelector('body > nav');
   const mobileViewport = window.matchMedia('(max-width:620px)');
+  let corporateRestoreFocus = null;
 
   if(!contact || !picker || !form || !back) return;
+  if(corporate && corporate.parentElement !== document.body){
+    document.body.appendChild(corporate);
+  }
 
   function contactScroll(){
     return contact.querySelector(':scope > .wrap');
@@ -2996,11 +3437,38 @@ document.addEventListener('DOMContentLoaded', () => {
     window.requestAnimationFrame(() => back.focus({preventScroll:true}));
   }
 
+  function openCorporate(trigger){
+    if(!corporate) return;
+    corporateRestoreFocus = trigger || null;
+    corporate.removeAttribute('inert');
+    corporate.classList.add('is-open');
+    corporate.setAttribute('aria-hidden','false');
+    document.body.classList.add('corporate-panel-open');
+    appScroll?.setAttribute('inert','');
+    bottomNav?.setAttribute('inert','');
+    siteHeader?.setAttribute('inert','');
+    window.requestAnimationFrame(() => corporateClose?.focus({preventScroll:true}));
+  }
+
+  function closeCorporate(){
+    if(!corporate || !corporate.classList.contains('is-open')) return;
+    corporate.classList.remove('is-open');
+    corporate.setAttribute('aria-hidden','true');
+    corporate.setAttribute('inert','');
+    document.body.classList.remove('corporate-panel-open');
+    appScroll?.removeAttribute('inert');
+    bottomNav?.removeAttribute('inert');
+    siteHeader?.removeAttribute('inert');
+    if(corporateRestoreFocus && typeof corporateRestoreFocus.focus === 'function'){
+      window.requestAnimationFrame(() => corporateRestoreFocus.focus({preventScroll:true}));
+    }
+  }
+
   picker.querySelectorAll('[data-story-path]').forEach(button => {
     button.addEventListener('click',() => {
       const path = button.dataset.storyPath;
       if(path === 'corporate'){
-        if(corporate) corporate.scrollIntoView({behavior:'smooth',block:'start'});
+        openCorporate(button);
         return;
       }
       openForm(path === 'certificate' ? 'certificate' : 'order');
@@ -3013,6 +3481,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if(scroll) scroll.scrollTop = 0;
     const firstAction = picker.querySelector('[data-story-path="order"]');
     if(firstAction) window.requestAnimationFrame(() => firstAction.focus({preventScroll:true}));
+  });
+
+  corporateClose?.addEventListener('click',closeCorporate);
+  document.addEventListener('keydown',event => {
+    if(event.key === 'Escape' && corporate?.classList.contains('is-open')){
+      closeCorporate();
+    }
   });
 
   if(typeof mobileViewport.addEventListener === 'function'){
@@ -3100,7 +3575,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileViewport = window.matchMedia('(max-width:620px)');
   if(!appScroll) return;
 
-  const screenSelector = '.hero,#philosophy,#how,#tracks,#pricing,#contact,#corporate,#author';
+  const screenSelector = '.hero,#philosophy,#how,#tracks,#pricing,#contact,#author';
   let gesture = null;
   let settleTimer = 0;
 

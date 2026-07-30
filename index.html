@@ -404,6 +404,10 @@
       <div class="eyebrow" data-i18n="pricing_eyebrow">Стоимость и форматы</div>
       <h2 data-i18n="pricing_h2">Выберите свой формат</h2>
       <p data-i18n="pricing_p">Выберите глубину работы: от песни по готовому тексту до полного создания истории, текста и музыкальной концепции.</p>
+      <div class="pricing-promo" aria-label="Ограниченная стартовая акция">
+        <strong data-i18n="pricing_promo_title">Ограниченная стартовая акция</strong>
+        <span data-i18n="pricing_promo_until">Только до 31 августа</span>
+      </div>
     </div>
     <div class="tiers-grid" id="tiersGrid"></div>
   </div>
@@ -563,12 +567,21 @@
   </div>
 </section>
 
-<section id="corporate">
-  <div class="wrap">
+<section class="corporate-panel" id="corporate" aria-hidden="true" aria-modal="true" role="dialog" aria-labelledby="corporatePanelTitle" inert>
+  <div class="corporate-panel-shell">
+    <div class="corporate-panel-topbar">
+      <button class="corporate-panel-close" id="corporatePanelClose" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        <span data-i18n="corp_close">Закрыть</span>
+      </button>
+      <div class="song-player-brand">Tune<span>Wrap</span></div>
+      <span class="corporate-panel-label" data-i18n="corp_panel_label">Для компаний</span>
+    </div>
+    <div class="wrap">
     <div class="corporate-box">
       <div>
         <div class="eyebrow" data-i18n="corp_eyebrow">Для компаний</div>
-        <h2 data-i18n="corp_h2">Нужно несколько песен?</h2>
+        <h2 id="corporatePanelTitle" data-i18n="corp_h2">Нужно несколько песен?</h2>
         <p data-i18n="corp_p" class="corp-text">Поздравления сотрудникам, подарки партнёрам, корпоративный гимн — при заказе от 5 песен действует скидка.</p>
         <div class="corp-controls">
           <div class="corp-field">
@@ -586,6 +599,7 @@
         <a class="btn-primary" id="corpTgLink" href="#" target="_blank" rel="noopener" data-i18n="corp_btn">Обсудить в Telegram</a>
       </div>
     </div>
+  </div>
   </div>
 </section>
 
@@ -771,6 +785,35 @@
   </div>
 </footer>
 
+<section class="tier-detail-panel" id="tierDetailPanel" aria-hidden="true" aria-modal="true" role="dialog" aria-labelledby="tierDetailTitle" inert>
+  <button class="tier-detail-backdrop" type="button" data-tier-panel-close aria-label="Закрыть"></button>
+  <div class="tier-detail-shell">
+    <div class="tier-detail-topbar">
+      <button class="tier-detail-close" id="tierDetailClose" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        <span data-i18n="tier_detail_close">Закрыть</span>
+      </button>
+      <div class="song-player-brand">Tune<span>Wrap</span></div>
+      <span class="tier-detail-step" data-i18n="tier_detail_label">Формат песни</span>
+    </div>
+    <div class="tier-detail-body">
+      <article class="tier-detail-card">
+        <div class="tier-detail-badge" id="tierDetailBadge" hidden></div>
+        <p class="tier-detail-kicker" data-i18n="pricing_promo_title">Ограниченная стартовая акция</p>
+        <h2 id="tierDetailTitle">TuneWrap</h2>
+        <div class="tier-detail-price">
+          <s id="tierDetailOldPrice">$39</s>
+          <strong id="tierDetailPrice">$19</strong>
+          <small>USD</small>
+        </div>
+        <p class="tier-detail-until" data-i18n="pricing_promo_until">Только до 31 августа</p>
+        <ul class="tier-detail-features" id="tierDetailFeatures"></ul>
+        <button class="tier-detail-select" id="tierDetailSelect" type="button" data-i18n="tier_detail_select">Выбрать тариф и продолжить</button>
+      </article>
+    </div>
+  </div>
+</section>
+
 <section class="song-player-screen" id="songPlayerScreen" aria-hidden="true" aria-modal="true" role="dialog" aria-labelledby="songPlayerTitle">
   <div class="song-player-shell">
     <div class="song-player-topbar">
@@ -793,27 +836,10 @@
 
       <div class="song-player-copy">
         <h1 id="songPlayerTitle">TuneWrap</h1>
-        <p id="songPlayerDescription"></p>
-      </div>
-
-      <div class="song-player-controls">
-        <div class="song-player-transport">
-          <button class="song-player-skip" id="songPlayerPrevious" type="button" aria-label="Предыдущий трек">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5.5L9 12l6.5 6.5"/></svg>
-          </button>
-          <button class="song-player-toggle" id="songPlayerToggle" type="button" aria-label="Воспроизвести">
-            <span class="song-player-toggle-icon" aria-hidden="true"></span>
-          </button>
-          <button class="song-player-skip" id="songPlayerNext" type="button" aria-label="Следующий трек">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.5L15 12l-6.5 6.5"/></svg>
-          </button>
-        </div>
-        <div class="song-player-timeline">
-          <input id="songPlayerSeek" type="range" min="0" max="0" step="0.01" value="0" aria-label="Перемотка песни">
-          <div class="song-player-times" aria-live="off">
-            <span id="songPlayerCurrentTime">0:00</span>
-            <span id="songPlayerDuration">0:00</span>
-          </div>
+        <span class="song-player-language" id="songPlayerLanguage"></span>
+        <div class="song-player-description-preview">
+          <p id="songPlayerDescription"></p>
+          <button class="song-player-description-toggle" id="songPlayerDescriptionToggle" type="button" aria-expanded="false" aria-controls="songPlayerDescriptionSheet" data-player-i18n="showFull" hidden>Показать полностью</button>
         </div>
       </div>
 
@@ -829,6 +855,35 @@
 
       <a class="song-player-order" id="songPlayerOrder" href="#contact" data-player-i18n="order">Заказать похожую историю</a>
     </div>
+
+    <div class="song-player-controls">
+      <div class="song-player-timeline">
+        <input id="songPlayerSeek" type="range" min="0" max="0" step="0.01" value="0" aria-label="Перемотка песни">
+        <div class="song-player-times" aria-live="off">
+          <span id="songPlayerCurrentTime">0:00</span>
+          <span id="songPlayerDuration">0:00</span>
+        </div>
+      </div>
+      <div class="song-player-transport">
+        <button class="song-player-skip" id="songPlayerPrevious" type="button" aria-label="Предыдущий трек">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5.5L9 12l6.5 6.5"/></svg>
+        </button>
+        <button class="song-player-toggle" id="songPlayerToggle" type="button" aria-label="Воспроизвести">
+          <span class="song-player-toggle-icon" aria-hidden="true"></span>
+        </button>
+        <button class="song-player-skip" id="songPlayerNext" type="button" aria-label="Следующий трек">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.5L15 12l-6.5 6.5"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <aside class="song-player-description-sheet" id="songPlayerDescriptionSheet" aria-hidden="true" aria-labelledby="songPlayerDescriptionSheetTitle" inert>
+      <div class="song-player-description-sheet-head">
+        <h2 id="songPlayerDescriptionSheetTitle" data-player-i18n="fullDescription">Описание песни</h2>
+        <button id="songPlayerDescriptionCollapse" type="button" data-player-i18n="collapse">Свернуть</button>
+      </div>
+      <div class="song-player-description-sheet-scroll" id="songPlayerDescriptionFull" tabindex="0"></div>
+    </aside>
   </div>
 </section>
 
