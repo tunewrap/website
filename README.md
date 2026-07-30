@@ -4,12 +4,12 @@ Official TuneWrap website.
 
 Static HTML/CSS/JavaScript project prepared for GitHub and Cloudflare Pages.
 
-## Stage 8.8
+## Stage 8.9
 
-- compact promotional pricing cards with full-screen tariff details;
-- hidden full-screen corporate order panel;
-- localized titles for all 29 tracks in RU, UA, GE, EN, and DE;
-- fixed Full Player controls with an expandable, scrollable description panel.
+- refined pricing composition with the shared TuneWrap waveform and direct order CTA;
+- showcase screens for Musical Stories and Author Songs without nested horizontal carousels;
+- separate full-screen, vertically scrolling libraries with RU, UA, EN, DE, and GE filters;
+- the existing 29-track global playback queue, players, covers, and audio files preserved.
 
 Run locally with any static file server, for example:
 

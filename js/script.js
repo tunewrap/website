@@ -573,6 +573,13 @@ function applyTuneWrapTrackTitles(language){
       tracks_eyebrow:"Музыкальные истории",
       tracks_h2:"Истории, которые можно услышать",
       tracks_p:"Сначала — человек и важные детали его жизни. Потом — текст, музыка и момент, в котором близкие узнают себя.",
+      library_featured_story:"Выбранная история",
+      stories_count_label:"музыкальных историй",
+      stories_open_all:"Открыть все истории",
+      stories_library_title:"Все музыкальные истории",
+      stories_library_subtitle:"Выберите язык или откройте любую историю из полного каталога.",
+      library_close:"Назад",
+      library_empty:"В этом языковом разделе пока нет песен.",
       track_127_title:"127",
       track_127_desc:"Она заплатила за его кофе. Через неделю он написал: «Верну кофе?» Через 127 дней понял, что хочет прожить с ней всю жизнь. Теперь это число — на их кольцах.",
       track_main_title:"Главный путь",
@@ -589,7 +596,7 @@ function applyTuneWrapTrackTitles(language){
       step3_desc:"Вы получаете готовую песню в высоком качестве. Срок и количество правок зависят от выбранного пакета.",
       pricing_eyebrow:"Стоимость и форматы",
       pricing_h2:"Выберите свой формат",
-      pricing_p:"Выберите глубину работы: от песни по готовому тексту до полного создания истории, текста и музыкальной концепции.",
+      pricing_p:"Выберите глубину работы: от песни по готовому тексту до полного создания истории и текста.",
       pricing_promo_title:"Ограниченная стартовая акция",
       pricing_promo_until:"Только до 31 августа",
       tier_open_btn:"Подробнее",
@@ -676,6 +683,12 @@ function applyTuneWrapTrackTitles(language){
 
       author_h2:"Автор проекта и его песни",
       author_p:"Это песни, написанные не на заказ. Они рождались вместе с путешествиями, встречами, потерями, надеждой, свободой выбора и любовью к жизни. Каждая из них — глава одной большой истории, которая продолжается и сегодня.",
+      author_showcase_p:"Авторские песни из путешествий, встреч, свободы выбора и любви к жизни.",
+      library_featured_author:"Выбранная авторская песня",
+      author_count_label:"авторских треков",
+      author_open_library:"Открыть авторскую библиотеку",
+      author_library_title:"Авторская библиотека",
+      author_library_subtitle:"Полный каталог песен автора TuneWrap.",
       author_amsterdam_desc:"Эта история началась глубокой ночью в Амстердаме. Мы с сыном просто шли вперёд по пустому городу, не зная, что запомним эту ночь навсегда. Красные огни, каналы и ощущение абсолютной свободы однажды стали песней.",
       author_ukraine_desc:"Эта песня посвящается миллионам украинцев, которые сегодня находятся вдали от дома. Тем, кто продолжает любить свою страну, молиться за неё и верить, что однажды скажет самые важные слова: «Я дома».",
       author_mychoice_desc:"Иногда нужно потерять привычную жизнь, чтобы обрести свою собственную. Эта песня появилась в день, когда я понял, что свобода — это право выбирать свой путь и оставаться верным самому себе.",
@@ -726,6 +739,13 @@ function applyTuneWrapTrackTitles(language){
       tracks_eyebrow:"Музичні історії",
       tracks_h2:"Історії, які можна почути",
       tracks_p:"Спочатку — людина й важливі деталі її життя. Потім — текст, музика та мить, у якій близькі впізнають себе.",
+      library_featured_story:"Обрана історія",
+      stories_count_label:"музичних історій",
+      stories_open_all:"Відкрити всі історії",
+      stories_library_title:"Усі музичні історії",
+      stories_library_subtitle:"Оберіть мову або відкрийте будь-яку історію з повного каталогу.",
+      library_close:"Назад",
+      library_empty:"У цьому мовному розділі поки немає пісень.",
       track_127_title:"127",
       track_127_desc:"Вона заплатила за його каву. Через тиждень він написав: «Повернути каву?» Через 127 днів зрозумів, що хоче прожити з нею все життя. Тепер це число — на їхніх обручках.",
       track_main_title:"Головний шлях",
@@ -742,7 +762,7 @@ function applyTuneWrapTrackTitles(language){
       step3_desc:"Ви отримуєте готову пісню у високій якості. Термін і кількість правок залежать від обраного пакета.",
       pricing_eyebrow:"Вартість і формати",
       pricing_h2:"Оберіть свій формат",
-      pricing_p:"Оберіть глибину роботи: від пісні за готовим текстом до повного створення історії, тексту та музичної концепції.",
+      pricing_p:"Оберіть глибину роботи: від пісні за готовим текстом до повного створення історії та тексту.",
       pricing_promo_title:"Обмежена стартова акція",
       pricing_promo_until:"Лише до 31 серпня",
       tier_open_btn:"Докладніше",
@@ -829,6 +849,12 @@ function applyTuneWrapTrackTitles(language){
 
       author_h2:"Автор проєкту та його пісні",
       author_p:"Це пісні, написані не на замовлення. Вони народжувалися разом із подорожами, зустрічами, втратами, надією, свободою вибору та любов’ю до життя. Кожна з них — розділ однієї великої історії, що триває й сьогодні.",
+      author_showcase_p:"Авторські пісні з подорожей, зустрічей, свободи вибору та любові до життя.",
+      library_featured_author:"Обрана авторська пісня",
+      author_count_label:"авторських треків",
+      author_open_library:"Відкрити авторську бібліотеку",
+      author_library_title:"Авторська бібліотека",
+      author_library_subtitle:"Повний каталог пісень автора TuneWrap.",
       author_amsterdam_desc:"Ця історія почалася глибокої ночі в Амстердамі. Ми із сином просто йшли вперед порожнім містом, не знаючи, що запам’ятаємо цю ніч назавжди. Червоні вогні, канали й відчуття абсолютної свободи одного дня стали піснею.",
       author_ukraine_desc:"Ця пісня присвячена мільйонам українців, які сьогодні далеко від дому. Тим, хто продовжує любити свою країну, молитися за неї й вірити, що одного дня скаже найважливіші слова: «Я вдома».",
       author_mychoice_desc:"Іноді потрібно втратити звичне життя, щоб знайти власне. Ця пісня з’явилася в день, коли я зрозумів: свобода — це право обирати свій шлях і залишатися вірним самому собі.",
@@ -879,6 +905,13 @@ function applyTuneWrapTrackTitles(language){
       tracks_eyebrow:"ისტორიები, რომლებიც სიმღერებად იქცა",
       tracks_h2:"ისტორიები, რომელთა მოსმენაც შეიძლება",
       tracks_p:"ჯერ — ადამიანი და მისი ცხოვრების მნიშვნელოვანი დეტალები. შემდეგ — ტექსტი, მუსიკა და წამი, როცა ახლობლები საკუთარ თავს ცნობენ.",
+      library_featured_story:"შერჩეული ისტორია",
+      stories_count_label:"მუსიკალური ისტორია",
+      stories_open_all:"ყველა ისტორიის გახსნა",
+      stories_library_title:"ყველა მუსიკალური ისტორია",
+      stories_library_subtitle:"აირჩიეთ ენა ან გახსენით ნებისმიერი ისტორია სრული კატალოგიდან.",
+      library_close:"უკან",
+      library_empty:"ამ ენის განყოფილებაში სიმღერები ჯერ არ არის.",
       track_127_title:"127",
       track_127_desc:"მან მისი ყავა გადაიხადა. ერთი კვირის შემდეგ მან მისწერა: „ყავა დაგიბრუნო?“ 127 დღეში მიხვდა, რომ მასთან მთელი ცხოვრების გატარება სურდა. ახლა ეს რიცხვი მათ ბეჭდებზეა.",
       track_main_title:"მთავარი გზა",
@@ -895,7 +928,7 @@ function applyTuneWrapTrackTitles(language){
       step3_desc:"იღებთ მზა სიმღერას მაღალ ხარისხში. ვადა და შესწორებების რაოდენობა არჩეულ პაკეტზეა დამოკიდებული.",
       pricing_eyebrow:"ფასი და ფორმატები",
       pricing_h2:"აირჩიეთ თქვენი ფორმატი",
-      pricing_p:"აირჩიეთ მუშაობის სიღრმე: მზა ტექსტის გახმოვანებიდან ისტორიის, ტექსტისა და მუსიკალური კონცეფციის სრულ შექმნამდე.",
+      pricing_p:"აირჩიეთ მუშაობის სიღრმე: მზა ტექსტის მიხედვით სიმღერიდან ისტორიისა და ტექსტის სრულ შექმნამდე.",
       pricing_promo_title:"შეზღუდული საწყისი აქცია",
       pricing_promo_until:"მხოლოდ 31 აგვისტომდე",
       tier_open_btn:"დეტალურად",
@@ -982,6 +1015,12 @@ function applyTuneWrapTrackTitles(language){
 
       author_h2:"პროექტის ავტორი და მისი სიმღერები",
       author_p:"ეს სიმღერები შეკვეთით არ დაწერილა. ისინი მოგზაურობებთან, შეხვედრებთან, დანაკარგებთან, იმედთან, არჩევანის თავისუფლებასთან და სიცოცხლის სიყვარულთან ერთად დაიბადა. თითოეული მათგანი ერთი დიდი ისტორიის თავია, რომელიც დღესაც გრძელდება.",
+      author_showcase_p:"საავტორო სიმღერები მოგზაურობებზე, შეხვედრებზე, არჩევანის თავისუფლებასა და სიცოცხლის სიყვარულზე.",
+      library_featured_author:"შერჩეული საავტორო სიმღერა",
+      author_count_label:"საავტორო ტრეკი",
+      author_open_library:"საავტორო ბიბლიოთეკის გახსნა",
+      author_library_title:"საავტორო ბიბლიოთეკა",
+      author_library_subtitle:"TuneWrap-ის ავტორის სიმღერების სრული კატალოგი.",
       author_amsterdam_desc:"ეს ისტორია ამსტერდამში, ღრმა ღამით დაიწყო. მე და ჩემი შვილი ცარიელ ქალაქში უბრალოდ წინ მივდიოდით და არ ვიცოდით, რომ ამ ღამეს სამუდამოდ დავიმახსოვრებდით. წითელი შუქები, არხები და სრული თავისუფლების განცდა ერთ დღეს სიმღერად იქცა.",
       author_ukraine_desc:"ეს სიმღერა ეძღვნება მილიონობით უკრაინელს, რომლებიც დღეს სახლიდან შორს არიან. მათ, ვინც კვლავ უყვარს თავისი ქვეყანა, ლოცულობს მისთვის და სჯერა, რომ ერთ დღეს ყველაზე მნიშვნელოვან სიტყვებს იტყვის: „მე სახლში ვარ“.",
       author_mychoice_desc:"ხანდახან ჩვეული ცხოვრება უნდა დაკარგო, რათა საკუთარი იპოვო. ეს სიმღერა იმ დღეს გაჩნდა, როცა გავიგე: თავისუფლება არის უფლება, აირჩიო შენი გზა და საკუთარ თავს ერთგული დარჩე.",
@@ -1032,6 +1071,13 @@ function applyTuneWrapTrackTitles(language){
       tracks_eyebrow:"Musical stories",
       tracks_h2:"Stories you can hear",
       tracks_p:"First comes the person and the details that matter. Then come the lyrics, the music, and the moment loved ones recognize themselves.",
+      library_featured_story:"Featured story",
+      stories_count_label:"musical stories",
+      stories_open_all:"Open all stories",
+      stories_library_title:"All musical stories",
+      stories_library_subtitle:"Choose a language or open any story from the complete catalog.",
+      library_close:"Back",
+      library_empty:"There are no songs in this language section yet.",
       track_127_title:"127",
       track_127_desc:"She paid for his coffee. A week later he wrote, “Can I pay you back?” After 127 days, he knew he wanted to spend his life with her. That number is now engraved on their rings.",
       track_main_title:"The Main Journey",
@@ -1048,7 +1094,7 @@ function applyTuneWrapTrackTitles(language){
       step3_desc:"You receive a finished high-quality song. Delivery time and the number of revisions depend on the selected package.",
       pricing_eyebrow:"Formats and pricing",
       pricing_h2:"Choose your format",
-      pricing_p:"Choose the depth of the work: from producing a song from ready lyrics to creating the full story, lyrics, and musical concept.",
+      pricing_p:"Choose the depth of the work: from a song based on ready lyrics to the complete creation of the story and lyrics.",
       pricing_promo_title:"Limited launch offer",
       pricing_promo_until:"Only until August 31",
       tier_open_btn:"View details",
@@ -1135,6 +1181,12 @@ function applyTuneWrapTrackTitles(language){
 
       author_h2:"The project author and his songs",
       author_p:"These songs were not written to order. They were born from journeys, encounters, losses, hope, freedom of choice and a love of life. Each one is a chapter in one continuing story.",
+      author_showcase_p:"Original songs shaped by travel, encounters, freedom of choice, and a love of life.",
+      library_featured_author:"Featured original song",
+      author_count_label:"original tracks",
+      author_open_library:"Open the artist library",
+      author_library_title:"Artist library",
+      author_library_subtitle:"The complete catalog of songs by the TuneWrap author.",
       author_amsterdam_desc:"This story began late at night in Amsterdam. My son and I simply kept walking through the empty city, unaware that we would remember that night forever. Red lights, canals and a feeling of absolute freedom eventually became a song.",
       author_ukraine_desc:"This song is dedicated to millions of Ukrainians living far from home today—to those who keep loving their country, praying for it and believing they will one day say the most important words: “I am home.”",
       author_mychoice_desc:"Sometimes you have to lose the life you knew to find your own. This song appeared on the day I understood that freedom is the right to choose your path and remain true to yourself.",
@@ -1185,6 +1237,13 @@ function applyTuneWrapTrackTitles(language){
       tracks_eyebrow:"Geschichten, die zu Liedern wurden",
       tracks_h2:"Drei Geschichten, die zu Liedern wurden",
       tracks_p:"Zuerst kommen der Mensch und die wichtigen Details seines Lebens. Dann entstehen Text, Musik und der Moment, in dem sich die Liebsten wiedererkennen.",
+      library_featured_story:"Ausgewählte Geschichte",
+      stories_count_label:"musikalische Geschichten",
+      stories_open_all:"Alle Geschichten öffnen",
+      stories_library_title:"Alle musikalischen Geschichten",
+      stories_library_subtitle:"Wählen Sie eine Sprache oder öffnen Sie eine beliebige Geschichte aus dem vollständigen Katalog.",
+      library_close:"Zurück",
+      library_empty:"In diesem Sprachbereich gibt es noch keine Songs.",
       track_127_title:"127",
       track_127_desc:"Sie bezahlte seinen Kaffee. Eine Woche später schrieb er: „Darf ich den Kaffee zurückzahlen?“ Nach 127 Tagen wusste er, dass er sein Leben mit ihr verbringen wollte. Heute steht diese Zahl in ihren Ringen.",
       track_main_title:"Der wichtigste Weg",
@@ -1201,7 +1260,7 @@ function applyTuneWrapTrackTitles(language){
       step3_desc:"Sie erhalten einen fertigen Song in hoher Qualität. Lieferzeit und Anzahl der Änderungen richten sich nach dem gewählten Paket.",
       pricing_eyebrow:"Formate und Preise",
       pricing_h2:"Wählen Sie Ihr Format",
-      pricing_p:"Wählen Sie die Arbeitstiefe: vom Song nach einem fertigen Text bis zur vollständigen Entwicklung von Geschichte, Liedtext und musikalischem Konzept.",
+      pricing_p:"Wählen Sie die Arbeitstiefe: vom Song nach einem fertigen Text bis zur vollständigen Entwicklung von Geschichte und Liedtext.",
       pricing_promo_title:"Zeitlich begrenztes Startangebot",
       pricing_promo_until:"Nur bis 31. August",
       tier_open_btn:"Details ansehen",
@@ -1288,6 +1347,12 @@ function applyTuneWrapTrackTitles(language){
 
       author_h2:"Der Autor des Projekts und seine Songs",
       author_p:"Diese Songs wurden nicht im Auftrag geschrieben. Sie entstanden aus Reisen, Begegnungen, Verlusten, Hoffnung, Entscheidungsfreiheit und Liebe zum Leben. Jeder von ihnen ist ein Kapitel einer großen Geschichte, die bis heute weitergeht.",
+      author_showcase_p:"Eigene Songs über Reisen, Begegnungen, Entscheidungsfreiheit und die Liebe zum Leben.",
+      library_featured_author:"Ausgewählter eigener Song",
+      author_count_label:"eigene Tracks",
+      author_open_library:"Autorenbibliothek öffnen",
+      author_library_title:"Autorenbibliothek",
+      author_library_subtitle:"Der vollständige Songkatalog des TuneWrap-Autors.",
       author_amsterdam_desc:"Diese Geschichte begann tief in der Nacht in Amsterdam. Mein Sohn und ich gingen einfach durch die leere Stadt, ohne zu ahnen, dass wir diese Nacht nie vergessen würden. Rote Lichter, Kanäle und ein Gefühl grenzenloser Freiheit wurden später zu einem Song.",
       author_ukraine_desc:"Dieser Song ist Millionen Ukrainern gewidmet, die heute fern von zu Hause leben. Menschen, die ihr Land weiter lieben, für es beten und daran glauben, eines Tages die wichtigsten Worte sagen zu können: „Ich bin zu Hause.“",
       author_mychoice_desc:"Manchmal muss man das vertraute Leben verlieren, um das eigene zu finden. Dieser Song entstand an dem Tag, an dem ich verstand: Freiheit bedeutet, den eigenen Weg wählen und sich selbst treu bleiben zu dürfen.",
@@ -1866,8 +1931,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // ---------- Stage 8.7: one catalog-wide playback queue ----------
 function buildGlobalPlaybackQueue(items){
   const languageOrder = ['GE','UA','EN','DE','RU'];
-  const libraryItems = items.filter(item => item.card.matches('#tracks .track'));
-  const authorItems = items.filter(item => item.card.matches('#author .author-card'));
+  const libraryItems = items.filter(item =>
+    item.card.classList.contains('track') && item.card.dataset.songLanguage
+  );
+  const authorItems = items.filter(item => item.card.classList.contains('author-card'));
   const knownLanguages = new Set(languageOrder);
   const orderedLibrary = languageOrder.flatMap(language =>
     libraryItems.filter(item => item.card.dataset.songLanguage === language)
@@ -1875,9 +1942,8 @@ function buildGlobalPlaybackQueue(items){
   const futureLibraryItems = libraryItems.filter(item =>
     !knownLanguages.has(item.card.dataset.songLanguage)
   );
-  const otherItems = items.filter(item =>
-    !item.card.matches('#tracks .track, #author .author-card')
-  );
+  const catalogItems = new Set([...libraryItems,...authorItems]);
+  const otherItems = items.filter(item => !catalogItems.has(item));
   return [...orderedLibrary,...futureLibraryItems,...authorItems,...otherItems];
 }
 
@@ -3216,6 +3282,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ---------- Stage 8.1: scalable Songs language shelf ----------
 document.addEventListener('DOMContentLoaded', () => {
   const section = document.getElementById('tracks');
+  if(section?.dataset.libraryArchitecture === 'fullscreen') return;
   const filterRoot = section ? section.querySelector('[data-songs-filter-root]') : null;
   const rail = filterRoot ? filterRoot.querySelector('[data-filter-level="language"]') : null;
   const stage = document.getElementById('songsLibraryPanel');
@@ -3497,6 +3564,25 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// ---------- Stage 8.9: pricing CTA opens the existing order flow ----------
+document.addEventListener('DOMContentLoaded',() => {
+  const cta = document.getElementById('pricingOrderCta');
+  const contact = document.getElementById('contact');
+  const orderEntry = document.querySelector('[data-story-path="order"]');
+  if(!cta || !contact || !orderEntry) return;
+
+  cta.addEventListener('click',event => {
+    event.preventDefault();
+    orderEntry.click();
+    window.setTimeout(() => {
+      contact.scrollIntoView({
+        behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth',
+        block:'start'
+      });
+    },40);
+  });
+});
+
 // ---------- Stage 8.2: tariff gesture axis arbiter ----------
 document.addEventListener('DOMContentLoaded', () => {
   const appScroll = document.getElementById('appScroll');
@@ -3663,4 +3749,236 @@ document.addEventListener('DOMContentLoaded', () => {
     window.clearTimeout(settleTimer);
     settleTimer = window.setTimeout(settleGesture,90);
   },{passive:true});
+});
+
+// ---------- Stage 8.9: showcase screens and fullscreen music libraries ----------
+document.addEventListener('DOMContentLoaded', () => {
+  const appScroll = document.getElementById('appScroll');
+  const bottomNav = document.querySelector('.mobile-bottom-nav');
+  const playerScreen = document.getElementById('songPlayerScreen');
+  const storiesPanel = document.getElementById('storiesLibraryScreen');
+  const authorPanel = document.getElementById('authorLibraryScreen');
+  const storiesList = document.querySelector('#songsLibraryPanel .tracks');
+  const authorList = document.querySelector('#author .author-grid');
+  const authorSignature = document.querySelector('#author .author-signature');
+  const storiesResults = document.getElementById('storiesLibraryList');
+  const authorResults = document.getElementById('authorLibraryList');
+  const storiesCount = document.getElementById('storiesCatalogCount');
+  const authorCount = document.getElementById('authorCatalogCount');
+
+  if(
+    !storiesPanel || !authorPanel || !storiesList || !authorList ||
+    !storiesResults || !authorResults || !storiesCount || !authorCount
+  ) return;
+
+  const languageByInterface = {ru:'RU',uk:'UA',en:'EN',de:'DE',ka:'GE'};
+  const authorLanguages = {
+    amsterdam:'RU',
+    mychoice:'UA',
+    tbilisiua:'UA',
+    tbilisige:'GE',
+    goodvibe:'EN',
+    pulse:'EN',
+    amsterdamen:'EN',
+    mychoiceen:'EN',
+    yayaya:'EN',
+    iwant:'UA',
+    yayayaalt:'EN',
+    dayspass:'UA',
+    ashes:'UA',
+    newflight:'UA',
+    noretreat:'UA',
+    '53':'EN'
+  };
+  const panels = [storiesPanel,authorPanel];
+  const panelState = new Map();
+  let pendingFeaturedFocus = null;
+
+  storiesList.classList.add('music-library-card-list','music-library-story-list');
+  authorList.classList.add('music-library-card-list','music-library-author-list');
+  storiesResults.append(storiesList);
+  authorResults.append(authorList);
+  if(authorSignature) authorResults.append(authorSignature);
+
+  const storyCards = Array.from(storiesList.querySelectorAll('.track[data-song-language]'));
+  const authorCards = Array.from(authorList.querySelectorAll('.author-card'));
+  authorCards.forEach(card => {
+    const track = card.querySelector('.play-btn[data-track]')?.dataset.track || '';
+    card.dataset.libraryLanguage = authorLanguages[track] || 'EN';
+  });
+  storiesCount.textContent = String(storyCards.length);
+  authorCount.textContent = String(authorCards.length);
+
+  function interfaceLanguage(){
+    const code = document.documentElement.getAttribute('lang') || 'ru';
+    return languageByInterface[code] || 'RU';
+  }
+
+  function cardsFor(panel){
+    return panel === storiesPanel ? storyCards : authorCards;
+  }
+
+  function cardLanguage(panel,card){
+    return panel === storiesPanel
+      ? card.dataset.songLanguage
+      : card.dataset.libraryLanguage;
+  }
+
+  function refreshFilter(panel,language,manual = false){
+    const state = panelState.get(panel);
+    if(!state) return;
+    state.language = language;
+    if(manual) state.manual = true;
+
+    const tabs = Array.from(panel.querySelectorAll('[data-library-language]'));
+    const cards = cardsFor(panel);
+    let visibleCount = 0;
+
+    tabs.forEach(tab => {
+      const active = tab.dataset.libraryLanguage === language;
+      tab.classList.toggle('is-active',active);
+      tab.setAttribute('aria-selected',String(active));
+      tab.tabIndex = active ? 0 : -1;
+    });
+
+    cards.forEach(card => {
+      const visible = cardLanguage(panel,card) === language;
+      card.hidden = !visible;
+      if(visible) visibleCount += 1;
+    });
+
+    panel.querySelector('[data-library-empty]').hidden = visibleCount !== 0;
+  }
+
+  function syncUnderlyingInert(){
+    const libraryOpen = panels.some(panel => panel.classList.contains('is-open'));
+    const playerOpen = playerScreen?.classList.contains('is-open');
+    if(libraryOpen || playerOpen){
+      appScroll?.setAttribute('inert','');
+      bottomNav?.setAttribute('inert','');
+    } else {
+      appScroll?.removeAttribute('inert');
+      bottomNav?.removeAttribute('inert');
+    }
+  }
+
+  function openLibrary(panel,trigger){
+    panels.forEach(other => {
+      if(other !== panel && other.classList.contains('is-open')) closeLibrary(other,false);
+    });
+    const state = panelState.get(panel);
+    state.trigger = trigger;
+    if(!state.manual) refreshFilter(panel,interfaceLanguage(),false);
+    panel.removeAttribute('inert');
+    panel.setAttribute('aria-hidden','false');
+    panel.classList.add('is-open');
+    document.body.classList.add('music-library-open');
+    syncUnderlyingInert();
+    window.requestAnimationFrame(() => {
+      panel.querySelector('[data-library-close]')?.focus({preventScroll:true});
+      window.dispatchEvent(new Event('resize'));
+    });
+  }
+
+  function closeLibrary(panel,restoreFocus = true){
+    if(!panel.classList.contains('is-open')) return;
+    const state = panelState.get(panel);
+    panel.classList.remove('is-open');
+    panel.setAttribute('aria-hidden','true');
+    panel.setAttribute('inert','');
+    if(!panels.some(item => item.classList.contains('is-open'))){
+      document.body.classList.remove('music-library-open');
+    }
+    syncUnderlyingInert();
+    if(restoreFocus && state?.trigger){
+      window.requestAnimationFrame(() => state.trigger.focus({preventScroll:true}));
+    }
+  }
+
+  panels.forEach(panel => {
+    panelState.set(panel,{
+      language:interfaceLanguage(),
+      manual:false,
+      trigger:null
+    });
+    panel.querySelectorAll('[data-library-language]').forEach(tab => {
+      tab.addEventListener('click',() => {
+        refreshFilter(panel,tab.dataset.libraryLanguage,true);
+      });
+      tab.addEventListener('keydown',event => {
+        if(event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+        event.preventDefault();
+        const tabs = Array.from(panel.querySelectorAll('[data-library-language]'));
+        const direction = event.key === 'ArrowRight' ? 1 : -1;
+        const index = tabs.indexOf(tab);
+        const next = tabs[(index + direction + tabs.length) % tabs.length];
+        next.focus();
+        refreshFilter(panel,next.dataset.libraryLanguage,true);
+      });
+    });
+    panel.querySelector('[data-library-close]')?.addEventListener('click',() => closeLibrary(panel));
+    refreshFilter(panel,interfaceLanguage(),false);
+  });
+
+  document.getElementById('openStoriesLibrary')?.addEventListener('click',event => {
+    openLibrary(storiesPanel,event.currentTarget);
+  });
+  document.getElementById('openAuthorLibrary')?.addEventListener('click',event => {
+    openLibrary(authorPanel,event.currentTarget);
+  });
+
+  document.querySelectorAll('[data-featured-track]').forEach(featured => {
+    featured.addEventListener('click',() => {
+      const name = featured.dataset.featuredTrack;
+      const canonical = document.querySelector('.play-btn[data-track="' + name + '"]')?.closest('.track,.author-card');
+      if(!canonical) return;
+      pendingFeaturedFocus = featured;
+      canonical.dispatchEvent(new MouseEvent('click',{
+        bubbles:true,
+        cancelable:true,
+        view:window
+      }));
+    });
+  });
+
+  function syncFeaturedTitles(){
+    const code = document.documentElement.getAttribute('lang') || 'ru';
+    const titles = TUNEWRAP_TRACK_TITLES[code] || TUNEWRAP_TRACK_TITLES.ru;
+    document.querySelectorAll('[data-featured-track]').forEach(featured => {
+      const title = titles[featured.dataset.featuredTrack];
+      const titleElement = featured.querySelector('[data-featured-title]');
+      if(titleElement && title) titleElement.textContent = title;
+      if(title) featured.setAttribute('aria-label',title);
+    });
+  }
+
+  document.addEventListener('tunewrap:languagechange',() => {
+    syncFeaturedTitles();
+    panels.forEach(panel => {
+      const state = panelState.get(panel);
+      if(state && !state.manual) refreshFilter(panel,interfaceLanguage(),false);
+    });
+  });
+  syncFeaturedTitles();
+
+  document.addEventListener('keydown',event => {
+    if(event.key !== 'Escape' || playerScreen?.classList.contains('is-open')) return;
+    const openPanel = panels.find(panel => panel.classList.contains('is-open'));
+    if(openPanel) closeLibrary(openPanel);
+  });
+
+  if(playerScreen && 'MutationObserver' in window){
+    const playerObserver = new MutationObserver(() => {
+      syncUnderlyingInert();
+      if(
+        pendingFeaturedFocus &&
+        playerScreen.getAttribute('aria-hidden') === 'true'
+      ){
+        const target = pendingFeaturedFocus;
+        pendingFeaturedFocus = null;
+        window.requestAnimationFrame(() => target.focus({preventScroll:true}));
+      }
+    });
+    playerObserver.observe(playerScreen,{attributes:true,attributeFilter:['class','aria-hidden']});
+  }
 });

@@ -197,12 +197,30 @@
   </div>
 </section>
 
-<section id="tracks">
+<section id="tracks" data-library-architecture="fullscreen">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow" data-i18n="tracks_eyebrow">Музыкальные истории</div>
       <h2 data-i18n="tracks_h2">Истории, которые можно услышать</h2>
       <p data-i18n="tracks_p">Сначала — человек и важные детали его жизни. Потом — текст, музыка и момент, в котором близкие узнают себя.</p>
+    </div>
+
+    <div class="library-showcase" data-library-showcase="stories">
+      <button class="library-featured-card" type="button" data-featured-track="growold" aria-label="Открыть песню">
+        <span class="library-featured-cover">
+          <img src="assets/covers/image-a1f0d25aaa9f.png" alt="" loading="eager">
+          <span class="library-featured-play" aria-hidden="true"></span>
+        </span>
+        <span class="library-featured-copy">
+          <small data-i18n="library_featured_story">Выбранная история</small>
+          <strong data-featured-title>Ми будемо старіти разом</strong>
+          <span data-featured-language>UA</span>
+        </span>
+      </button>
+      <div class="library-showcase-footer">
+        <p class="library-catalog-count"><strong id="storiesCatalogCount">0</strong> <span data-i18n="stories_count_label">музыкальных историй</span></p>
+        <button class="library-open-button" id="openStoriesLibrary" type="button" data-i18n="stories_open_all">Открыть все истории</button>
+      </div>
     </div>
 
     <div class="songs-library-filters" data-songs-filter-root>
@@ -402,14 +420,16 @@
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow" data-i18n="pricing_eyebrow">Стоимость и форматы</div>
+      <canvas id="pricingWave" class="pricing-wave" data-brand-wave aria-hidden="true"></canvas>
       <h2 data-i18n="pricing_h2">Выберите свой формат</h2>
-      <p data-i18n="pricing_p">Выберите глубину работы: от песни по готовому тексту до полного создания истории, текста и музыкальной концепции.</p>
+      <p data-i18n="pricing_p">Выберите глубину работы: от песни по готовому тексту до полного создания истории и текста.</p>
       <div class="pricing-promo" aria-label="Ограниченная стартовая акция">
         <strong data-i18n="pricing_promo_title">Ограниченная стартовая акция</strong>
         <span data-i18n="pricing_promo_until">Только до 31 августа</span>
       </div>
     </div>
     <div class="tiers-grid" id="tiersGrid"></div>
+    <a class="pricing-order-cta" id="pricingOrderCta" href="#contact" data-i18n="hero_btn_order">Рассказать свою историю</a>
   </div>
 </section>
 
@@ -608,7 +628,25 @@
     <div class="sec-head author-intro">
       <div class="eyebrow">Kosta Trufakin</div>
       <h2 data-i18n="author_h2">Автор проекта и его песни</h2>
-      <p data-i18n="author_p"><strong>Авторские песни из жизни и историй Kosta Trufakin.</strong> Это песни, написанные не на заказ. Они рождались вместе с путешествиями, встречами, потерями, надеждой, свободой выбора и любовью к жизни. Каждая из них — глава одной большой истории, которая продолжается и сегодня.</p>
+      <p data-i18n="author_showcase_p">Авторские песни из путешествий, встреч, свободы выбора и любви к жизни.</p>
+    </div>
+
+    <div class="library-showcase" data-library-showcase="author">
+      <button class="library-featured-card library-featured-card-author" type="button" data-featured-track="amsterdam" aria-label="Открыть песню">
+        <span class="library-featured-cover">
+          <img src="assets/covers/tunewrap-placeholder.svg" alt="" loading="eager">
+          <span class="library-featured-play" aria-hidden="true"></span>
+        </span>
+        <span class="library-featured-copy">
+          <small data-i18n="library_featured_author">Выбранная авторская песня</small>
+          <strong data-featured-title>Amsterdam</strong>
+          <span data-featured-language>RU</span>
+        </span>
+      </button>
+      <div class="library-showcase-footer">
+        <p class="library-catalog-count"><strong id="authorCatalogCount">0</strong> <span data-i18n="author_count_label">авторских треков</span></p>
+        <button class="library-open-button" id="openAuthorLibrary" type="button" data-i18n="author_open_library">Открыть авторскую библиотеку</button>
+      </div>
     </div>
 
     <div class="author-grid">
@@ -784,6 +822,70 @@
     <div data-i18n="footer_location">Тбилиси · Киев · онлайн</div>
   </div>
 </footer>
+
+<section class="music-library-panel" id="storiesLibraryScreen" data-library-kind="stories" aria-hidden="true" aria-modal="true" role="dialog" aria-labelledby="storiesLibraryTitle" inert>
+  <div class="music-library-shell">
+    <div class="music-library-topbar">
+      <button class="music-library-close" type="button" data-library-close>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        <span data-i18n="library_close">Назад</span>
+      </button>
+      <div class="song-player-brand">Tune<span>Wrap</span></div>
+      <span class="music-library-kind" data-i18n="tracks_eyebrow">Музыкальные истории</span>
+    </div>
+    <div class="music-library-scroll">
+      <header class="music-library-heading">
+        <p class="eyebrow" data-i18n="tracks_eyebrow">Музыкальные истории</p>
+        <h2 id="storiesLibraryTitle" data-i18n="stories_library_title">Все музыкальные истории</h2>
+        <p data-i18n="stories_library_subtitle">Выберите язык или откройте любую историю из полного каталога.</p>
+      </header>
+      <div class="music-library-filters" role="tablist" aria-label="Язык песен" data-library-filters>
+        <button type="button" role="tab" data-library-language="RU">RU</button>
+        <button type="button" role="tab" data-library-language="UA">UA</button>
+        <button type="button" role="tab" data-library-language="EN">EN</button>
+        <button type="button" role="tab" data-library-language="DE">DE</button>
+        <button type="button" role="tab" data-library-language="GE">GE</button>
+      </div>
+      <div class="music-library-results" id="storiesLibraryList"></div>
+      <div class="music-library-empty" data-library-empty hidden>
+        <span aria-hidden="true">♪</span>
+        <p data-i18n="library_empty">В этом языковом разделе пока нет песен.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="music-library-panel" id="authorLibraryScreen" data-library-kind="author" aria-hidden="true" aria-modal="true" role="dialog" aria-labelledby="authorLibraryTitle" inert>
+  <div class="music-library-shell">
+    <div class="music-library-topbar">
+      <button class="music-library-close" type="button" data-library-close>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        <span data-i18n="library_close">Назад</span>
+      </button>
+      <div class="song-player-brand">Tune<span>Wrap</span></div>
+      <span class="music-library-kind" data-i18n="mobile_nav_author">Авторские</span>
+    </div>
+    <div class="music-library-scroll">
+      <header class="music-library-heading">
+        <p class="eyebrow">Kosta Trufakin</p>
+        <h2 id="authorLibraryTitle" data-i18n="author_library_title">Авторская библиотека</h2>
+        <p data-i18n="author_library_subtitle">Полный каталог песен автора TuneWrap.</p>
+      </header>
+      <div class="music-library-filters" role="tablist" aria-label="Язык песен" data-library-filters>
+        <button type="button" role="tab" data-library-language="RU">RU</button>
+        <button type="button" role="tab" data-library-language="UA">UA</button>
+        <button type="button" role="tab" data-library-language="EN">EN</button>
+        <button type="button" role="tab" data-library-language="DE">DE</button>
+        <button type="button" role="tab" data-library-language="GE">GE</button>
+      </div>
+      <div class="music-library-results" id="authorLibraryList"></div>
+      <div class="music-library-empty" data-library-empty hidden>
+        <span aria-hidden="true">♪</span>
+        <p data-i18n="library_empty">В этом языковом разделе пока нет песен.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section class="tier-detail-panel" id="tierDetailPanel" aria-hidden="true" aria-modal="true" role="dialog" aria-labelledby="tierDetailTitle" inert>
   <button class="tier-detail-backdrop" type="button" data-tier-panel-close aria-label="Закрыть"></button>
