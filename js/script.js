@@ -1486,6 +1486,11 @@ function applyTuneWrapTrackTitles(language){
   };
 
   const WEDDING_PACKAGE_IDS = ["first-dance","love-story","wedding-collection"];
+  const WEDDING_PACKAGE_PRICES = {
+    "first-dance": {oldPrice:"99", price:"49"},
+    "love-story": {oldPrice:"199", price:"99"},
+    "wedding-collection": {oldPrice:"299", price:"149"}
+  };
   const WEDDING_PACKAGES = {
     ru: [
       {
@@ -1917,7 +1922,6 @@ function applyTuneWrapTrackTitles(language){
       card.setAttribute('aria-label',tier.name + ', $' + tier.price + '. ' + t('tier_open_btn'));
       card.dataset.tierIndex = String(i);
       card.innerHTML =
-        (tier.badge ? '<div class="tier-badge">'+tier.badge+'</div>' : '') +
         '<div class="tier-name">'+tier.name+'</div>' +
         '<div class="tier-price tier-price-promo"><s>$'+tier.oldPrice+'</s><strong>$'+tier.price+'</strong><small>USD</small></div>' +
         '<span class="tier-card-open">'+t('tier_open_btn')+'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span>';
@@ -1941,14 +1945,15 @@ function applyTuneWrapTrackTitles(language){
     grid.setAttribute('aria-label',t('wedding_panel_label'));
     WEDDING_PACKAGES[lang].forEach((packageData,index) => {
       const card = document.createElement('button');
+      const packagePrice = WEDDING_PACKAGE_PRICES[packageData.id];
       card.type = 'button';
       card.className = 'wedding-package-card' + (selectedWeddingPackageId === packageData.id ? ' selected' : '');
       card.dataset.weddingPackage = packageData.id;
-      card.setAttribute('aria-label',packageData.name + '. ' + packageData.short + '. ' + t('tier_open_btn'));
+      card.setAttribute('aria-label',packageData.name + ', $' + packagePrice.price + '. ' + t('tier_open_btn'));
       card.innerHTML =
-        '<span class="wedding-package-icon">'+weddingIconMarkup(packageData.id)+'</span>' +
-        '<span class="wedding-package-copy"><strong>'+packageData.name+'</strong><small>'+packageData.short+'</small></span>' +
-        '<span class="wedding-package-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span>';
+        '<span class="wedding-package-name">'+packageData.name+'</span>' +
+        '<span class="wedding-package-price"><s>$'+packagePrice.oldPrice+'</s><strong>$'+packagePrice.price+'</strong></span>' +
+        '<span class="wedding-package-more">'+t('tier_open_btn')+'</span>';
       card.addEventListener('click',() => openTierPanel(index,card,'wedding'));
       grid.appendChild(card);
     });
