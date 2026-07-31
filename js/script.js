@@ -620,6 +620,16 @@ function applyTuneWrapTrackTitles(language){
       tier_detail_label:"Формат песни",
       tier_detail_select:"Выбрать тариф и продолжить",
       tier_select_btn:"Выбрать",
+      wedding_eyebrow:"ДЛЯ ВАШЕЙ СВАДЬБЫ",
+      wedding_subtitle:"Музыка для моментов,<br>которые останутся с вами навсегда.",
+      wedding_panel_label:"Для вашей свадьбы",
+      wedding_what_included:"Что входит",
+      wedding_ideal_for:"Идеально подходит для",
+      wedding_order_type_label:"Тип заказа:",
+      wedding_order_type_value:"Свадебный пакет",
+      wedding_selected_package_label:"Выбранный свадебный пакет",
+      wedding_change_hint:"Вы можете изменить пакет перед отправкой заявки.",
+      msg_order_type:"Тип заказа",
       contact_eyebrow:"Начать свою историю",
       contact_h2:"Расскажите нам свою историю",
       contact_p:"Выберите пакет и стиль, расскажите о человеке — и мы отправим готовую заявку в один клик.",
@@ -792,6 +802,16 @@ function applyTuneWrapTrackTitles(language){
       tier_detail_label:"Формат пісні",
       tier_detail_select:"Обрати тариф і продовжити",
       tier_select_btn:"Обрати",
+      wedding_eyebrow:"ДЛЯ ВАШОГО ВЕСІЛЛЯ",
+      wedding_subtitle:"Музика для моментів,<br>які назавжди залишаться з вами.",
+      wedding_panel_label:"Для вашого весілля",
+      wedding_what_included:"Що входить",
+      wedding_ideal_for:"Ідеально підходить для",
+      wedding_order_type_label:"Тип замовлення:",
+      wedding_order_type_value:"Весільний пакет",
+      wedding_selected_package_label:"Обраний весільний пакет",
+      wedding_change_hint:"Ви можете змінити пакет перед надсиланням заявки.",
+      msg_order_type:"Тип замовлення",
       contact_eyebrow:"Почати свою історію",
       contact_h2:"Розкажіть нам свою історію",
       contact_p:"Оберіть пакет і стиль, розкажіть про людину — і ми надішлемо готову заявку в один клік.",
@@ -964,6 +984,16 @@ function applyTuneWrapTrackTitles(language){
       tier_detail_label:"სიმღერის ფორმატი",
       tier_detail_select:"ტარიფის არჩევა და გაგრძელება",
       tier_select_btn:"არჩევა",
+      wedding_eyebrow:"თქვენი ქორწილისთვის",
+      wedding_subtitle:"მუსიკა იმ მომენტებისთვის,<br>რომლებიც სამუდამოდ დაგრჩებათ.",
+      wedding_panel_label:"თქვენი ქორწილისთვის",
+      wedding_what_included:"რას მოიცავს",
+      wedding_ideal_for:"იდეალურია",
+      wedding_order_type_label:"შეკვეთის ტიპი:",
+      wedding_order_type_value:"საქორწილო პაკეტი",
+      wedding_selected_package_label:"არჩეული საქორწილო პაკეტი",
+      wedding_change_hint:"პაკეტის შეცვლა შეგიძლიათ განაცხადის გაგზავნამდე.",
+      msg_order_type:"შეკვეთის ტიპი",
       contact_eyebrow:"დაიწყეთ თქვენი ისტორია",
       contact_h2:"მოგვიყევით თქვენი ისტორია",
       contact_p:"აირჩიეთ პაკეტი და სტილი, მოგვიყევით ადამიანის შესახებ — და ერთი დაწკაპუნებით გამზადებულ განაცხადს გამოგიგზავნით.",
@@ -1136,6 +1166,16 @@ function applyTuneWrapTrackTitles(language){
       tier_detail_label:"Song format",
       tier_detail_select:"Choose this plan and continue",
       tier_select_btn:"Choose",
+      wedding_eyebrow:"FOR YOUR WEDDING",
+      wedding_subtitle:"Music for the moments<br>you will carry with you forever.",
+      wedding_panel_label:"For your wedding",
+      wedding_what_included:"What is included",
+      wedding_ideal_for:"Perfect for",
+      wedding_order_type_label:"Order type:",
+      wedding_order_type_value:"Wedding Package",
+      wedding_selected_package_label:"Selected wedding package",
+      wedding_change_hint:"You can change the package before sending your request.",
+      msg_order_type:"Order type",
       contact_eyebrow:"Begin your story",
       contact_h2:"Tell us your story",
       contact_p:"Pick a package and style, tell us about the person — and we'll send a ready order in one click.",
@@ -1308,6 +1348,16 @@ function applyTuneWrapTrackTitles(language){
       tier_detail_label:"Songformat",
       tier_detail_select:"Tarif wählen und fortfahren",
       tier_select_btn:"Wählen",
+      wedding_eyebrow:"FÜR IHRE HOCHZEIT",
+      wedding_subtitle:"Musik für Momente,<br>die für immer bei Ihnen bleiben.",
+      wedding_panel_label:"Für Ihre Hochzeit",
+      wedding_what_included:"Was enthalten ist",
+      wedding_ideal_for:"Ideal geeignet für",
+      wedding_order_type_label:"Bestellart:",
+      wedding_order_type_value:"Hochzeitspaket",
+      wedding_selected_package_label:"Gewähltes Hochzeitspaket",
+      wedding_change_hint:"Sie können das Paket vor dem Absenden der Anfrage ändern.",
+      msg_order_type:"Bestellart",
       contact_eyebrow:"Ihre Geschichte beginnen",
       contact_h2:"Erzählen Sie uns Ihre Geschichte",
       contact_p:"Wähle Paket und Stil, erzähl uns von der Person — und wir schicken dir eine fertige Bestellung per Klick.",
@@ -1432,6 +1482,110 @@ function applyTuneWrapTrackTitles(language){
       {name:"Einfach", oldPrice:"39", price:"19", badge:null, features:["Dein Text oder deine Idee wird zum Song","1 Stil deiner Wahl","Einfaches Take-Editing","Lieferung in 48–72 Stunden"]},
       {name:"Fortgeschritten", oldPrice:"99", price:"49", badge:"Beliebt", features:["Alles aus „Einfach“","Handverlesene Takes und Mixing","Bis zu 2 kostenlose Textkorrekturen","Lieferung in 24–48 Stunden"]},
       {name:"Hit", oldPrice:"199", price:"139", badge:null, features:["Alles aus „Fortgeschritten“","Vertiefte Produktionsarbeit","Korrekturen bis zur Freigabe","Instrumentalversion gratis"]}
+    ]
+  };
+
+  const WEDDING_PACKAGE_IDS = ["first-dance","love-story","wedding-collection"];
+  const WEDDING_PACKAGES = {
+    ru: [
+      {
+        id:"first-dance", name:"First Dance", short:"Песня для первого танца",
+        description:"Персональная песня для вашего первого танца. История, слова и музыка, созданные только для вас двоих.",
+        includes:["сбор истории пары","написание персонального текста","создание музыки","готовая песня в MP3","текст песни","обложка","версия для свадебного танца"],
+        ideal:"Первый танец молодожёнов", button:"Выбрать First Dance"
+      },
+      {
+        id:"love-story", name:"Love Story", short:"История вашей любви",
+        description:"История вашего знакомства, любви и пути к свадьбе, превращённая в полноценную песню.",
+        includes:["подробный сбор истории","ключевые моменты знакомства и отношений","персональный текст","музыка и вокал","готовая песня в MP3","текст песни","обложка","версия для видео Love Story"],
+        ideal:"Love Story, свадебное видео, церемония или подарок", button:"Выбрать Love Story"
+      },
+      {
+        id:"wedding-collection", name:"Wedding Collection", short:"Музыка для всей свадьбы",
+        description:"Персональная музыкальная коллекция для самых важных моментов вашей свадьбы.",
+        includes:["песня для первого танца","история любви пары","песня-благодарность родителям","семейная или финальная песня","единый стиль обложек","комплект MP3 и текстов"],
+        ideal:"Полное музыкальное оформление свадебной истории", button:"Выбрать Wedding Collection"
+      }
+    ],
+    uk: [
+      {
+        id:"first-dance", name:"First Dance", short:"Пісня для першого танцю",
+        description:"Персональна пісня для вашого першого танцю. Історія, слова й музика, створені лише для вас двох.",
+        includes:["збір історії пари","написання персонального тексту","створення музики","готова пісня в MP3","текст пісні","обкладинка","версія для весільного танцю"],
+        ideal:"Перший танець молодят", button:"Обрати First Dance"
+      },
+      {
+        id:"love-story", name:"Love Story", short:"Історія вашого кохання",
+        description:"Історія вашого знайомства, кохання та шляху до весілля, перетворена на повноцінну пісню.",
+        includes:["детальний збір історії","ключові моменти знайомства й стосунків","персональний текст","музика та вокал","готова пісня в MP3","текст пісні","обкладинка","версія для відео Love Story"],
+        ideal:"Love Story, весільне відео, церемонія або подарунок", button:"Обрати Love Story"
+      },
+      {
+        id:"wedding-collection", name:"Wedding Collection", short:"Музика для всього весілля",
+        description:"Персональна музична колекція для найважливіших моментів вашого весілля.",
+        includes:["пісня для першого танцю","історія кохання пари","пісня-подяка батькам","сімейна або фінальна пісня","єдиний стиль обкладинок","комплект MP3 і текстів"],
+        ideal:"Повне музичне оформлення весільної історії", button:"Обрати Wedding Collection"
+      }
+    ],
+    ka: [
+      {
+        id:"first-dance", name:"First Dance", short:"სიმღერა პირველი ცეკვისთვის",
+        description:"პერსონალური სიმღერა თქვენი პირველი ცეკვისთვის. ისტორია, სიტყვები და მუსიკა, შექმნილი მხოლოდ თქვენთვის.",
+        includes:["წყვილის ისტორიის შეგროვება","პერსონალური ტექსტის დაწერა","მუსიკის შექმნა","მზა სიმღერა MP3 ფორმატში","სიმღერის ტექსტი","ყდა","ვერსია საქორწილო ცეკვისთვის"],
+        ideal:"ახალდაქორწინებულთა პირველი ცეკვა", button:"აირჩიეთ First Dance"
+      },
+      {
+        id:"love-story", name:"Love Story", short:"თქვენი სიყვარულის ისტორია",
+        description:"თქვენი გაცნობის, სიყვარულისა და ქორწილამდე გზის ისტორია, სრულფასოვან სიმღერად ქცეული.",
+        includes:["ისტორიის დეტალური შეგროვება","გაცნობისა და ურთიერთობის მნიშვნელოვანი მომენტები","პერსონალური ტექსტი","მუსიკა და ვოკალი","მზა სიმღერა MP3 ფორმატში","სიმღერის ტექსტი","ყდა","ვერსია Love Story ვიდეოსთვის"],
+        ideal:"Love Story, საქორწილო ვიდეო, ცერემონია ან საჩუქარი", button:"აირჩიეთ Love Story"
+      },
+      {
+        id:"wedding-collection", name:"Wedding Collection", short:"მუსიკა მთელი ქორწილისთვის",
+        description:"პერსონალური მუსიკალური კოლექცია თქვენი ქორწილის ყველაზე მნიშვნელოვანი მომენტებისთვის.",
+        includes:["სიმღერა პირველი ცეკვისთვის","წყვილის სიყვარულის ისტორია","მადლობის სიმღერა მშობლებისთვის","ოჯახური ან ფინალური სიმღერა","ყდების ერთიანი სტილი","MP3-ებისა და ტექსტების კომპლექტი"],
+        ideal:"საქორწილო ისტორიის სრული მუსიკალური გაფორმება", button:"აირჩიეთ Wedding Collection"
+      }
+    ],
+    en: [
+      {
+        id:"first-dance", name:"First Dance", short:"A song for your first dance",
+        description:"A personal song for your first dance. A story, lyrics and music created only for the two of you.",
+        includes:["the couple’s story collection","personal lyric writing","music creation","finished MP3 song","song lyrics","cover artwork","a wedding-dance version"],
+        ideal:"The newlyweds’ first dance", button:"Choose First Dance"
+      },
+      {
+        id:"love-story", name:"Love Story", short:"The story of your love",
+        description:"The story of how you met, fell in love and reached your wedding day, transformed into a complete song.",
+        includes:["in-depth story collection","key moments from your meeting and relationship","personal lyrics","music and vocals","finished MP3 song","song lyrics","cover artwork","a version for a Love Story video"],
+        ideal:"Love Story, wedding video, ceremony or gift", button:"Choose Love Story"
+      },
+      {
+        id:"wedding-collection", name:"Wedding Collection", short:"Music for the whole wedding",
+        description:"A personal music collection for the most important moments of your wedding.",
+        includes:["a first-dance song","the couple’s love story","a thank-you song for parents","a family or final song","one visual style for all covers","a complete set of MP3 files and lyrics"],
+        ideal:"A complete musical setting for your wedding story", button:"Choose Wedding Collection"
+      }
+    ],
+    de: [
+      {
+        id:"first-dance", name:"First Dance", short:"Ein Song für den ersten Tanz",
+        description:"Ein persönlicher Song für Ihren ersten Tanz. Geschichte, Text und Musik, nur für Sie beide geschaffen.",
+        includes:["Erfassung Ihrer Paargeschichte","persönlicher Liedtext","Komposition der Musik","fertiger Song als MP3","Liedtext","Cover","Version für den Hochzeitstanz"],
+        ideal:"Der erste Tanz des Brautpaares", button:"First Dance auswählen"
+      },
+      {
+        id:"love-story", name:"Love Story", short:"Die Geschichte Ihrer Liebe",
+        description:"Ihre Kennenlern-, Liebes- und Hochzeitsgeschichte, verwandelt in einen vollständigen Song.",
+        includes:["ausführliche Erfassung der Geschichte","Schlüsselmomente des Kennenlernens und der Beziehung","persönlicher Liedtext","Musik und Gesang","fertiger Song als MP3","Liedtext","Cover","Version für ein Love-Story-Video"],
+        ideal:"Love Story, Hochzeitsvideo, Zeremonie oder Geschenk", button:"Love Story auswählen"
+      },
+      {
+        id:"wedding-collection", name:"Wedding Collection", short:"Musik für die gesamte Hochzeit",
+        description:"Eine persönliche Musiksammlung für die wichtigsten Momente Ihrer Hochzeit.",
+        includes:["Song für den ersten Tanz","Liebesgeschichte des Paares","Dankeslied für die Eltern","Familien- oder Abschlusssong","einheitlicher Coverstil","Komplettpaket aus MP3-Dateien und Texten"],
+        ideal:"Die vollständige musikalische Gestaltung Ihrer Hochzeitsgeschichte", button:"Wedding Collection auswählen"
+      }
     ]
   };
 
@@ -1566,9 +1720,12 @@ function applyTuneWrapTrackTitles(language){
 
   let currentLang = 'ru';
   let selectedTierIdx = null;
+  let selectedWeddingPackageId = null;
   let selectedStyles = [];
   let currentMode = 'order';
   let activeTierPanelIdx = 0;
+  let activeWeddingPanelIdx = 0;
+  let activeOfferType = 'tier';
   let tierPanelRestoreFocus = null;
 
   const tierPanel = document.getElementById('tierDetailPanel');
@@ -1577,30 +1734,92 @@ function applyTuneWrapTrackTitles(language){
   const tierPanelBadge = document.getElementById('tierDetailBadge');
   const tierPanelOldPrice = document.getElementById('tierDetailOldPrice');
   const tierPanelPrice = document.getElementById('tierDetailPrice');
+  const tierPanelPriceWrap = document.getElementById('tierDetailPriceWrap');
+  const tierPanelUntil = document.getElementById('tierDetailUntil');
+  const tierPanelKicker = document.getElementById('tierDetailKicker');
+  const tierPanelStep = document.getElementById('tierDetailStep');
   const tierPanelFeatures = document.getElementById('tierDetailFeatures');
   const tierPanelSelect = document.getElementById('tierDetailSelect');
+  const tierPanelVisual = document.getElementById('tierDetailVisual');
+  const tierPanelVisualImage = document.getElementById('tierDetailVisualImage');
+  const tierPanelDescription = document.getElementById('tierDetailDescription');
+  const tierPanelWeddingContent = document.getElementById('tierDetailWeddingContent');
+  const tierPanelWeddingIncludes = document.getElementById('tierDetailWeddingIncludes');
+  const tierPanelWeddingIdeal = document.getElementById('tierDetailWeddingIdeal');
+  const weddingPackageSelect = document.getElementById('fieldWeddingPackage');
+  const tierPanelLanguageSelect = document.getElementById('tierDetailLanguageSelect');
 
   function t(key){ return (I18N[currentLang] || I18N.ru)[key] || ''; }
 
-  function renderTierPanel(index = activeTierPanelIdx){
+  function weddingPackageById(lang,id){
+    return (WEDDING_PACKAGES[lang] || WEDDING_PACKAGES.ru).find(item => item.id === id) || null;
+  }
+
+  function weddingIconMarkup(id){
+    if(id === 'first-dance'){
+      return '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 23c4-8 7-12 10-12 3 0 4 4 8 4"/><path d="M9 9l4 4M19 7l-2 5M24 22l3 3"/><circle cx="8" cy="24" r="2.5"/><circle cx="25" cy="15" r="2.5"/></svg>';
+    }
+    if(id === 'love-story'){
+      return '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 24c4-11 7-15 11-15 3 0 5 3 9 3"/><path d="M6 24h20"/><circle cx="9" cy="20" r="2"/><circle cx="17" cy="11" r="2"/><circle cx="25" cy="12" r="2"/></svg>';
+    }
+    return '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 10h18M7 16h18M7 22h18"/><path d="M10 7v18M16 7v18M22 7v18"/><circle cx="10" cy="10" r="2"/><circle cx="16" cy="16" r="2"/><circle cx="22" cy="22" r="2"/></svg>';
+  }
+
+  function renderTierPanel(index = activeTierPanelIdx, type = activeOfferType){
     if(
       !tierPanel || !tierPanelTitle || !tierPanelBadge || !tierPanelOldPrice ||
       !tierPanelPrice || !tierPanelFeatures || !tierPanelSelect
     ) return;
+
+    activeOfferType = type === 'wedding' ? 'wedding' : 'tier';
+    const isWedding = activeOfferType === 'wedding';
+    tierPanel.classList.toggle('is-wedding',isWedding);
+
+    if(isWedding){
+      const packageData = WEDDING_PACKAGES[currentLang][index];
+      if(!packageData) return;
+      activeWeddingPanelIdx = index;
+      tierPanelBadge.hidden = true;
+      tierPanelVisual.hidden = false;
+      tierPanelDescription.hidden = false;
+      tierPanelPriceWrap.hidden = true;
+      tierPanelUntil.hidden = true;
+      tierPanelFeatures.hidden = true;
+      tierPanelWeddingContent.hidden = false;
+      tierPanelKicker.textContent = t('wedding_eyebrow');
+      tierPanelStep.textContent = t('wedding_panel_label');
+      tierPanelTitle.textContent = packageData.name;
+      tierPanelDescription.textContent = packageData.description;
+      tierPanelWeddingIncludes.innerHTML = packageData.includes.map(feature => '<li>' + feature + '</li>').join('');
+      tierPanelWeddingIdeal.textContent = packageData.ideal;
+      tierPanelSelect.textContent = packageData.button;
+      tierPanelVisualImage.alt = packageData.name + ' — ' + t('wedding_panel_label');
+      return;
+    }
+
     const tier = TIERS[currentLang][index];
     if(!tier) return;
     activeTierPanelIdx = index;
-    tierPanelTitle.textContent = tier.name;
     tierPanelBadge.textContent = tier.badge || '';
     tierPanelBadge.hidden = !tier.badge;
+    tierPanelVisual.hidden = true;
+    tierPanelDescription.hidden = true;
+    tierPanelPriceWrap.hidden = false;
+    tierPanelUntil.hidden = false;
+    tierPanelFeatures.hidden = false;
+    tierPanelWeddingContent.hidden = true;
+    tierPanelKicker.textContent = t('pricing_promo_title');
+    tierPanelStep.textContent = t('tier_detail_label');
+    tierPanelTitle.textContent = tier.name;
     tierPanelOldPrice.textContent = '$' + tier.oldPrice;
     tierPanelPrice.textContent = '$' + tier.price;
     tierPanelFeatures.innerHTML = tier.features.map(feature => '<li>' + feature + '</li>').join('');
+    tierPanelSelect.textContent = t('tier_detail_select');
   }
 
-  function openTierPanel(index,trigger){
+  function openTierPanel(index,trigger,type = 'tier'){
     if(!tierPanel) return;
-    renderTierPanel(index);
+    renderTierPanel(index,type);
     tierPanelRestoreFocus = trigger || null;
     tierPanel.removeAttribute('inert');
     tierPanel.classList.add('is-open');
@@ -1620,24 +1839,70 @@ function applyTuneWrapTrackTitles(language){
     }
   }
 
+  function syncWeddingFormState(){
+    const isWedding = Boolean(selectedWeddingPackageId);
+    const packageData = isWedding ? weddingPackageById(currentLang,selectedWeddingPackageId) : null;
+    const typePill = document.getElementById('weddingOrderTypePill');
+    const packageField = document.getElementById('weddingPackageField');
+    const sumOrderType = document.getElementById('sumOrderType');
+    if(typePill) typePill.hidden = !isWedding;
+    if(packageField) packageField.hidden = !isWedding;
+    if(sumOrderType) sumOrderType.textContent = isWedding ? t('wedding_order_type_value') : '';
+    if(weddingPackageSelect && isWedding) weddingPackageSelect.value = selectedWeddingPackageId;
+    if(isWedding && packageData){
+      document.getElementById('sumTier').textContent = packageData.name;
+    }
+  }
+
+  function resetOrderSelection(){
+    selectedTierIdx = null;
+    selectedWeddingPackageId = null;
+    document.getElementById('sumTier').textContent = t('dash');
+    syncWeddingFormState();
+    updateSummaryTotal();
+    renderTiers(currentLang);
+    renderWeddingPackages(currentLang);
+  }
+
   function applySelectedTier(index){
     const tier = TIERS[currentLang][index];
     if(!tier) return;
+    selectedWeddingPackageId = null;
     selectedTierIdx = index;
     document.getElementById('sumTier').textContent = tier.name + ' ($' + tier.price + ')';
+    syncWeddingFormState();
     updateSummaryTotal();
     renderTiers(currentLang);
+    renderWeddingPackages(currentLang);
+  }
+
+  function applySelectedWeddingPackage(index){
+    const packageData = WEDDING_PACKAGES[currentLang][index];
+    if(!packageData) return;
+    selectedTierIdx = null;
+    selectedWeddingPackageId = packageData.id;
+    syncWeddingFormState();
+    updateSummaryTotal();
+    renderTiers(currentLang);
+    renderWeddingPackages(currentLang);
   }
 
   function continueWithSelectedTier(){
-    applySelectedTier(activeTierPanelIdx);
+    const selectingWedding = activeOfferType === 'wedding';
+    if(selectingWedding) applySelectedWeddingPackage(activeWeddingPanelIdx);
+    else applySelectedTier(activeTierPanelIdx);
     closeTierPanel();
     const contact = document.getElementById('contact');
     const orderMode = document.querySelector('.mode-btn[data-mode="order"]');
     if(orderMode) orderMode.click();
+    if(selectingWedding){
+      const occasion = document.getElementById('fieldOccasion');
+      if(occasion && occasion.options.length > 1) occasion.selectedIndex = 1;
+      updateOtherOccasion();
+    }
     if(contact) contact.classList.add('is-story-path-form');
     window.setTimeout(() => {
-      contact?.scrollIntoView({behavior:'smooth',block:'start'});
+      contact?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth',block:'start'});
     },80);
   }
 
@@ -1657,19 +1922,53 @@ function applyTuneWrapTrackTitles(language){
         '<div class="tier-price tier-price-promo"><s>$'+tier.oldPrice+'</s><strong>$'+tier.price+'</strong><small>USD</small></div>' +
         '<span class="tier-card-open">'+t('tier_open_btn')+'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span>';
       card.addEventListener('click',()=>{
-        openTierPanel(i,card);
+        openTierPanel(i,card,'tier');
       });
       card.addEventListener('keydown',event => {
         if(event.key !== 'Enter' && event.key !== ' ') return;
         event.preventDefault();
-        openTierPanel(i,card);
+        openTierPanel(i,card,'tier');
       });
       grid.appendChild(card);
     });
-    if(tierPanel?.classList.contains('is-open')) renderTierPanel(activeTierPanelIdx);
+    if(tierPanel?.classList.contains('is-open') && activeOfferType === 'tier') renderTierPanel(activeTierPanelIdx,'tier');
+  }
+
+  function renderWeddingPackages(lang){
+    const grid = document.getElementById('weddingPackagesGrid');
+    if(!grid) return;
+    grid.innerHTML = '';
+    grid.setAttribute('aria-label',t('wedding_panel_label'));
+    WEDDING_PACKAGES[lang].forEach((packageData,index) => {
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'wedding-package-card' + (selectedWeddingPackageId === packageData.id ? ' selected' : '');
+      card.dataset.weddingPackage = packageData.id;
+      card.setAttribute('aria-label',packageData.name + '. ' + packageData.short + '. ' + t('tier_open_btn'));
+      card.innerHTML =
+        '<span class="wedding-package-icon">'+weddingIconMarkup(packageData.id)+'</span>' +
+        '<span class="wedding-package-copy"><strong>'+packageData.name+'</strong><small>'+packageData.short+'</small></span>' +
+        '<span class="wedding-package-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span>';
+      card.addEventListener('click',() => openTierPanel(index,card,'wedding'));
+      grid.appendChild(card);
+    });
+    if(tierPanel?.classList.contains('is-open') && activeOfferType === 'wedding') renderTierPanel(activeWeddingPanelIdx,'wedding');
+  }
+
+  function renderWeddingPackageSelect(lang){
+    if(!weddingPackageSelect) return;
+    const previous = selectedWeddingPackageId || weddingPackageSelect.value;
+    weddingPackageSelect.innerHTML = WEDDING_PACKAGES[lang]
+      .map(packageData => '<option value="'+packageData.id+'">'+packageData.name+'</option>')
+      .join('');
+    if(previous && WEDDING_PACKAGE_IDS.includes(previous)) weddingPackageSelect.value = previous;
   }
 
   function updateSummaryTotal(){
+    if(selectedWeddingPackageId){
+      document.getElementById('sumTotal').textContent = t('dash');
+      return;
+    }
     const base = selectedTierIdx !== null ? parseInt(TIERS[currentLang][selectedTierIdx].price, 10) : 0;
     const urgent = document.getElementById('fieldUrgent').checked ? 25 : 0;
     const total = base + urgent;
@@ -1784,6 +2083,8 @@ function applyTuneWrapTrackTitles(language){
 
   function renderDynamic(lang){
     renderTiers(lang);
+    renderWeddingPackages(lang);
+    renderWeddingPackageSelect(lang);
     renderStyles(lang);
     renderOccasions(lang);
     updateOtherOccasion();
@@ -1792,7 +2093,11 @@ function applyTuneWrapTrackTitles(language){
     renderCorpTiers(lang);
     updateSummaryTotal();
     updateCorpTotal();
-    if(selectedTierIdx !== null){
+    syncWeddingFormState();
+    if(selectedWeddingPackageId){
+      const packageData = weddingPackageById(lang,selectedWeddingPackageId);
+      if(packageData) document.getElementById('sumTier').textContent = packageData.name;
+    } else if(selectedTierIdx !== null){
       document.getElementById('sumTier').textContent = TIERS[lang][selectedTierIdx].name + ' ($' + TIERS[lang][selectedTierIdx].price + ')';
     }
     if(selectedStyles.length){
@@ -1820,12 +2125,18 @@ function applyTuneWrapTrackTitles(language){
     document.documentElement.setAttribute('lang', LANG_TAGS[lang] || 'ru');
     document.body.classList.toggle('lang-ka', lang === 'ka');
     buttons.forEach(b=> b.classList.toggle('active', b.getAttribute('data-lang') === lang));
+    if(tierPanelLanguageSelect) tierPanelLanguageSelect.value = lang;
     renderDynamic(lang);
     applyTuneWrapTrackTitles(lang);
   }
 
   buttons.forEach(btn=>{
     btn.addEventListener('click', ()=> applyLang(btn.getAttribute('data-lang')));
+  });
+  tierPanelLanguageSelect?.addEventListener('change',event => {
+    const languageButton = document.querySelector('.lang-btn[data-lang="' + event.target.value + '"]');
+    if(languageButton) languageButton.click();
+    else applyLang(event.target.value);
   });
 
   tierPanelClose?.addEventListener('click',closeTierPanel);
@@ -1853,6 +2164,15 @@ function applyTuneWrapTrackTitles(language){
 
   document.getElementById('fieldOccasion').addEventListener('change', updateOtherOccasion);
   document.getElementById('fieldUrgent').addEventListener('change', updateSummaryTotal);
+  weddingPackageSelect?.addEventListener('change',event => {
+    const index = WEDDING_PACKAGE_IDS.indexOf(event.target.value);
+    if(index < 0) return;
+    applySelectedWeddingPackage(index);
+    const occasion = document.getElementById('fieldOccasion');
+    if(occasion && occasion.options.length > 1) occasion.selectedIndex = 1;
+    updateOtherOccasion();
+  });
+  document.addEventListener('tunewrap:reset-order-selection',resetOrderSelection);
   document.getElementById('corpQty').addEventListener('input', updateCorpTotal);
   document.getElementById('corpTier').addEventListener('change', updateCorpTotal);
 
@@ -1864,6 +2184,7 @@ function applyTuneWrapTrackTitles(language){
   // generate order
   document.getElementById('btnGenerate').addEventListener('click', function(){
     const tier = selectedTierIdx !== null ? TIERS[currentLang][selectedTierIdx] : null;
+    const weddingPackage = selectedWeddingPackageId ? weddingPackageById(currentLang,selectedWeddingPackageId) : null;
     const styleLabels = selectedStyles.map(sid=> STYLES[currentLang][STYLE_IDS.indexOf(sid)]);
     const name = document.getElementById('fieldName').value.trim();
     const occasion = document.getElementById('fieldOccasion').value;
@@ -1879,9 +2200,14 @@ function applyTuneWrapTrackTitles(language){
     let lines = [];
     lines.push(t('msg_header') + (currentMode === 'certificate' ? ' — ' + t('mode_certificate') : ''));
     lines.push('—');
-    lines.push(t('msg_package')+': ' + (tier ? tier.name+' ($'+tier.price+')' : dash));
+    if(weddingPackage){
+      lines.push(t('msg_order_type') + ': ' + t('wedding_order_type_value'));
+      lines.push(t('msg_package') + ': ' + weddingPackage.name);
+    } else {
+      lines.push(t('msg_package')+': ' + (tier ? tier.name+' ($'+tier.price+')' : dash));
+    }
     if(urgent) lines.push(t('msg_urgent') + ' (+$25)');
-    lines.push(t('summary_total') + ' $' + (tier ? totalPrice : 0));
+    if(!weddingPackage) lines.push(t('summary_total') + ' $' + (tier ? totalPrice : 0));
     lines.push(t('msg_style')+': ' + (styleLabels.length ? styleLabels.join(', ') : dash));
     lines.push(t('msg_name')+': ' + (name || dash));
 
@@ -3628,6 +3954,7 @@ document.addEventListener('DOMContentLoaded',() => {
 
   cta.addEventListener('click',event => {
     event.preventDefault();
+    document.dispatchEvent(new CustomEvent('tunewrap:reset-order-selection'));
     orderEntry.click();
     window.setTimeout(() => {
       contact.scrollIntoView({
@@ -3657,14 +3984,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const vertical = Math.abs(deltaY) > Math.abs(deltaX);
 
     if(vertical && Math.abs(deltaY) >= 44){
-      const target = deltaY > 0
-        ? document.getElementById('contact')
-        : document.getElementById('tracks');
-      if(target){
-        appScroll.scrollTo({
-          top:target.offsetTop,
-          behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth'
-        });
+      const pricingScroll = document.querySelector('#pricing > .wrap');
+      const hasInnerScroll = pricingScroll && pricingScroll.scrollHeight > pricingScroll.clientHeight + 2;
+      const atTop = !pricingScroll || pricingScroll.scrollTop <= 1;
+      const atBottom = !pricingScroll || pricingScroll.scrollTop + pricingScroll.clientHeight >= pricingScroll.scrollHeight - 1;
+      const canContinueInside = hasInnerScroll && ((deltaY > 0 && !atBottom) || (deltaY < 0 && !atTop));
+      if(!canContinueInside){
+        const target = deltaY > 0
+          ? document.getElementById('contact')
+          : document.getElementById('tracks');
+        if(target){
+          appScroll.scrollTo({
+            top:target.offsetTop,
+            behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth'
+          });
+        }
       }
     } else if(Math.abs(deltaX) >= 20){
       const cards = Array.from(rail.querySelectorAll('.tier-card'));
@@ -3700,8 +4034,8 @@ document.addEventListener('DOMContentLoaded', () => {
     gesture.lastY = touch.clientY;
     const deltaX = gesture.startX - touch.clientX;
     const deltaY = gesture.startY - touch.clientY;
-    event.preventDefault();
     if(Math.abs(deltaX) >= Math.abs(deltaY)){
+      event.preventDefault();
       rail.scrollLeft = gesture.startScrollLeft + deltaX;
     }
   },{passive:false});
@@ -3762,7 +4096,11 @@ document.addEventListener('DOMContentLoaded', () => {
       startY:touch.clientY,
       startScrollTop:appScroll.scrollTop,
       startIndex:nearestScreenIndex(appScroll.scrollTop),
-      forceScreenNavigation:Boolean(event.target.closest('#pricing .tiers-grid')),
+      forceScreenNavigation:(() => {
+        const pricingScroll = event.target.closest('#pricing')?.querySelector(':scope > .wrap');
+        const hasInnerScroll = pricingScroll && pricingScroll.scrollHeight > pricingScroll.clientHeight + 2;
+        return Boolean(event.target.closest('#pricing .tiers-grid') && !hasInnerScroll);
+      })(),
       deltaX:0,
       deltaY:0,
       ended:false

@@ -8345,3 +8345,543 @@ body.music-library-open{
     transition-duration:.01ms;
   }
 }
+
+
+/* ---------- STAGE 9 · WEDDING PACKAGES INTEGRATION ---------- */
+.wedding-packages{
+  display:grid;
+  gap:12px;
+  width:100%;
+  min-width:0;
+}
+
+.wedding-packages-heading{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+}
+
+.wedding-packages-eyebrow{
+  color:#e5b152;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+
+.wedding-packages-heading p{
+  max-width:34ch;
+  color:#aaa4ac;
+  font-size:12px;
+  line-height:1.4;
+  text-align:right;
+}
+
+.wedding-packages-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  width:100%;
+  min-width:0;
+}
+
+.wedding-package-card{
+  position:relative;
+  display:grid;
+  min-width:0;
+  min-height:104px;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:10px;
+  padding:14px 12px;
+  overflow:hidden;
+  border:1px solid rgba(229,177,82,.26);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 12% 12%,rgba(217,164,65,.12),transparent 48%),
+    linear-gradient(145deg,rgba(27,25,29,.96),rgba(13,13,15,.98));
+  color:#f1ece4;
+  box-shadow:inset 0 1px rgba(255,255,255,.035);
+  text-align:left;
+  cursor:pointer;
+  transition:
+    transform .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease,
+    background .2s ease;
+}
+
+.wedding-package-card:hover,
+.wedding-package-card:focus-visible{
+  border-color:rgba(239,195,102,.58);
+  box-shadow:
+    0 12px 34px rgba(0,0,0,.28),
+    0 0 28px rgba(217,164,65,.12),
+    inset 0 1px rgba(255,255,255,.055);
+  outline:none;
+}
+
+.wedding-package-card:active{
+  transform:scale(.985);
+  border-color:rgba(239,195,102,.72);
+  box-shadow:0 0 32px rgba(217,164,65,.2);
+}
+
+.wedding-package-card.selected{
+  border-color:#d9a441;
+  box-shadow:0 0 0 1px rgba(217,164,65,.5),0 0 28px rgba(217,164,65,.15);
+}
+
+.wedding-package-icon{
+  display:grid;
+  width:34px;
+  height:34px;
+  flex:none;
+  place-items:center;
+  border:1px solid rgba(239,195,102,.22);
+  border-radius:12px;
+  background:rgba(217,164,65,.075);
+  color:#e7b75b;
+}
+
+.wedding-package-icon svg{
+  width:22px;
+  height:22px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.6;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.wedding-package-copy{
+  display:grid;
+  min-width:0;
+  gap:4px;
+}
+
+.wedding-package-copy strong{
+  overflow:hidden;
+  color:#f2ede4;
+  font:600 16px/1.15 'Fraunces',serif;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+body.lang-ka .wedding-package-copy strong{
+  font-family:'Noto Serif Georgian',serif;
+}
+
+.wedding-package-copy small{
+  display:-webkit-box;
+  overflow:hidden;
+  color:#aaa3aa;
+  font-size:10px;
+  line-height:1.35;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+}
+
+.wedding-package-arrow{
+  display:grid;
+  width:26px;
+  height:44px;
+  place-items:center;
+  color:#d9a441;
+}
+
+.wedding-package-arrow svg{
+  width:18px;
+  height:18px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.tier-detail-visual{
+  width:100%;
+  margin-bottom:18px;
+  overflow:hidden;
+  border:1px solid rgba(239,195,102,.2);
+  border-radius:20px;
+  aspect-ratio:16/7;
+  background:#0d0c0e;
+  box-shadow:0 18px 44px rgba(0,0,0,.3);
+}
+
+.tier-detail-visual img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.tier-detail-description{
+  margin-top:12px;
+  color:#c8c1c7;
+  font-size:13px;
+  line-height:1.55;
+}
+
+.tier-detail-wedding-content{
+  display:grid;
+  gap:16px;
+  margin:20px 0;
+}
+
+.tier-detail-info-block{
+  padding:16px;
+  border:1px solid rgba(245,225,181,.09);
+  border-radius:17px;
+  background:rgba(255,255,255,.025);
+}
+
+.tier-detail-info-block h3{
+  margin:0 0 10px;
+  color:#e4b152;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.tier-detail-info-block ul{
+  display:grid;
+  gap:8px;
+  margin:0;
+  padding:0;
+  color:#c8c1c7;
+  font-size:12px;
+  line-height:1.42;
+  list-style:none;
+}
+
+.tier-detail-info-block li{
+  display:flex;
+  gap:8px;
+}
+
+.tier-detail-info-block li::before{
+  content:"—";
+  flex:none;
+  color:#d9a441;
+}
+
+.tier-detail-info-block p{
+  color:#ded6ce;
+  font-size:12px;
+  line-height:1.5;
+}
+
+.tier-detail-panel.is-wedding .tier-detail-card{
+  width:min(100%,520px);
+}
+
+.tier-detail-panel.is-wedding .tier-detail-card h2{
+  font-size:clamp(34px,9vw,50px);
+}
+
+.wedding-package-field[hidden],
+.wedding-order-type-pill[hidden],
+.tier-detail-visual[hidden],
+.tier-detail-description[hidden],
+.tier-detail-price[hidden],
+.tier-detail-until[hidden],
+.tier-detail-features[hidden],
+.tier-detail-wedding-content[hidden]{
+  display:none !important;
+}
+
+@media(max-width:620px){
+  #pricing > .wrap{
+    grid-template-rows:auto auto auto auto;
+    gap:7px;
+    overflow-x:hidden;
+    overflow-y:auto;
+    overscroll-behavior-y:contain;
+    scrollbar-width:none;
+    touch-action:pan-y;
+  }
+
+  #pricing > .wrap::-webkit-scrollbar{
+    display:none;
+  }
+
+  .wedding-packages{
+    gap:7px;
+  }
+
+  .wedding-packages-heading{
+    display:block;
+  }
+
+  .wedding-packages-eyebrow{
+    font-size:9px;
+    letter-spacing:.15em;
+  }
+
+  .wedding-packages-heading p{
+    max-width:none;
+    margin-top:3px;
+    font-size:9.5px;
+    line-height:1.3;
+    text-align:left;
+  }
+
+  .wedding-packages-grid{
+    gap:6px;
+  }
+
+  .wedding-package-card{
+    min-height:88px;
+    grid-template-columns:1fr auto;
+    grid-template-rows:auto 1fr;
+    align-items:start;
+    gap:5px 3px;
+    padding:9px 7px 7px;
+    border-radius:15px;
+  }
+
+  .wedding-package-icon{
+    width:27px;
+    height:27px;
+    grid-column:1;
+    grid-row:1;
+    border-radius:9px;
+  }
+
+  .wedding-package-icon svg{
+    width:18px;
+    height:18px;
+  }
+
+  .wedding-package-copy{
+    grid-column:1 / -1;
+    grid-row:2;
+    gap:3px;
+  }
+
+  .wedding-package-copy strong{
+    font-size:clamp(10px,3vw,12px);
+    line-height:1.1;
+  }
+
+  .wedding-package-copy small{
+    font-size:clamp(7.5px,2.25vw,9px);
+    line-height:1.25;
+    -webkit-line-clamp:2;
+  }
+
+  .wedding-package-arrow{
+    width:22px;
+    height:27px;
+    grid-column:2;
+    grid-row:1;
+  }
+
+  .wedding-package-arrow svg{
+    width:15px;
+    height:15px;
+  }
+
+  .tier-detail-panel.is-wedding .tier-detail-body{
+    place-items:start center;
+  }
+
+  .tier-detail-panel.is-wedding .tier-detail-card{
+    padding:17px 16px 16px;
+  }
+
+  .tier-detail-visual{
+    margin-bottom:14px;
+    border-radius:16px;
+  }
+
+  .tier-detail-description{
+    margin-top:9px;
+    font-size:11.5px;
+    line-height:1.48;
+  }
+
+  .tier-detail-wedding-content{
+    gap:11px;
+    margin:15px 0;
+  }
+
+  .tier-detail-info-block{
+    padding:12px;
+    border-radius:14px;
+  }
+
+  .tier-detail-info-block ul{
+    gap:6px;
+    font-size:10.5px;
+  }
+
+  .tier-detail-info-block p{
+    font-size:10.5px;
+  }
+
+  .order-summary:has(.wedding-order-type-pill:not([hidden])){
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media(max-width:350px), (max-height:620px) and (max-width:620px){
+  .wedding-packages{
+    gap:5px;
+  }
+
+  .wedding-packages-heading p{
+    margin-top:2px;
+    font-size:8.6px;
+  }
+
+  .wedding-packages-grid{
+    gap:4px;
+  }
+
+  .wedding-package-card{
+    min-height:76px;
+    padding:7px 5px 5px;
+  }
+
+  .wedding-package-icon{
+    width:24px;
+    height:24px;
+  }
+
+  .wedding-package-icon svg{
+    width:16px;
+    height:16px;
+  }
+
+  .wedding-package-copy strong{
+    font-size:9.5px;
+  }
+
+  .wedding-package-copy small{
+    overflow:hidden;
+    font-size:7.2px;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    -webkit-line-clamp:1;
+  }
+
+  .wedding-package-arrow{
+    width:18px;
+    height:24px;
+  }
+
+  .tier-detail-panel.is-wedding .tier-detail-card h2{
+    font-size:30px;
+  }
+}
+
+
+/* Stage 9: panel-local language switch and pricing scroll ownership */
+.tier-detail-meta{
+  display:flex;
+  min-width:0;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+}
+
+.tier-detail-language{
+  display:block;
+  flex:none;
+}
+
+.tier-detail-language select{
+  width:54px;
+  min-height:34px;
+  padding:6px 23px 6px 9px;
+  border:1px solid rgba(239,195,102,.2);
+  border-radius:11px;
+  background-color:rgba(255,255,255,.035);
+  background-position:right 7px center;
+  color:#e7b75b;
+  font-size:9px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+@media(max-width:620px){
+  .tier-detail-meta{
+    gap:5px;
+  }
+
+  .tier-detail-step{
+    max-width:74px;
+    overflow:hidden;
+    font-size:7px;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  .tier-detail-language select{
+    width:50px;
+    min-height:32px;
+    padding-left:8px;
+    font-size:8px;
+  }
+}
+
+@media(max-width:350px){
+  .tier-detail-step{
+    display:none;
+  }
+}
+
+/* Stage 9: preserve full card rows inside the internally scrollable pricing screen */
+@media(max-width:620px){
+  #pricing .tiers-grid{
+    min-height:134px;
+  }
+
+  .wedding-packages-grid{
+    min-height:88px;
+  }
+}
+
+@media(max-width:350px), (max-height:620px) and (max-width:620px){
+  #pricing .tiers-grid{
+    min-height:121px;
+  }
+
+  .wedding-packages-grid{
+    min-height:76px;
+  }
+}
+
+/* Stage 9: keep the universal CTA close to the bottom navigation on tall screens */
+@media(max-width:620px){
+  #pricing > .wrap{
+    grid-template-rows:auto auto auto minmax(50px,1fr);
+  }
+
+  .pricing-order-cta{
+    align-self:end;
+  }
+}
+
+/* Stage 9: balanced CTA spacing without a large empty tail */
+@media(max-width:620px){
+  #pricing > .wrap{
+    grid-template-rows:auto auto auto auto;
+  }
+
+  .pricing-order-cta{
+    align-self:auto;
+  }
+}
+
+@media(min-height:760px) and (max-width:620px){
+  .pricing-order-cta{
+    margin-top:52px;
+  }
+}

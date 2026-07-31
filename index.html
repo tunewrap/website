@@ -430,6 +430,15 @@
       </div>
     </div>
     <div class="tiers-grid" id="tiersGrid"></div>
+
+    <div class="wedding-packages" id="weddingPackages">
+      <div class="wedding-packages-heading">
+        <div class="wedding-packages-eyebrow" data-i18n="wedding_eyebrow">ДЛЯ ВАШЕЙ СВАДЬБЫ</div>
+        <p data-i18n="wedding_subtitle">Музыка для моментов,<br>которые останутся с вами навсегда.</p>
+      </div>
+      <div class="wedding-packages-grid" id="weddingPackagesGrid" aria-label="Свадебные пакеты"></div>
+    </div>
+
     <a class="pricing-order-cta" id="pricingOrderCta" href="#contact" data-i18n="hero_btn_order">Рассказать свою историю</a>
   </div>
 </section>
@@ -481,9 +490,16 @@
       <p class="mode-hint" id="modeHint" data-i18n="mode_order_hint">Заполните детали — и мы напишем песню под конкретного человека.</p>
 
       <div class="order-summary">
+        <div class="order-pill wedding-order-type-pill" id="weddingOrderTypePill" hidden><span data-i18n="wedding_order_type_label">Тип заказа:</span> <strong id="sumOrderType">Свадебный пакет</strong></div>
         <div class="order-pill"><span data-i18n="summary_tier">Пакет:</span> <strong id="sumTier">—</strong></div>
         <div class="order-pill"><span data-i18n="summary_style">Стиль:</span> <strong id="sumStyle">—</strong></div>
         <div class="order-pill"><span data-i18n="summary_total">Итого:</span> <strong id="sumTotal">—</strong></div>
+      </div>
+
+      <div class="field-group wedding-package-field" id="weddingPackageField" hidden>
+        <label class="field-label" for="fieldWeddingPackage" data-i18n="wedding_selected_package_label">Выбранный свадебный пакет</label>
+        <select id="fieldWeddingPackage"></select>
+        <span class="field-hint" data-i18n="wedding_change_hint">Вы можете изменить пакет перед отправкой заявки.</span>
       </div>
 
       <div class="field-group">
@@ -918,20 +934,46 @@
         <span data-i18n="tier_detail_close">Закрыть</span>
       </button>
       <div class="song-player-brand">Tune<span>Wrap</span></div>
-      <span class="tier-detail-step" data-i18n="tier_detail_label">Формат песни</span>
+      <div class="tier-detail-meta">
+        <span class="tier-detail-step" id="tierDetailStep" data-i18n="tier_detail_label">Формат песни</span>
+        <label class="tier-detail-language">
+          <span class="sr-only">Language</span>
+          <select id="tierDetailLanguageSelect" aria-label="Language">
+            <option value="ru">RU</option>
+            <option value="uk">UA</option>
+            <option value="ka">GE</option>
+            <option value="en">EN</option>
+            <option value="de">DE</option>
+          </select>
+        </label>
+      </div>
     </div>
     <div class="tier-detail-body">
       <article class="tier-detail-card">
         <div class="tier-detail-badge" id="tierDetailBadge" hidden></div>
-        <p class="tier-detail-kicker" data-i18n="pricing_promo_title">Ограниченная стартовая акция</p>
+        <div class="tier-detail-visual" id="tierDetailVisual" hidden>
+          <img id="tierDetailVisualImage" src="assets/covers/wedding-package-placeholder.svg" alt="" loading="eager">
+        </div>
+        <p class="tier-detail-kicker" id="tierDetailKicker" data-i18n="pricing_promo_title">Ограниченная стартовая акция</p>
         <h2 id="tierDetailTitle">TuneWrap</h2>
-        <div class="tier-detail-price">
+        <p class="tier-detail-description" id="tierDetailDescription" hidden></p>
+        <div class="tier-detail-price" id="tierDetailPriceWrap">
           <s id="tierDetailOldPrice">$39</s>
           <strong id="tierDetailPrice">$19</strong>
           <small>USD</small>
         </div>
-        <p class="tier-detail-until" data-i18n="pricing_promo_until">Только до 31 августа</p>
+        <p class="tier-detail-until" id="tierDetailUntil" data-i18n="pricing_promo_until">Только до 31 августа</p>
         <ul class="tier-detail-features" id="tierDetailFeatures"></ul>
+        <div class="tier-detail-wedding-content" id="tierDetailWeddingContent" hidden>
+          <section class="tier-detail-info-block">
+            <h3 data-i18n="wedding_what_included">Что входит</h3>
+            <ul id="tierDetailWeddingIncludes"></ul>
+          </section>
+          <section class="tier-detail-info-block">
+            <h3 data-i18n="wedding_ideal_for">Идеально подходит для</h3>
+            <p id="tierDetailWeddingIdeal"></p>
+          </section>
+        </div>
         <button class="tier-detail-select" id="tierDetailSelect" type="button" data-i18n="tier_detail_select">Выбрать тариф и продолжить</button>
       </article>
     </div>
