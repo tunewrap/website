@@ -9140,3 +9140,12 @@ body.lang-ka .wedding-package-name{
     font-size:8.2px;
   }
 }
+
+
+/* ---------- HOTFIX · PRICING SCREEN SWIPE REGRESSION ---------- */
+@media(max-width:620px){
+  /* Let a boundary gesture leave the pricing screen and continue in appScroll. */
+  #pricing > .wrap{
+    overscroll-behavior-y:auto;
+  }
+}

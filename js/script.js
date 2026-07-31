@@ -4101,11 +4101,18 @@ document.addEventListener('DOMContentLoaded', () => {
       startY:touch.clientY,
       startScrollTop:appScroll.scrollTop,
       startIndex:nearestScreenIndex(appScroll.scrollTop),
-      forceScreenNavigation:(() => {
-        const pricingScroll = event.target.closest('#pricing')?.querySelector(':scope > .wrap');
-        const hasInnerScroll = pricingScroll && pricingScroll.scrollHeight > pricingScroll.clientHeight + 2;
-        return Boolean(event.target.closest('#pricing .tiers-grid') && !hasInnerScroll);
+      pricingBoundary:(() => {
+        const pricing = event.target.closest('#pricing');
+        const pricingScroll = pricing?.querySelector(':scope > .wrap');
+        if(!pricingScroll) return null;
+        const hasInnerScroll = pricingScroll.scrollHeight > pricingScroll.clientHeight + 2;
+        return {
+          hasInnerScroll,
+          atTop:pricingScroll.scrollTop <= 1,
+          atBottom:pricingScroll.scrollTop + pricingScroll.clientHeight >= pricingScroll.scrollHeight - 1
+        };
       })(),
+      forceScreenNavigation:false,
       deltaX:0,
       deltaY:0,
       ended:false
@@ -4118,6 +4125,12 @@ document.addEventListener('DOMContentLoaded', () => {
     gesture.deltaX = gesture.startX - touch.clientX;
     gesture.deltaY = gesture.startY - touch.clientY;
     const vertical = Math.abs(gesture.deltaY) > Math.abs(gesture.deltaX);
+    if(vertical && gesture.pricingBoundary){
+      const boundary = gesture.pricingBoundary;
+      gesture.forceScreenNavigation = !boundary.hasInnerScroll || (
+        gesture.deltaY > 0 ? boundary.atBottom : boundary.atTop
+      );
+    }
     if(Math.abs(gesture.deltaY) < 44 || !vertical){
       gesture = null;
       return;
