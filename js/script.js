@@ -127,6 +127,7 @@
 
 // ---------- track players with live analyser waveform ----------
 (function(){
+  if(document.getElementById('tuneWrapAudioEngine')) return;
   const tracks = Array.from(new Set(
     Array.from(document.querySelectorAll('.play-btn[data-track]'))
       .map(button => button.dataset.track)
@@ -2493,6 +2494,7 @@ function buildGlobalPlaybackQueue(items){
 
 // ---------- mobile app player, menu and bottom navigation ----------
 document.addEventListener('DOMContentLoaded', () => {
+  const usesUnifiedAudio = Boolean(document.getElementById('tuneWrapAudioEngine'));
   const mobileTrackItems = Array.from(document.querySelectorAll('.play-btn[data-track]'))
     .map(button => {
       const name = button.dataset.track;
@@ -2568,9 +2570,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if(audio && button && audio.paused) button.click();
   }
 
-  playControl.addEventListener('click', toggleCurrent);
-  prevControl.addEventListener('click', () => stepTrack(-1));
-  nextControl.addEventListener('click', () => stepTrack(1));
+  if(!usesUnifiedAudio){
+    playControl.addEventListener('click', toggleCurrent);
+    prevControl.addEventListener('click', () => stepTrack(-1));
+    nextControl.addEventListener('click', () => stepTrack(1));
+  }
 
   trackOrder.forEach(name => {
     const audio = document.getElementById('audio-' + name);
@@ -2684,6 +2688,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ---------- Stage 7: full screen song player ----------
 document.addEventListener('DOMContentLoaded', () => {
+  if(document.getElementById('tuneWrapAudioEngine')) return;
   const screen = document.getElementById('songPlayerScreen');
   const backButton = document.getElementById('songPlayerBack');
   const minimizeButton = document.getElementById('songPlayerMinimize');
@@ -4345,6 +4350,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ---------- Stage 8.10: showcase screens and searchable fullscreen libraries ----------
 document.addEventListener('DOMContentLoaded', () => {
+  const usesUnifiedAudio = Boolean(document.getElementById('tuneWrapAudioEngine'));
   const appScroll = document.getElementById('appScroll');
   const bottomNav = document.querySelector('.mobile-bottom-nav');
   const playerScreen = document.getElementById('songPlayerScreen');
@@ -4667,33 +4673,35 @@ document.addEventListener('DOMContentLoaded', () => {
     openLibrary(authorPanel,event.currentTarget);
   });
 
-  document.querySelectorAll('[data-featured-track]').forEach(featured => {
-    featured.addEventListener('click',() => {
-      const name = featured.dataset.featuredTrack;
-      const canonical = document.querySelector('.play-btn[data-track="' + name + '"]')?.closest('.track,.author-card');
-      if(!canonical) return;
-      pendingFeaturedFocus = featured;
-      canonical.dispatchEvent(new MouseEvent('click',{
-        bubbles:true,
-        cancelable:true,
-        view:window
-      }));
+  if(!usesUnifiedAudio){
+    document.querySelectorAll('[data-featured-track]').forEach(featured => {
+      featured.addEventListener('click',() => {
+        const name = featured.dataset.featuredTrack;
+        const canonical = document.querySelector('.play-btn[data-track="' + name + '"]')?.closest('.track,.author-card');
+        if(!canonical) return;
+        pendingFeaturedFocus = featured;
+        canonical.dispatchEvent(new MouseEvent('click',{
+          bubbles:true,
+          cancelable:true,
+          view:window
+        }));
+      });
     });
-  });
 
-  [...storyCards,...authorCards].forEach(card => {
-    const button = card.querySelector('.play-btn[data-track]');
-    const audio = button ? document.getElementById('audio-' + button.dataset.track) : null;
-    button?.addEventListener('click',event => {
-      if(!event.isTrusted) return;
-      event.stopPropagation();
-      window.__tuneWrapPlayerBridge?.adoptLibraryPlayback(card,button);
-      window.setTimeout(syncPlayingCards,0);
+    [...storyCards,...authorCards].forEach(card => {
+      const button = card.querySelector('.play-btn[data-track]');
+      const audio = button ? document.getElementById('audio-' + button.dataset.track) : null;
+      button?.addEventListener('click',event => {
+        if(!event.isTrusted) return;
+        event.stopPropagation();
+        window.__tuneWrapPlayerBridge?.adoptLibraryPlayback(card,button);
+        window.setTimeout(syncPlayingCards,0);
+      });
+      audio?.addEventListener('play',syncPlayingCards);
+      audio?.addEventListener('pause',syncPlayingCards);
+      audio?.addEventListener('ended',syncPlayingCards);
     });
-    audio?.addEventListener('play',syncPlayingCards);
-    audio?.addEventListener('pause',syncPlayingCards);
-    audio?.addEventListener('ended',syncPlayingCards);
-  });
+  }
 
   function syncFeaturedTitles(){
     const code = document.documentElement.getAttribute('lang') || 'ru';
