@@ -2,57 +2,6 @@
 (function(){
   'use strict';
 
-  const AUDIO_SOURCES = Object.freeze({
-    justfive:'assets/audio/just-five-more-minutes.mp3',
-    growold:'assets/audio/audio-071ef6697656.mp3',
-    days127:'assets/audio/audio-188f96c94cb4.mp3',
-    mainroad:'assets/audio/audio-95fd6d54ddeb.mp3',
-    natalia65:'assets/audio/audio-ba2f83db69e6.mp3',
-    amsterdam:'assets/audio/audio-d4b332340900.mp3',
-    mychoice:'assets/audio/audio-1ad596796709.mp3',
-    tbilisiua:'assets/audio/tbilisi-ua.mp3',
-    tbilisige:'assets/audio/tbilisi-stage86.mp3',
-    goodvibe:'assets/audio/audio-63294ade4013.mp3',
-    pulse:'assets/audio/audio-5e36414e3276.mp3',
-    amsterdamen:'assets/audio/audio-ff299af622e9.mp3',
-    mychoiceen:'assets/audio/audio-d01d2cbad9e8.mp3',
-    yayaya:'assets/audio/audio-a310886514a8.mp3',
-    iwant:'assets/audio/audio-d0ee8b619e44.mp3',
-    '53':'assets/audio/53.mp3',
-    diana:'assets/audio/diana.mp3',
-    bestdad:'assets/audio/best-husband-father.mp3',
-    allbegins:'assets/audio/vse-tilky-pochynaietsia.mp3',
-    fiveua:'assets/audio/shche-piat-khvylyn.mp3',
-    growolden:'assets/audio/well-grow-old-together.mp3',
-    neuesleben:'assets/audio/neues-leben.mp3',
-    growoldge:'assets/audio/ertad-davberdebit.mp3',
-    fivege:'assets/audio/kidev-khuti-tsuti.mp3',
-    yayayaalt:'assets/audio/ya-ya-ya-alternative.mp3',
-    dayspass:'assets/audio/mynaiut-dni.mp3',
-    ashes:'assets/audio/na-popeli.mp3',
-    newflight:'assets/audio/novyi-polit.mp3',
-    noretreat:'assets/audio/shliakhu-nazad-nema.mp3'
-  });
-
-  const AUTHOR_LANGUAGES = Object.freeze({
-    amsterdam:'RU',
-    mychoice:'UA',
-    tbilisiua:'UA',
-    tbilisige:'GE',
-    goodvibe:'EN',
-    pulse:'EN',
-    amsterdamen:'EN',
-    mychoiceen:'EN',
-    yayaya:'EN',
-    iwant:'UA',
-    yayayaalt:'EN',
-    dayspass:'UA',
-    ashes:'UA',
-    newflight:'UA',
-    noretreat:'UA',
-    '53':'EE / EN'
-  });
-
   const PLAYER_UI = Object.freeze({
     ru:{
       play:'Воспроизвести', pause:'Пауза', previous:'Предыдущий трек', next:'Следующий трек',
@@ -137,18 +86,14 @@
       !miniPrevious || !miniToggle || !miniNext || !miniStop
     ) return;
 
-    const rawItems = Array.from(document.querySelectorAll('.play-btn[data-track]'))
-      .map(button => {
-        const name = button.dataset.track;
-        const card = button.closest('.track,.author-card');
-        const source = AUDIO_SOURCES[name];
-        return name && card && source ? {name,card,button,source} : null;
-      })
-      .filter(Boolean);
-    const uniqueItems = Array.from(new Map(rawItems.map(item => [item.name,item])).values());
-    const queue = typeof buildGlobalPlaybackQueue === 'function'
-      ? buildGlobalPlaybackQueue(uniqueItems)
-      : uniqueItems;
+    const catalog = window.TuneWrapCatalog;
+    if(!catalog?.enabled) return;
+    const queue = catalog.queue().map(track => Object.freeze({
+      ...track,
+      name:track.id,
+      source:track.audio
+    }));
+    if(!queue.length) return;
     const itemsByName = new Map(queue.map(item => [item.name,item]));
 
     let currentItem = null;
@@ -183,14 +128,7 @@
     }
 
     function localizedTitle(name){
-      const code = interfaceLanguage();
-      if(typeof TUNEWRAP_TRACK_TITLES !== 'undefined'){
-        return TUNEWRAP_TRACK_TITLES[code]?.[name] ||
-          TUNEWRAP_TRACK_TITLES.ru?.[name] ||
-          itemsByName.get(name)?.card.querySelector('.track-title')?.textContent.trim() ||
-          'TuneWrap';
-      }
-      return itemsByName.get(name)?.card.querySelector('.track-title')?.textContent.trim() || 'TuneWrap';
+      return catalog.title(itemsByName.get(name),interfaceLanguage());
     }
 
     function formatTime(value){
@@ -208,23 +146,28 @@
     }
 
     function itemLanguage(item){
-      if(!item) return '';
-      return item.card.dataset.songLanguage || AUTHOR_LANGUAGES[item.name] || 'TuneWrap';
+      return item?.language || 'TuneWrap';
     }
 
     function itemCover(item){
-      return item?.card.querySelector('.story-cover,.author-cover')?.getAttribute('src') || '';
+      return item?.cover || 'assets/covers/tunewrap-placeholder.svg';
     }
 
     function isAuthorItem(item){
-      return Boolean(item?.card.classList.contains('author-card'));
+      return item?.section === 'author';
     }
 
-    function songText(card,attribute){
-      const node = card?.querySelector('[' + attribute + ']');
-      if(node) return node.textContent.trim();
-      const dataKey = attribute === 'data-song-lyrics' ? 'songLyrics' : 'songTranslation';
-      return (card?.dataset[dataKey] || '').trim();
+    function songText(item,field){
+      const value = item?.[field];
+      if(!value || typeof value !== 'object') return '';
+      const code = interfaceLanguage();
+      return value[code] || value.original || value.ru || value.en || value.uk || value.ka || value.de || Object.values(value)[0] || '';
+    }
+
+    function cardFor(item){
+      if(!item) return null;
+      const escaped = window.CSS?.escape ? window.CSS.escape(item.name) : item.name.replace(/[^a-z0-9_-]/gi,'\\$&');
+      return document.querySelector('[data-track-id="' + escaped + '"]');
     }
 
     function setSeekVisual(value,total){
@@ -281,7 +224,9 @@
     }
 
     function installPlayingOverlays(){
-      queue.forEach(item => ensureOverlay(item.card,item.name,'card'));
+      document.querySelectorAll('.track[data-track-id],.author-card[data-track-id]').forEach(card => {
+        ensureOverlay(card,card.dataset.trackId,'card');
+      });
       document.querySelectorAll('[data-featured-track]').forEach(featured => {
         ensureOverlay(featured.querySelector('.library-featured-cover'),featured.dataset.featuredTrack,'artwork');
       });
@@ -331,8 +276,8 @@
         button.classList.toggle('is-current-track',current);
         button.setAttribute('aria-pressed',String(current && playing));
       });
-      queue.forEach(item => {
-        item.card.classList.toggle('is-active-track',item === currentItem && playing);
+      document.querySelectorAll('.track[data-track-id],.author-card[data-track-id]').forEach(card => {
+        card.classList.toggle('is-active-track',card.dataset.trackId === currentItem?.name && playing);
       });
       document.querySelectorAll('[data-featured-track]').forEach(featured => {
         featured.classList.toggle('is-active-track',featured.dataset.featuredTrack === currentItem?.name && playing);
@@ -429,7 +374,7 @@
       if(!item) return;
       closeDescriptionSheet(false);
       const currentTitle = localizedTitle(item.name);
-      const currentDescription = item.card.querySelector('.track-desc')?.textContent.trim() || '';
+      const currentDescription = catalog.description(item,interfaceLanguage());
       title.textContent = currentTitle;
       description.textContent = currentDescription;
       languageLabel.textContent = itemLanguage(item);
@@ -451,10 +396,10 @@
       const legacyOverlay = legacyCoverWrap?.querySelector(':scope > .tunewrap-playing-overlay');
       if(legacyOverlay) legacyOverlay.dataset.playingTrack = item.name;
 
-      const lyricText = songText(item.card,'data-song-lyrics');
+      const lyricText = songText(item,'lyrics');
       lyrics.textContent = lyricText || ui().empty;
       lyrics.classList.toggle('is-empty',!lyricText);
-      const translationText = songText(item.card,'data-song-translation');
+      const translationText = songText(item,'translation');
       translation.textContent = translationText;
       translationBlock.hidden = !translationText;
       syncMiniPlayer();
@@ -478,7 +423,7 @@
 
     function openPlayer(item,origin,autoplay){
       if(!item) return;
-      restoreFocus = origin || item.card;
+      restoreFocus = origin || cardFor(item);
       if(currentItem !== item){
         selectTrack(item.name,{autoplay:autoplay !== false,reason:'open-player'});
       } else if(autoplay !== false && audio.paused){
@@ -504,7 +449,7 @@
       screen.setAttribute('aria-hidden','true');
       screen.setAttribute('inert','');
       document.body.classList.remove('song-player-open');
-      const libraryOpen = Boolean(document.querySelector('.music-library-screen.is-open'));
+      const libraryOpen = Boolean(document.querySelector('.music-library-panel.is-open'));
       if(!libraryOpen){
         appScroll?.removeAttribute('inert');
         bottomNav?.removeAttribute('inert');
@@ -836,8 +781,8 @@
       try{
         navigator.mediaSession.metadata = new MediaMetadata({
           title:localizedTitle(currentItem.name),
-          artist:isAuthorItem(currentItem) ? 'Kosta Trufakin · TuneWrap' : 'TuneWrap',
-          album:isAuthorItem(currentItem) ? 'TuneWrap · Author Songs' : 'TuneWrap · Musical Stories',
+          artist:currentItem.artist || (isAuthorItem(currentItem) ? 'Kosta Trufakin' : 'TuneWrap'),
+          album:currentItem.album || (isAuthorItem(currentItem) ? 'TuneWrap · Author Songs' : 'TuneWrap · Musical Stories'),
           artwork:[
             {src:artworkUrl,sizes:'192x192',type},
             {src:artworkUrl,sizes:'512x512',type}
@@ -885,33 +830,54 @@
       },{capture:true});
     }
 
-    queue.forEach(item => {
-      item.card.tabIndex = 0;
-      captureClick(item.button,() => {
+    document.addEventListener('click',event => {
+      const button = event.target.closest('.play-btn[data-track]');
+      if(button){
+        const item = itemsByName.get(button.dataset.track);
+        if(!item) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
         if(currentItem === item) toggleCurrent();
         else selectTrack(item.name,{autoplay:true,reason:'library-play'});
         syncMiniPlayer();
-      });
-      item.card.addEventListener('click',event => {
-        if(event.target.closest('.play-btn')) return;
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        openPlayer(item,item.card,true);
-      },{capture:true});
-      item.card.addEventListener('keydown',event => {
-        if(event.target !== item.card || (event.key !== 'Enter' && event.key !== ' ')) return;
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        openPlayer(item,item.card,true);
-      },{capture:true});
-    });
-
-    document.querySelectorAll('[data-featured-track]').forEach(featured => {
-      captureClick(featured,() => {
+        return;
+      }
+      const featured = event.target.closest('[data-featured-track]');
+      if(featured){
         const item = itemsByName.get(featured.dataset.featuredTrack);
-        if(item) openPlayer(item,featured,true);
-      });
-    });
+        if(!item) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        openPlayer(item,featured,true);
+        return;
+      }
+      const ribbon = event.target.closest('[data-start-track]');
+      if(ribbon){
+        const item = itemsByName.get(ribbon.dataset.startTrack);
+        if(!item) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        openPlayer(item,ribbon,true);
+        return;
+      }
+      const card = event.target.closest('.track[data-track-id],.author-card[data-track-id]');
+      if(!card) return;
+      const item = itemsByName.get(card.dataset.trackId);
+      if(!item) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      openPlayer(item,card,true);
+    },{capture:true});
+
+    document.addEventListener('keydown',event => {
+      const card = event.target.closest?.('.track[data-track-id],.author-card[data-track-id]');
+      if(!card || event.target !== card || (event.key !== 'Enter' && event.key !== ' ')) return;
+      const item = itemsByName.get(card.dataset.trackId);
+      if(!item) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      openPlayer(item,card,true);
+    },{capture:true});
 
     captureClick(backButton,() => closePlayer(true));
     captureClick(minimizeButton,() => closePlayer(true));
@@ -1038,6 +1004,11 @@
     });
 
     document.addEventListener('tunewrap:languagechange',syncLocalizedPlayer);
+    document.addEventListener('tunewrap:catalogrendered',() => {
+      installPlayingOverlays();
+      drawIdleWaves();
+      syncCardStates();
+    });
     document.addEventListener('visibilitychange',() => {
       // Playback state is deliberately preserved. Only refresh UI/metadata on return.
       if(!document.hidden){

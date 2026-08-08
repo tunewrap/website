@@ -1,0 +1,39 @@
+{
+  "id": "story-127-ru",
+  "legacyKey": "days127",
+  "title": "127",
+  "originalTitle": "127",
+  "titles": {
+    "ru": "127",
+    "uk": "127",
+    "ka": "127",
+    "en": "127",
+    "de": "127"
+  },
+  "section": "stories",
+  "language": "RU",
+  "artist": "TuneWrap",
+  "album": "TuneWrap · Musical Stories",
+  "category": {
+    "ru": "История любви",
+    "uk": "Історія кохання",
+    "ka": "სიყვარულის ისტორია",
+    "en": "Love story",
+    "de": "Liebesgeschichte"
+  },
+  "tags": [
+    "RU",
+    "stories"
+  ],
+  "descriptions": {
+    "ru": "Она заплатила за его кофе. Через неделю он написал: «Верну кофе?» Через 127 дней понял, что хочет прожить с ней всю жизнь. Теперь это число — на их кольцах.",
+    "uk": "Вона заплатила за його каву. Через тиждень він написав: «Повернути каву?» Через 127 днів зрозумів, що хоче прожити з нею все життя. Тепер це число — на їхніх обручках.",
+    "ka": "მან მისი ყავა გადაიხადა. ერთი კვირის შემდეგ მან მისწერა: „ყავა დაგიბრუნო?“ 127 დღეში მიხვდა, რომ მასთან მთელი ცხოვრების გატარება სურდა. ახლა ეს რიცხვი მათ ბეჭდებზეა.",
+    "en": "She paid for his coffee. A week later he wrote, “Can I pay you back?” After 127 days, he knew he wanted to spend his life with her. That number is now engraved on their rings.",
+    "de": "Sie bezahlte seinen Kaffee. Eine Woche später schrieb er: „Darf ich den Kaffee zurückzahlen?“ Nach 127 Tagen wusste er, dass er sein Leben mit ihr verbringen wollte. Heute steht diese Zahl in ihren Ringen."
+  },
+  "durationLabel": "3:03",
+  "order": 1,
+  "featured": false,
+  "published": true
+}

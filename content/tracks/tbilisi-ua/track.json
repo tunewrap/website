@@ -1,0 +1,33 @@
+{
+  "id": "tbilisi-ua",
+  "legacyKey": "tbilisiua",
+  "title": "Tbilisi (UA)",
+  "originalTitle": "Tbilisi (UA)",
+  "titles": {
+    "ru": "Тбилиси (UA)",
+    "uk": "Тбілісі (UA)",
+    "ka": "თბილისი (UA)",
+    "en": "Tbilisi (UA)",
+    "de": "Tbilisi (UA)"
+  },
+  "section": "author",
+  "language": "UA",
+  "artist": "Kosta Trufakin",
+  "album": "TuneWrap · Author Songs",
+  "category": {},
+  "tags": [
+    "UA",
+    "author"
+  ],
+  "descriptions": {
+    "ru": "Иногда чужой город становится родным. Тбилиси подарил мне новую главу жизни, новых людей и веру в то, что никогда не поздно начать всё сначала.",
+    "uk": "Іноді чуже місто стає рідним. Тбілісі подарував мені новий розділ життя, нових людей і віру в те, що ніколи не пізно почати все спочатку.",
+    "ka": "ხანდახან უცხო ქალაქი მშობლიური ხდება. თბილისმა მაჩუქა ცხოვრების ახალი თავი, ახალი ადამიანები და რწმენა, რომ ყველაფრის თავიდან დაწყება არასოდეს არის გვიანი.",
+    "en": "Sometimes a foreign city becomes home. Tbilisi gave me a new chapter, new people and faith that it is never too late to begin again.",
+    "de": "Manchmal wird eine fremde Stadt zur Heimat. Tbilisi schenkte mir ein neues Kapitel, neue Menschen und den Glauben daran, dass es nie zu spät ist, neu anzufangen."
+  },
+  "durationLabel": "2:41",
+  "order": 3,
+  "featured": false,
+  "published": true
+}

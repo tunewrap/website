@@ -1,0 +1,33 @@
+{
+  "id": "my-choice-en",
+  "legacyKey": "mychoiceen",
+  "title": "I Do Whatever I Want!",
+  "originalTitle": "I Do Whatever I Want!",
+  "titles": {
+    "ru": "Я делаю что хочу!",
+    "uk": "Я роблю що хочу!",
+    "ka": "ვაკეთებ იმას, რაც მინდა!",
+    "en": "I Do Whatever I Want!",
+    "de": "Ich mache, was ich will!"
+  },
+  "section": "author",
+  "language": "EN",
+  "artist": "Kosta Trufakin",
+  "album": "TuneWrap · Author Songs",
+  "category": {},
+  "tags": [
+    "EN",
+    "author"
+  ],
+  "descriptions": {
+    "ru": "Английская версия личной истории о свободе, новом пути и праве жить по собственному выбору.",
+    "uk": "Англійська версія особистої історії про свободу, новий шлях і право жити за власним вибором.",
+    "ka": "პირადი ისტორიის ინგლისური ვერსია თავისუფლებაზე, ახალ გზასა და საკუთარი არჩევანით ცხოვრების უფლებაზე.",
+    "en": "The English version of a personal story about freedom, a new path and the right to live by your own choice.",
+    "de": "Die englische Version einer persönlichen Geschichte über Freiheit, einen neuen Weg und das Recht, nach der eigenen Entscheidung zu leben."
+  },
+  "durationLabel": "3:04",
+  "order": 8,
+  "featured": false,
+  "published": true
+}

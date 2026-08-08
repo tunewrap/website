@@ -1,0 +1,33 @@
+{
+  "id": "pulse-of-the-night-en",
+  "legacyKey": "pulse",
+  "title": "Pulse of the Night",
+  "originalTitle": "Pulse of the Night",
+  "titles": {
+    "ru": "Пульс ночи",
+    "uk": "Пульс ночі",
+    "ka": "ღამის პულსი",
+    "en": "Pulse of the Night",
+    "de": "Puls der Nacht"
+  },
+  "section": "author",
+  "language": "EN",
+  "artist": "Kosta Trufakin",
+  "album": "TuneWrap · Author Songs",
+  "category": {},
+  "tags": [
+    "EN",
+    "author"
+  ],
+  "descriptions": {
+    "ru": "Музыка была рядом со мной всю жизнь. Бас-гитара, сцена, свет софитов и тысячи сердец, бьющихся в одном ритме. Есть моменты, которые невозможно описать словами — их можно только почувствовать. Это история о свободе, энергии музыки и пульсе ночи, частью которого я являюсь.",
+    "uk": "Музика була поруч зі мною все життя. Бас-гітара, сцена, світло софітів і тисячі сердець, що б'ються в одному ритмі. Є моменти, які неможливо описати словами — їх можна лише відчути. Це історія про свободу, енергію музики та пульс ночі, частиною якого я є.",
+    "ka": "მუსიკა მთელი ცხოვრება ჩემ გვერდით იყო. ბას-გიტარა, სცენა, პროჟექტორების შუქი და ათასობით გული, რომლებიც ერთ რიტმში ცემენ. არის მომენტები, რომელთა სიტყვებით აღწერა შეუძლებელია — ისინი მხოლოდ უნდა იგრძნო. ეს არის ისტორია თავისუფლებაზე, მუსიკის ენერგიასა და ღამის პულსზე, რომლის ნაწილიც დღესაც ვარ.",
+    "en": "Music has been with me all my life. Bass guitar, the stage, spotlights and thousands of hearts beating in one rhythm. Some moments cannot be described in words — they can only be felt. This is a story about freedom, the energy of music and the pulse of the night that I am still part of.",
+    "de": "Musik war mein ganzes Leben lang an meiner Seite. Bassgitarre, Bühne, Scheinwerfer und Tausende Herzen, die im gleichen Rhythmus schlagen. Manche Momente lassen sich nicht in Worte fassen — man kann sie nur fühlen. Dies ist eine Geschichte über Freiheit, die Energie der Musik und den Puls der Nacht, zu dem ich bis heute gehöre."
+  },
+  "durationLabel": "3:29",
+  "order": 6,
+  "featured": false,
+  "published": true
+}

@@ -1,0 +1,39 @@
+{
+  "id": "just-five-more-minutes-en",
+  "legacyKey": "justfive",
+  "title": "Just Five More Minutes",
+  "originalTitle": "Just Five More Minutes",
+  "titles": {
+    "ru": "Ещё пять минут",
+    "uk": "Ще п'ять хвилин",
+    "ka": "კიდევ ხუთი წუთი",
+    "en": "Just Five More Minutes",
+    "de": "Noch fünf Minuten"
+  },
+  "section": "stories",
+  "language": "EN",
+  "artist": "TuneWrap",
+  "album": "TuneWrap · Musical Stories",
+  "category": {
+    "ru": "Личная история",
+    "uk": "Особиста історія",
+    "ka": "პირადი ისტორია",
+    "en": "Personal story",
+    "de": "Persönliche Geschichte"
+  },
+  "tags": [
+    "EN",
+    "stories"
+  ],
+  "descriptions": {
+    "ru": "Иногда самые важные слова звучат в просьбе остаться ещё на пять минут. Личная история о времени, близости и мгновениях, которые хочется удержать.",
+    "uk": "Іноді найважливіші слова звучать у проханні залишитися ще на п’ять хвилин. Особиста історія про час, близькість і миті, які хочеться втримати.",
+    "ka": "ზოგჯერ ყველაზე მნიშვნელოვანი სიტყვები მხოლოდ თხოვნაში ჟღერს — დარჩი კიდევ ხუთი წუთით. პირადი ისტორია დროზე, სიახლოვესა და იმ წამებზე, რომელთა შენარჩუნებაც გვინდა.",
+    "en": "Sometimes the most important words are simply a request to stay for five more minutes. A personal story about time, closeness, and moments we wish we could hold onto.",
+    "de": "Manchmal liegen die wichtigsten Worte in der Bitte, noch fünf Minuten zu bleiben. Eine persönliche Geschichte über Zeit, Nähe und Augenblicke, die wir festhalten möchten."
+  },
+  "durationLabel": "3:41",
+  "order": 5,
+  "featured": false,
+  "published": true
+}

@@ -1,0 +1,27 @@
+{
+  "id": "neues-leben-de",
+  "legacyKey": "neuesleben",
+  "title": "Neues Leben",
+  "originalTitle": "Neues Leben",
+  "titles": {
+    "ru": "Новая жизнь",
+    "uk": "Нове життя",
+    "ka": "ახალი ცხოვრება",
+    "en": "New Life",
+    "de": "Neues Leben"
+  },
+  "section": "stories",
+  "language": "DE",
+  "artist": "TuneWrap",
+  "album": "TuneWrap · Musical Stories",
+  "category": {},
+  "tags": [
+    "DE",
+    "stories"
+  ],
+  "descriptions": {},
+  "durationLabel": "3:44",
+  "order": 11,
+  "featured": false,
+  "published": true
+}

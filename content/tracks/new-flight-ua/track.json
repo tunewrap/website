@@ -1,0 +1,27 @@
+{
+  "id": "new-flight-ua",
+  "legacyKey": "newflight",
+  "title": "НОВИЙ ПОЛІТ",
+  "originalTitle": "НОВИЙ ПОЛІТ",
+  "titles": {
+    "ru": "Новый полёт",
+    "uk": "Новий політ",
+    "ka": "ახალი ფრენა",
+    "en": "New Flight",
+    "de": "Neuer Flug"
+  },
+  "section": "author",
+  "language": "UA",
+  "artist": "Kosta Trufakin",
+  "album": "TuneWrap · Author Songs",
+  "category": {},
+  "tags": [
+    "UA",
+    "author"
+  ],
+  "descriptions": {},
+  "durationLabel": "2:50",
+  "order": 14,
+  "featured": false,
+  "published": true
+}

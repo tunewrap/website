@@ -1,0 +1,33 @@
+{
+  "id": "ya-ya-ya-en",
+  "legacyKey": "yayaya",
+  "title": "Ya Ya Ya",
+  "originalTitle": "Ya Ya Ya",
+  "titles": {
+    "ru": "Ya Ya Ya",
+    "uk": "Ya Ya Ya",
+    "ka": "Ya Ya Ya",
+    "en": "Ya Ya Ya",
+    "de": "Ya Ya Ya"
+  },
+  "section": "author",
+  "language": "EN",
+  "artist": "Kosta Trufakin",
+  "album": "TuneWrap · Author Songs",
+  "category": {},
+  "tags": [
+    "EN",
+    "author"
+  ],
+  "descriptions": {
+    "ru": "Иногда песня рождается не из боли, а из чистой энергии. Ya Ya Ya — про момент, когда перестаёшь оглядываться на чужое мнение и просто идёшь своим ритмом. Гитарный драйв, дорога и припев, который хочется петь всей компанией.",
+    "uk": "Іноді пісня народжується не з болю, а з чистої енергії. Ya Ya Ya — про мить, коли перестаєш озиратися на чужу думку й просто йдеш у власному ритмі. Гітарний драйв, дорога та приспів, який хочеться співати всією компанією.",
+    "ka": "ზოგჯერ სიმღერა ტკივილისგან კი არა, სუფთა ენერგიისგან იბადება. Ya Ya Ya იმ წამზეა, როცა სხვების აზრს აღარ უყურებ და საკუთარ რიტმში მიდიხარ. გიტარის დრაივი, გზა და მისამღერი, რომლის ერთად სიმღერაც ყველას მოუნდება.",
+    "en": "Sometimes a song is born not from pain, but from pure energy. Ya Ya Ya is about the moment you stop looking back at other people’s opinions and move in your own rhythm. Guitar drive, the open road and a chorus made to be sung together.",
+    "de": "Manchmal entsteht ein Song nicht aus Schmerz, sondern aus reiner Energie. Ya Ya Ya handelt von dem Moment, in dem man nicht mehr auf die Meinung anderer zurückblickt und im eigenen Rhythmus weitergeht. Gitarrendrive, Straße und ein Refrain, den man gemeinsam singen möchte."
+  },
+  "durationLabel": "2:46",
+  "order": 9,
+  "featured": false,
+  "published": true
+}

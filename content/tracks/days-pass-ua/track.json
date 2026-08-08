@@ -1,0 +1,27 @@
+{
+  "id": "days-pass-ua",
+  "legacyKey": "dayspass",
+  "title": "Минають Дні",
+  "originalTitle": "Минають Дні",
+  "titles": {
+    "ru": "Проходят дни",
+    "uk": "Минають дні",
+    "ka": "დღეები გადის",
+    "en": "Days Go By",
+    "de": "Die Tage vergehen"
+  },
+  "section": "author",
+  "language": "UA",
+  "artist": "Kosta Trufakin",
+  "album": "TuneWrap · Author Songs",
+  "category": {},
+  "tags": [
+    "UA",
+    "author"
+  ],
+  "descriptions": {},
+  "durationLabel": "3:19",
+  "order": 12,
+  "featured": false,
+  "published": true
+}

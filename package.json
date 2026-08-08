@@ -1,0 +1,17 @@
+{
+  "name": "tunewrap-web",
+  "private": true,
+  "version": "10.2.0",
+  "description": "TuneWrap mobile web application",
+  "scripts": {
+    "tracks:build": "node scripts/tracks-build.js",
+    "tracks:check": "node scripts/tracks-build.js --check",
+    "tracks:import": "node scripts/tracks-import.js",
+    "tracks:test-queue": "node scripts/tracks-queue-test.js",
+    "tracks:test-scale": "node scripts/tracks-scale-test.js",
+    "test": "npm run tracks:check && npm run tracks:test-queue && npm run tracks:test-scale"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

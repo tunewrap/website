@@ -1,0 +1,33 @@
+{
+  "id": "amsterdam-en",
+  "legacyKey": "amsterdamen",
+  "title": "Amsterdam — English Version",
+  "originalTitle": "Amsterdam — English Version",
+  "titles": {
+    "ru": "Амстердам — английская версия",
+    "uk": "Амстердам — англійська версія",
+    "ka": "ამსტერდამი — ინგლისური ვერსია",
+    "en": "Amsterdam — English Version",
+    "de": "Amsterdam — englische Version"
+  },
+  "section": "author",
+  "language": "EN",
+  "artist": "Kosta Trufakin",
+  "album": "TuneWrap · Author Songs",
+  "category": {},
+  "tags": [
+    "EN",
+    "author"
+  ],
+  "descriptions": {
+    "ru": "Та же ночь, те же каналы и красные огни — история, рассказанная на английском языке.",
+    "uk": "Та сама ніч, ті самі канали й червоні вогні — історія, розказана англійською мовою.",
+    "ka": "იგივე ღამე, იგივე არხები და წითელი შუქები — ისტორია, რომელიც ინგლისურად არის მოთხრობილი.",
+    "en": "The same night, the same canals and red lights — a story told in English.",
+    "de": "Dieselbe Nacht, dieselben Kanäle und roten Lichter — eine Geschichte, die auf Englisch erzählt wird."
+  },
+  "durationLabel": "3:21",
+  "order": 7,
+  "featured": false,
+  "published": true
+}

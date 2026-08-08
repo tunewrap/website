@@ -1,0 +1,27 @@
+{
+  "id": "tbilisi-ge",
+  "legacyKey": "tbilisige",
+  "title": "Tbilisi (GE)",
+  "originalTitle": "Tbilisi (GE)",
+  "titles": {
+    "ru": "Тбилиси (GE)",
+    "uk": "Тбілісі (GE)",
+    "ka": "თბილისი (GE)",
+    "en": "Tbilisi (GE)",
+    "de": "Tbilisi (GE)"
+  },
+  "section": "author",
+  "language": "GE",
+  "artist": "Kosta Trufakin",
+  "album": "TuneWrap · Author Songs",
+  "category": {},
+  "tags": [
+    "GE",
+    "author"
+  ],
+  "descriptions": {},
+  "durationLabel": "4:44",
+  "order": 4,
+  "featured": false,
+  "published": true
+}

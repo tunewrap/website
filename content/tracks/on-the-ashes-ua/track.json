@@ -1,0 +1,27 @@
+{
+  "id": "on-the-ashes-ua",
+  "legacyKey": "ashes",
+  "title": "НА ПОПЕЛІ",
+  "originalTitle": "НА ПОПЕЛІ",
+  "titles": {
+    "ru": "На пепелище",
+    "uk": "На попелі",
+    "ka": "ფერფლზე",
+    "en": "On the Ashes",
+    "de": "Auf der Asche"
+  },
+  "section": "author",
+  "language": "UA",
+  "artist": "Kosta Trufakin",
+  "album": "TuneWrap · Author Songs",
+  "category": {},
+  "tags": [
+    "UA",
+    "author"
+  ],
+  "descriptions": {},
+  "durationLabel": "2:41",
+  "order": 13,
+  "featured": false,
+  "published": true
+}

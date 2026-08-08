@@ -1,0 +1,39 @@
+{
+  "id": "main-road-ru",
+  "legacyKey": "mainroad",
+  "title": "Главный путь",
+  "originalTitle": "Главный путь",
+  "titles": {
+    "ru": "Главный путь",
+    "uk": "Головний шлях",
+    "ka": "მთავარი გზა",
+    "en": "The Main Path",
+    "de": "Der wichtigste Weg"
+  },
+  "section": "stories",
+  "language": "RU",
+  "artist": "TuneWrap",
+  "album": "TuneWrap · Musical Stories",
+  "category": {
+    "ru": "История нового начала",
+    "uk": "Історія нового початку",
+    "ka": "ახალი დასაწყისის ისტორია",
+    "en": "A story of a new beginning",
+    "de": "Geschichte eines neuen Anfangs"
+  },
+  "tags": [
+    "RU",
+    "stories"
+  ],
+  "descriptions": {
+    "ru": "35 лет на железной дороге. Он всегда ставил семью на первое место, откладывая свои мечты на потом. Последняя смена стала не прощанием, а первым билетом в новую главу его жизни.",
+    "uk": "35 років на залізниці. Він завжди ставив родину на перше місце, відкладаючи свої мрії на потім. Остання зміна стала не прощанням, а першим квитком у новий розділ його життя.",
+    "ka": "35 წელი რკინიგზაზე. ის ყოველთვის ოჯახს აყენებდა პირველ ადგილზე და საკუთარ ოცნებებს შემდეგისთვის ტოვებდა. ბოლო ცვლა დამშვიდობება კი არა, მისი ცხოვრების ახალი თავის პირველი ბილეთი გახდა.",
+    "en": "Thirty-five years on the railway. He always put his family first and postponed his own dreams. His final shift was not a farewell, but the first ticket into a new chapter of life.",
+    "de": "35 Jahre bei der Bahn. Seine Familie stand für ihn immer an erster Stelle, während er seine eigenen Träume auf später verschob. Seine letzte Schicht war kein Abschied, sondern die erste Fahrkarte in ein neues Kapitel seines Lebens."
+  },
+  "durationLabel": "3:42",
+  "order": 2,
+  "featured": false,
+  "published": true
+}

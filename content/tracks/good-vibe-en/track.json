@@ -1,0 +1,33 @@
+{
+  "id": "good-vibe-en",
+  "legacyKey": "goodvibe",
+  "title": "Good Vibe",
+  "originalTitle": "Good Vibe",
+  "titles": {
+    "ru": "Хорошее настроение",
+    "uk": "Гарний настрій",
+    "ka": "კარგი განწყობა",
+    "en": "Good Vibe",
+    "de": "Gute Stimmung"
+  },
+  "section": "author",
+  "language": "EN",
+  "artist": "Kosta Trufakin",
+  "album": "TuneWrap · Author Songs",
+  "category": {},
+  "tags": [
+    "EN",
+    "author"
+  ],
+  "descriptions": {
+    "ru": "Иногда несколько месяцев поддержки, улыбок и тёплых разговоров превращаются в хорошую музыку. Эта песня — благодарность жизни и одному человеку за её светлые моменты.",
+    "uk": "Іноді кілька місяців підтримки, усмішок і теплих розмов перетворюються на хорошу музику. Ця пісня — подяка життю й одній людині за його світлі миті.",
+    "ka": "ხანდახან მხარდაჭერის, ღიმილისა და თბილი საუბრების რამდენიმე თვე კარგ მუსიკად იქცევა. ეს სიმღერა მადლობაა ცხოვრებისადმი და ერთი ადამიანისადმი მისი ნათელი წუთებისთვის.",
+    "en": "Sometimes months of support, smiles and warm conversations turn into good music. This song is a thank-you to life—and to one person—for its brighter moments.",
+    "de": "Manchmal werden Monate voller Unterstützung, Lächeln und warmer Gespräche zu guter Musik. Dieser Song ist ein Dank an das Leben und an einen Menschen für seine hellen Momente."
+  },
+  "durationLabel": "5:33",
+  "order": 5,
+  "featured": false,
+  "published": true
+}

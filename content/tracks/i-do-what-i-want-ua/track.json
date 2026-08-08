@@ -1,0 +1,33 @@
+{
+  "id": "i-do-what-i-want-ua",
+  "legacyKey": "iwant",
+  "title": "Я РОБЛЮ ЩО ХОЧУ",
+  "originalTitle": "Я РОБЛЮ ЩО ХОЧУ",
+  "titles": {
+    "ru": "Я делаю что хочу",
+    "uk": "Я роблю що хочу",
+    "ka": "ვაკეთებ იმას, რაც მინდა",
+    "en": "I Do Whatever I Want",
+    "de": "Ich mache, was ich will"
+  },
+  "section": "author",
+  "language": "UA",
+  "artist": "Kosta Trufakin",
+  "album": "TuneWrap · Author Songs",
+  "category": {},
+  "tags": [
+    "UA",
+    "author"
+  ],
+  "descriptions": {
+    "ru": "После долгих лет жизни по чужому расписанию однажды наступает тишина — и впервые никто не говорит, что ты должен делать. Эта песня родилась из простого, почти дерзкого ощущения свободы: сегодня я сам выбираю свой день, свой путь и свою жизнь. «Я роблю що хочу» — не про каприз, а про возвращение к себе.",
+    "uk": "Після довгих років життя за чужим розкладом одного дня настає тиша — і вперше ніхто не говорить, що ти повинен робити. Ця пісня народилася з простого, майже зухвалого відчуття свободи: сьогодні я сам обираю свій день, свій шлях і своє життя. «Я роблю що хочу» — не про примху, а про повернення до себе.",
+    "ka": "სხვისი განრიგით ცხოვრების მრავალი წლის შემდეგ ერთხელ სიჩუმე დგება — და პირველად აღარავინ გეუბნება, რა უნდა გააკეთო. ეს სიმღერა თავისუფლების უბრალო, თითქმის თამამმა განცდამ დაბადა: დღეს მე თავად ვირჩევ ჩემს დღეს, გზას და ცხოვრებას. „Я роблю що хочу“ ახირება კი არა, საკუთარ თავთან დაბრუნებაა.",
+    "en": "After years of living by someone else’s schedule, silence finally arrives—and for the first time nobody tells you what you must do. This song was born from a simple, almost defiant feeling of freedom: today I choose my own day, my own path and my own life. “I do what I want” is not a whim; it is a return to yourself.",
+    "de": "Nach vielen Jahren nach dem Zeitplan anderer kommt plötzlich Stille—und zum ersten Mal sagt niemand mehr, was man tun muss. Dieser Song entstand aus einem einfachen, fast trotzigen Gefühl von Freiheit: Heute bestimme ich meinen Tag, meinen Weg und mein Leben selbst. „Ich mache, was ich will“ ist keine Laune, sondern die Rückkehr zu sich selbst."
+  },
+  "durationLabel": "2:52",
+  "order": 10,
+  "featured": false,
+  "published": true
+}

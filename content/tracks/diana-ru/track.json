@@ -1,0 +1,27 @@
+{
+  "id": "diana-ru",
+  "legacyKey": "diana",
+  "title": "Диана!",
+  "originalTitle": "Диана!",
+  "titles": {
+    "ru": "Диана!",
+    "uk": "Діана!",
+    "ka": "დიანა!",
+    "en": "Diana!",
+    "de": "Diana!"
+  },
+  "section": "stories",
+  "language": "RU",
+  "artist": "TuneWrap",
+  "album": "TuneWrap · Musical Stories",
+  "category": {},
+  "tags": [
+    "RU",
+    "stories"
+  ],
+  "descriptions": {},
+  "durationLabel": "4:04",
+  "order": 6,
+  "featured": false,
+  "published": true
+}

@@ -105,7 +105,7 @@ Complete measurements for all 29 assets follow.
 
 ### Delivery path
 
-- Every track is referenced from the same relative `assets/audio/` path and now passes through the same audio engine.
+- Stage 10.1 moved each unchanged MP3 into its own `content/tracks/<stable-id>/track.mp3` package. Every generated URL still passes through the same persistent audio engine; no section-specific path exists.
 - Local HTTP checks returned `Content-Type: audio/mpeg` and a correct `Content-Length` for both a CBR Story file and a VBR Author file.
 - The local test server did not honor `Range` and returned `200 OK`; this is why direct seekability must be detected at runtime rather than assumed.
 - The final Chromium acceptance test used a range-capable local server, received a full seekable interval through `206 Partial Content`, and successfully moved the active VBR track to approximately 51% at 320×568, 360×640 and 393×852.

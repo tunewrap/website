@@ -1,0 +1,39 @@
+{
+  "id": "natalia-65-ru",
+  "legacyKey": "natalia65",
+  "title": "65",
+  "originalTitle": "65",
+  "titles": {
+    "ru": "Наталья — 65 лет",
+    "uk": "Наталія — 65 років",
+    "ka": "ნატალია — 65 წელი",
+    "en": "Natalia — 65",
+    "de": "Natalia — 65 Jahre"
+  },
+  "section": "stories",
+  "language": "RU",
+  "artist": "TuneWrap",
+  "album": "TuneWrap · Musical Stories",
+  "category": {
+    "ru": "История благодарности",
+    "uk": "Історія вдячності",
+    "ka": "მადლიერების ისტორია",
+    "en": "A story of gratitude",
+    "de": "Geschichte der Dankbarkeit"
+  },
+  "tags": [
+    "RU",
+    "stories"
+  ],
+  "descriptions": {
+    "ru": "Белый халат после смены. Любимый дождь за окном, кофе на веранде, цветущие пионы и слова, которые знает вся семья: «Главное — чтобы все были здоровы». Эта история о женщине, которая всю жизнь дарит любовь и заботу другим.",
+    "uk": "Білий халат після зміни. Улюблений дощ за вікном, кава на веранді, квітучі півонії та слова, які знає вся родина: «Головне — щоб усі були здорові». Це історія жінки, яка все життя дарує іншим любов і турботу.",
+    "ka": "თეთრი ხალათი სამუშაო ცვლის შემდეგ. საყვარელი წვიმა ფანჯრის მიღმა, ყავა ვერანდაზე, აყვავებული პიონები და სიტყვები, რომლებიც მთელმა ოჯახმა იცის: „მთავარია, ყველა ჯანმრთელი იყოს“. ეს არის ქალის ისტორია, რომელიც მთელი ცხოვრება სხვებს სიყვარულსა და ზრუნვას ჩუქნის.",
+    "en": "A white coat after a shift. Her favorite rain outside, coffee on the veranda, blooming peonies, and words the whole family knows: “The main thing is that everyone is healthy.” This is the story of a woman who has spent her life giving love and care to others.",
+    "de": "Der weiße Kittel nach der Schicht. Ihr geliebter Regen vor dem Fenster, Kaffee auf der Veranda, blühende Pfingstrosen und die Worte, die die ganze Familie kennt: „Hauptsache, alle sind gesund.“ Dies ist die Geschichte einer Frau, die ihr ganzes Leben anderen Liebe und Fürsorge schenkt."
+  },
+  "durationLabel": "3:34",
+  "order": 3,
+  "featured": false,
+  "published": true
+}

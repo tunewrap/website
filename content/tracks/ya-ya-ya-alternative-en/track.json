@@ -1,0 +1,27 @@
+{
+  "id": "ya-ya-ya-alternative-en",
+  "legacyKey": "yayayaalt",
+  "title": "YA YA YA (alternative)",
+  "originalTitle": "YA YA YA (alternative)",
+  "titles": {
+    "ru": "YA YA YA (альтернативная версия)",
+    "uk": "YA YA YA (альтернативна версія)",
+    "ka": "YA YA YA (ალტერნატიული ვერსია)",
+    "en": "YA YA YA (Alternative Version)",
+    "de": "YA YA YA (Alternative Version)"
+  },
+  "section": "author",
+  "language": "EN",
+  "artist": "Kosta Trufakin",
+  "album": "TuneWrap · Author Songs",
+  "category": {},
+  "tags": [
+    "EN",
+    "author"
+  ],
+  "descriptions": {},
+  "durationLabel": "3:03",
+  "order": 11,
+  "featured": false,
+  "published": true
+}

@@ -1,0 +1,27 @@
+{
+  "id": "five-more-minutes-ua",
+  "legacyKey": "fiveua",
+  "title": "ЩЕ П'ЯТЬ ХВИЛИН",
+  "originalTitle": "ЩЕ П'ЯТЬ ХВИЛИН",
+  "titles": {
+    "ru": "Ещё пять минут",
+    "uk": "Ще п'ять хвилин",
+    "ka": "კიდევ ხუთი წუთი",
+    "en": "Five More Minutes",
+    "de": "Noch fünf Minuten"
+  },
+  "section": "stories",
+  "language": "UA",
+  "artist": "TuneWrap",
+  "album": "TuneWrap · Musical Stories",
+  "category": {},
+  "tags": [
+    "UA",
+    "stories"
+  ],
+  "descriptions": {},
+  "durationLabel": "3:09",
+  "order": 9,
+  "featured": false,
+  "published": true
+}

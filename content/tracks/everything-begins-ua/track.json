@@ -1,0 +1,27 @@
+{
+  "id": "everything-begins-ua",
+  "legacyKey": "allbegins",
+  "title": "ВСЕ ТІЛЬКИ ПОЧИНАЄТЬСЯ!",
+  "originalTitle": "ВСЕ ТІЛЬКИ ПОЧИНАЄТЬСЯ!",
+  "titles": {
+    "ru": "Всё только начинается!",
+    "uk": "Все тільки починається!",
+    "ka": "ყველაფერი მხოლოდ იწყება!",
+    "en": "Everything Is Just Beginning!",
+    "de": "Alles fängt gerade erst an!"
+  },
+  "section": "stories",
+  "language": "UA",
+  "artist": "TuneWrap",
+  "album": "TuneWrap · Musical Stories",
+  "category": {},
+  "tags": [
+    "UA",
+    "stories"
+  ],
+  "descriptions": {},
+  "durationLabel": "4:07",
+  "order": 8,
+  "featured": false,
+  "published": true
+}

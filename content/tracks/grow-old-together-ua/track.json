@@ -1,0 +1,39 @@
+{
+  "id": "grow-old-together-ua",
+  "legacyKey": "growold",
+  "title": "Ми будемо старіти разом",
+  "originalTitle": "Ми будемо старіти разом",
+  "titles": {
+    "ru": "Мы будем стареть вместе",
+    "uk": "Ми будемо старіти разом",
+    "ka": "ჩვენ ერთად დავბერდებით",
+    "en": "We'll Grow Old Together",
+    "de": "Wir werden gemeinsam alt"
+  },
+  "section": "stories",
+  "language": "UA",
+  "artist": "TuneWrap",
+  "album": "TuneWrap · Musical Stories",
+  "category": {
+    "ru": "История любви",
+    "uk": "Історія кохання",
+    "ka": "სიყვარულის ისტორია",
+    "en": "Love story",
+    "de": "Liebesgeschichte"
+  },
+  "tags": [
+    "UA",
+    "stories"
+  ],
+  "descriptions": {
+    "ru": "Любовь — это не обещание на один день. Это тысячи рассветов, чашка утреннего кофе, детский смех и тепло ладоней спустя много лет. Самое большое счастье — не считать годы, а проживать каждый день вместе.",
+    "uk": "Любов — це не обіцянка на один день. Це тисячі світанків, чашка ранкової кави, дитячий сміх і тепло долонь через багато років. Найбільше щастя — не рахувати роки, а проживати кожен день разом.",
+    "ka": "სიყვარული ერთი დღის დაპირება არ არის. ეს არის ათასობით განთიადი, დილის ყავა, ბავშვების სიცილი და ხელების სითბო მრავალი წლის შემდეგ. ყველაზე დიდი ბედნიერებაა არა წლების დათვლა, არამედ ყოველი დღის ერთად ცხოვრება.",
+    "en": "Love is not a promise for one day. It is thousands of sunrises, morning coffee, children's laughter and the warmth of holding hands many years later. The greatest happiness is not counting the years, but living every day together.",
+    "de": "Liebe ist kein Versprechen für nur einen Tag. Sie bedeutet tausend Sonnenaufgänge, morgendlichen Kaffee, Kinderlachen und die Wärme vertrauter Hände nach vielen Jahren. Das größte Glück ist, nicht die Jahre zu zählen, sondern jeden Tag gemeinsam zu leben."
+  },
+  "durationLabel": "3:17",
+  "order": 4,
+  "featured": true,
+  "published": true
+}

@@ -1,0 +1,33 @@
+{
+  "id": "amsterdam-ru",
+  "legacyKey": "amsterdam",
+  "title": "Amsterdam",
+  "originalTitle": "Amsterdam",
+  "titles": {
+    "ru": "Амстердам",
+    "uk": "Амстердам",
+    "ka": "ამსტერდამი",
+    "en": "Amsterdam",
+    "de": "Amsterdam"
+  },
+  "section": "author",
+  "language": "RU",
+  "artist": "Kosta Trufakin",
+  "album": "TuneWrap · Author Songs",
+  "category": {},
+  "tags": [
+    "RU",
+    "author"
+  ],
+  "descriptions": {
+    "ru": "Эта история началась глубокой ночью в Амстердаме. Мы с сыном просто шли вперёд по пустому городу, не зная, что запомним эту ночь навсегда. Красные огни, каналы и ощущение абсолютной свободы однажды стали песней.",
+    "uk": "Ця історія почалася глибокої ночі в Амстердамі. Ми із сином просто йшли вперед порожнім містом, не знаючи, що запам’ятаємо цю ніч назавжди. Червоні вогні, канали й відчуття абсолютної свободи одного дня стали піснею.",
+    "ka": "ეს ისტორია ამსტერდამში, ღრმა ღამით დაიწყო. მე და ჩემი შვილი ცარიელ ქალაქში უბრალოდ წინ მივდიოდით და არ ვიცოდით, რომ ამ ღამეს სამუდამოდ დავიმახსოვრებდით. წითელი შუქები, არხები და სრული თავისუფლების განცდა ერთ დღეს სიმღერად იქცა.",
+    "en": "This story began late at night in Amsterdam. My son and I simply kept walking through the empty city, unaware that we would remember that night forever. Red lights, canals and a feeling of absolute freedom eventually became a song.",
+    "de": "Diese Geschichte begann tief in der Nacht in Amsterdam. Mein Sohn und ich gingen einfach durch die leere Stadt, ohne zu ahnen, dass wir diese Nacht nie vergessen würden. Rote Lichter, Kanäle und ein Gefühl grenzenloser Freiheit wurden später zu einem Song."
+  },
+  "durationLabel": "3:30",
+  "order": 1,
+  "featured": true,
+  "published": true
+}

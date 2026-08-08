@@ -1,0 +1,33 @@
+{
+  "id": "my-choice-ua",
+  "legacyKey": "mychoice",
+  "title": "Мій вибір",
+  "originalTitle": "Мій вибір",
+  "titles": {
+    "ru": "Мой выбор",
+    "uk": "Мій вибір",
+    "ka": "ჩემი არჩევანი",
+    "en": "My Choice",
+    "de": "Meine Wahl"
+  },
+  "section": "author",
+  "language": "UA",
+  "artist": "Kosta Trufakin",
+  "album": "TuneWrap · Author Songs",
+  "category": {},
+  "tags": [
+    "UA",
+    "author"
+  ],
+  "descriptions": {
+    "ru": "Иногда нужно потерять привычную жизнь, чтобы обрести свою собственную. Эта песня появилась в день, когда я понял, что свобода — это право выбирать свой путь и оставаться верным самому себе.",
+    "uk": "Іноді потрібно втратити звичне життя, щоб знайти власне. Ця пісня з’явилася в день, коли я зрозумів: свобода — це право обирати свій шлях і залишатися вірним самому собі.",
+    "ka": "ხანდახან ჩვეული ცხოვრება უნდა დაკარგო, რათა საკუთარი იპოვო. ეს სიმღერა იმ დღეს გაჩნდა, როცა გავიგე: თავისუფლება არის უფლება, აირჩიო შენი გზა და საკუთარ თავს ერთგული დარჩე.",
+    "en": "Sometimes you have to lose the life you knew to find your own. This song appeared on the day I understood that freedom is the right to choose your path and remain true to yourself.",
+    "de": "Manchmal muss man das vertraute Leben verlieren, um das eigene zu finden. Dieser Song entstand an dem Tag, an dem ich verstand: Freiheit bedeutet, den eigenen Weg wählen und sich selbst treu bleiben zu dürfen."
+  },
+  "durationLabel": "3:24",
+  "order": 2,
+  "featured": false,
+  "published": true
+}

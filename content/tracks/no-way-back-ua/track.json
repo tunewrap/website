@@ -1,0 +1,27 @@
+{
+  "id": "no-way-back-ua",
+  "legacyKey": "noretreat",
+  "title": "ШЛЯХУ НАЗАД НЕМА",
+  "originalTitle": "ШЛЯХУ НАЗАД НЕМА",
+  "titles": {
+    "ru": "Пути назад нет",
+    "uk": "Шляху назад нема",
+    "ka": "უკან დასახევი გზა არ არის",
+    "en": "No Way Back",
+    "de": "Kein Weg zurück"
+  },
+  "section": "author",
+  "language": "UA",
+  "artist": "Kosta Trufakin",
+  "album": "TuneWrap · Author Songs",
+  "category": {},
+  "tags": [
+    "UA",
+    "author"
+  ],
+  "descriptions": {},
+  "durationLabel": "2:59",
+  "order": 15,
+  "featured": false,
+  "published": true
+}
