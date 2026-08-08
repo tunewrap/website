@@ -433,8 +433,8 @@
 
     <div class="wedding-packages" id="weddingPackages">
       <div class="wedding-packages-heading">
-        <div class="wedding-packages-eyebrow" data-i18n="wedding_eyebrow">ДЛЯ ВАШЕЙ СВАДЬБЫ</div>
-        <p data-i18n="wedding_subtitle">Музыка для моментов,<br>которые останутся с вами навсегда.</p>
+        <div class="wedding-packages-eyebrow" data-i18n="wedding_eyebrow">СВАДЕБНЫЙ ФОРМАТ</div>
+        <p data-i18n="wedding_subtitle">Музыка для моментов, которые останутся с вами навсегда.</p>
       </div>
       <div class="wedding-packages-grid" id="weddingPackagesGrid" aria-label="Свадебные пакеты"></div>
     </div>
@@ -452,7 +452,9 @@
 
     <div class="story-path-picker" id="storyPathPicker">
       <article class="story-path-card">
-        <span class="story-path-icon" aria-hidden="true">❤️</span>
+        <span class="story-path-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M5 13v-2m3 5V8m3 10V6m3 9V9m3 4v-2m2 5.5V7.5"/></svg>
+        </span>
         <div>
           <h3 data-i18n="path_order_title">Заказать песню</h3>
           <p data-i18n="path_order_desc">Расскажите историю человека — мы превратим её в личную песню.</p>
@@ -460,7 +462,9 @@
         <button type="button" data-story-path="order" data-i18n="path_order_action">Начать заказ</button>
       </article>
       <article class="story-path-card">
-        <span class="story-path-icon" aria-hidden="true">🎁</span>
+        <span class="story-path-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 8h16v12H4V8zm-1-4h18v4H3V4zm9 0v16M8.5 4C7 4 6 3.2 6 2.2 6 1.5 6.6 1 7.4 1 9.4 1 12 4 12 4m3.5 0C17 4 18 3.2 18 2.2 18 1.5 17.4 1 16.6 1 14.6 1 12 4 12 4"/></svg>
+        </span>
         <div>
           <h3 data-i18n="path_certificate_title">Подарочный сертификат</h3>
           <p data-i18n="path_certificate_desc">Подарите возможность сохранить важную историю в собственной песне.</p>
@@ -468,7 +472,9 @@
         <button type="button" data-story-path="certificate" data-i18n="path_certificate_action">Выбрать сертификат</button>
       </article>
       <article class="story-path-card">
-        <span class="story-path-icon" aria-hidden="true">🏢</span>
+        <span class="story-path-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M8.5 10.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7-1.5a2.3 2.3 0 1 0 0-4.6A2.3 2.3 0 0 0 15.5 9zM3 19c0-3.4 2.2-5.5 5.5-5.5S14 15.6 14 19M13 13c.7-.4 1.5-.6 2.5-.6 3 0 5 1.9 5 4.8V19"/></svg>
+        </span>
         <div>
           <h3 data-i18n="path_corporate_title">Корпоративная песня</h3>
           <p data-i18n="path_corporate_desc">Песни для команды, компании, партнёров и важных корпоративных событий.</p>
@@ -569,37 +575,6 @@
       </div>
     </div>
 
-    <div class="contact-alternatives">
-      <p data-i18n="contact_alternatives">Или свяжитесь с нами любым удобным способом.</p>
-      <div class="contact-channels" aria-label="Контакты TuneWrap">
-        <a class="contact-channel" href="https://t.me/tunewrap" target="_blank" rel="noopener">
-          <span class="contact-channel-mark" aria-hidden="true">TG</span>
-          <span>
-            <strong>Telegram</strong>
-            <small>@tunewrap</small>
-          </span>
-        </a>
-        <span class="contact-channel is-pending" aria-disabled="true">
-          <span class="contact-channel-mark" aria-hidden="true">WA</span>
-          <span>
-            <strong>WhatsApp</strong>
-            <small>+номер</small>
-          </span>
-        </span>
-        <span class="contact-channel is-pending" aria-disabled="true">
-          <span class="contact-channel-mark" aria-hidden="true">@</span>
-          <span>
-            <strong>Email</strong>
-          </span>
-        </span>
-        <span class="contact-channel is-pending" aria-disabled="true">
-          <span class="contact-channel-mark" aria-hidden="true">IG</span>
-          <span>
-            <strong>Instagram</strong>
-          </span>
-        </span>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -831,14 +806,80 @@
   </div>
 </section>
 
-</main>
+<section id="contactHub" class="contact-hub" aria-labelledby="contactHubTitle">
+  <div class="wrap contact-hub-scroll">
+    <header class="contact-hub-heading" id="contactHubTop">
+      <div class="eyebrow">TuneWrap</div>
+      <h2 id="contactHubTitle" data-i18n="contact_hub_title">Контакты</h2>
+      <p data-i18n="contact_hub_subtitle">Музыка начинается с вашей истории.</p>
+    </header>
 
-<footer>
-  <div class="wrap">
-    <div>© 2026 TuneWrap</div>
-    <div data-i18n="footer_location">Тбилиси · Киев · онлайн</div>
+    <div class="contact-hub-socials" aria-label="TuneWrap social media">
+      <span class="contact-hub-channel is-pending" aria-disabled="true">
+        <span class="contact-hub-channel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 11.6a8 8 0 0 1-11.7 7.1L4 20l1.3-4.1A8 8 0 1 1 20 11.6z"/><path d="M8.2 7.8c.4 3.7 2.3 5.7 6 6.2l1.3-1.7-2-1-1 1c-1.4-.6-2.4-1.6-3-3l1-1-1-2-1.3 1.5z"/></svg></span>
+        <small>WhatsApp</small>
+      </span>
+      <a class="contact-hub-channel" href="https://t.me/tunewrap" target="_blank" rel="noopener" aria-label="Telegram — TuneWrap">
+        <span class="contact-hub-channel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 11 17-7-4 16-5-5-3 3 1-5 7-6-9 5-4-1z"/></svg></span>
+        <small>Telegram</small>
+      </a>
+      <span class="contact-hub-channel is-pending" aria-disabled="true">
+        <span class="contact-hub-channel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg></span>
+        <small>Instagram</small>
+      </span>
+      <span class="contact-hub-channel is-pending" aria-disabled="true">
+        <span class="contact-hub-channel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 4v10.2a4.2 4.2 0 1 1-3.2-4.1M14 4c.7 2.3 2.2 3.6 4.5 3.9"/></svg></span>
+        <small>TikTok</small>
+      </span>
+      <span class="contact-hub-channel is-pending" aria-disabled="true">
+        <span class="contact-hub-channel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 12c0 2.3-.2 4.2-.6 5.1-.2.5-.6.9-1.1 1.1-1.1.4-3.8.6-7.3.6s-6.2-.2-7.3-.6a2.3 2.3 0 0 1-1.1-1.1C3.2 16.2 3 14.3 3 12s.2-4.2.6-5.1c.2-.5.6-.9 1.1-1.1C5.8 5.4 8.5 5.2 12 5.2s6.2.2 7.3.6c.5.2.9.6 1.1 1.1.4.9.6 2.8.6 5.1z"/><path d="m10 9 5 3-5 3V9z"/></svg></span>
+        <small>YouTube</small>
+      </span>
+      <span class="contact-hub-channel is-pending" aria-disabled="true">
+        <span class="contact-hub-channel-icon contact-hub-at" aria-hidden="true">@</span>
+        <small>Email</small>
+      </span>
+    </div>
+
+    <section class="contact-hub-payment" id="contactHubPayment" aria-labelledby="contactHubPaymentTitle">
+      <div>
+        <h3 id="contactHubPaymentTitle" data-i18n="contact_payment_title">Способы оплаты</h3>
+        <p data-i18n="contact_payment_pending">Подключённые способы оплаты появятся здесь.</p>
+      </div>
+      <div class="contact-payment-slot" data-payment-methods-slot aria-hidden="true"><span></span><span></span><span></span></div>
+    </section>
+
+    <nav class="contact-hub-navigation" aria-label="TuneWrap information">
+      <div class="contact-hub-column">
+        <h3 data-i18n="contact_about_title">О нас</h3>
+        <a href="#philosophy" data-contact-target="philosophy" data-i18n="contact_nav_philosophy">Философия TuneWrap</a>
+        <a href="#how" data-contact-target="how" data-i18n="contact_nav_process">Как это работает</a>
+        <a href="#tracks" data-contact-target="tracks" data-i18n="contact_nav_stories">Музыкальные истории</a>
+        <a href="#pricing" data-contact-target="pricing" data-i18n="contact_nav_pricing">Стоимость и форматы</a>
+        <a href="#author" data-contact-target="author" data-i18n="contact_nav_author">Авторские песни создателя проекта</a>
+        <a href="#contact" data-contact-target="contact" data-i18n="contact_nav_order">Рассказать свою историю</a>
+      </div>
+      <div class="contact-hub-column">
+        <h3 data-i18n="contact_info_title">Информация</h3>
+        <button type="button" data-contact-action="corporate" data-i18n="contact_nav_corporate">Для корпоративных клиентов</button>
+        <button type="button" data-contact-action="wedding" data-i18n="contact_nav_wedding">Свадебный формат</button>
+        <a href="#contactHubTop" data-contact-action="contacts" data-i18n="contact_nav_contacts">Контакты</a>
+        <a href="#contactHubPayment" data-contact-action="payment" data-i18n="contact_nav_payment">Оплата</a>
+        <span class="is-pending" aria-disabled="true" data-i18n="contact_nav_terms">Условия использования</span>
+        <a href="https://t.me/tunewrap" target="_blank" rel="noopener" data-i18n="contact_nav_write">Написать нам</a>
+      </div>
+    </nav>
+
+    <div class="contact-hub-copyright">
+      <strong>TuneWrap</strong>
+      <span>© 2026 TuneWrap</span>
+      <small data-i18n="footer_location">Тбилиси · Киев · онлайн</small>
+    </div>
+    <canvas id="contactSignatureWave" class="contact-signature-wave" data-brand-wave aria-hidden="true"></canvas>
   </div>
-</footer>
+</section>
+
+</main>
 
 <section class="music-library-panel" id="storiesLibraryScreen" data-library-kind="stories" aria-hidden="true" aria-modal="true" role="dialog" aria-labelledby="storiesLibraryTitle" inert>
   <div class="music-library-shell">
@@ -1091,7 +1132,7 @@
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v13H4V7zm3-3h10v3H7V4zm5 6v7m-3.5-3.5h7"/></svg>
     <span data-i18n="mobile_nav_packages">Пакеты</span>
   </a>
-  <a href="#contact" data-mobile-section="contact">
+  <a href="#contactHub" data-mobile-section="contactHub">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H8l-4 4V5zm4 4h8m-8 3h6"/></svg>
     <span data-i18n="mobile_nav_contacts">Контакты</span>
   </a>

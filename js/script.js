@@ -620,8 +620,8 @@ function applyTuneWrapTrackTitles(language){
       tier_detail_label:"Формат песни",
       tier_detail_select:"Выбрать тариф и продолжить",
       tier_select_btn:"Выбрать",
-      wedding_eyebrow:"ДЛЯ ВАШЕЙ СВАДЬБЫ",
-      wedding_subtitle:"Музыка для моментов,<br>которые останутся с вами навсегда.",
+      wedding_eyebrow:"СВАДЕБНЫЙ ФОРМАТ",
+      wedding_subtitle:"Музыка для моментов, которые останутся с вами навсегда.",
       wedding_panel_label:"Для вашей свадьбы",
       wedding_what_included:"Что входит",
       wedding_ideal_for:"Идеально подходит для",
@@ -643,6 +643,24 @@ function applyTuneWrapTrackTitles(language){
       path_corporate_desc:"Песни для команды, компании, партнёров и важных корпоративных событий.",
       path_corporate_action:"Перейти к форме",
       path_back:"Назад к выбору",
+      contact_hub_title:"Контакты",
+      contact_hub_subtitle:"Музыка начинается с вашей истории.",
+      contact_payment_title:"Способы оплаты",
+      contact_payment_pending:"Подключённые способы оплаты появятся здесь.",
+      contact_about_title:"О нас",
+      contact_info_title:"Информация",
+      contact_nav_philosophy:"Философия TuneWrap",
+      contact_nav_process:"Как это работает",
+      contact_nav_stories:"Музыкальные истории",
+      contact_nav_pricing:"Стоимость и форматы",
+      contact_nav_author:"Авторские песни создателя проекта",
+      contact_nav_order:"Рассказать свою историю",
+      contact_nav_corporate:"Для корпоративных клиентов",
+      contact_nav_wedding:"Свадебный формат",
+      contact_nav_contacts:"Контакты",
+      contact_nav_payment:"Оплата",
+      contact_nav_terms:"Условия использования",
+      contact_nav_write:"Написать нам",
       contact_tg:"Написать в Telegram",
       contact_wa:"WhatsApp",
       contact_alternatives:"Или свяжитесь с нами любым удобным способом.",
@@ -802,8 +820,8 @@ function applyTuneWrapTrackTitles(language){
       tier_detail_label:"Формат пісні",
       tier_detail_select:"Обрати тариф і продовжити",
       tier_select_btn:"Обрати",
-      wedding_eyebrow:"ДЛЯ ВАШОГО ВЕСІЛЛЯ",
-      wedding_subtitle:"Музика для моментів,<br>які назавжди залишаться з вами.",
+      wedding_eyebrow:"ВЕСІЛЬНИЙ ФОРМАТ",
+      wedding_subtitle:"Музика для моментів, які назавжди залишаться з вами.",
       wedding_panel_label:"Для вашого весілля",
       wedding_what_included:"Що входить",
       wedding_ideal_for:"Ідеально підходить для",
@@ -825,6 +843,24 @@ function applyTuneWrapTrackTitles(language){
       path_corporate_desc:"Пісні для команди, компанії, партнерів і важливих корпоративних подій.",
       path_corporate_action:"Перейти до форми",
       path_back:"Назад до вибору",
+      contact_hub_title:"Контакти",
+      contact_hub_subtitle:"Музика починається з вашої історії.",
+      contact_payment_title:"Способи оплати",
+      contact_payment_pending:"Підключені способи оплати з’являться тут.",
+      contact_about_title:"Про нас",
+      contact_info_title:"Інформація",
+      contact_nav_philosophy:"Філософія TuneWrap",
+      contact_nav_process:"Як це працює",
+      contact_nav_stories:"Музичні історії",
+      contact_nav_pricing:"Вартість і формати",
+      contact_nav_author:"Авторські пісні засновника проєкту",
+      contact_nav_order:"Розповісти свою історію",
+      contact_nav_corporate:"Для корпоративних клієнтів",
+      contact_nav_wedding:"Весільний формат",
+      contact_nav_contacts:"Контакти",
+      contact_nav_payment:"Оплата",
+      contact_nav_terms:"Умови користування",
+      contact_nav_write:"Написати нам",
       contact_tg:"Написати в Telegram",
       contact_wa:"WhatsApp",
       contact_alternatives:"Або зв’яжіться з нами будь-яким зручним способом.",
@@ -984,8 +1020,8 @@ function applyTuneWrapTrackTitles(language){
       tier_detail_label:"სიმღერის ფორმატი",
       tier_detail_select:"ტარიფის არჩევა და გაგრძელება",
       tier_select_btn:"არჩევა",
-      wedding_eyebrow:"თქვენი ქორწილისთვის",
-      wedding_subtitle:"მუსიკა იმ მომენტებისთვის,<br>რომლებიც სამუდამოდ დაგრჩებათ.",
+      wedding_eyebrow:"საქორწილო ფორმატი",
+      wedding_subtitle:"მუსიკა იმ მომენტებისთვის, რომლებიც სამუდამოდ დაგრჩებათ.",
       wedding_panel_label:"თქვენი ქორწილისთვის",
       wedding_what_included:"რას მოიცავს",
       wedding_ideal_for:"იდეალურია",
@@ -1007,6 +1043,24 @@ function applyTuneWrapTrackTitles(language){
       path_corporate_desc:"სიმღერები გუნდისთვის, კომპანიისთვის, პარტნიორებისა და მნიშვნელოვანი ღონისძიებებისთვის.",
       path_corporate_action:"ფორმაზე გადასვლა",
       path_back:"არჩევანზე დაბრუნება",
+      contact_hub_title:"კონტაქტი",
+      contact_hub_subtitle:"მუსიკა თქვენი ისტორიით იწყება.",
+      contact_payment_title:"გადახდის მეთოდები",
+      contact_payment_pending:"დაკავშირებული გადახდის მეთოდები აქ გამოჩნდება.",
+      contact_about_title:"ჩვენ შესახებ",
+      contact_info_title:"ინფორმაცია",
+      contact_nav_philosophy:"TuneWrap-ის ფილოსოფია",
+      contact_nav_process:"როგორ მუშაობს",
+      contact_nav_stories:"მუსიკალური ისტორიები",
+      contact_nav_pricing:"ფასი და ფორმატები",
+      contact_nav_author:"პროექტის დამფუძნებლის საავტორო სიმღერები",
+      contact_nav_order:"მოგვიყევით თქვენი ისტორია",
+      contact_nav_corporate:"კორპორაციული კლიენტებისთვის",
+      contact_nav_wedding:"საქორწილო ფორმატი",
+      contact_nav_contacts:"კონტაქტი",
+      contact_nav_payment:"გადახდა",
+      contact_nav_terms:"გამოყენების პირობები",
+      contact_nav_write:"მოგვწერეთ",
       contact_tg:"დაწერეთ Telegram-ში",
       contact_wa:"WhatsApp",
       contact_alternatives:"ან დაგვიკავშირდით თქვენთვის მოსახერხებელი ნებისმიერი გზით.",
@@ -1166,8 +1220,8 @@ function applyTuneWrapTrackTitles(language){
       tier_detail_label:"Song format",
       tier_detail_select:"Choose this plan and continue",
       tier_select_btn:"Choose",
-      wedding_eyebrow:"FOR YOUR WEDDING",
-      wedding_subtitle:"Music for the moments<br>you will carry with you forever.",
+      wedding_eyebrow:"WEDDING FORMAT",
+      wedding_subtitle:"Music for the moments you will carry with you forever.",
       wedding_panel_label:"For your wedding",
       wedding_what_included:"What is included",
       wedding_ideal_for:"Perfect for",
@@ -1189,6 +1243,24 @@ function applyTuneWrapTrackTitles(language){
       path_corporate_desc:"Songs for teams, companies, partners and meaningful corporate occasions.",
       path_corporate_action:"Open the form",
       path_back:"Back to choices",
+      contact_hub_title:"Contacts",
+      contact_hub_subtitle:"Music begins with your story.",
+      contact_payment_title:"Payment methods",
+      contact_payment_pending:"Connected payment methods will appear here.",
+      contact_about_title:"About us",
+      contact_info_title:"Information",
+      contact_nav_philosophy:"TuneWrap philosophy",
+      contact_nav_process:"How it works",
+      contact_nav_stories:"Musical stories",
+      contact_nav_pricing:"Formats and pricing",
+      contact_nav_author:"Original songs by the project founder",
+      contact_nav_order:"Tell your story",
+      contact_nav_corporate:"For corporate clients",
+      contact_nav_wedding:"Wedding format",
+      contact_nav_contacts:"Contacts",
+      contact_nav_payment:"Payment",
+      contact_nav_terms:"Terms of use",
+      contact_nav_write:"Write to us",
       contact_tg:"Message on Telegram",
       contact_wa:"WhatsApp",
       contact_alternatives:"Or contact us in whichever way is most convenient for you.",
@@ -1348,8 +1420,8 @@ function applyTuneWrapTrackTitles(language){
       tier_detail_label:"Songformat",
       tier_detail_select:"Tarif wählen und fortfahren",
       tier_select_btn:"Wählen",
-      wedding_eyebrow:"FÜR IHRE HOCHZEIT",
-      wedding_subtitle:"Musik für Momente,<br>die für immer bei Ihnen bleiben.",
+      wedding_eyebrow:"HOCHZEITSFORMAT",
+      wedding_subtitle:"Musik für Momente, die für immer bei Ihnen bleiben.",
       wedding_panel_label:"Für Ihre Hochzeit",
       wedding_what_included:"Was enthalten ist",
       wedding_ideal_for:"Ideal geeignet für",
@@ -1371,6 +1443,24 @@ function applyTuneWrapTrackTitles(language){
       path_corporate_desc:"Songs für Teams, Unternehmen, Partner und besondere Firmenevents.",
       path_corporate_action:"Formular öffnen",
       path_back:"Zurück zur Auswahl",
+      contact_hub_title:"Kontakt",
+      contact_hub_subtitle:"Musik beginnt mit Ihrer Geschichte.",
+      contact_payment_title:"Zahlungsmethoden",
+      contact_payment_pending:"Verfügbare Zahlungsmethoden werden hier angezeigt.",
+      contact_about_title:"Über uns",
+      contact_info_title:"Informationen",
+      contact_nav_philosophy:"Die Philosophie von TuneWrap",
+      contact_nav_process:"So funktioniert's",
+      contact_nav_stories:"Musikalische Geschichten",
+      contact_nav_pricing:"Formate und Preise",
+      contact_nav_author:"Eigene Songs des Projektgründers",
+      contact_nav_order:"Ihre Geschichte erzählen",
+      contact_nav_corporate:"Für Firmenkunden",
+      contact_nav_wedding:"Hochzeitsformat",
+      contact_nav_contacts:"Kontakt",
+      contact_nav_payment:"Zahlung",
+      contact_nav_terms:"Nutzungsbedingungen",
+      contact_nav_write:"Schreiben Sie uns",
       contact_tg:"Auf Telegram schreiben",
       contact_wa:"WhatsApp",
       contact_alternatives:"Oder kontaktieren Sie uns auf dem für Sie bequemsten Weg.",
@@ -1944,17 +2034,23 @@ function applyTuneWrapTrackTitles(language){
     grid.innerHTML = '';
     grid.setAttribute('aria-label',t('wedding_panel_label'));
     WEDDING_PACKAGES[lang].forEach((packageData,index) => {
-      const card = document.createElement('button');
+      const card = document.createElement('article');
       const packagePrice = WEDDING_PACKAGE_PRICES[packageData.id];
-      card.type = 'button';
-      card.className = 'wedding-package-card' + (selectedWeddingPackageId === packageData.id ? ' selected' : '');
+      card.className = 'tier-card wedding-offer-card' + (selectedWeddingPackageId === packageData.id ? ' selected' : '');
+      card.tabIndex = 0;
+      card.setAttribute('role','button');
       card.dataset.weddingPackage = packageData.id;
       card.setAttribute('aria-label',packageData.name + ', $' + packagePrice.price + '. ' + t('tier_open_btn'));
       card.innerHTML =
-        '<span class="wedding-package-name">'+packageData.name+'</span>' +
-        '<span class="wedding-package-price"><s>$'+packagePrice.oldPrice+'</s><strong>$'+packagePrice.price+'</strong></span>' +
-        '<span class="wedding-package-more">'+t('tier_open_btn')+'</span>';
+        '<div class="tier-name">'+packageData.name+'</div>' +
+        '<div class="tier-price tier-price-promo"><s>$'+packagePrice.oldPrice+'</s><strong>$'+packagePrice.price+'</strong><small>USD</small></div>' +
+        '<span class="tier-card-open">'+t('tier_open_btn')+'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span>';
       card.addEventListener('click',() => openTierPanel(index,card,'wedding'));
+      card.addEventListener('keydown',event => {
+        if(event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        openTierPanel(index,card,'wedding');
+      });
       grid.appendChild(card);
     });
     if(tierPanel?.classList.contains('is-open') && activeOfferType === 'wedding') renderTierPanel(activeWeddingPanelIdx,'wedding');
@@ -2284,6 +2380,82 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 650);
     });
   });
+});
+
+// ---------- Stage 9.4: order-to-contact information architecture ----------
+document.addEventListener('DOMContentLoaded',() => {
+  const appScroll = document.getElementById('appScroll');
+  const author = document.getElementById('author');
+  const pricing = document.getElementById('pricing');
+  const order = document.getElementById('contact');
+  const contactHub = document.getElementById('contactHub');
+  const hubScroll = contactHub?.querySelector(':scope > .wrap');
+  const weddingPackages = document.getElementById('weddingPackages');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion:reduce)');
+
+  if(!appScroll || !contactHub) return;
+
+  // Keep the mobile story flow deterministic: Stories → Author → Pricing → Order → Contacts.
+  if(author && pricing && author.nextElementSibling !== pricing){
+    appScroll.insertBefore(author,pricing);
+  }
+
+  function motionBehavior(){
+    return reducedMotion.matches ? 'auto' : 'smooth';
+  }
+
+  function moveToScreen(target,{resetInner=true}={}){
+    if(!target) return;
+    if(target === order) order.classList.remove('is-story-path-form');
+    if(resetInner){
+      const inner = target.querySelector(':scope > .wrap');
+      if(inner) inner.scrollTop = 0;
+    }
+    appScroll.scrollTo({top:target.offsetTop,behavior:motionBehavior()});
+  }
+
+  contactHub.querySelectorAll('[data-contact-target]').forEach(link => {
+    link.addEventListener('click',event => {
+      event.preventDefault();
+      moveToScreen(document.getElementById(link.dataset.contactTarget));
+    });
+  });
+
+  contactHub.querySelector('[data-contact-action="corporate"]')?.addEventListener('click',event => {
+    document.dispatchEvent(new CustomEvent('tunewrap:open-corporate',{detail:{trigger:event.currentTarget}}));
+  });
+
+  contactHub.querySelector('[data-contact-action="wedding"]')?.addEventListener('click',() => {
+    moveToScreen(pricing,{resetInner:false});
+    window.setTimeout(() => {
+      const pricingScroll = pricing?.querySelector(':scope > .wrap');
+      if(!pricingScroll || !weddingPackages) return;
+      const targetTop = Math.max(0,weddingPackages.offsetTop - Math.max(12,pricingScroll.clientHeight * .2));
+      pricingScroll.scrollTo({top:targetTop,behavior:motionBehavior()});
+    },reducedMotion.matches ? 0 : 420);
+  });
+
+  contactHub.querySelector('[data-contact-action="contacts"]')?.addEventListener('click',event => {
+    event.preventDefault();
+    hubScroll?.scrollTo({top:0,behavior:motionBehavior()});
+  });
+
+  contactHub.querySelector('[data-contact-action="payment"]')?.addEventListener('click',event => {
+    event.preventDefault();
+    const payment = document.getElementById('contactHubPayment');
+    if(!hubScroll || !payment) return;
+    hubScroll.scrollTo({top:Math.max(0,payment.offsetTop - 12),behavior:motionBehavior()});
+  });
+
+  const signatureWave = document.getElementById('contactSignatureWave');
+  if(signatureWave && 'IntersectionObserver' in window){
+    const signatureObserver = new IntersectionObserver(entries => {
+      contactHub.classList.toggle('is-signature-visible',entries.some(entry => entry.isIntersecting));
+    },{root:hubScroll || null,threshold:.24});
+    signatureObserver.observe(signatureWave);
+  } else {
+    contactHub.classList.add('is-signature-visible');
+  }
 });
 
 // ---------- Stage 8: stable cover loading ----------
@@ -3928,6 +4100,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  document.addEventListener('tunewrap:open-corporate',event => {
+    openCorporate(event.detail?.trigger || null);
+  });
+
   back.addEventListener('click',() => {
     contact.classList.remove('is-story-path-form');
     const scroll = contactScroll();
@@ -3997,7 +4173,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if(!canContinueInside){
         const target = deltaY > 0
           ? document.getElementById('contact')
-          : document.getElementById('tracks');
+          : document.getElementById('author');
         if(target){
           appScroll.scrollTo({
             top:target.offsetTop,
@@ -4055,7 +4231,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileViewport = window.matchMedia('(max-width:620px)');
   if(!appScroll) return;
 
-  const screenSelector = '.hero,#philosophy,#how,#tracks,#pricing,#contact,#author';
+  const screenSelector = '.hero,#philosophy,#how,#tracks,#author,#pricing,#contact,#contactHub';
   let gesture = null;
   let settleTimer = 0;
 
@@ -4101,15 +4277,15 @@ document.addEventListener('DOMContentLoaded', () => {
       startY:touch.clientY,
       startScrollTop:appScroll.scrollTop,
       startIndex:nearestScreenIndex(appScroll.scrollTop),
-      pricingBoundary:(() => {
-        const pricing = event.target.closest('#pricing');
-        const pricingScroll = pricing?.querySelector(':scope > .wrap');
-        if(!pricingScroll) return null;
-        const hasInnerScroll = pricingScroll.scrollHeight > pricingScroll.clientHeight + 2;
+      innerBoundary:(() => {
+        const screen = event.target.closest('#pricing,#contact,#contactHub');
+        const innerScroll = screen?.querySelector(':scope > .wrap');
+        if(!innerScroll) return null;
+        const hasInnerScroll = innerScroll.scrollHeight > innerScroll.clientHeight + 2;
         return {
           hasInnerScroll,
-          atTop:pricingScroll.scrollTop <= 1,
-          atBottom:pricingScroll.scrollTop + pricingScroll.clientHeight >= pricingScroll.scrollHeight - 1
+          atTop:innerScroll.scrollTop <= 1,
+          atBottom:innerScroll.scrollTop + innerScroll.clientHeight >= innerScroll.scrollHeight - 1
         };
       })(),
       forceScreenNavigation:false,
@@ -4125,8 +4301,8 @@ document.addEventListener('DOMContentLoaded', () => {
     gesture.deltaX = gesture.startX - touch.clientX;
     gesture.deltaY = gesture.startY - touch.clientY;
     const vertical = Math.abs(gesture.deltaY) > Math.abs(gesture.deltaX);
-    if(vertical && gesture.pricingBoundary){
-      const boundary = gesture.pricingBoundary;
+    if(vertical && gesture.innerBoundary){
+      const boundary = gesture.innerBoundary;
       gesture.forceScreenNavigation = !boundary.hasInnerScroll || (
         gesture.deltaY > 0 ? boundary.atBottom : boundary.atTop
       );
@@ -4141,12 +4317,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   appScroll.addEventListener('touchcancel',event => {
     window.clearTimeout(settleTimer);
-    if(gesture && gesture.forceScreenNavigation && event.changedTouches.length){
+    if(gesture && event.changedTouches.length){
       const touch = event.changedTouches[0];
       gesture.deltaX = gesture.startX - touch.clientX;
       gesture.deltaY = gesture.startY - touch.clientY;
       const vertical = Math.abs(gesture.deltaY) > Math.abs(gesture.deltaX);
-      if(vertical && Math.abs(gesture.deltaY) >= 44){
+      const boundary = gesture.innerBoundary;
+      const canLeaveInner = !boundary || !boundary.hasInnerScroll || (
+        gesture.deltaY > 0 ? boundary.atBottom : boundary.atTop
+      );
+      if(vertical && canLeaveInner && Math.abs(gesture.deltaY) >= 44){
+        gesture.forceScreenNavigation = true;
         gesture.ended = true;
         settleTimer = window.setTimeout(settleGesture,0);
         return;
