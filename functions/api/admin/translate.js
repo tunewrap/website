@@ -29,13 +29,37 @@ function cleanText(value,max){
   return text;
 }
 
+function sleep(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
+
+function aiErrorMessage(error){
+  const raw=String(error?.message||error||'Unknown Workers AI error');
+  if(raw.includes('3036')) return 'Закончился дневной бесплатный лимит Workers AI (код 3036).';
+  if(raw.includes('3040')) return 'Workers AI временно перегружен (код 3040).';
+  if(raw.includes('3007')) return 'Workers AI не успел выполнить перевод вовремя (код 3007).';
+  if(raw.includes('3006')) return 'Запрос к Workers AI слишком большой (код 3006).';
+  return `Workers AI: ${raw}`;
+}
+
 async function translateText(ai,text,source,target){
   const value=String(text||'').trim();
   if(!value) return '';
-  const result=await ai.run(MODEL,{text:value,source_lang:source,target_lang:target});
-  const translated=typeof result?.translated_text==='string' ? result.translated_text.trim() : '';
-  if(!translated) throw new Error(`Translation model returned no text for ${target}`);
-  return translated;
+
+  let lastError=null;
+  for(let attempt=1;attempt<=3;attempt++){
+    try{
+      const result=await ai.run(MODEL,{text:value,source_lang:source,target_lang:target});
+      const translated=typeof result?.translated_text==='string' ? result.translated_text.trim() : '';
+      if(!translated) throw new Error(`Translation model returned no text for ${target}`);
+      return translated;
+    }catch(error){
+      lastError=error;
+      const message=String(error?.message||error||'');
+      // Daily allocation and malformed requests will not recover with retries.
+      if(message.includes('3036')||message.includes('3006')||message.includes('5004')||message.includes('5007')) break;
+      if(attempt<3) await sleep(attempt===1?450:1100);
+    }
+  }
+  throw new HttpError(502,aiErrorMessage(lastError));
 }
 
 function localizedSectionLabel(line,target){
@@ -70,7 +94,11 @@ async function mapWithConcurrency(items,limit,worker){
 async function translatePreservingLines(ai,text,source,target,{songStructure=false}={}){
   if(!text)return '';
   const lines=String(text).replace(/\r\n/g,'\n').split('\n');
-  const translated=await mapWithConcurrency(lines,6,async line=>{
+
+  // Keep only two simultaneous model calls. Stage 11.0.5 used six; reducing
+  // concurrency makes long song translations much less likely to hit transient
+  // Workers AI capacity/timeout failures while preserving exact line topology.
+  const translated=await mapWithConcurrency(lines,2,async line=>{
     if(!line.trim())return '';
     if(songStructure){
       const section=localizedSectionLabel(line,target);
@@ -78,8 +106,7 @@ async function translatePreservingLines(ai,text,source,target,{songStructure=fal
     }
     return translateText(ai,line,source,target);
   });
-  // Exact source line-break topology is retained: one output line per input line,
-  // including blank stanza separators.
+
   return translated.join('\n');
 }
 
@@ -98,7 +125,7 @@ export async function onRequestPost(context){
     const targets=[...new Set(requested.map(value=>String(value||'').toLowerCase()))]
       .filter(locale=>ALLOWED_LOCALES.includes(locale)&&locale!==source);
 
-    if(!targets.length) return json({ok:true,model:MODEL,source,structureVersion:2,translations:{}});
+    if(!targets.length) return json({ok:true,model:MODEL,source,structureVersion:3,translations:{}});
 
     const payload={
       title:cleanText(body.title,400),
@@ -107,17 +134,22 @@ export async function onRequestPost(context){
     };
     if(!payload.title&&!payload.description&&!payload.lyrics) throw new HttpError(400,'Нет текста для перевода');
 
-    // Process target languages one-by-one so a normal song stays within a small,
-    // predictable number of simultaneous Workers AI calls.
     const translations={};
     for(const target of targets){
-      const title=await translateText(context.env.AI,payload.title,source,target);
-      const description=await translatePreservingLines(context.env.AI,payload.description,source,target);
-      const lyrics=await translatePreservingLines(context.env.AI,payload.lyrics,source,target,{songStructure:true});
-      translations[target]={title,description,lyrics};
+      try{
+        const title=await translateText(context.env.AI,payload.title,source,target);
+        const description=await translatePreservingLines(context.env.AI,payload.description,source,target);
+        const lyrics=await translatePreservingLines(context.env.AI,payload.lyrics,source,target,{songStructure:true});
+        translations[target]={title,description,lyrics};
+      }catch(error){
+        if(error instanceof HttpError){
+          throw new HttpError(error.status,`${target.toUpperCase()}: ${error.message}`);
+        }
+        throw error;
+      }
     }
 
-    return json({ok:true,model:MODEL,source,structureVersion:2,translations});
+    return json({ok:true,model:MODEL,source,structureVersion:3,translations});
   }catch(error){
     return handleError(error);
   }
