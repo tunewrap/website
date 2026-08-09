@@ -2,9 +2,10 @@ import {requireAdmin,requireSameOrigin} from '../../_shared/auth.js';
 import {HttpError,handleError,json,readJson} from '../../_shared/http.js';
 
 const MODEL='@cf/meta/m2m100-1.2b';
+const FALLBACK_MODEL='@cf/zai-org/glm-4.7-flash';
 const LANGUAGE_TO_LOCALE=Object.freeze({RU:'ru',UA:'uk',GE:'ka',EN:'en',DE:'de'});
 const ALLOWED_LOCALES=Object.freeze(['ru','uk','ka','en','de']);
-const MAX_ITEMS=12;
+const MAX_ITEMS=8;
 
 const SECTION_LABELS=Object.freeze({
   verse:{ru:'Куплет',uk:'Куплет',ka:'კუპლეტი',en:'Verse',de:'Strophe'},
@@ -50,24 +51,92 @@ function localizedSectionLabel(line,target){
   return null;
 }
 
+const LANGUAGE_NAMES=Object.freeze({
+  ru:'Russian',
+  uk:'Ukrainian',
+  ka:'Georgian',
+  en:'English',
+  de:'German'
+});
+
+function extractGeneratedText(result){
+  const direct=typeof result?.response==='string'?result.response.trim():'';
+  if(direct)return direct;
+  const choice=result?.choices?.[0];
+  const message=typeof choice?.message?.content==='string'?choice.message.content.trim():'';
+  if(message)return message;
+  const text=typeof choice?.text==='string'?choice.text.trim():'';
+  return text;
+}
+
+async function fallbackTranslateText(ai,value,source,target){
+  const sourceName=LANGUAGE_NAMES[source]||source;
+  const targetName=LANGUAGE_NAMES[target]||target;
+  const prompt=[
+    `Translate this single line from ${sourceName} to ${targetName}.`,
+    'Return ONLY the translated line.',
+    'Do not explain, do not add quotation marks, labels, notes, or markdown.',
+    '',
+    value
+  ].join('\n');
+
+  const result=await ai.run(FALLBACK_MODEL,{
+    messages:[
+      {role:'system',content:'You are a precise professional translator. Preserve meaning and tone.'},
+      {role:'user',content:prompt}
+    ],
+    temperature:0,
+    max_completion_tokens:256,
+    stream:false
+  });
+
+  return extractGeneratedText(result);
+}
+
 async function translateText(ai,text,source,target){
   const value=String(text||'').trim();
   if(!value)return '';
+
   let lastError=null;
+  let gotEmpty=false;
+
   for(let attempt=1;attempt<=2;attempt++){
     try{
       const result=await ai.run(MODEL,{text:value,source_lang:source,target_lang:target});
       const translated=typeof result?.translated_text==='string'?result.translated_text.trim():'';
-      if(!translated)throw new Error(`Translation model returned no text for ${target}`);
-      return translated;
+      if(translated)return translated;
+      gotEmpty=true;
+      lastError=new Error(`Translation model returned no text for ${target}`);
     }catch(error){
       lastError=error;
       const message=String(error?.message||error||'');
       if(message.includes('3036')||message.includes('3006')||message.includes('Too many subrequests'))break;
-      if(attempt<2)await sleep(500);
+    }
+    if(attempt<2)await sleep(350);
+  }
+
+  const hardMessage=String(lastError?.message||lastError||'');
+  const hardFailure=
+    hardMessage.includes('3036')||
+    hardMessage.includes('3006')||
+    hardMessage.includes('Too many subrequests');
+
+  if(!hardFailure){
+    try{
+      const fallback=await fallbackTranslateText(ai,value,source,target);
+      if(fallback)return fallback;
+      lastError=new Error(`Fallback translation model returned no text for ${target}`);
+    }catch(error){
+      lastError=error;
     }
   }
-  throw new HttpError(502,aiErrorMessage(lastError));
+
+  throw new HttpError(
+    502,
+    gotEmpty && target==='ka'
+      ? `Не удалось перевести одну строку на грузинский даже через резервную модель: ${aiErrorMessage(lastError)}`
+      : aiErrorMessage(lastError)
+  );
 }
 
 async function mapWithConcurrency(items,limit,worker){
@@ -123,6 +192,7 @@ export async function onRequestPost(context){
     return json({
       ok:true,
       model:MODEL,
+      fallbackModel:FALLBACK_MODEL,
       source,
       target,
       chunked:true,

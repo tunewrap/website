@@ -1,9 +1,9 @@
-------formdata-undici-083002815697
+------formdata-undici-068003554840
 Content-Disposition: form-data; name="metadata"
 
-{"main_module":"functionsWorker-0.2834857392211251.js"}
-------formdata-undici-083002815697
-Content-Disposition: form-data; name="functionsWorker-0.2834857392211251.js"; filename="functionsWorker-0.2834857392211251.js"
+{"main_module":"functionsWorker-0.5679596947242912.js"}
+------formdata-undici-068003554840
+Content-Disposition: form-data; name="functionsWorker-0.5679596947242912.js"; filename="functionsWorker-0.5679596947242912.js"
 Content-Type: application/javascript+module
 
 var __defProp = Object.defineProperty;
@@ -1851,9 +1851,10 @@ __name(onRequestPost8, "onRequestPost");
 
 // api/admin/translate.js
 var MODEL = "@cf/meta/m2m100-1.2b";
+var FALLBACK_MODEL = "@cf/zai-org/glm-4.7-flash";
 var LANGUAGE_TO_LOCALE = Object.freeze({ RU: "ru", UA: "uk", GE: "ka", EN: "en", DE: "de" });
 var ALLOWED_LOCALES = Object.freeze(["ru", "uk", "ka", "en", "de"]);
-var MAX_ITEMS = 12;
+var MAX_ITEMS = 8;
 var SECTION_LABELS = Object.freeze({
   verse: { ru: "\u041A\u0443\u043F\u043B\u0435\u0442", uk: "\u041A\u0443\u043F\u043B\u0435\u0442", ka: "\u10D9\u10E3\u10DE\u10DA\u10D4\u10E2\u10D8", en: "Verse", de: "Strophe" },
   chorus: { ru: "\u041F\u0440\u0438\u043F\u0435\u0432", uk: "\u041F\u0440\u0438\u0441\u043F\u0456\u0432", ka: "\u10DB\u10D8\u10E1\u10D0\u10DB\u10E6\u10D4\u10E0\u10D8", en: "Chorus", de: "Refrain" },
@@ -1898,24 +1899,79 @@ function localizedSectionLabel(line, target) {
   return null;
 }
 __name(localizedSectionLabel, "localizedSectionLabel");
+var LANGUAGE_NAMES = Object.freeze({
+  ru: "Russian",
+  uk: "Ukrainian",
+  ka: "Georgian",
+  en: "English",
+  de: "German"
+});
+function extractGeneratedText(result) {
+  const direct = typeof result?.response === "string" ? result.response.trim() : "";
+  if (direct) return direct;
+  const choice = result?.choices?.[0];
+  const message2 = typeof choice?.message?.content === "string" ? choice.message.content.trim() : "";
+  if (message2) return message2;
+  const text = typeof choice?.text === "string" ? choice.text.trim() : "";
+  return text;
+}
+__name(extractGeneratedText, "extractGeneratedText");
+async function fallbackTranslateText(ai, value, source, target) {
+  const sourceName = LANGUAGE_NAMES[source] || source;
+  const targetName = LANGUAGE_NAMES[target] || target;
+  const prompt = [
+    `Translate this single line from ${sourceName} to ${targetName}.`,
+    "Return ONLY the translated line.",
+    "Do not explain, do not add quotation marks, labels, notes, or markdown.",
+    "",
+    value
+  ].join("\n");
+  const result = await ai.run(FALLBACK_MODEL, {
+    messages: [
+      { role: "system", content: "You are a precise professional translator. Preserve meaning and tone." },
+      { role: "user", content: prompt }
+    ],
+    temperature: 0,
+    max_completion_tokens: 256,
+    stream: false
+  });
+  return extractGeneratedText(result);
+}
+__name(fallbackTranslateText, "fallbackTranslateText");
 async function translateText(ai, text, source, target) {
   const value = String(text || "").trim();
   if (!value) return "";
   let lastError = null;
+  let gotEmpty = false;
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
       const result = await ai.run(MODEL, { text: value, source_lang: source, target_lang: target });
       const translated = typeof result?.translated_text === "string" ? result.translated_text.trim() : "";
-      if (!translated) throw new Error(`Translation model returned no text for ${target}`);
-      return translated;
+      if (translated) return translated;
+      gotEmpty = true;
+      lastError = new Error(`Translation model returned no text for ${target}`);
     } catch (error) {
       lastError = error;
       const message2 = String(error?.message || error || "");
       if (message2.includes("3036") || message2.includes("3006") || message2.includes("Too many subrequests")) break;
-      if (attempt < 2) await sleep(500);
+    }
+    if (attempt < 2) await sleep(350);
+  }
+  const hardMessage = String(lastError?.message || lastError || "");
+  const hardFailure = hardMessage.includes("3036") || hardMessage.includes("3006") || hardMessage.includes("Too many subrequests");
+  if (!hardFailure) {
+    try {
+      const fallback = await fallbackTranslateText(ai, value, source, target);
+      if (fallback) return fallback;
+      lastError = new Error(`Fallback translation model returned no text for ${target}`);
+    } catch (error) {
+      lastError = error;
     }
   }
-  throw new HttpError(502, aiErrorMessage(lastError));
+  throw new HttpError(
+    502,
+    gotEmpty && target === "ka" ? `\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 \u043E\u0434\u043D\u0443 \u0441\u0442\u0440\u043E\u043A\u0443 \u043D\u0430 \u0433\u0440\u0443\u0437\u0438\u043D\u0441\u043A\u0438\u0439 \u0434\u0430\u0436\u0435 \u0447\u0435\u0440\u0435\u0437 \u0440\u0435\u0437\u0435\u0440\u0432\u043D\u0443\u044E \u043C\u043E\u0434\u0435\u043B\u044C: ${aiErrorMessage(lastError)}` : aiErrorMessage(lastError)
+  );
 }
 __name(translateText, "translateText");
 async function mapWithConcurrency(items, limit, worker) {
@@ -1966,6 +2022,7 @@ async function onRequestPost9(context) {
     return json({
       ok: true,
       model: MODEL,
+      fallbackModel: FALLBACK_MODEL,
       source,
       target,
       chunked: true,
@@ -2064,7 +2121,7 @@ async function onRequestGet5(context) {
 }
 __name(onRequestGet5, "onRequestGet");
 
-// ../.wrangler/tmp/pages-yGOnhI/functionsRoutes-0.16621758274482035.mjs
+// ../.wrangler/tmp/pages-efJ169/functionsRoutes-0.25270275128023933.mjs
 var routes = [
   {
     routePath: "/api/admin/tracks/:id/archive",
@@ -2636,4 +2693,4 @@ export {
   pages_template_worker_default as default
 };
 
-------formdata-undici-083002815697--
+------formdata-undici-068003554840--

@@ -232,7 +232,7 @@ function rebuildLines(lines,translated,kind){
 
 async function translateItemsChunked(sourceLanguage,target,items){
   const translated={};
-  const CHUNK_SIZE=12;
+  const CHUNK_SIZE=8;
   for(let offset=0;offset<items.length;offset+=CHUNK_SIZE){
     const chunk=items.slice(offset,offset+CHUNK_SIZE);
     const result=await api('/api/admin/translate',{method:'POST',body:{
