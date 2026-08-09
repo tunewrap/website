@@ -1755,3 +1755,150 @@
     transition:none !important;
   }
 }
+/* ---------- STAGE 12.1.1 · HERO WIDE ALIGNMENT ----------
+   Desktop/tablet follows the successful mobile composition:
+   one hero card, one CTA, waveform as background visual.
+   Scope starts at 621px, so phone <=620px is untouched.
+*/
+@media (min-width:621px){
+  /* Remove the two legacy desktop-only secondary actions. */
+  .hero-actions .btn-ghost{
+    display:none !important;
+  }
+
+  .hero{
+    padding-top:18px;
+  }
+
+  .hero .wrap{
+    max-width:1440px;
+    padding-right:clamp(18px,3vw,34px);
+    padding-left:clamp(18px,3vw,34px);
+  }
+
+  .hero-grid{
+    position:relative;
+    display:flex;
+    min-height:clamp(610px,70vh,760px);
+    align-items:flex-end;
+    justify-content:flex-start;
+    gap:0;
+    padding:
+      clamp(56px,6vw,82px)
+      clamp(48px,6.3vw,92px)
+      clamp(46px,5vw,70px);
+    overflow:hidden;
+    border-radius:34px;
+  }
+
+  /* Do not squeeze the text into the old two-column desktop layout. */
+  .hero-grid > div{
+    position:relative;
+    z-index:4;
+    width:min(64%,760px);
+    max-width:none;
+    margin:0;
+  }
+
+  .hero .eyebrow{
+    margin:0 0 14px;
+  }
+
+  .hero h1{
+    max-width:10.8ch;
+    margin:0 0 22px;
+    font-size:clamp(58px,5.9vw,82px);
+    line-height:.95;
+    letter-spacing:-.046em;
+  }
+
+  .hero p.lead{
+    max-width:58ch;
+    margin:0 0 27px;
+    color:rgba(226,221,225,.80);
+    font-size:15px;
+    line-height:1.68;
+  }
+
+  .hero-actions{
+    display:flex;
+    margin:0;
+  }
+
+  .hero-actions .btn-primary{
+    min-width:240px;
+    min-height:57px;
+    padding:0 25px;
+    border-radius:17px;
+    font-size:13px;
+  }
+
+  /* The waveform becomes the large background composition instead of
+     occupying a separate narrow column. */
+  #ambientWave{
+    position:absolute;
+    z-index:2;
+    top:34px;
+    right:-2%;
+    width:72%;
+    height:470px;
+    margin:0;
+    opacity:.64;
+    pointer-events:none;
+    filter:
+      contrast(1.06)
+      saturate(.95)
+      drop-shadow(0 0 30px rgba(217,164,65,.15));
+    -webkit-mask-image:
+      linear-gradient(90deg,transparent 0,#000 12%,#000 94%,transparent 100%);
+    mask-image:
+      linear-gradient(90deg,transparent 0,#000 12%,#000 94%,transparent 100%);
+  }
+
+  /* Soft lower fade makes the desktop hero read like the mobile card. */
+  .hero-grid::before{
+    z-index:1;
+    background:
+      linear-gradient(180deg,rgba(7,7,9,.02) 0%,rgba(7,7,9,.08) 42%,rgba(7,7,9,.88) 100%),
+      linear-gradient(90deg,rgba(8,8,10,.72) 0%,rgba(8,8,10,.34) 50%,rgba(8,8,10,.03) 100%);
+  }
+
+  .hero-grid::after{
+    z-index:1;
+    top:41%;
+    right:-94px;
+    width:520px;
+    height:520px;
+    opacity:.75;
+  }
+}
+
+/* Tablet: same composition, simply scaled — not a different structure. */
+@media (min-width:621px) and (max-width:899px){
+  .hero .wrap{
+    padding-right:18px;
+    padding-left:18px;
+  }
+
+  .hero-grid{
+    min-height:clamp(590px,72vh,700px);
+    display:flex;
+    padding:48px 38px 46px;
+  }
+
+  .hero-grid > div{
+    width:min(78%,620px);
+  }
+
+  .hero h1{
+    font-size:clamp(50px,7.4vw,66px);
+  }
+
+  #ambientWave{
+    top:24px;
+    right:-12%;
+    width:84%;
+    height:390px;
+    opacity:.54;
+  }
+}
