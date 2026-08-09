@@ -2454,3 +2454,131 @@
     text-transform:none;
   }
 }
+
+/* ---------- STAGE 12.1.6 · WEDDING DETAIL = STANDARD FORMAT CARD ----------
+   Tablet/desktop wedding detail panels now use the same compact card language
+   as the regular "Ваш формат" package detail card.
+   Phone <=620px remains untouched.
+*/
+@media (min-width:621px){
+  .tier-detail-panel.is-wedding .tier-detail-card{
+    width:min(100%,430px);
+    max-width:430px;
+    padding:24px 21px 21px;
+  }
+
+  /* Remove the large wedding illustration on wide layouts. */
+  .tier-detail-panel.is-wedding .tier-detail-visual{
+    display:none !important;
+  }
+
+  .tier-detail-panel.is-wedding .tier-detail-kicker{
+    max-width:100%;
+  }
+
+  .tier-detail-panel.is-wedding .tier-detail-card h2{
+    margin-top:10px;
+  }
+
+  .tier-detail-panel.is-wedding .tier-detail-description{
+    margin-top:10px;
+    color:#aaa4ac;
+    font-size:11.5px;
+    line-height:1.52;
+  }
+
+  /* Price uses exactly the same visual language as the ordinary tier card. */
+  .tier-detail-panel.is-wedding .tier-detail-price{
+    margin-top:13px;
+  }
+
+  .tier-detail-panel.is-wedding .tier-detail-until{
+    display:block;
+  }
+
+  /* Wedding information is flattened: no big nested cards. */
+  .tier-detail-panel.is-wedding .tier-detail-wedding-content{
+    display:grid;
+    gap:13px;
+    margin:17px 0 18px;
+  }
+
+  .tier-detail-panel.is-wedding .tier-detail-info-block{
+    margin:0;
+    padding:0;
+    border:0;
+    border-radius:0;
+    background:none;
+    box-shadow:none;
+  }
+
+  .tier-detail-panel.is-wedding .tier-detail-info-block + .tier-detail-info-block{
+    padding-top:12px;
+    border-top:1px solid rgba(245,225,181,.10);
+  }
+
+  .tier-detail-panel.is-wedding .tier-detail-info-block h3{
+    margin:0 0 8px;
+    color:#d9a441;
+    font:800 10px/1.25 'Manrope',sans-serif;
+    letter-spacing:.07em;
+    text-transform:uppercase;
+  }
+
+  .tier-detail-panel.is-wedding .tier-detail-info-block ul{
+    display:grid;
+    gap:7px;
+    margin:0;
+    padding:0;
+    color:#c8c1c7;
+    font-size:11.5px;
+    line-height:1.38;
+    list-style:none;
+  }
+
+  .tier-detail-panel.is-wedding .tier-detail-info-block li{
+    display:flex;
+    gap:9px;
+  }
+
+  .tier-detail-panel.is-wedding .tier-detail-info-block li::before{
+    content:"✓";
+    flex:none;
+    color:#d9a441;
+    font-weight:800;
+  }
+
+  .tier-detail-panel.is-wedding .tier-detail-info-block p{
+    margin:0;
+    color:#c8c1c7;
+    font-size:11.5px;
+    line-height:1.45;
+  }
+
+  .tier-detail-panel.is-wedding .tier-detail-select{
+    margin-top:0;
+  }
+}
+
+/* Desktop keeps the entire wedding card compact and centered. */
+@media (min-width:900px){
+  .tier-detail-panel.is-wedding .tier-detail-shell{
+    width:min(920px,calc(100% - 44px));
+    height:calc(100dvh - 44px);
+    max-height:760px;
+    inset:22px auto auto 50%;
+    border:1px solid rgba(217,164,65,.16);
+    border-radius:28px;
+    overflow:hidden;
+    box-shadow:0 35px 100px rgba(0,0,0,.52);
+    transform:translate(-50%,24px);
+  }
+
+  .tier-detail-panel.is-wedding.is-open .tier-detail-shell{
+    transform:translate(-50%,0);
+  }
+
+  .tier-detail-panel.is-wedding .tier-detail-body{
+    padding:28px;
+  }
+}

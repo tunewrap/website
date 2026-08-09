@@ -1,9 +1,9 @@
-------formdata-undici-090787234343
+------formdata-undici-096242187565
 Content-Disposition: form-data; name="metadata"
 
-{"main_module":"functionsWorker-0.4029809918266236.js"}
-------formdata-undici-090787234343
-Content-Disposition: form-data; name="functionsWorker-0.4029809918266236.js"; filename="functionsWorker-0.4029809918266236.js"
+{"main_module":"functionsWorker-0.5738239469212061.js"}
+------formdata-undici-096242187565
+Content-Disposition: form-data; name="functionsWorker-0.5738239469212061.js"; filename="functionsWorker-0.5738239469212061.js"
 Content-Type: application/javascript+module
 
 var __defProp = Object.defineProperty;
@@ -2505,7 +2505,7 @@ async function onRequestGet8(context) {
 }
 __name(onRequestGet8, "onRequestGet");
 
-// ../.wrangler/tmp/pages-YtCftM/functionsRoutes-0.8013333967190828.mjs
+// ../.wrangler/tmp/pages-EseUOP/functionsRoutes-0.27750024401637274.mjs
 var routes = [
   {
     routePath: "/api/admin/tracks/:id/archive",
@@ -3112,4 +3112,4 @@ export {
   pages_template_worker_default as default
 };
 
-------formdata-undici-090787234343--
+------formdata-undici-096242187565--
