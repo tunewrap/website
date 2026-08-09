@@ -17,6 +17,19 @@ const nodes = {
 function el(tag,className,text){const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;}
 function toast(message,error=false){const item=el('div','toast'+(error?' is-error':''),message);nodes.toast.append(item);setTimeout(()=>item.remove(),4200);}
 function formatDuration(value){const seconds=Math.max(0,Math.round(Number(value)||0));return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;}
+
+async function detectImageMime(file){
+  const bytes=new Uint8Array(await file.slice(0,16).arrayBuffer());
+  if(bytes.length>=8 &&
+    bytes[0]===0x89 && bytes[1]===0x50 && bytes[2]===0x4e && bytes[3]===0x47 &&
+    bytes[4]===0x0d && bytes[5]===0x0a && bytes[6]===0x1a && bytes[7]===0x0a) return 'image/png';
+  if(bytes.length>=3 && bytes[0]===0xff && bytes[1]===0xd8 && bytes[2]===0xff) return 'image/jpeg';
+  if(bytes.length>=12 &&
+    String.fromCharCode(...bytes.slice(0,4))==='RIFF' &&
+    String.fromCharCode(...bytes.slice(8,12))==='WEBP') return 'image/webp';
+  return '';
+}
+
 function localizedValue(value,locale,fallback=''){return value?.[locale]||value?.ru||value?.en||Object.values(value||{})[0]||fallback;}
 
 async function api(path,options={}){
@@ -335,7 +348,7 @@ for(const node of [nodes.title,nodes.description,nodes.lyrics,nodes.translation]
 nodes.language.addEventListener('change',()=>{markPrimaryLocale();syncPrimaryToLocale();setLocaleTab(state.primaryLocale);});
 
 nodes.audioFile.addEventListener('change',async()=>{const file=nodes.audioFile.files[0];if(!file)return;if(!/\.mp3$/i.test(file.name)||file.size>80*1024*1024){toast('Нужен MP3 до 80 MB',true);nodes.audioFile.value='';return;}const url=URL.createObjectURL(file);const probe=new Audio();probe.preload='metadata';probe.src=url;try{await new Promise((resolve,reject)=>{probe.onloadedmetadata=resolve;probe.onerror=reject;});if(!Number.isFinite(probe.duration)||probe.duration<=0)throw new Error();state.audioFile=file;state.audioDuration=probe.duration;nodes.audioLabel.textContent=file.name;nodes.audioMeta.textContent=`${(file.size/1048576).toFixed(1)} MB · ${formatDuration(probe.duration)}`;nodes.audioPreview.src=url;nodes.audioPreview.hidden=false;}catch(error){URL.revokeObjectURL(url);toast('Браузер не смог прочитать метаданные MP3',true);nodes.audioFile.value='';}});
-nodes.coverFile.addEventListener('change',async()=>{const file=nodes.coverFile.files[0];if(!file)return;if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>8*1024*1024){toast('Нужна JPEG, PNG или WebP до 8 MB',true);nodes.coverFile.value='';return;}const url=URL.createObjectURL(file);const image=new Image();image.src=url;try{await image.decode();const ratio=image.naturalWidth/image.naturalHeight;if(image.naturalWidth<600||image.naturalHeight<600||ratio<.8||ratio>1.25)throw new Error('Минимум 600×600, форма близкая к квадрату');state.coverFile=file;state.coverInfo={width:image.naturalWidth,height:image.naturalHeight};nodes.coverPreview.src=url;nodes.coverLabel.textContent=file.name;nodes.coverMeta.textContent=`${image.naturalWidth}×${image.naturalHeight} · ${(file.size/1048576).toFixed(1)} MB`;}catch(error){URL.revokeObjectURL(url);toast(error.message||'Не удалось прочитать обложку',true);nodes.coverFile.value='';}});
+nodes.coverFile.addEventListener('change',async()=>{const file=nodes.coverFile.files[0];if(!file)return;try{if(file.size>8*1024*1024)throw new Error('Обложка превышает 8 MB');const actualType=await detectImageMime(file);if(!actualType)throw new Error('Нужна настоящая JPEG, PNG или WebP обложка');const normalized=file.type===actualType?file:new File([file],file.name,{type:actualType,lastModified:file.lastModified});const url=URL.createObjectURL(normalized);const image=new Image();image.src=url;try{await image.decode();const ratio=image.naturalWidth/image.naturalHeight;if(image.naturalWidth<600||image.naturalHeight<600||ratio<.8||ratio>1.25)throw new Error('Минимум 600×600, форма близкая к квадрату');state.coverFile=normalized;state.coverInfo={width:image.naturalWidth,height:image.naturalHeight};nodes.coverPreview.src=url;nodes.coverLabel.textContent=file.name;const corrected=file.type&&file.type!==actualType?` · формат исправлен: ${actualType.replace('image/','').toUpperCase()}`:'';nodes.coverMeta.textContent=`${image.naturalWidth}×${image.naturalHeight} · ${(file.size/1048576).toFixed(1)} MB${corrected}`;}catch(error){URL.revokeObjectURL(url);throw error;}}catch(error){toast(error.message||'Не удалось прочитать обложку',true);nodes.coverFile.value='';state.coverFile=null;state.coverInfo=null;}});
 nodes.search.addEventListener('input',()=>{state.query=nodes.search.value;renderTracks();});
 nodes.tabs.addEventListener('click',event=>{const button=event.target.closest('[data-tab]');if(!button)return;state.tab=button.dataset.tab;nodes.tabs.querySelectorAll('button').forEach(item=>item.classList.toggle('is-active',item===button));renderTracks();});
 $('#newTrackButton').addEventListener('click',()=>openEditor());
