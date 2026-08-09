@@ -3,6 +3,7 @@ import {HttpError,handleError,json,readJson} from '../../_shared/http.js';
 
 const MODEL='@cf/meta/m2m100-1.2b';
 const FALLBACK_MODEL='@cf/zai-org/glm-4.7-flash';
+const SECOND_FALLBACK_MODEL='@cf/qwen/qwen3-30b-a3b-fp8';
 const LANGUAGE_TO_LOCALE=Object.freeze({RU:'ru',UA:'uk',GE:'ka',EN:'en',DE:'de'});
 const ALLOWED_LOCALES=Object.freeze(['ru','uk','ka','en','de']);
 const MAX_ITEMS=8;
@@ -60,13 +61,73 @@ const LANGUAGE_NAMES=Object.freeze({
 });
 
 function extractGeneratedText(result){
-  const direct=typeof result?.response==='string'?result.response.trim():'';
-  if(direct)return direct;
-  const choice=result?.choices?.[0];
-  const message=typeof choice?.message?.content==='string'?choice.message.content.trim():'';
-  if(message)return message;
-  const text=typeof choice?.text==='string'?choice.text.trim():'';
-  return text;
+  const seen=new Set();
+
+  function walk(value,depth=0){
+    if(value==null||depth>7)return '';
+    if(typeof value==='string'){
+      const text=value.trim();
+      return text;
+    }
+    if(typeof value!=='object'||seen.has(value))return '';
+    seen.add(value);
+
+    // Prefer known completion fields first.
+    const preferred=['response','output_text','translated_text','content','text','answer','result'];
+    for(const key of preferred){
+      const candidate=value?.[key];
+      if(typeof candidate==='string'&&candidate.trim())return candidate.trim();
+      if(Array.isArray(candidate)){
+        for(const item of candidate){
+          const nested=walk(item,depth+1);
+          if(nested)return nested;
+        }
+      }
+    }
+
+    const choice=value?.choices?.[0];
+    if(choice){
+      const nested=walk(choice,depth+1);
+      if(nested)return nested;
+    }
+
+    const message=value?.message;
+    if(message){
+      const nested=walk(message,depth+1);
+      if(nested)return nested;
+    }
+
+    // Last resort: inspect remaining nested objects, but ignore metadata/reasoning.
+    for(const [key,candidate] of Object.entries(value)){
+      if(['id','object','model','created','usage','system_fingerprint','service_tier',
+          'reasoning','reasoning_content','finish_reason'].includes(key))continue;
+      if(candidate&&typeof candidate==='object'){
+        const nested=walk(candidate,depth+1);
+        if(nested)return nested;
+      }
+    }
+    return '';
+  }
+
+  return walk(result);
+}
+
+async function runPrimaryOnce(ai,value,source,target){
+  const result=await ai.run(MODEL,{
+    text:value,
+    source_lang:source,
+    target_lang:target
+  });
+  return typeof result?.translated_text==='string' ? result.translated_text.trim() : '';
+}
+
+async function pivotTranslateText(ai,value,source,target){
+  // A direct source→Georgian inference can occasionally return an empty string.
+  // Route only that failed line through a stable intermediate language.
+  const pivot=source==='en' ? 'ru' : 'en';
+  const first=await runPrimaryOnce(ai,value,source,pivot);
+  if(!first)return '';
+  return runPrimaryOnce(ai,first,pivot,target);
 }
 
 async function fallbackTranslateText(ai,value,source,target){
@@ -76,17 +137,39 @@ async function fallbackTranslateText(ai,value,source,target){
     `Translate this single line from ${sourceName} to ${targetName}.`,
     'Return ONLY the translated line.',
     'Do not explain, do not add quotation marks, labels, notes, or markdown.',
+    'Preserve the emotional meaning and natural wording.',
     '',
     value
   ].join('\n');
 
   const result=await ai.run(FALLBACK_MODEL,{
     messages:[
-      {role:'system',content:'You are a precise professional translator. Preserve meaning and tone.'},
+      {role:'system',content:'You are a precise professional translator. Return only the translation.'},
       {role:'user',content:prompt}
     ],
     temperature:0,
-    max_completion_tokens:256,
+    reasoning_effort:'low',
+    max_completion_tokens:1024,
+    stream:false
+  });
+
+  return extractGeneratedText(result);
+}
+
+async function secondFallbackTranslateText(ai,value,source,target){
+  const sourceName=LANGUAGE_NAMES[source]||source;
+  const targetName=LANGUAGE_NAMES[target]||target;
+  const prompt=[
+    `Translate the following single line from ${sourceName} to ${targetName}.`,
+    'Output only the translated line. No explanation, no markdown, no quotes.',
+    '',
+    value
+  ].join('\n');
+
+  const result=await ai.run(SECOND_FALLBACK_MODEL,{
+    prompt,
+    temperature:0.1,
+    max_tokens:512,
     stream:false
   });
 
@@ -100,10 +183,10 @@ async function translateText(ai,text,source,target){
   let lastError=null;
   let gotEmpty=false;
 
+  // 1) Direct M2M100 translation, with one retry.
   for(let attempt=1;attempt<=2;attempt++){
     try{
-      const result=await ai.run(MODEL,{text:value,source_lang:source,target_lang:target});
-      const translated=typeof result?.translated_text==='string'?result.translated_text.trim():'';
+      const translated=await runPrimaryOnce(ai,value,source,target);
       if(translated)return translated;
       gotEmpty=true;
       lastError=new Error(`Translation model returned no text for ${target}`);
@@ -112,7 +195,7 @@ async function translateText(ai,text,source,target){
       const message=String(error?.message||error||'');
       if(message.includes('3036')||message.includes('3006')||message.includes('Too many subrequests'))break;
     }
-    if(attempt<2)await sleep(350);
+    if(attempt<2)await sleep(300);
   }
 
   const hardMessage=String(lastError?.message||lastError||'');
@@ -122,6 +205,17 @@ async function translateText(ai,text,source,target){
     hardMessage.includes('Too many subrequests');
 
   if(!hardFailure){
+    // 2) For failed Georgian lines, try M2M100 again through EN/RU pivot.
+    if(target==='ka'){
+      try{
+        const pivot=await pivotTranslateText(ai,value,source,target);
+        if(pivot)return pivot;
+      }catch(error){
+        lastError=error;
+      }
+    }
+
+    // 3) Reserve multilingual LLM.
     try{
       const fallback=await fallbackTranslateText(ai,value,source,target);
       if(fallback)return fallback;
@@ -129,12 +223,21 @@ async function translateText(ai,text,source,target){
     }catch(error){
       lastError=error;
     }
+
+    // 4) Second reserve multilingual LLM using a different response family.
+    try{
+      const second=await secondFallbackTranslateText(ai,value,source,target);
+      if(second)return second;
+      lastError=new Error(`Second fallback translation model returned no text for ${target}`);
+    }catch(error){
+      lastError=error;
+    }
   }
 
   throw new HttpError(
     502,
-    gotEmpty && target==='ka'
-      ? `Не удалось перевести одну строку на грузинский даже через резервную модель: ${aiErrorMessage(lastError)}`
+    target==='ka'
+      ? `Не удалось автоматически перевести одну строку на грузинский после 4 способов перевода: ${aiErrorMessage(lastError)}`
       : aiErrorMessage(lastError)
   );
 }
@@ -193,6 +296,7 @@ export async function onRequestPost(context){
       ok:true,
       model:MODEL,
       fallbackModel:FALLBACK_MODEL,
+      secondFallbackModel:SECOND_FALLBACK_MODEL,
       source,
       target,
       chunked:true,

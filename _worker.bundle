@@ -1,9 +1,9 @@
-------formdata-undici-068003554840
+------formdata-undici-083349524577
 Content-Disposition: form-data; name="metadata"
 
-{"main_module":"functionsWorker-0.5679596947242912.js"}
-------formdata-undici-068003554840
-Content-Disposition: form-data; name="functionsWorker-0.5679596947242912.js"; filename="functionsWorker-0.5679596947242912.js"
+{"main_module":"functionsWorker-0.3379252310460422.js"}
+------formdata-undici-083349524577
+Content-Disposition: form-data; name="functionsWorker-0.3379252310460422.js"; filename="functionsWorker-0.3379252310460422.js"
 Content-Type: application/javascript+module
 
 var __defProp = Object.defineProperty;
@@ -1852,6 +1852,7 @@ __name(onRequestPost8, "onRequestPost");
 // api/admin/translate.js
 var MODEL = "@cf/meta/m2m100-1.2b";
 var FALLBACK_MODEL = "@cf/zai-org/glm-4.7-flash";
+var SECOND_FALLBACK_MODEL = "@cf/qwen/qwen3-30b-a3b-fp8";
 var LANGUAGE_TO_LOCALE = Object.freeze({ RU: "ru", UA: "uk", GE: "ka", EN: "en", DE: "de" });
 var ALLOWED_LOCALES = Object.freeze(["ru", "uk", "ka", "en", "de"]);
 var MAX_ITEMS = 8;
@@ -1907,15 +1908,76 @@ var LANGUAGE_NAMES = Object.freeze({
   de: "German"
 });
 function extractGeneratedText(result) {
-  const direct = typeof result?.response === "string" ? result.response.trim() : "";
-  if (direct) return direct;
-  const choice = result?.choices?.[0];
-  const message2 = typeof choice?.message?.content === "string" ? choice.message.content.trim() : "";
-  if (message2) return message2;
-  const text = typeof choice?.text === "string" ? choice.text.trim() : "";
-  return text;
+  const seen = /* @__PURE__ */ new Set();
+  function walk(value, depth = 0) {
+    if (value == null || depth > 7) return "";
+    if (typeof value === "string") {
+      const text = value.trim();
+      return text;
+    }
+    if (typeof value !== "object" || seen.has(value)) return "";
+    seen.add(value);
+    const preferred = ["response", "output_text", "translated_text", "content", "text", "answer", "result"];
+    for (const key of preferred) {
+      const candidate = value?.[key];
+      if (typeof candidate === "string" && candidate.trim()) return candidate.trim();
+      if (Array.isArray(candidate)) {
+        for (const item of candidate) {
+          const nested = walk(item, depth + 1);
+          if (nested) return nested;
+        }
+      }
+    }
+    const choice = value?.choices?.[0];
+    if (choice) {
+      const nested = walk(choice, depth + 1);
+      if (nested) return nested;
+    }
+    const message2 = value?.message;
+    if (message2) {
+      const nested = walk(message2, depth + 1);
+      if (nested) return nested;
+    }
+    for (const [key, candidate] of Object.entries(value)) {
+      if ([
+        "id",
+        "object",
+        "model",
+        "created",
+        "usage",
+        "system_fingerprint",
+        "service_tier",
+        "reasoning",
+        "reasoning_content",
+        "finish_reason"
+      ].includes(key)) continue;
+      if (candidate && typeof candidate === "object") {
+        const nested = walk(candidate, depth + 1);
+        if (nested) return nested;
+      }
+    }
+    return "";
+  }
+  __name(walk, "walk");
+  return walk(result);
 }
 __name(extractGeneratedText, "extractGeneratedText");
+async function runPrimaryOnce(ai, value, source, target) {
+  const result = await ai.run(MODEL, {
+    text: value,
+    source_lang: source,
+    target_lang: target
+  });
+  return typeof result?.translated_text === "string" ? result.translated_text.trim() : "";
+}
+__name(runPrimaryOnce, "runPrimaryOnce");
+async function pivotTranslateText(ai, value, source, target) {
+  const pivot = source === "en" ? "ru" : "en";
+  const first = await runPrimaryOnce(ai, value, source, pivot);
+  if (!first) return "";
+  return runPrimaryOnce(ai, first, pivot, target);
+}
+__name(pivotTranslateText, "pivotTranslateText");
 async function fallbackTranslateText(ai, value, source, target) {
   const sourceName = LANGUAGE_NAMES[source] || source;
   const targetName = LANGUAGE_NAMES[target] || target;
@@ -1923,21 +1985,41 @@ async function fallbackTranslateText(ai, value, source, target) {
     `Translate this single line from ${sourceName} to ${targetName}.`,
     "Return ONLY the translated line.",
     "Do not explain, do not add quotation marks, labels, notes, or markdown.",
+    "Preserve the emotional meaning and natural wording.",
     "",
     value
   ].join("\n");
   const result = await ai.run(FALLBACK_MODEL, {
     messages: [
-      { role: "system", content: "You are a precise professional translator. Preserve meaning and tone." },
+      { role: "system", content: "You are a precise professional translator. Return only the translation." },
       { role: "user", content: prompt }
     ],
     temperature: 0,
-    max_completion_tokens: 256,
+    reasoning_effort: "low",
+    max_completion_tokens: 1024,
     stream: false
   });
   return extractGeneratedText(result);
 }
 __name(fallbackTranslateText, "fallbackTranslateText");
+async function secondFallbackTranslateText(ai, value, source, target) {
+  const sourceName = LANGUAGE_NAMES[source] || source;
+  const targetName = LANGUAGE_NAMES[target] || target;
+  const prompt = [
+    `Translate the following single line from ${sourceName} to ${targetName}.`,
+    "Output only the translated line. No explanation, no markdown, no quotes.",
+    "",
+    value
+  ].join("\n");
+  const result = await ai.run(SECOND_FALLBACK_MODEL, {
+    prompt,
+    temperature: 0.1,
+    max_tokens: 512,
+    stream: false
+  });
+  return extractGeneratedText(result);
+}
+__name(secondFallbackTranslateText, "secondFallbackTranslateText");
 async function translateText(ai, text, source, target) {
   const value = String(text || "").trim();
   if (!value) return "";
@@ -1945,8 +2027,7 @@ async function translateText(ai, text, source, target) {
   let gotEmpty = false;
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
-      const result = await ai.run(MODEL, { text: value, source_lang: source, target_lang: target });
-      const translated = typeof result?.translated_text === "string" ? result.translated_text.trim() : "";
+      const translated = await runPrimaryOnce(ai, value, source, target);
       if (translated) return translated;
       gotEmpty = true;
       lastError = new Error(`Translation model returned no text for ${target}`);
@@ -1955,11 +2036,19 @@ async function translateText(ai, text, source, target) {
       const message2 = String(error?.message || error || "");
       if (message2.includes("3036") || message2.includes("3006") || message2.includes("Too many subrequests")) break;
     }
-    if (attempt < 2) await sleep(350);
+    if (attempt < 2) await sleep(300);
   }
   const hardMessage = String(lastError?.message || lastError || "");
   const hardFailure = hardMessage.includes("3036") || hardMessage.includes("3006") || hardMessage.includes("Too many subrequests");
   if (!hardFailure) {
+    if (target === "ka") {
+      try {
+        const pivot = await pivotTranslateText(ai, value, source, target);
+        if (pivot) return pivot;
+      } catch (error) {
+        lastError = error;
+      }
+    }
     try {
       const fallback = await fallbackTranslateText(ai, value, source, target);
       if (fallback) return fallback;
@@ -1967,10 +2056,17 @@ async function translateText(ai, text, source, target) {
     } catch (error) {
       lastError = error;
     }
+    try {
+      const second = await secondFallbackTranslateText(ai, value, source, target);
+      if (second) return second;
+      lastError = new Error(`Second fallback translation model returned no text for ${target}`);
+    } catch (error) {
+      lastError = error;
+    }
   }
   throw new HttpError(
     502,
-    gotEmpty && target === "ka" ? `\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 \u043E\u0434\u043D\u0443 \u0441\u0442\u0440\u043E\u043A\u0443 \u043D\u0430 \u0433\u0440\u0443\u0437\u0438\u043D\u0441\u043A\u0438\u0439 \u0434\u0430\u0436\u0435 \u0447\u0435\u0440\u0435\u0437 \u0440\u0435\u0437\u0435\u0440\u0432\u043D\u0443\u044E \u043C\u043E\u0434\u0435\u043B\u044C: ${aiErrorMessage(lastError)}` : aiErrorMessage(lastError)
+    target === "ka" ? `\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 \u043E\u0434\u043D\u0443 \u0441\u0442\u0440\u043E\u043A\u0443 \u043D\u0430 \u0433\u0440\u0443\u0437\u0438\u043D\u0441\u043A\u0438\u0439 \u043F\u043E\u0441\u043B\u0435 4 \u0441\u043F\u043E\u0441\u043E\u0431\u043E\u0432 \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0430: ${aiErrorMessage(lastError)}` : aiErrorMessage(lastError)
   );
 }
 __name(translateText, "translateText");
@@ -2023,6 +2119,7 @@ async function onRequestPost9(context) {
       ok: true,
       model: MODEL,
       fallbackModel: FALLBACK_MODEL,
+      secondFallbackModel: SECOND_FALLBACK_MODEL,
       source,
       target,
       chunked: true,
@@ -2121,7 +2218,7 @@ async function onRequestGet5(context) {
 }
 __name(onRequestGet5, "onRequestGet");
 
-// ../.wrangler/tmp/pages-efJ169/functionsRoutes-0.25270275128023933.mjs
+// ../.wrangler/tmp/pages-tr410l/functionsRoutes-0.4269907203100417.mjs
 var routes = [
   {
     routePath: "/api/admin/tracks/:id/archive",
@@ -2693,4 +2790,4 @@ export {
   pages_template_worker_default as default
 };
 
-------formdata-undici-068003554840--
+------formdata-undici-083349524577--
