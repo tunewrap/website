@@ -199,49 +199,108 @@ function isCollapsedStructuredTranslation(sourceText,targetText){
   const sourceBreaks=(source.match(/\n/g)||[]).length;
   const targetBreaks=(target.match(/\n/g)||[]).length;
   const sourceNonEmpty=source.split('\n').filter(line=>line.trim()).length;
-  // Stage 11.0.4 translated the whole lyric as one paragraph. Rebuild only
-  // obviously flattened translations; normal/manual structured versions stay untouched.
   return sourceNonEmpty>=6&&sourceBreaks>=5&&targetBreaks<=1;
 }
+
 function missingTranslationTargets(track){
   const source=PRIMARY_LOCALE[track.language]||'ru';
   const sourceDescription=track.descriptions?.[source]||'';
   const sourceLyrics=track.lyrics?.[source]||'';
   return UI_LOCALES.map(([locale])=>locale).filter(locale=>{
     if(locale===source)return false;
-    const targetLyrics=track.lyrics?.[locale]||'';
     return (track.title&&!track.titles?.[locale]) ||
       (sourceDescription&&!track.descriptions?.[locale]) ||
-      (sourceLyrics&&!targetLyrics) ||
-      isCollapsedStructuredTranslation(sourceLyrics,targetLyrics);
+      (sourceLyrics&&(!track.lyrics?.[locale]||isCollapsedStructuredTranslation(sourceLyrics,track.lyrics?.[locale])));
   });
 }
-async function autoTranslateMissing(track){
-  const source=PRIMARY_LOCALE[track.language]||'ru';
+
+function buildLineItems(kind,text){
+  const lines=String(text||'').replace(/\r\n/g,'\n').split('\n');
+  const items=[];
+  lines.forEach((line,index)=>{
+    if(line.trim())items.push({id:`${kind}:${index}`,kind,text:line});
+  });
+  return {lines,items};
+}
+
+function rebuildLines(lines,translated,kind){
+  return lines.map((line,index)=>{
+    if(!line.trim())return '';
+    return translated[`${kind}:${index}`]??line;
+  }).join('\n');
+}
+
+async function translateItemsChunked(sourceLanguage,target,items){
+  const translated={};
+  const CHUNK_SIZE=12;
+  for(let offset=0;offset<items.length;offset+=CHUNK_SIZE){
+    const chunk=items.slice(offset,offset+CHUNK_SIZE);
+    const result=await api('/api/admin/translate',{method:'POST',body:{
+      sourceLanguage,
+      target,
+      items:chunk
+    }});
+    Object.assign(translated,result.translations||{});
+  }
+  return translated;
+}
+
+async function translateOneTarget(track,source,target){
+  const sourceDescription=track.descriptions?.[source]||'';
   const sourceLyrics=track.lyrics?.[source]||'';
-  const targets=missingTranslationTargets(track);
-  if(!targets.length)return track;
-  const labels=targets.map(locale=>UI_LOCALES.find(([code])=>code===locale)?.[1]||locale.toUpperCase());
-  toast(`Автоперевод: ${labels.join(', ')} · сохраняем структуру`);
-  const result=await api('/api/admin/translate',{method:'POST',body:{
-    sourceLanguage:track.language,
-    title:track.title,
-    description:track.descriptions?.[source]||'',
-    lyrics:sourceLyrics,
-    targets
-  }});
+  const targetLyrics=track.lyrics?.[target]||'';
+
+  const needsTitle=Boolean(track.title&&!track.titles?.[target]);
+  const needsDescription=Boolean(sourceDescription&&!track.descriptions?.[target]);
+  const needsLyrics=Boolean(sourceLyrics&&(!targetLyrics||isCollapsedStructuredTranslation(sourceLyrics,targetLyrics)));
+
+  const items=[];
+  let descriptionPack=null;
+  let lyricsPack=null;
+
+  if(needsTitle)items.push({id:'title',kind:'title',text:track.title});
+  if(needsDescription){
+    descriptionPack=buildLineItems('description',sourceDescription);
+    items.push(...descriptionPack.items);
+  }
+  if(needsLyrics){
+    lyricsPack=buildLineItems('lyrics',sourceLyrics);
+    items.push(...lyricsPack.items);
+  }
+
+  if(!items.length)return track;
+
+  const translated=await translateItemsChunked(track.language,target,items);
   const titles={...(track.titles||{})};
   const descriptions={...(track.descriptions||{})};
   const lyrics={...(track.lyrics||{})};
-  for(const locale of targets){
-    const translated=result.translations?.[locale]||{};
-    if(!titles[locale]&&translated.title)titles[locale]=translated.title;
-    if(!descriptions[locale]&&translated.description)descriptions[locale]=translated.description;
-    const shouldRefreshLyrics=!lyrics[locale]||isCollapsedStructuredTranslation(sourceLyrics,lyrics[locale]);
-    if(shouldRefreshLyrics&&translated.lyrics)lyrics[locale]=translated.lyrics;
+
+  if(needsTitle&&translated.title)titles[target]=translated.title;
+  if(needsDescription&&descriptionPack){
+    descriptions[target]=rebuildLines(descriptionPack.lines,translated,'description');
   }
+  if(needsLyrics&&lyricsPack){
+    lyrics[target]=rebuildLines(lyricsPack.lines,translated,'lyrics');
+  }
+
   return {...track,titles,descriptions,lyrics};
 }
+
+async function autoTranslateMissing(track){
+  const source=PRIMARY_LOCALE[track.language]||'ru';
+  const targets=missingTranslationTargets(track);
+  if(!targets.length)return track;
+
+  let next=track;
+  for(let index=0;index<targets.length;index++){
+    const target=targets[index];
+    const label=UI_LOCALES.find(([code])=>code===target)?.[1]||target.toUpperCase();
+    toast(`Автоперевод ${label} · ${index+1}/${targets.length}`);
+    next=await translateOneTarget(next,source,target);
+  }
+  return next;
+}
+
 function validateClient(track,publish){const errors=[];if(!track.title)errors.push('Введите название');if(!track.section)errors.push('Выберите раздел');if(!track.language)errors.push('Выберите язык');if(publish&&!track.audio&&!state.audioFile)errors.push('Для публикации выберите MP3');if(state.coverFile&&!state.coverInfo)errors.push('Дождитесь проверки обложки');return errors;}
 function showErrors(errors){nodes.formErrors.textContent=errors.join('\n');nodes.formErrors.hidden=!errors.length;if(errors.length)nodes.formErrors.scrollIntoView({behavior:'smooth',block:'center'});}
 function xhrUpload(path,file,progress,headers={}){return new Promise((resolve,reject)=>{const xhr=new XMLHttpRequest();xhr.open('POST',path);xhr.responseType='json';xhr.setRequestHeader('content-type',file.type||'application/octet-stream');xhr.setRequestHeader('x-file-name',encodeURIComponent(file.name));Object.entries(headers).forEach(([key,value])=>xhr.setRequestHeader(key,String(value)));progress.hidden=false;xhr.upload.onprogress=event=>{if(event.lengthComputable)progress.value=Math.round(event.loaded/event.total*100);};xhr.onload=()=>xhr.status>=200&&xhr.status<300?resolve(xhr.response):reject(new Error(xhr.response?.error||`Upload HTTP ${xhr.status}`));xhr.onerror=()=>reject(new Error('Загрузка прервана сетью'));xhr.send(file);});}
