@@ -15,7 +15,8 @@
     "admin:dev": "wrangler pages dev . --binding ENVIRONMENT=development",
     "admin:test": "node scripts/admin-catalog-test.js",
     "orders:test": "node scripts/orders-crm-test.js",
-    "test": "npm run tracks:check && npm run tracks:test-queue && npm run tracks:test-artwork && npm run tracks:test-scale && npm run admin:test && npm run orders:test"
+    "responsive:test": "node scripts/responsive-wide-test.js",
+    "test": "npm run tracks:check && npm run tracks:test-queue && npm run tracks:test-artwork && npm run tracks:test-scale && npm run admin:test && npm run orders:test && npm run responsive:test"
   },
   "engines": {
     "node": ">=18"
