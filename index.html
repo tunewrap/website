@@ -61,8 +61,8 @@
 <section class="top-mini-player" id="topMiniPlayer" aria-hidden="true" aria-label="TuneWrap Mini Player">
   <button class="top-mini-expand" id="topMiniExpand" type="button" aria-label="Развернуть плеер">
     <span class="top-mini-brand">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12M9 10l10-2M6.5 21A2.5 2.5 0 106.5 16a2.5 2.5 0 000 5zm10-2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"/></svg>
-      <span>Tune<em>Wrap</em></span>
+      <span class="top-mini-artwork" aria-hidden="true"><img id="topMiniCover" src="assets/covers/tunewrap-placeholder.svg" alt=""></span>
+      <span class="top-mini-wordmark">Tune<em>Wrap</em></span>
     </span>
     <strong id="topMiniTitle">TuneWrap</strong>
   </button>
@@ -829,9 +829,6 @@
 <audio id="tuneWrapAudioEngine" preload="metadata" playsinline></audio>
 
 <script src="js/catalog-core.js"></script>
-<script src="js/track-catalog.generated.js"></script>
-<script src="js/catalog-runtime.js"></script>
-<script src="js/script.js"></script>
-<script src="js/playback-engine.js"></script>
+<script type="module" src="js/app-bootstrap.js"></script>
 </body>
 </html>

@@ -1,0 +1,5 @@
+node_modules/
+.wrangler/
+.qa-functions/
+.dev.vars
+*.log

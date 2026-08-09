@@ -62,6 +62,7 @@
     const nextButton = document.getElementById('songPlayerNext');
     const miniPlayer = document.getElementById('topMiniPlayer');
     const miniExpand = document.getElementById('topMiniExpand');
+    const miniCover = document.getElementById('topMiniCover');
     const miniTitle = document.getElementById('topMiniTitle');
     const miniPrevious = document.getElementById('topMiniPrevious');
     const miniToggle = document.getElementById('topMiniToggle');
@@ -82,7 +83,7 @@
       !title || !description || !languageLabel || !descriptionToggle || !descriptionSheet ||
       !descriptionCollapse || !descriptionFull || !lyrics || !translation || !translationBlock ||
       !orderButton || !seek || !currentTimeLabel || !durationLabel || !previousButton ||
-      !toggleButton || !nextButton || !miniPlayer || !miniExpand || !miniTitle ||
+      !toggleButton || !nextButton || !miniPlayer || !miniExpand || !miniCover || !miniTitle ||
       !miniPrevious || !miniToggle || !miniNext || !miniStop
     ) return;
 
@@ -305,6 +306,9 @@
       }
       const currentTitle = localizedTitle(currentItem.name);
       miniTitle.textContent = currentTitle;
+      catalog.syncCoverImage(miniCover,currentItem,{alt:'',loading:'eager'});
+      miniPlayer.dataset.trackId = currentItem.name;
+      miniPlayer.dataset.trackLanguage = itemLanguage(currentItem);
       miniPlayer.classList.add('is-active');
       miniPlayer.setAttribute('aria-hidden','false');
       miniPlayer.removeAttribute('inert');
@@ -312,16 +316,8 @@
       if(legacyPlayer){
         legacyTitle.textContent = currentTitle;
         legacyArtist.textContent = isAuthorItem(currentItem) ? 'Kosta Trufakin' : 'TuneWrap';
-        const source = itemCover(currentItem);
-        if(source){
-          legacyCover.src = source;
-          legacyCover.alt = '';
-          legacyCoverWrap.classList.remove('is-wave');
-        } else {
-          legacyCover.removeAttribute('src');
-          legacyCover.alt = '';
-          legacyCoverWrap.classList.add('is-wave');
-        }
+        catalog.syncCoverImage(legacyCover,currentItem,{alt:'',loading:'eager'});
+        legacyCoverWrap.classList.remove('is-wave');
       }
     }
 
@@ -378,19 +374,8 @@
       title.textContent = currentTitle;
       description.textContent = currentDescription;
       languageLabel.textContent = itemLanguage(item);
-      const source = itemCover(item);
-      cover.classList.remove('is-loaded');
-      if(source){
-        cover.src = source;
-        cover.alt = currentTitle;
-        cover.decoding = 'async';
-        coverWrap.classList.remove('is-wave');
-        if(cover.complete) requestAnimationFrame(() => cover.classList.add('is-loaded'));
-      } else {
-        cover.removeAttribute('src');
-        cover.alt = '';
-        coverWrap.classList.add('is-wave');
-      }
+      catalog.syncCoverImage(cover,item,{alt:currentTitle,loading:'eager'});
+      coverWrap.classList.remove('is-wave');
       const playerOverlay = coverWrap.querySelector(':scope > .tunewrap-playing-overlay');
       if(playerOverlay) playerOverlay.dataset.playingTrack = item.name;
       const legacyOverlay = legacyCoverWrap?.querySelector(':scope > .tunewrap-playing-overlay');

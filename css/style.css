@@ -4737,6 +4737,36 @@
     stroke-linejoin:round;
   }
 
+  .top-mini-artwork{
+    position:relative;
+    display:block;
+    width:24px;
+    height:24px;
+    flex:none;
+    overflow:hidden;
+    border:1px solid rgba(217,164,65,.22);
+    border-radius:7px;
+    background:#17140e;
+  }
+
+  .top-mini-artwork img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:opacity var(--tw-motion-base) ease;
+  }
+
+  .top-mini-artwork img.is-loaded{
+    opacity:1;
+  }
+
+  .top-mini-wordmark{
+    min-width:0;
+    white-space:nowrap;
+  }
+
   .top-mini-brand em{
     color:#d9a441;
     font-style:normal;
@@ -9034,7 +9064,8 @@ body.music-library-open{
 @media(prefers-reduced-motion:reduce){
   .music-library-panel .track,
   .music-library-panel .author-card,
-  .music-library-search input{
+  .music-library-search input,
+  .top-mini-artwork img{
     transition-duration:.01ms;
   }
 }
@@ -10051,3 +10082,38 @@ body.lang-ka .wedding-package-name{
     margin-top:0;
   }
 }
+/* Stage 11: the public UI waits for its canonical D1 Track Catalog. */
+.catalog-bootstrap{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:grid;
+  place-content:center;
+  justify-items:center;
+  gap:14px;
+  padding:24px;
+  color:#f3e7ca;
+  text-align:center;
+  background:#070707;
+  font:500 14px/1.45 Inter,system-ui,sans-serif;
+}
+.catalog-bootstrap-mark{
+  width:42px;
+  height:42px;
+  border:1px solid rgba(216,177,92,.24);
+  border-top-color:#d8b15c;
+  border-radius:50%;
+  animation:catalog-bootstrap-spin .8s linear infinite;
+}
+.catalog-bootstrap.is-error strong{font:600 18px/1.2 Georgia,serif;color:#e1bd6f}
+.catalog-bootstrap.is-error button{
+  min-height:44px;
+  padding:0 22px;
+  border:0;
+  border-radius:999px;
+  color:#090909;
+  background:linear-gradient(135deg,#f0d38c,#b88a36);
+  font:700 14px/1 Inter,system-ui,sans-serif;
+}
+@keyframes catalog-bootstrap-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.catalog-bootstrap-mark{animation:none}}

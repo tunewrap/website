@@ -9,6 +9,7 @@
   const tracks = Core.createCatalog(rawTracks);
   const byId = new Map(tracks.map(track => [track.id,track]));
   const PAGE_SIZE = 24;
+  const FALLBACK_COVER = 'assets/covers/tunewrap-placeholder.svg';
   const LISTEN_LABELS = {ru:'Слушать',uk:'Слухати',ka:'მოსმენა',en:'Listen to',de:'Anhören'};
   const COUNT_COPY = {
     ru(count){
@@ -59,17 +60,76 @@
     return node;
   }
 
-  function coverImage(track,className){
-    const image = element('img',className);
-    image.src = track.cover;
-    image.alt = localizedTitle(track);
-    image.loading = 'lazy';
+  function coverSource(track){
+    return typeof track?.cover === 'string' && track.cover.trim() ? track.cover : FALLBACK_COVER;
+  }
+
+  function syncCoverImage(image,track,options = {}){
+    if(!image) return image;
+    const requestedSource = coverSource(track);
+    const alt = options.alt === undefined ? localizedTitle(track) : options.alt;
+    image.alt = alt;
+    if(options.loading) image.loading = options.loading;
     image.decoding = 'async';
-    if(track.artwork?.width > 0 && track.artwork?.height > 0){
+    if(track?.artwork?.width > 0 && track?.artwork?.height > 0){
       image.width = track.artwork.width;
       image.height = track.artwork.height;
     }
+
+    let token = Number(image.__tuneWrapCoverToken || 0) + 1;
+    image.__tuneWrapCoverToken = token;
+    image.__tuneWrapCoverCleanup?.();
+    image.classList.remove('is-loaded');
+    image.dataset.coverState = 'loading';
+
+    function assign(source,isFallback){
+      const operation = token;
+      let settled = false;
+      const cleanup = () => {
+        image.removeEventListener('load',onLoad);
+        image.removeEventListener('error',onError);
+        if(image.__tuneWrapCoverCleanup === cleanup) image.__tuneWrapCoverCleanup = null;
+      };
+      const reveal = state => {
+        if(settled || image.__tuneWrapCoverToken !== operation) return;
+        settled = true;
+        cleanup();
+        image.dataset.coverState = state;
+        requestAnimationFrame(() => {
+          if(image.__tuneWrapCoverToken === operation) image.classList.add('is-loaded');
+        });
+      };
+      const onLoad = () => reveal(isFallback ? 'fallback' : 'ready');
+      const onError = () => {
+        if(settled || image.__tuneWrapCoverToken !== operation) return;
+        cleanup();
+        if(!isFallback){
+          image.dataset.coverFallbackFor = requestedSource;
+          assign(FALLBACK_COVER,true);
+        } else {
+          reveal('error');
+        }
+      };
+      image.__tuneWrapCoverCleanup = cleanup;
+      image.addEventListener('load',onLoad,{once:true});
+      image.addEventListener('error',onError,{once:true});
+      image.src = source;
+      if(image.complete){
+        queueMicrotask(() => {
+          if(image.__tuneWrapCoverToken !== operation || settled) return;
+          if(image.naturalWidth > 0) onLoad();
+          else onError();
+        });
+      }
+    }
+
+    assign(requestedSource,requestedSource === FALLBACK_COVER);
     return image;
+  }
+
+  function coverImage(track,className){
+    const image = element('img',className);
+    return syncCoverImage(image,track,{loading:'lazy'});
   }
 
   function renderStoryCard(track){
@@ -155,6 +215,8 @@
     title:localizedTitle,
     description:localizedDescription,
     category:localizedCategory,
+    cover:coverSource,
+    syncCoverImage,
     titleMaps:Core.titleMaps(tracks),
     originalTitles:Object.freeze(Object.fromEntries(tracks.map(track => [track.id,track.originalTitle || track.title]))),
     renderCard
@@ -179,10 +241,7 @@
       featured.dataset.trackId = track.id;
       featured.setAttribute('aria-label',localizedTitle(track));
       const image = featured.querySelector('img');
-      if(image){
-        image.src = track.cover;
-        image.alt = localizedTitle(track);
-      }
+      if(image) syncCoverImage(image,track,{alt:localizedTitle(track),loading:'eager'});
       const title = featured.querySelector('[data-featured-title]');
       if(title) title.textContent = localizedTitle(track);
       const language = featured.querySelector('[data-featured-language]');

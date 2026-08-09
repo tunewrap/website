@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-08T08:19:44.069Z",
+  "generatedAt": "2026-08-09T06:22:19.210Z",
   "trackCount": 29,
   "publishedCount": 29,
   "tracks": [
@@ -29,8 +29,8 @@
       "cover": "content/tracks/story-127-ru/cover.png",
       "artwork": {
         "fallback": false,
-        "width": 1536,
-        "height": 1536,
+        "width": 0,
+        "height": 0,
         "bytes": 326813,
         "format": "png"
       },
@@ -50,14 +50,8 @@
         "stories"
       ],
       "durationLabel": "3:03",
-      "duration": 183.432,
-      "audioQuality": {
-        "duration": 183.432,
-        "bitrate": 128024,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 1,
       "featured": false,
       "published": true
@@ -87,8 +81,8 @@
       "cover": "content/tracks/main-road-ru/cover.png",
       "artwork": {
         "fallback": false,
-        "width": 1536,
-        "height": 1536,
+        "width": 0,
+        "height": 0,
         "bytes": 334253,
         "format": "png"
       },
@@ -108,14 +102,8 @@
         "stories"
       ],
       "durationLabel": "3:42",
-      "duration": 222.072,
-      "audioQuality": {
-        "duration": 222.072,
-        "bitrate": 128019,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 2,
       "featured": false,
       "published": true
@@ -145,8 +133,8 @@
       "cover": "content/tracks/natalia-65-ru/cover.png",
       "artwork": {
         "fallback": false,
-        "width": 1536,
-        "height": 1536,
+        "width": 0,
+        "height": 0,
         "bytes": 320625,
         "format": "png"
       },
@@ -166,14 +154,8 @@
         "stories"
       ],
       "durationLabel": "3:34",
-      "duration": 214.368,
-      "audioQuality": {
-        "duration": 214.368,
-        "bitrate": 128020,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 3,
       "featured": false,
       "published": true
@@ -203,8 +185,8 @@
       "cover": "content/tracks/grow-old-together-ua/cover.png",
       "artwork": {
         "fallback": false,
-        "width": 1536,
-        "height": 1536,
+        "width": 0,
+        "height": 0,
         "bytes": 493133,
         "format": "png"
       },
@@ -224,14 +206,8 @@
         "stories"
       ],
       "durationLabel": "3:17",
-      "duration": 196.872,
-      "audioQuality": {
-        "duration": 196.872,
-        "bitrate": 128022,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 4,
       "featured": true,
       "published": true
@@ -261,8 +237,8 @@
       "cover": "content/tracks/just-five-more-minutes-en/cover.png",
       "artwork": {
         "fallback": false,
-        "width": 1536,
-        "height": 1536,
+        "width": 0,
+        "height": 0,
         "bytes": 552671,
         "format": "png"
       },
@@ -282,14 +258,8 @@
         "stories"
       ],
       "durationLabel": "3:41",
-      "duration": 221.88,
-      "audioQuality": {
-        "duration": 221.88,
-        "bitrate": 128019,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 5,
       "featured": false,
       "published": true
@@ -328,14 +298,8 @@
         "stories"
       ],
       "durationLabel": "4:04",
-      "duration": 244.608,
-      "audioQuality": {
-        "duration": 244.608,
-        "bitrate": 179597,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 6,
       "featured": false,
       "published": true
@@ -374,14 +338,8 @@
         "stories"
       ],
       "durationLabel": "5:09",
-      "duration": 309.024,
-      "audioQuality": {
-        "duration": 309.024,
-        "bitrate": 182235,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 7,
       "featured": false,
       "published": true
@@ -420,14 +378,8 @@
         "stories"
       ],
       "durationLabel": "4:07",
-      "duration": 247.848,
-      "audioQuality": {
-        "duration": 247.848,
-        "bitrate": 184388,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 8,
       "featured": false,
       "published": true
@@ -466,14 +418,8 @@
         "stories"
       ],
       "durationLabel": "3:09",
-      "duration": 189.6,
-      "audioQuality": {
-        "duration": 189.6,
-        "bitrate": 179393,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 9,
       "featured": false,
       "published": true
@@ -512,14 +458,8 @@
         "stories"
       ],
       "durationLabel": "3:18",
-      "duration": 198.24,
-      "audioQuality": {
-        "duration": 198.24,
-        "bitrate": 181136,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 10,
       "featured": false,
       "published": true
@@ -558,14 +498,8 @@
         "stories"
       ],
       "durationLabel": "3:44",
-      "duration": 224.64,
-      "audioQuality": {
-        "duration": 224.64,
-        "bitrate": 186089,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 11,
       "featured": false,
       "published": true
@@ -604,14 +538,8 @@
         "stories"
       ],
       "durationLabel": "3:28",
-      "duration": 208.488,
-      "audioQuality": {
-        "duration": 208.488,
-        "bitrate": 179237,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 12,
       "featured": false,
       "published": true
@@ -650,14 +578,8 @@
         "stories"
       ],
       "durationLabel": "3:24",
-      "duration": 204.168,
-      "audioQuality": {
-        "duration": 204.168,
-        "bitrate": 183121,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 13,
       "featured": false,
       "published": true
@@ -702,14 +624,8 @@
         "author"
       ],
       "durationLabel": "3:30",
-      "duration": 210.672,
-      "audioQuality": {
-        "duration": 210.672,
-        "bitrate": 128020,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 1,
       "featured": true,
       "published": true
@@ -754,14 +670,8 @@
         "author"
       ],
       "durationLabel": "3:24",
-      "duration": 204.648,
-      "audioQuality": {
-        "duration": 204.648,
-        "bitrate": 128021,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 2,
       "featured": false,
       "published": true
@@ -806,14 +716,8 @@
         "author"
       ],
       "durationLabel": "2:41",
-      "duration": 161.472,
-      "audioQuality": {
-        "duration": 161.472,
-        "bitrate": 128026,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 3,
       "featured": false,
       "published": true
@@ -852,14 +756,8 @@
         "author"
       ],
       "durationLabel": "4:44",
-      "duration": 284.88,
-      "audioQuality": {
-        "duration": 284.88,
-        "bitrate": 186990,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 4,
       "featured": false,
       "published": true
@@ -904,14 +802,8 @@
         "author"
       ],
       "durationLabel": "5:33",
-      "duration": 333.792,
-      "audioQuality": {
-        "duration": 333.792,
-        "bitrate": 131454,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 5,
       "featured": false,
       "published": true
@@ -956,14 +848,8 @@
         "author"
       ],
       "durationLabel": "3:29",
-      "duration": 209.304,
-      "audioQuality": {
-        "duration": 209.304,
-        "bitrate": 134199,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 6,
       "featured": false,
       "published": true
@@ -1008,14 +894,8 @@
         "author"
       ],
       "durationLabel": "3:21",
-      "duration": 201.312,
-      "audioQuality": {
-        "duration": 201.312,
-        "bitrate": 128021,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 7,
       "featured": false,
       "published": true
@@ -1060,14 +940,8 @@
         "author"
       ],
       "durationLabel": "3:04",
-      "duration": 184.512,
-      "audioQuality": {
-        "duration": 184.512,
-        "bitrate": 128023,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 8,
       "featured": false,
       "published": true
@@ -1112,14 +986,8 @@
         "author"
       ],
       "durationLabel": "2:46",
-      "duration": 166.272,
-      "audioQuality": {
-        "duration": 166.272,
-        "bitrate": 132720,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 9,
       "featured": false,
       "published": true
@@ -1164,14 +1032,8 @@
         "author"
       ],
       "durationLabel": "2:52",
-      "duration": 172.824,
-      "audioQuality": {
-        "duration": 172.824,
-        "bitrate": 128024,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 10,
       "featured": false,
       "published": true
@@ -1210,14 +1072,8 @@
         "author"
       ],
       "durationLabel": "3:03",
-      "duration": 183.552,
-      "audioQuality": {
-        "duration": 183.552,
-        "bitrate": 179894,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 11,
       "featured": false,
       "published": true
@@ -1256,14 +1112,8 @@
         "author"
       ],
       "durationLabel": "3:19",
-      "duration": 199.704,
-      "audioQuality": {
-        "duration": 199.704,
-        "bitrate": 177664,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 12,
       "featured": false,
       "published": true
@@ -1302,14 +1152,8 @@
         "author"
       ],
       "durationLabel": "2:41",
-      "duration": 161.232,
-      "audioQuality": {
-        "duration": 161.232,
-        "bitrate": 188505,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 13,
       "featured": false,
       "published": true
@@ -1348,14 +1192,8 @@
         "author"
       ],
       "durationLabel": "2:50",
-      "duration": 170.04,
-      "audioQuality": {
-        "duration": 170.04,
-        "bitrate": 186207,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 14,
       "featured": false,
       "published": true
@@ -1394,14 +1232,8 @@
         "author"
       ],
       "durationLabel": "2:59",
-      "duration": 179.592,
-      "audioQuality": {
-        "duration": 179.592,
-        "bitrate": 170077,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 15,
       "featured": false,
       "published": true
@@ -1431,8 +1263,8 @@
       "cover": "content/tracks/our-way-53-en/cover.png",
       "artwork": {
         "fallback": false,
-        "width": 1536,
-        "height": 1536,
+        "width": 0,
+        "height": 0,
         "bytes": 491987,
         "format": "png"
       },
@@ -1450,14 +1282,8 @@
         "Our Choice"
       ],
       "durationLabel": "2:24",
-      "duration": 144.72,
-      "audioQuality": {
-        "duration": 144.72,
-        "bitrate": 180441,
-        "sampleRate": 48000,
-        "channels": 2,
-        "codec": "mp3"
-      },
+      "duration": 0,
+      "audioQuality": null,
       "order": 16,
       "featured": false,
       "published": true

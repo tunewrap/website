@@ -1,44 +1,14 @@
-# HOW TO ADD A NEW TUNEWRAP TRACK
+# Adding a TuneWrap track after Stage 11
 
-1. Create a folder in `content/inbox/` named with a stable ID, for example `night-and-word-ge`.
-2. Add `track.mp3`.
-3. Add `cover.webp` if available. Without it, TuneWrap uses the branded fallback.
-4. Fill in `track.json`:
+Production tracks are created and published through `/admin/`. See [HOW-TO-USE-TUNEWRAP-ADMIN.md](HOW-TO-USE-TUNEWRAP-ADMIN.md).
 
-```json
-{
-  "id": "night-and-word-ge",
-  "title": "ღამე და სიტყვა",
-  "titles": {
-    "ka": "ღამე და სიტყვა",
-    "en": "Night and Word"
-  },
-  "section": "stories",
-  "language": "GE",
-  "artist": "TuneWrap",
-  "album": "TuneWrap · Musical Stories",
-  "category": {
-    "en": "Love"
-  },
-  "tags": ["love", "night"],
-  "order": 14,
-  "featured": false,
-  "published": true
-}
-```
+The old `content/tracks/<id>` package pipeline remains intentionally available only for:
 
-5. Optionally add `lyrics.md` and `translation.md`.
-6. Run `npm run tracks:import`.
-7. Release only after the command prints `VALID` and `npm test` passes.
+- validating the immutable 29-track migration baseline;
+- rebuilding the Stage 10 backup catalog;
+- disaster-recovery comparison;
+- development tests of the queue and artwork rules.
 
-Do not edit `index.html`, the playback queue, Full Player, Mini Player, counters or Media Session metadata for an individual track. The catalog build updates them automatically.
+It is not the production publishing path. Running `npm run tracks:build` does not publish a song to D1 and does not update the live site.
 
-`order` is explicit and local to `section`, not global across the whole catalog. A new Musical Story receives its intended position among other `stories`; a new creator track receives its intended position among other `author` records. The generated playback queue is always:
-
-1. every published playable `stories` track sorted by `order`;
-2. every published playable `author` track sorted by `order`;
-3. then a cyclic return to the first Story.
-
-The same `order` number may be used once in each section. Duplicating an order inside one section fails import/build validation. Run `npm run tracks:test-queue` to print and validate the canonical 29-track queue without starting the application.
-
-Use `"published": false` for a draft. Drafts stay in the content catalog but do not appear in libraries, search or playback.
+The production rule is data-driven and unchanged: all published playable `stories` sorted by section-local `order`, then all published playable `author` tracks sorted by section-local `order`, then cyclic return to the first Story. Language filters, Search and Featured select UI records only; they never replace the global playback queue.

@@ -1,0 +1,125 @@
+TUNEWRAP WEB — STAGE 11 FILE HANDOFF
+Comparison baseline: TuneWrap Stage 10.2.1
+Source implementation: TuneWrap Stage 11 Admin Studio
+Comparison method: byte-for-byte file comparison; unchanged assets were additionally verified by SHA-256.
+
+Stage 11 implementation payload: 37 files
+  NEW: 32
+  MODIFIED: 5
+Handoff manifest inside ZIP: 1 additional file (this manifest)
+
+NEW:
+.gitignore
+HOW-TO-USE-TUNEWRAP-ADMIN.md
+STAGE-11-ADMIN-AUDIT.md
+TUNEWRAP-ADMIN-SETUP.md
+_headers
+_routes.json
+admin/admin.css
+admin/admin.js
+admin/index.html
+functions/_shared/auth.js
+functions/_shared/http.js
+functions/_shared/tracks.js
+functions/_shared/upload.js
+functions/api/admin/export.js
+functions/api/admin/import.js
+functions/api/admin/reorder.js
+functions/api/admin/tracks/[id].js
+functions/api/admin/tracks/[id]/archive.js
+functions/api/admin/tracks/[id]/publish.js
+functions/api/admin/tracks/[id]/unpublish.js
+functions/api/admin/tracks/index.js
+functions/api/admin/upload/audio.js
+functions/api/admin/upload/cover.js
+functions/api/media/[[path]].js
+functions/api/tracks.js
+js/app-bootstrap.js
+migrations/0001_tracks.sql
+migrations/0002_seed_tracks.sql
+package-lock.json
+scripts/admin-catalog-test.js
+scripts/generate-d1-seed.js
+wrangler.toml
+
+MODIFIED:
+HOW-TO-ADD-A-TRACK.md
+README.md
+css/style.css
+index.html
+package.json
+
+UNCHANGED ASSETS EXCLUDED:
+
+MP3 — 29 files, SHA-256 unchanged:
+content/tracks/amsterdam-en/track.mp3
+content/tracks/amsterdam-ru/track.mp3
+content/tracks/best-husband-father-ru/track.mp3
+content/tracks/days-pass-ua/track.mp3
+content/tracks/diana-ru/track.mp3
+content/tracks/everything-begins-ua/track.mp3
+content/tracks/five-more-minutes-ge/track.mp3
+content/tracks/five-more-minutes-ua/track.mp3
+content/tracks/good-vibe-en/track.mp3
+content/tracks/grow-old-together-en/track.mp3
+content/tracks/grow-old-together-ge/track.mp3
+content/tracks/grow-old-together-ua/track.mp3
+content/tracks/i-do-what-i-want-ua/track.mp3
+content/tracks/just-five-more-minutes-en/track.mp3
+content/tracks/main-road-ru/track.mp3
+content/tracks/my-choice-en/track.mp3
+content/tracks/my-choice-ua/track.mp3
+content/tracks/natalia-65-ru/track.mp3
+content/tracks/neues-leben-de/track.mp3
+content/tracks/new-flight-ua/track.mp3
+content/tracks/no-way-back-ua/track.mp3
+content/tracks/on-the-ashes-ua/track.mp3
+content/tracks/our-way-53-en/track.mp3
+content/tracks/pulse-of-the-night-en/track.mp3
+content/tracks/story-127-ru/track.mp3
+content/tracks/tbilisi-ge/track.mp3
+content/tracks/tbilisi-ua/track.mp3
+content/tracks/ya-ya-ya-alternative-en/track.mp3
+content/tracks/ya-ya-ya-en/track.mp3
+
+Existing covers / artwork — 14 files, SHA-256 unchanged:
+assets/covers/53.png
+assets/covers/image-284c2b3a71b9.png
+assets/covers/image-5c7073df3d12.png
+assets/covers/image-a1f0d25aaa9f.png
+assets/covers/image-b08c7250134f.png
+assets/covers/just-five-more-minutes.png
+assets/covers/tunewrap-placeholder.svg
+assets/covers/wedding-package-placeholder.svg
+content/tracks/grow-old-together-ua/cover.png
+content/tracks/just-five-more-minutes-en/cover.png
+content/tracks/main-road-ru/cover.png
+content/tracks/natalia-65-ru/cover.png
+content/tracks/our-way-53-en/cover.png
+content/tracks/story-127-ru/cover.png
+
+UNCHANGED SUPPORT FILES EXCLUDED:
+- all 29 existing content/tracks/*/track.json metadata files;
+- data/track-catalog.json;
+- js/catalog-core.js;
+- js/catalog-runtime.js;
+- js/playback-engine.js;
+- js/script.js;
+- js/track-catalog.generated.js;
+- existing Stage 10 validation scripts and audit documents.
+
+REMOVED FILES:
+None.
+
+EXCLUDED BUILD / TEMPORARY CONTENT:
+node_modules/
+.git/
+.wrangler/
+.qa-functions/
+temporary QA files and screenshots
+build caches and logs
+
+IMPORTANT:
+This deploy ZIP is an overlay for the current TuneWrap Stage 10.2.1 working project.
+It intentionally contains no unchanged MP3 or cover binaries.
+Playback engine files and the existing track order are not included because they were byte-identical and were not changed by Stage 11.

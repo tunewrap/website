@@ -72,6 +72,7 @@ function resolveAudio(packageDir,metadata){
 
 function resolveCover(packageDir,metadata){
   if(metadata.cover){
+    if(typeof metadata.cover !== 'string') return '';
     const file = path.resolve(packageDir,metadata.cover);
     return file.startsWith(packageDir + path.sep) || file === packageDir ? file : '';
   }
@@ -207,8 +208,33 @@ function validatePackage(projectRoot,packageDir,options = {}){
     warnings.push('Draft has no MP3 and will not be published');
   }
   const coverFile = resolveCover(packageDir,metadata);
-  const artwork = inspectCover(coverFile,errors,warnings,options.probe !== false);
-  if(!coverFile) warnings.push('Cover is missing; TuneWrap fallback artwork will be used');
+  const configuredCover = typeof metadata.cover === 'string' ? metadata.cover.trim() : '';
+  let artwork = null;
+  let coverReady = true;
+  if(metadata.cover && typeof metadata.cover !== 'string'){
+    errors.push('Track "' + (id || folder) + '" cover must be a filename string');
+    coverReady = false;
+  }
+  if(configuredCover){
+    const configuredFile = path.resolve(packageDir,configuredCover);
+    const insidePackage = configuredFile === packageDir || configuredFile.startsWith(packageDir + path.sep);
+    const displayPath = insidePackage ? publicPath(projectRoot,configuredFile) : configuredCover;
+    if(!insidePackage){
+      errors.push('Track "' + (id || folder) + '" cover path must stay inside its package: ' + configuredCover);
+      coverReady = false;
+    } else if(!fs.existsSync(configuredFile) || !fs.statSync(configuredFile).isFile()){
+      errors.push('Track "' + (id || folder) + '" cover file not found: ' + displayPath);
+      coverReady = false;
+    } else {
+      try{ fs.accessSync(configuredFile,fs.constants.R_OK); }
+      catch(error){
+        errors.push('Track "' + (id || folder) + '" cover file is not readable: ' + displayPath);
+        coverReady = false;
+      }
+    }
+  }
+  if(coverReady) artwork = inspectCover(coverFile,errors,warnings,options.probe !== false);
+  if(!configuredCover && !coverFile) warnings.push('Cover is missing; TuneWrap fallback artwork will be used');
   const lyrics = readOptionalText(packageDir,metadata,'lyrics','lyrics.md');
   const translation = readOptionalText(packageDir,metadata,'translation','translation.md');
   if(!Object.keys(lyrics).length) warnings.push('Lyrics are missing. Track may still be published without lyrics');
