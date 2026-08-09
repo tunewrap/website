@@ -32,6 +32,7 @@ try{
 
   // Register the tablet/desktop presentation adapter before the playback engine.
   // It never owns audio; it only reveals the existing player UI on wider screens.
+  await import('./wide-copy-polish.js');
   await import('./responsive-wide.js');
   await import('./playback-engine.js');
 
