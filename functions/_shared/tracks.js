@@ -14,6 +14,20 @@ const JSON_FIELDS = Object.freeze({
   tags_json:'tags', audio_quality_json:'audioQuality'
 });
 
+const ID_RE = /^[a-z0-9][a-z0-9-]{0,95}$/;
+
+const TRANSLIT = Object.freeze({
+  // Russian / Ukrainian
+  'а':'a','б':'b','в':'v','г':'g','ґ':'g','д':'d','е':'e','ё':'yo','є':'ye','ж':'zh','з':'z',
+  'и':'i','і':'i','ї':'yi','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r',
+  'с':'s','т':'t','у':'u','ф':'f','х':'kh','ц':'ts','ч':'ch','ш':'sh','щ':'shch','ы':'y',
+  'э':'e','ю':'yu','я':'ya','ь':'','ъ':'',
+  // Georgian
+  'ა':'a','ბ':'b','გ':'g','დ':'d','ე':'e','ვ':'v','ზ':'z','თ':'t','ი':'i','კ':'k','ლ':'l',
+  'მ':'m','ნ':'n','ო':'o','პ':'p','ჟ':'zh','რ':'r','ს':'s','ტ':'t','უ':'u','ფ':'p','ქ':'k',
+  'ღ':'gh','ყ':'q','შ':'sh','ჩ':'ch','ც':'ts','ძ':'dz','წ':'ts','ჭ':'ch','ხ':'kh','ჯ':'j','ჰ':'h'
+});
+
 function parseJson(value,fallback){
   if(value === null || value === undefined || value === '') return fallback;
   try{return JSON.parse(value);}catch(error){return fallback;}
@@ -71,6 +85,7 @@ export async function getTrack(db,id,{admin = true} = {}){
 export function validateTrack(input,{publishing = false} = {}){
   const errors = [];
   if(!input || typeof input !== 'object') return ['Данные трека отсутствуют'];
+  if(input.id && !ID_RE.test(String(input.id))) errors.push('Некорректный Track ID');
   if(!String(input.title || '').trim()) errors.push('Название обязательно');
   if(!SECTIONS.includes(input.section)) errors.push('Раздел должен быть stories или author');
   if(!LANGUAGES.includes(String(input.language || '').toUpperCase())) errors.push('Неподдерживаемый язык');
@@ -82,10 +97,19 @@ export function validateTrack(input,{publishing = false} = {}){
   return errors;
 }
 
+function asciiSlug(value){
+  const source = String(value || '').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  let output = '';
+  for(const char of source){
+    if(/[a-z0-9]/.test(char)) output += char;
+    else if(Object.prototype.hasOwnProperty.call(TRANSLIT,char)) output += TRANSLIT[char];
+    else output += '-';
+  }
+  return output.replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,64);
+}
+
 export function slugify(title,language){
-  const transliterated = String(title || '').normalize('NFKD').replace(/[\u0300-\u036f]/g,'')
-    .toLowerCase().replace(/[^a-z0-9\p{Letter}]+/gu,'-').replace(/^-+|-+$/g,'').slice(0,64);
-  const safe = transliterated || 'track';
+  const safe = asciiSlug(title) || 'track';
   return `${safe}-${String(language || 'RU').toLowerCase()}`;
 }
 
