@@ -1,0 +1,30 @@
+TUNEWRAP WEB — STAGE 12 CHANGED FILES
+
+NEW
+admin/orders.html
+admin/orders.css
+admin/orders.js
+functions/_shared/orders.js
+functions/api/orders.js
+functions/api/admin/orders/index.js
+functions/api/admin/orders/[[id]].js
+js/orders-submit.js
+migrations/0003_orders.sql
+scripts/orders-crm-test.js
+TUNEWRAP-ORDERS-SETUP.md
+STAGE-12-CHANGED-FILES.txt
+
+MODIFIED
+admin/admin.js
+js/app-bootstrap.js
+package.json
+
+UNCHANGED / DO NOT TOUCH
+Track Catalog architecture
+Global Queue order
+Playback Engine
+Full Player
+Mini Player
+Media Session
+R2 music media paths
+Existing track migrations/seed

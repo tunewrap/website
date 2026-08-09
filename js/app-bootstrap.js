@@ -11,6 +11,15 @@ try{
   window.TUNEWRAP_TRACK_CATALOG = payload.tracks;
   await import('./catalog-runtime.js');
   await import('./script.js');
+
+  // Stage 12 order intake is deliberately isolated from the music/player bootstrap.
+  // A CRM/API problem must never make the music library unavailable.
+  try{
+    await import('./orders-submit.js');
+  }catch(error){
+    console.error('TuneWrap order intake bootstrap failed',error);
+  }
+
   await import('./playback-engine.js');
   // Dynamic imports may finish after the browser's native DOMContentLoaded.
   // Stage 10 modules register on that event, so replay it only when it has

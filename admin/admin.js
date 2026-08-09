@@ -3,6 +3,42 @@ const PRIMARY_LOCALE = Object.freeze({RU:'ru',UA:'uk',GE:'ka',EN:'en',DE:'de'});
 const FALLBACK_COVER = '/assets/covers/tunewrap-placeholder.svg';
 const $ = selector => document.querySelector(selector);
 const state = {tracks:[],summary:null,tab:'all',query:'',current:null,audioFile:null,audioDuration:0,coverFile:null,coverInfo:null,importBackup:null,busy:false,localeTab:'ru',primaryLocale:'ru'};
+
+// ---------- Stage 12: Admin Studio section navigation ----------
+(function installAdminSectionNavigation(){
+  const header=document.querySelector('.admin-header');
+  if(!header||document.getElementById('adminSectionNavigation'))return;
+
+  const style=document.createElement('style');
+  style.id='adminSectionNavigationStyles';
+  style.textContent=`
+    .admin-section-nav{display:flex;align-items:center;gap:5px;margin-left:auto;margin-right:9px;padding:4px;border:1px solid var(--line);border-radius:13px;background:#0d0d0b}
+    .admin-section-nav a{min-height:34px;display:inline-flex;align-items:center;justify-content:center;padding:0 11px;border-radius:9px;color:var(--muted);text-decoration:none;font-size:11px;font-weight:800}
+    .admin-section-nav a.is-active{color:#0b0905;background:var(--gold)}
+    @media(max-width:520px){.admin-header{gap:7px}.admin-section-nav{margin-right:0}.admin-section-nav a{padding:0 8px;font-size:10px}.brand small{display:none}}
+  `;
+  document.head.append(style);
+
+  const nav=document.createElement('nav');
+  nav.id='adminSectionNavigation';
+  nav.className='admin-section-nav';
+  nav.setAttribute('aria-label','Разделы Admin Studio');
+
+  const music=document.createElement('a');
+  music.href='/admin/';
+  music.className='is-active';
+  music.textContent='Музыка';
+  music.setAttribute('aria-current','page');
+
+  const orders=document.createElement('a');
+  orders.href='/admin/orders.html';
+  orders.textContent='Заказы';
+
+  nav.append(music,orders);
+  const refresh=document.getElementById('refreshButton');
+  header.insertBefore(nav,refresh||null);
+})();
+
 const nodes = {
   list:$('#trackList'),empty:$('#emptyState'),search:$('#searchInput'),tabs:$('#catalogTabs'),editor:$('#trackEditor'),form:$('#trackForm'),
   formErrors:$('#formErrors'),trackId:$('#trackId'),title:$('#titleField'),section:$('#sectionField'),language:$('#languageField'),artist:$('#artistField'),

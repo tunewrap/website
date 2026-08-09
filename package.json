@@ -14,7 +14,8 @@
     "admin:migrate-local": "wrangler d1 migrations apply tunewrap-catalog --local",
     "admin:dev": "wrangler pages dev . --binding ENVIRONMENT=development",
     "admin:test": "node scripts/admin-catalog-test.js",
-    "test": "npm run tracks:check && npm run tracks:test-queue && npm run tracks:test-artwork && npm run tracks:test-scale && npm run admin:test"
+    "orders:test": "node scripts/orders-crm-test.js",
+    "test": "npm run tracks:check && npm run tracks:test-queue && npm run tracks:test-artwork && npm run tracks:test-scale && npm run admin:test && npm run orders:test"
   },
   "engines": {
     "node": ">=18"
