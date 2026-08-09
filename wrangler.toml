@@ -7,6 +7,9 @@ ENVIRONMENT = "production"
 ACCESS_TEAM_DOMAIN = "https://dry-wave-888f.cloudflareaccess.com"
 ACCESS_AUD = "bf1c62c77d9334188b6af53f721408414a97ed8ac13cd6edb94e9df0509dd7b6"
 
+[ai]
+binding = "AI"
+
 [[d1_databases]]
 binding = "TUNEWRAP_DB"
 database_name = "tunewrap-catalog"

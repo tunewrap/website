@@ -1,9 +1,9 @@
-------formdata-undici-064176685562
+------formdata-undici-094765808113
 Content-Disposition: form-data; name="metadata"
 
-{"main_module":"functionsWorker-0.14964471697254722.js"}
-------formdata-undici-064176685562
-Content-Disposition: form-data; name="functionsWorker-0.14964471697254722.js"; filename="functionsWorker-0.14964471697254722.js"
+{"main_module":"functionsWorker-0.2470417726543659.js"}
+------formdata-undici-094765808113
+Content-Disposition: form-data; name="functionsWorker-0.2470417726543659.js"; filename="functionsWorker-0.2470417726543659.js"
 Content-Type: application/javascript+module
 
 var __defProp = Object.defineProperty;
@@ -1849,6 +1849,57 @@ async function onRequestPost8(context) {
 }
 __name(onRequestPost8, "onRequestPost");
 
+// api/admin/translate.js
+var MODEL = "@cf/meta/m2m100-1.2b";
+var LANGUAGE_TO_LOCALE = Object.freeze({ RU: "ru", UA: "uk", GE: "ka", EN: "en", DE: "de" });
+var ALLOWED_LOCALES = Object.freeze(["ru", "uk", "ka", "en", "de"]);
+function cleanText(value, max) {
+  const text = String(value || "").trim();
+  if (text.length > max) throw new HttpError(413, `\u0422\u0435\u043A\u0441\u0442 \u0441\u043B\u0438\u0448\u043A\u043E\u043C \u0434\u043B\u0438\u043D\u043D\u044B\u0439 \u0434\u043B\u044F \u0430\u0432\u0442\u043E\u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0430 (${max} \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432 \u043C\u0430\u043A\u0441\u0438\u043C\u0443\u043C)`);
+  return text;
+}
+__name(cleanText, "cleanText");
+async function translateText(ai, text, source, target) {
+  if (!text) return "";
+  const result = await ai.run(MODEL, { text, source_lang: source, target_lang: target });
+  const translated = typeof result?.translated_text === "string" ? result.translated_text.trim() : "";
+  if (!translated) throw new Error(`Translation model returned no text for ${target}`);
+  return translated;
+}
+__name(translateText, "translateText");
+async function onRequestPost9(context) {
+  try {
+    requireSameOrigin(context.request);
+    await requireAdmin(context);
+    if (!context.env.AI) throw new HttpError(503, "Workers AI binding is not configured");
+    const body = await readJson(context.request);
+    const sourceLanguage = String(body.sourceLanguage || "").toUpperCase();
+    const source = LANGUAGE_TO_LOCALE[sourceLanguage];
+    if (!source) throw new HttpError(400, "\u041D\u0435\u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043C\u044B\u0439 \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u044F\u0437\u044B\u043A");
+    const requested = Array.isArray(body.targets) ? body.targets : ALLOWED_LOCALES;
+    const targets = [...new Set(requested.map((value) => String(value || "").toLowerCase()))].filter((locale) => ALLOWED_LOCALES.includes(locale) && locale !== source);
+    if (!targets.length) return json({ ok: true, model: MODEL, source, translations: {} });
+    const payload = {
+      title: cleanText(body.title, 400),
+      description: cleanText(body.description, 12e3),
+      lyrics: cleanText(body.lyrics, 24e3)
+    };
+    if (!payload.title && !payload.description && !payload.lyrics) throw new HttpError(400, "\u041D\u0435\u0442 \u0442\u0435\u043A\u0441\u0442\u0430 \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0430");
+    const entries = await Promise.all(targets.map(async (target) => {
+      const [title, description, lyrics] = await Promise.all([
+        translateText(context.env.AI, payload.title, source, target),
+        translateText(context.env.AI, payload.description, source, target),
+        translateText(context.env.AI, payload.lyrics, source, target)
+      ]);
+      return [target, { title, description, lyrics }];
+    }));
+    return json({ ok: true, model: MODEL, source, translations: Object.fromEntries(entries) });
+  } catch (error) {
+    return handleError(error);
+  }
+}
+__name(onRequestPost9, "onRequestPost");
+
 // api/media/[[path]].js
 function parseRange(header, size) {
   if (!header) return null;
@@ -1935,7 +1986,7 @@ async function onRequestGet5(context) {
 }
 __name(onRequestGet5, "onRequestGet");
 
-// ../.wrangler/tmp/pages-jo6irt/functionsRoutes-0.09952162933722886.mjs
+// ../.wrangler/tmp/pages-M1vgfA/functionsRoutes-0.8380757028881587.mjs
 var routes = [
   {
     routePath: "/api/admin/tracks/:id/archive",
@@ -2027,6 +2078,13 @@ var routes = [
     method: "POST",
     middlewares: [],
     modules: [onRequestPost8]
+  },
+  {
+    routePath: "/api/admin/translate",
+    mountPath: "/api/admin",
+    method: "POST",
+    middlewares: [],
+    modules: [onRequestPost9]
   },
   {
     routePath: "/api/media/:path*",
@@ -2500,4 +2558,4 @@ export {
   pages_template_worker_default as default
 };
 
-------formdata-undici-064176685562--
+------formdata-undici-094765808113--
