@@ -1,9 +1,9 @@
-------formdata-undici-094765808113
+------formdata-undici-091958527672
 Content-Disposition: form-data; name="metadata"
 
-{"main_module":"functionsWorker-0.2470417726543659.js"}
-------formdata-undici-094765808113
-Content-Disposition: form-data; name="functionsWorker-0.2470417726543659.js"; filename="functionsWorker-0.2470417726543659.js"
+{"main_module":"functionsWorker-0.4738379587410281.js"}
+------formdata-undici-091958527672
+Content-Disposition: form-data; name="functionsWorker-0.4738379587410281.js"; filename="functionsWorker-0.4738379587410281.js"
 Content-Type: application/javascript+module
 
 var __defProp = Object.defineProperty;
@@ -1853,20 +1853,81 @@ __name(onRequestPost8, "onRequestPost");
 var MODEL = "@cf/meta/m2m100-1.2b";
 var LANGUAGE_TO_LOCALE = Object.freeze({ RU: "ru", UA: "uk", GE: "ka", EN: "en", DE: "de" });
 var ALLOWED_LOCALES = Object.freeze(["ru", "uk", "ka", "en", "de"]);
+var SECTION_LABELS = Object.freeze({
+  verse: { ru: "\u041A\u0443\u043F\u043B\u0435\u0442", uk: "\u041A\u0443\u043F\u043B\u0435\u0442", ka: "\u10D9\u10E3\u10DE\u10DA\u10D4\u10E2\u10D8", en: "Verse", de: "Strophe" },
+  chorus: { ru: "\u041F\u0440\u0438\u043F\u0435\u0432", uk: "\u041F\u0440\u0438\u0441\u043F\u0456\u0432", ka: "\u10DB\u10D8\u10E1\u10D0\u10DB\u10E6\u10D4\u10E0\u10D8", en: "Chorus", de: "Refrain" },
+  prechorus: { ru: "\u041F\u0440\u0435\u0434\u043F\u0440\u0438\u043F\u0435\u0432", uk: "\u041F\u0435\u0440\u0435\u0434\u043F\u0440\u0438\u0441\u043F\u0456\u0432", ka: "\u10DE\u10E0\u10D4\u10E5\u10DD\u10E0\u10E3\u10E1\u10D8", en: "Pre-Chorus", de: "Pre-Refrain" },
+  bridge: { ru: "\u0411\u0440\u0438\u0434\u0436", uk: "\u0411\u0440\u0438\u0434\u0436", ka: "\u10D1\u10E0\u10D8\u10EF\u10D8", en: "Bridge", de: "Bridge" },
+  intro: { ru: "\u0412\u0441\u0442\u0443\u043F\u043B\u0435\u043D\u0438\u0435", uk: "\u0412\u0441\u0442\u0443\u043F", ka: "\u10D8\u10DC\u10E2\u10E0\u10DD", en: "Intro", de: "Intro" },
+  outro: { ru: "\u0424\u0438\u043D\u0430\u043B", uk: "\u0424\u0456\u043D\u0430\u043B", ka: "\u10D0\u10E3\u10E2\u10E0\u10DD", en: "Outro", de: "Outro" }
+});
+var SECTION_ALIASES = Object.freeze([
+  ["prechorus", /(предприпев|передприспів|pre[ -]?chorus|pre[ -]?refrain|პრექორუს)/i],
+  ["chorus", /(припев|приспів|chorus|refrain|მისამღერ)/i],
+  ["verse", /(куплет|verse|strophe|კუპლეტ)/i],
+  ["bridge", /(бридж|bridge|ბრიჯ)/i],
+  ["intro", /(вступ|вступление|intro|ინტრო)/i],
+  ["outro", /(финал|фінал|outro|აუტრო)/i]
+]);
 function cleanText(value, max) {
-  const text = String(value || "").trim();
+  const text = String(value || "").replace(/\r\n/g, "\n").trim();
   if (text.length > max) throw new HttpError(413, `\u0422\u0435\u043A\u0441\u0442 \u0441\u043B\u0438\u0448\u043A\u043E\u043C \u0434\u043B\u0438\u043D\u043D\u044B\u0439 \u0434\u043B\u044F \u0430\u0432\u0442\u043E\u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0430 (${max} \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432 \u043C\u0430\u043A\u0441\u0438\u043C\u0443\u043C)`);
   return text;
 }
 __name(cleanText, "cleanText");
 async function translateText(ai, text, source, target) {
-  if (!text) return "";
-  const result = await ai.run(MODEL, { text, source_lang: source, target_lang: target });
+  const value = String(text || "").trim();
+  if (!value) return "";
+  const result = await ai.run(MODEL, { text: value, source_lang: source, target_lang: target });
   const translated = typeof result?.translated_text === "string" ? result.translated_text.trim() : "";
   if (!translated) throw new Error(`Translation model returned no text for ${target}`);
   return translated;
 }
 __name(translateText, "translateText");
+function localizedSectionLabel(line, target) {
+  const trimmed = String(line || "").trim();
+  const match2 = trimmed.match(/^\[([^\]]+)\]$/);
+  if (!match2) return null;
+  const sourceLabel = match2[1].trim();
+  const number = (sourceLabel.match(/\d+/) || [])[0] || "";
+  for (const [key, pattern] of SECTION_ALIASES) {
+    if (pattern.test(sourceLabel)) {
+      const label = SECTION_LABELS[key]?.[target];
+      if (label) return `[${label}${number ? ` ${number}` : ""}]`;
+    }
+  }
+  return null;
+}
+__name(localizedSectionLabel, "localizedSectionLabel");
+async function mapWithConcurrency(items, limit, worker) {
+  const output = new Array(items.length);
+  let cursor = 0;
+  async function runner() {
+    while (true) {
+      const index = cursor++;
+      if (index >= items.length) return;
+      output[index] = await worker(items[index], index);
+    }
+  }
+  __name(runner, "runner");
+  await Promise.all(Array.from({ length: Math.min(limit, items.length || 1) }, runner));
+  return output;
+}
+__name(mapWithConcurrency, "mapWithConcurrency");
+async function translatePreservingLines(ai, text, source, target, { songStructure = false } = {}) {
+  if (!text) return "";
+  const lines = String(text).replace(/\r\n/g, "\n").split("\n");
+  const translated = await mapWithConcurrency(lines, 6, async (line) => {
+    if (!line.trim()) return "";
+    if (songStructure) {
+      const section = localizedSectionLabel(line, target);
+      if (section) return section;
+    }
+    return translateText(ai, line, source, target);
+  });
+  return translated.join("\n");
+}
+__name(translatePreservingLines, "translatePreservingLines");
 async function onRequestPost9(context) {
   try {
     requireSameOrigin(context.request);
@@ -1878,22 +1939,21 @@ async function onRequestPost9(context) {
     if (!source) throw new HttpError(400, "\u041D\u0435\u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043C\u044B\u0439 \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u044F\u0437\u044B\u043A");
     const requested = Array.isArray(body.targets) ? body.targets : ALLOWED_LOCALES;
     const targets = [...new Set(requested.map((value) => String(value || "").toLowerCase()))].filter((locale) => ALLOWED_LOCALES.includes(locale) && locale !== source);
-    if (!targets.length) return json({ ok: true, model: MODEL, source, translations: {} });
+    if (!targets.length) return json({ ok: true, model: MODEL, source, structureVersion: 2, translations: {} });
     const payload = {
       title: cleanText(body.title, 400),
       description: cleanText(body.description, 12e3),
       lyrics: cleanText(body.lyrics, 24e3)
     };
     if (!payload.title && !payload.description && !payload.lyrics) throw new HttpError(400, "\u041D\u0435\u0442 \u0442\u0435\u043A\u0441\u0442\u0430 \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0430");
-    const entries = await Promise.all(targets.map(async (target) => {
-      const [title, description, lyrics] = await Promise.all([
-        translateText(context.env.AI, payload.title, source, target),
-        translateText(context.env.AI, payload.description, source, target),
-        translateText(context.env.AI, payload.lyrics, source, target)
-      ]);
-      return [target, { title, description, lyrics }];
-    }));
-    return json({ ok: true, model: MODEL, source, translations: Object.fromEntries(entries) });
+    const translations = {};
+    for (const target of targets) {
+      const title = await translateText(context.env.AI, payload.title, source, target);
+      const description = await translatePreservingLines(context.env.AI, payload.description, source, target);
+      const lyrics = await translatePreservingLines(context.env.AI, payload.lyrics, source, target, { songStructure: true });
+      translations[target] = { title, description, lyrics };
+    }
+    return json({ ok: true, model: MODEL, source, structureVersion: 2, translations });
   } catch (error) {
     return handleError(error);
   }
@@ -1986,7 +2046,7 @@ async function onRequestGet5(context) {
 }
 __name(onRequestGet5, "onRequestGet");
 
-// ../.wrangler/tmp/pages-M1vgfA/functionsRoutes-0.8380757028881587.mjs
+// ../.wrangler/tmp/pages-3v47T3/functionsRoutes-0.6840827164014016.mjs
 var routes = [
   {
     routePath: "/api/admin/tracks/:id/archive",
@@ -2558,4 +2618,4 @@ export {
   pages_template_worker_default as default
 };
 
-------formdata-undici-094765808113--
+------formdata-undici-091958527672--

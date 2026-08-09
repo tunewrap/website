@@ -192,28 +192,42 @@ function readForm(){
   const category={...(state.current?.category||{})};if(nodes.category.value.trim())category[primary]=nodes.category.value.trim();
   return{...(state.current||{}),title:nodes.title.value.trim(),originalTitle:state.current?.originalTitle||nodes.title.value.trim(),titles,descriptions,section:nodes.section.value,language:nodes.language.value,artist:nodes.artist.value.trim()||'TuneWrap',album:nodes.album.value.trim(),category,tags:nodes.tags.value.split(',').map(value=>value.trim()).filter(Boolean),lyrics,translation,order:Number(nodes.order.value)||state.current?.order||0,featured:nodes.featured.checked,audio:state.current?.audio||'',cover:state.current?.cover||'',artwork:state.current?.artwork||{},duration:state.current?.duration||0,durationLabel:state.current?.durationLabel||''};
 }
+function isCollapsedStructuredTranslation(sourceText,targetText){
+  const source=String(sourceText||'').replace(/\r\n/g,'\n');
+  const target=String(targetText||'').replace(/\r\n/g,'\n');
+  if(!source.trim()||!target.trim())return false;
+  const sourceBreaks=(source.match(/\n/g)||[]).length;
+  const targetBreaks=(target.match(/\n/g)||[]).length;
+  const sourceNonEmpty=source.split('\n').filter(line=>line.trim()).length;
+  // Stage 11.0.4 translated the whole lyric as one paragraph. Rebuild only
+  // obviously flattened translations; normal/manual structured versions stay untouched.
+  return sourceNonEmpty>=6&&sourceBreaks>=5&&targetBreaks<=1;
+}
 function missingTranslationTargets(track){
   const source=PRIMARY_LOCALE[track.language]||'ru';
   const sourceDescription=track.descriptions?.[source]||'';
   const sourceLyrics=track.lyrics?.[source]||'';
   return UI_LOCALES.map(([locale])=>locale).filter(locale=>{
     if(locale===source)return false;
+    const targetLyrics=track.lyrics?.[locale]||'';
     return (track.title&&!track.titles?.[locale]) ||
       (sourceDescription&&!track.descriptions?.[locale]) ||
-      (sourceLyrics&&!track.lyrics?.[locale]);
+      (sourceLyrics&&!targetLyrics) ||
+      isCollapsedStructuredTranslation(sourceLyrics,targetLyrics);
   });
 }
 async function autoTranslateMissing(track){
   const source=PRIMARY_LOCALE[track.language]||'ru';
+  const sourceLyrics=track.lyrics?.[source]||'';
   const targets=missingTranslationTargets(track);
   if(!targets.length)return track;
   const labels=targets.map(locale=>UI_LOCALES.find(([code])=>code===locale)?.[1]||locale.toUpperCase());
-  toast(`Автоперевод: ${labels.join(', ')}`);
+  toast(`Автоперевод: ${labels.join(', ')} · сохраняем структуру`);
   const result=await api('/api/admin/translate',{method:'POST',body:{
     sourceLanguage:track.language,
     title:track.title,
     description:track.descriptions?.[source]||'',
-    lyrics:track.lyrics?.[source]||'',
+    lyrics:sourceLyrics,
     targets
   }});
   const titles={...(track.titles||{})};
@@ -223,7 +237,8 @@ async function autoTranslateMissing(track){
     const translated=result.translations?.[locale]||{};
     if(!titles[locale]&&translated.title)titles[locale]=translated.title;
     if(!descriptions[locale]&&translated.description)descriptions[locale]=translated.description;
-    if(!lyrics[locale]&&translated.lyrics)lyrics[locale]=translated.lyrics;
+    const shouldRefreshLyrics=!lyrics[locale]||isCollapsedStructuredTranslation(sourceLyrics,lyrics[locale]);
+    if(shouldRefreshLyrics&&translated.lyrics)lyrics[locale]=translated.lyrics;
   }
   return {...track,titles,descriptions,lyrics};
 }
