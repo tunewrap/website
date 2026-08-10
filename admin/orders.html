@@ -89,12 +89,28 @@
         <article><span>Стиль</span><strong id="detailStyles">—</strong></article>
         <article><span>Инструменты</span><strong id="detailInstruments">—</strong></article>
         <article><span>Suno-основа</span><strong id="detailSoundPrompt">—</strong></article>
+        <article><span>Вокал</span><strong id="detailVocal">—</strong></article>
         <article><span>Стоимость</span><strong id="detailPrice">—</strong></article>
         <article><span>Создано</span><strong id="detailCreated">—</strong></article>
       </section>
 
+      <section class="form-section order-translation-section" id="orderTranslationSection" hidden>
+        <div class="section-heading">
+          <span>RU</span>
+          <div>
+            <h2>Перевод на русский</h2>
+            <p id="detailTranslationStatus">Переводим заявку автоматически…</p>
+          </div>
+          <button class="secondary-button order-translation-retry" id="retryOrderTranslation" type="button" hidden>Повторить перевод</button>
+        </div>
+        <div class="story-block" id="translationOccasionBlock"><small>Событие</small><p id="translationOccasion"></p></div>
+        <div class="story-block" id="translationCoreBlock"><small>Главное</small><p id="translationCore"></p></div>
+        <div class="story-block" id="translationDescriptionBlock"><small>Описание</small><p id="translationDescription"></p></div>
+        <div class="story-block" id="translationGoldenBlock"><small>Дополнительные ответы</small><div id="translationGolden"></div></div>
+      </section>
+
       <section class="form-section order-copy-section">
-        <div class="section-heading"><span>01</span><div><h2>История клиента</h2><p>Исходные данные из формы TuneWrap.</p></div></div>
+        <div class="section-heading"><span>01</span><div><h2>История клиента</h2><p id="detailOriginalLanguageNote">Исходные данные из формы TuneWrap.</p></div></div>
         <div class="story-block" id="detailOccasionBlock"><small>Событие</small><p id="detailOccasion"></p></div>
         <div class="story-block" id="detailCoreBlock"><small>Главное</small><p id="detailCore"></p></div>
         <div class="story-block" id="detailDescriptionBlock"><small>Описание</small><p id="detailDescription"></p></div>

@@ -1,0 +1,23 @@
+/* TuneWrap Stage 12.6 — Order Intake Completion */
+.order-vocal-field{margin-top:4px}
+.order-vocal-chips{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:7px!important;
+}
+.order-vocal-chip{
+  display:inline-flex!important;
+  flex:0 0 auto!important;
+  width:auto!important;
+  min-width:0!important;
+  min-height:32px!important;
+  padding:7px 11px!important;
+  border-radius:999px!important;
+}
+.order-vocal-summary strong{
+  max-width:min(58vw,420px);
+}
+@media(min-width:621px){
+  .order-vocal-chips{gap:8px!important}
+  .order-vocal-chip{min-height:36px!important;padding:8px 14px!important}
+}

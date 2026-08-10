@@ -20,6 +20,7 @@
         package:'Выберите пакет и стоимость.',
         style:'Выберите хотя бы один стиль песни.',
         instrument:'Выберите инструменты/звучание или «На усмотрение TuneWrap».',
+        vocal:'Выберите, кто должен петь.',
         name:'Укажите ваше имя.',
         occasion:'Выберите повод или историю.',
         story:'Выберите пример истории или напишите свою.',
@@ -38,6 +39,7 @@
         package:'Оберіть пакет і вартість.',
         style:'Оберіть хоча б один стиль пісні.',
         instrument:'Оберіть інструменти/звучання або «На розсуд TuneWrap».',
+        vocal:'Оберіть, хто має співати.',
         name:'Вкажіть ваше ім’я.',
         occasion:'Оберіть подію або історію.',
         story:'Оберіть приклад історії або напишіть свою.',
@@ -56,6 +58,7 @@
         package:'აირჩიეთ პაკეტი და ფასი.',
         style:'აირჩიეთ მინიმუმ ერთი მუსიკალური სტილი.',
         instrument:'აირჩიეთ ინსტრუმენტები/ჟღერადობა ან „TuneWrap-ის არჩევანი“.',
+        vocal:'აირჩიეთ, ვინ უნდა იმღეროს.',
         name:'მიუთითეთ თქვენი სახელი.',
         occasion:'აირჩიეთ შემთხვევა ან ისტორია.',
         story:'აირჩიეთ მაგალითი ან დაწერეთ თქვენი ისტორია.',
@@ -74,6 +77,7 @@
         package:'Choose a package and price.',
         style:'Choose at least one music style.',
         instrument:'Choose instruments/sound or “TuneWrap choice”.',
+        vocal:'Choose who should sing.',
         name:'Enter your name.',
         occasion:'Choose an occasion or story.',
         story:'Choose a story example or write your own.',
@@ -92,6 +96,7 @@
         package:'Bitte Paket und Preis auswählen.',
         style:'Bitte mindestens einen Musikstil auswählen.',
         instrument:'Bitte Instrumente/Klang oder „TuneWrap-Auswahl“ wählen.',
+        vocal:'Bitte auswählen, wer singen soll.',
         name:'Bitte Ihren Namen eingeben.',
         occasion:'Bitte Anlass oder Geschichte auswählen.',
         story:'Bitte ein Beispiel wählen oder Ihre eigene Geschichte schreiben.',
@@ -142,6 +147,30 @@
       .sort((a,b)=>(a.order||99)-(b.order||99));
   }
 
+  function enabledWeddings(){
+    const list=pricing()?.config?.weddings;
+    return (Array.isArray(list)?list:[])
+      .filter(offer=>offer&&offer.enabled!==false)
+      .sort((a,b)=>(a.order||99)-(b.order||99));
+  }
+
+  function selectedPackageValue(){
+    const selected=pricing()?.getSelected?.();
+    if(selected?.type==='tier'&&Number.isInteger(Number(selected.index)))return 'tier:'+Number(selected.index);
+    if(selected?.type==='wedding'&&selected.id)return 'wedding:'+selected.id;
+    return '';
+  }
+
+  function packageGroupLabels(){
+    return {
+      ru:{regular:'Песни',wedding:'Свадебные форматы'},
+      uk:{regular:'Пісні',wedding:'Весільні формати'},
+      ka:{regular:'სიმღერები',wedding:'საქორწილო ფორმატები'},
+      en:{regular:'Songs',wedding:'Wedding formats'},
+      de:{regular:'Songs',wedding:'Hochzeitsformate'}
+    }[lang()]||{regular:'Песни',wedding:'Свадебные форматы'};
+  }
+
   function selectedTierIndex(){
     const selected=pricing()?.getSelected?.();
     return selected?.type==='tier'&&Number.isInteger(Number(selected.index))
@@ -181,13 +210,19 @@
 
     select.addEventListener('change',()=>{
       clearError(group);
-      if(select.value==='')return;
-      const index=Number(select.value);
-      if(!Number.isInteger(index))return;
+      const value=String(select.value||'');
+      if(!value)return;
 
-      // Keep the original Stage 9 state and the Pricing CMS state in sync.
-      document.dispatchEvent(new CustomEvent('tunewrap:set-order-tier',{detail:{index}}));
-      pricing()?.selectTier?.(index);
+      const [kind,key]=value.split(':');
+      if(kind==='tier'){
+        const index=Number(key);
+        if(!Number.isInteger(index))return;
+        document.dispatchEvent(new CustomEvent('tunewrap:set-order-tier',{detail:{index}}));
+        pricing()?.selectTier?.(index);
+      }else if(kind==='wedding'&&key){
+        document.dispatchEvent(new CustomEvent('tunewrap:set-order-wedding',{detail:{id:key}}));
+        pricing()?.selectWedding?.(key);
+      }
       window.setTimeout(syncRegularPackageField,0);
     });
 
@@ -202,27 +237,44 @@
     const c=copy();
     group.querySelector('label').textContent=c.packageLabel;
     group.querySelector('.field-hint').textContent=c.packageHint;
+    group.hidden=false;
 
-    const weddingVisible=Boolean($('#weddingPackageField')&&!$('#weddingPackageField').hidden);
-    group.hidden=weddingVisible;
-    if(weddingVisible)return;
+    // Stage 12.6 uses one selector for all six packages.
+    // Keep the old wedding select populated for core compatibility, but do not show a duplicate field.
+    const weddingField=$('#weddingPackageField');
+    if(weddingField)weddingField.hidden=true;
 
-    const current=selectedTierIndex();
-    const options=document.createDocumentFragment();
+    const current=selectedPackageValue();
+    const fragment=document.createDocumentFragment();
     const placeholder=document.createElement('option');
     placeholder.value='';
     placeholder.textContent=c.packagePlaceholder;
-    options.appendChild(placeholder);
+    fragment.appendChild(placeholder);
 
+    const groups=packageGroupLabels();
+
+    const regularGroup=document.createElement('optgroup');
+    regularGroup.label=groups.regular;
     enabledTiers().forEach(offer=>{
       const option=document.createElement('option');
-      option.value=String(tierIndex(offer));
-      option.textContent=`${localizedOfferName(offer)} — $${Number(offer.price)||0}`;
-      options.appendChild(option);
+      option.value='tier:'+tierIndex(offer);
+      option.textContent=localizedOfferName(offer)+' — $'+(Number(offer.price)||0);
+      regularGroup.appendChild(option);
     });
+    if(regularGroup.children.length)fragment.appendChild(regularGroup);
 
-    select.replaceChildren(options);
-    select.value=current===null?'':String(current);
+    const weddingGroup=document.createElement('optgroup');
+    weddingGroup.label=groups.wedding;
+    enabledWeddings().forEach(offer=>{
+      const option=document.createElement('option');
+      option.value='wedding:'+offer.id;
+      option.textContent=localizedOfferName(offer)+' — $'+(Number(offer.price)||0);
+      weddingGroup.appendChild(option);
+    });
+    if(weddingGroup.children.length)fragment.appendChild(weddingGroup);
+
+    select.replaceChildren(fragment);
+    select.value=current;
   }
 
   function requiredTargets(){
@@ -230,6 +282,7 @@
       package:regularPackageField(),
       style:$('#styleChips')?.closest('.field-group'),
       instrument:$('#instrumentChips')?.closest('.field-group'),
+      vocal:$('#orderVocalField'),
       name:$('#fieldName')?.closest('.field-group'),
       occasion:$('#fieldOccasion')?.closest('.field-group'),
       story:$('#storyCore'),
@@ -240,11 +293,12 @@
 
   function markRequired(){
     const targets=requiredTargets();
-    ['style','instrument','name','occasion','story','description','contact'].forEach(key=>{
+    ['style','instrument','vocal','name','occasion','story','description','contact'].forEach(key=>{
       targets[key]?.classList.add('ux-required');
     });
     $('#styleChips')?.closest('.field-group')?.querySelector('.field-label')?.classList.add('ux-required-label');
     $('#instrumentChips')?.closest('.field-group')?.querySelector('.field-label')?.classList.add('ux-required-label');
+    $('#orderVocalField')?.querySelector('.field-label')?.classList.add('ux-required-label');
     $('#fieldName')?.closest('.field-group')?.querySelector('.field-label')?.classList.add('ux-required-label');
     $('#fieldOccasion')?.closest('.field-group')?.querySelector('.field-label')?.classList.add('ux-required-label');
     $('#fieldDescription')?.closest('.field-group')?.querySelector('.field-label')?.classList.add('ux-required-label');
@@ -291,7 +345,7 @@
   }
 
   function packageSelected(){
-    return weddingSelected()||selectedTierIndex()!==null;
+    return Boolean(pricing()?.getSelected?.())||weddingSelected()||selectedTierIndex()!==null;
   }
 
   function validContact(value){
@@ -371,6 +425,7 @@
     if(currentMode()!=='certificate'){
       if(styleCount()<1)errors.push([groups.style,c.errors.style]);
       if($('#instrumentChips')&&instrumentCount()<1)errors.push([groups.instrument,c.errors.instrument]);
+      if($('#orderVocalField')&&!window.__tuneWrapOrderCompletion?.hasVocalChoice?.())errors.push([groups.vocal,c.errors.vocal]);
       if(!text('fieldOccasion'))errors.push([groups.occasion,c.errors.occasion]);
       if(!text('fieldStoryCore'))errors.push([groups.story,c.errors.story]);
       if(!text('fieldDescription'))errors.push([groups.description,c.errors.description]);

@@ -45,3 +45,24 @@
 }
 @media(max-width:430px){.order-detail-grid{grid-template-columns:1fr}.order-hero-card{align-items:stretch;flex-direction:column}.order-status-badge{align-self:flex-start}}
 @media(min-width:900px){.order-row:hover{background:rgba(216,177,92,.025)}}
+
+
+/* Stage 12.6 translation */
+.order-translation-section{
+  border-color:rgba(217,164,65,.34)!important;
+  background:linear-gradient(180deg,rgba(217,164,65,.045),rgba(255,255,255,.012));
+}
+.order-translation-section .section-heading{
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:start;
+}
+.order-translation-retry{align-self:center}
+.order-translation-section.is-loading .story-block{opacity:.38}
+.order-translation-section.is-error{
+  border-color:rgba(218,118,99,.34)!important;
+}
+#detailTranslationStatus{max-width:720px}
+@media(max-width:720px){
+  .order-translation-section .section-heading{grid-template-columns:auto 1fr}
+  .order-translation-retry{grid-column:1/-1;width:100%}
+}

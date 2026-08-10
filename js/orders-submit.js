@@ -1,5 +1,6 @@
 const COPY={
   ru:{
+    vocalLabel:'Вокал',
     saving:'Сохраняем заявку в TuneWrap…',
     success:id=>`Заявка сохранена. Номер: ${id}`,
     duplicate:id=>`Эта заявка уже сохранена. Номер: ${id}`,
@@ -8,6 +9,7 @@ const COPY={
     error:'Не удалось сохранить заявку. WhatsApp / Telegram и копирование текста продолжают работать.'
   },
   uk:{
+    vocalLabel:'Вокал',
     saving:'Зберігаємо заявку в TuneWrap…',
     success:id=>`Заявку збережено. Номер: ${id}`,
     duplicate:id=>`Цю заявку вже збережено. Номер: ${id}`,
@@ -16,6 +18,7 @@ const COPY={
     error:'Не вдалося зберегти заявку. WhatsApp / Telegram і копіювання тексту продовжують працювати.'
   },
   ka:{
+    vocalLabel:'ვოკალი',
     saving:'მოთხოვნა ინახება TuneWrap-ში…',
     success:id=>`მოთხოვნა შენახულია. ნომერი: ${id}`,
     duplicate:id=>`ეს მოთხოვნა უკვე შენახულია. ნომერი: ${id}`,
@@ -24,6 +27,7 @@ const COPY={
     error:'მოთხოვნის შენახვა ვერ მოხერხდა. WhatsApp / Telegram და ტექსტის კოპირება კვლავ მუშაობს.'
   },
   en:{
+    vocalLabel:'Vocal',
     saving:'Saving your request in TuneWrap…',
     success:id=>`Request saved. Reference: ${id}`,
     duplicate:id=>`This request is already saved. Reference: ${id}`,
@@ -32,6 +36,7 @@ const COPY={
     error:'We could not save the request. WhatsApp / Telegram and copy still work.'
   },
   de:{
+    vocalLabel:'Gesang',
     saving:'Anfrage wird in TuneWrap gespeichert…',
     success:id=>`Anfrage gespeichert. Nummer: ${id}`,
     duplicate:id=>`Diese Anfrage ist bereits gespeichert. Nummer: ${id}`,
@@ -103,6 +108,19 @@ function goldenAnswers(){
   }).filter(Boolean);
 }
 
+function selectedPricing(){
+  const api=window.__tuneWrapPricing;
+  return {
+    selected:api?.getSelected?.()||null,
+    offer:api?.getSelectedOffer?.()||null
+  };
+}
+
+function localizedPricingName(offer){
+  const locales=offer?.locales||{};
+  return locales[lang()]?.name||locales.ru?.name||offer?.id||'';
+}
+
 function parsePrice(){
   const raw=content('sumTotal');
   const match=raw.match(/(\d+(?:[.,]\d+)?)/);
@@ -112,9 +130,14 @@ function parsePrice(){
 function collect(){
   const mode=activeMode();
   const weddingField=document.getElementById('weddingPackageField');
-  const wedding=visible(weddingField);
-  const orderType=wedding?'wedding':mode==='certificate'?'certificate':'order';
   const weddingSelect=document.getElementById('fieldWeddingPackage');
+  const pricingState=selectedPricing();
+  const weddingFromPricing=mode!=='certificate'&&pricingState.selected?.type==='wedding';
+  const wedding=mode!=='certificate'&&(weddingFromPricing||visible(weddingField));
+  const orderType=wedding?'wedding':mode==='certificate'?'certificate':'order';
+  const vocalChoice=window.__tuneWrapOrderCompletion?.getVocalChoice?.()||'';
+  const vocalLabel=window.__tuneWrapOrderCompletion?.getVocalLabel?.()||'';
+  const vocalPrompt=window.__tuneWrapOrderCompletion?.getVocalPrompt?.()||'';
 
   return {
     clientSubmissionId:crypto.randomUUID(),
@@ -128,15 +151,22 @@ function collect(){
     description:text('fieldDescription'),
     goldenAnswers:goldenAnswers(),
     tierLabel:content('sumTier'),
-    weddingPackageId:wedding?weddingSelect?.value||'':'',
-    weddingPackageLabel:wedding?weddingSelect?.selectedOptions?.[0]?.textContent?.trim()||'':'',
+    weddingPackageId:wedding?(weddingFromPricing?pricingState.selected.id:weddingSelect?.value||''):'',
+    weddingPackageLabel:wedding?(weddingFromPricing?localizedPricingName(pricingState.offer):weddingSelect?.selectedOptions?.[0]?.textContent?.trim()||''):'',
     styles:window.__tuneWrapSoundPreferences?.getSelectedStyleLabels?.()
       ||(content('sumStyle')&&content('sumStyle')!=='—'?content('sumStyle').split(',').map(v=>v.trim()).filter(Boolean):[]),
     instruments:window.__tuneWrapSoundPreferences?.getSelectedInstrumentLabels?.()||[],
-    soundPrompt:window.__tuneWrapSoundPreferences?.getSoundPrompt?.()||'',
+    vocalChoice,
+    soundPrompt:[
+      window.__tuneWrapSoundPreferences?.getSoundPrompt?.()||'',
+      vocalPrompt
+    ].filter(Boolean).join('; '),
     urgent:Boolean(document.getElementById('fieldUrgent')?.checked),
     quotedPrice:parsePrice(),
-    rawMessage:content('previewText'),
+    rawMessage:[
+      content('previewText'),
+      vocalLabel?(COPY[lang()]?.vocalLabel||'Vocal')+': '+vocalLabel:''
+    ].filter(Boolean).join('\n'),
     source:'web',
     sourceUrl:location.pathname+location.search
   };

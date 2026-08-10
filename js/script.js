@@ -1981,6 +1981,11 @@ function applyTuneWrapTrackTitles(language){
       applySelectedTier(index);
     }
   });
+  document.addEventListener('tunewrap:set-order-wedding',event => {
+    const id=String(event.detail?.id||'');
+    const index=WEDDING_PACKAGE_IDS.indexOf(id);
+    if(index>=0)applySelectedWeddingPackage(index);
+  });
   document.getElementById('corpQty').addEventListener('input', updateCorpTotal);
   document.getElementById('corpTier').addEventListener('change', updateCorpTotal);
 

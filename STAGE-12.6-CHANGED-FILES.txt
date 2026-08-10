@@ -1,0 +1,34 @@
+NEW
+js/order-intake-completion.js
+css/order-intake-completion.css
+migrations/0007_order_translation_vocal.sql
+scripts/install-stage-12.6-order-intake-completion.js
+scripts/order-intake-completion-test.js
+README-STAGE-12.6.txt
+STAGE-12.6-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+js/app-bootstrap.js
+js/script.js
+js/pricing-cms-runtime.js
+js/ux-critical-fixes.js
+js/orders-submit.js
+js/site-cms-runtime.js
+functions/_shared/orders.js
+admin/orders.html
+admin/orders.css
+admin/orders.js
+package.json
+
+D1
+orders + vocal_choice
+orders + translation_ru_json
+orders + translation_ru_at
+
+NO CHANGES
+track catalog / queue
+persistent audio engine
+R2 music
+Pricing CMS schema
+Site CMS schema
+Sound CMS schema

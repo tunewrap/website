@@ -3,6 +3,7 @@ import {HttpError} from './http.js';
 export const ORDER_STATUSES=Object.freeze(['new','in_progress','waiting_client','done','archived']);
 export const ORDER_TYPES=Object.freeze(['order','certificate','wedding','corporate']);
 export const ORDER_LANGUAGES=Object.freeze(['ru','uk','ka','en','de']);
+export const ORDER_VOCALS=Object.freeze(['male','female','duet','any']);
 
 function parseJson(value,fallback){
   try{return JSON.parse(value||'');}catch(error){return fallback;}
@@ -28,6 +29,17 @@ function goldenAnswers(value){
   })).filter(item=>item.question&&item.answer);
 }
 
+function cleanTranslationRu(value){
+  if(!value||typeof value!=='object')return null;
+  return {
+    occasion:clean(value.occasion,1200),
+    occasionDetail:clean(value.occasionDetail,2400),
+    storyCore:clean(value.storyCore,12000),
+    description:clean(value.description,30000),
+    goldenAnswers:goldenAnswers(value.goldenAnswers)
+  };
+}
+
 export function rowToOrder(row){
   if(!row)return null;
   return {
@@ -49,6 +61,9 @@ export function rowToOrder(row){
     styles:parseJson(row.styles_json,[]),
     instruments:parseJson(row.instruments_json,[]),
     soundPrompt:row.sound_prompt||'',
+    vocalChoice:row.vocal_choice||'',
+    translationRu:parseJson(row.translation_ru_json,null),
+    translationRuAt:row.translation_ru_at||'',
     urgent:Boolean(row.urgent),
     quotedPrice:Number.isFinite(row.quoted_price)?row.quoted_price:(row.quoted_price==null?null:Number(row.quoted_price)),
     rawMessage:row.raw_message,
@@ -108,13 +123,20 @@ export function normalizePublicOrder(input,request){
     styles:listStrings(input?.styles,5,160),
     instruments:listStrings(input?.instruments,80,160),
     soundPrompt:clean(input?.soundPrompt,12000,{label:'Sound prompt'}),
+    vocalChoice:(()=>{
+      const value=clean(input?.vocalChoice,40);
+      if((orderType==='order'||orderType==='wedding')&&!ORDER_VOCALS.includes(value)){
+        throw new HttpError(422,'Выберите вокал');
+      }
+      return ORDER_VOCALS.includes(value)?value:'';
+    })(),
     urgent:Boolean(input?.urgent),
     quotedPrice,
     rawMessage:clean(input?.rawMessage,32000),
     source:clean(input?.source,40)||'web',
     sourceUrl,
     internalNotes:'',
-    schemaVersion:2
+    schemaVersion:3
   };
 }
 
@@ -139,14 +161,14 @@ export async function insertOrder(db,order,id){
     INSERT INTO orders (
       id,client_submission_id,status,order_type,interface_language,name,contact,
       occasion,occasion_detail,story_core,description,golden_answers_json,
-      tier_label,wedding_package_id,wedding_package_label,styles_json,instruments_json,sound_prompt,urgent,
+      tier_label,wedding_package_id,wedding_package_label,styles_json,instruments_json,sound_prompt,vocal_choice,urgent,
       quoted_price,raw_message,source,source_url,internal_notes,schema_version,
       created_at,updated_at,last_edited_by
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   `).bind(
     id,order.clientSubmissionId,order.status,order.orderType,order.language,order.name,order.contact,
     order.occasion,order.occasionDetail,order.storyCore,order.description,JSON.stringify(order.goldenAnswers),
-    order.tierLabel,order.weddingPackageId,order.weddingPackageLabel,JSON.stringify(order.styles),JSON.stringify(order.instruments),order.soundPrompt,order.urgent?1:0,
+    order.tierLabel,order.weddingPackageId,order.weddingPackageLabel,JSON.stringify(order.styles),JSON.stringify(order.instruments),order.soundPrompt,order.vocalChoice,order.urgent?1:0,
     order.quotedPrice,order.rawMessage,order.source,order.sourceUrl,order.internalNotes,order.schemaVersion,
     now,now,'public-form'
   ).run();
@@ -163,12 +185,26 @@ export async function updateOrderAdmin(db,id,input,editor){
     ? current.internalNotes
     : clean(input.internalNotes,16000,{label:'Внутренние заметки'});
 
+  const translationRu=input?.translationRu===undefined
+    ? current.translationRu
+    : cleanTranslationRu(input.translationRu);
+  const translationChanged=input?.translationRu!==undefined;
   const now=new Date().toISOString();
+  const translationRuAt=translationChanged?now:(current.translationRuAt||'');
+
   await db.prepare(`
     UPDATE orders
-    SET status=?,internal_notes=?,updated_at=?,last_edited_by=?
+    SET status=?,internal_notes=?,translation_ru_json=?,translation_ru_at=?,updated_at=?,last_edited_by=?
     WHERE id=?
-  `).bind(status,internalNotes,now,editor,id).run();
+  `).bind(
+    status,
+    internalNotes,
+    translationRu?JSON.stringify(translationRu):'',
+    translationRuAt,
+    now,
+    editor,
+    id
+  ).run();
 
   return getOrder(db,id);
 }

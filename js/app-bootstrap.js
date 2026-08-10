@@ -11,6 +11,14 @@ if(!document.getElementById('tunewrapResponsiveWide')){
   document.head.append(responsiveWide);
 }
 
+if(!document.getElementById('tunewrapOrderCompletionStyles')){
+  const orderCompletionStyles=document.createElement('link');
+  orderCompletionStyles.id='tunewrapOrderCompletionStyles';
+  orderCompletionStyles.rel='stylesheet';
+  orderCompletionStyles.href='/css/order-intake-completion.css?v=12.6';
+  document.head.append(orderCompletionStyles);
+}
+
 if(!document.getElementById('tunewrapSiteCmsStyles')){
   const siteCmsStyles=document.createElement('link');
   siteCmsStyles.id='tunewrapSiteCmsStyles';
@@ -97,6 +105,13 @@ try{
     }catch(error){
       console.error('TuneWrap Sound Preferences runtime failed',error);
     }
+  }
+
+  // Stage 12.6: vocal preference is part of the structured order payload.
+  try{
+    await import('./order-intake-completion.js');
+  }catch(error){
+    console.error('TuneWrap Stage 12.6 order completion runtime failed',error);
   }
 
   // Orders CRM is loaded after Pricing + Site CMS so it sees final price/contact state.

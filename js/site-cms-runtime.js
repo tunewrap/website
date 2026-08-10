@@ -345,6 +345,83 @@
     patchTermsPanel();
   }
 
+  function scrollMainTo(id){
+    const target=document.getElementById(id);
+    if(!target)return false;
+    const app=document.getElementById('appScroll');
+    const behavior=window.matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth';
+
+    const inner=target.querySelector(':scope > .wrap');
+    if(inner&&inner.scrollHeight>inner.clientHeight)inner.scrollTop=0;
+
+    if(app&&app.scrollHeight>app.clientHeight+2){
+      app.scrollTo({top:target.offsetTop,behavior});
+    }else{
+      target.scrollIntoView({behavior,block:'start'});
+    }
+
+    try{history.replaceState(null,'',`#${id}`);}catch(error){}
+    return true;
+  }
+
+  function scrollInsideContact(selector){
+    const hub=$('#contactHub');
+    const inner=hub?.querySelector(':scope > .wrap');
+    const target=$(selector);
+    if(!hub||!target)return;
+    scrollMainTo('contactHub');
+    const behavior=window.matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth';
+    window.setTimeout(()=>{
+      if(inner&&inner.scrollHeight>inner.clientHeight+2){
+        inner.scrollTo({top:Math.max(0,target.offsetTop-16),behavior});
+      }else{
+        target.scrollIntoView({behavior,block:'start'});
+      }
+    },80);
+  }
+
+  function installFooterNavigation(){
+    const nav=$('.contact-hub-navigation');
+    if(!nav||nav.dataset.siteNavigationBound==='1')return;
+    nav.dataset.siteNavigationBound='1';
+
+    nav.addEventListener('click',event=>{
+      const targetLink=event.target.closest('[data-contact-target]');
+      if(targetLink){
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        scrollMainTo(targetLink.dataset.contactTarget);
+        return;
+      }
+
+      const action=event.target.closest('[data-contact-action]')?.dataset.contactAction;
+      if(action==='wedding'){
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        scrollMainTo('pricing');
+        const pricingInner=$('#pricing')?.querySelector(':scope > .wrap');
+        const wedding=$('#weddingPackagesGrid');
+        window.setTimeout(()=>{
+          if(pricingInner&&wedding&&pricingInner.scrollHeight>pricingInner.clientHeight+2){
+            pricingInner.scrollTo({top:Math.max(0,wedding.offsetTop-20),behavior:'smooth'});
+          }else wedding?.scrollIntoView({behavior:'smooth',block:'center'});
+        },80);
+        return;
+      }
+      if(action==='contacts'){
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        scrollInsideContact('#contactHubTop');
+        return;
+      }
+      if(action==='payment'){
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        scrollInsideContact('#contactHubPayment');
+      }
+    },true);
+  }
+
   function currentPreviewMessage(){
     return $('#previewText')?.textContent||'';
   }
@@ -391,6 +468,7 @@
     patchChannels();
     patchPayments();
     patchTermsLink();
+    installFooterNavigation();
     patchOrderContactLinks();
     patchCorporateContact();
   }

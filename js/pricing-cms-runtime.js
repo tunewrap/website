@@ -170,7 +170,7 @@
     if(!offer)return;
     const loc=offerLocale(offer);
     if(loc?.name){
-      const value=state.selected.type==='tier'?`${loc.name} (${money(offer.price)})`:loc.name;
+      const value=`${loc.name} (${money(offer.price)})`;
       setTextNode($('#sumTier'),value);
     }
     setText('#sumTotal',money(totalFor(offer)));
@@ -266,6 +266,14 @@
       const offer=tierByIndex(numeric);
       if(!offer || offer.enabled===false)return false;
       state.selected={type:'tier',index:numeric};
+      patchOrderSummary();
+      return true;
+    },
+    selectWedding:id=>{
+      const value=String(id||'');
+      const offer=weddingById(value);
+      if(!offer || offer.enabled===false)return false;
+      state.selected={type:'wedding',id:value};
       patchOrderSummary();
       return true;
     }
