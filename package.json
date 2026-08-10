@@ -17,7 +17,8 @@
     "orders:test": "node scripts/orders-crm-test.js",
     "responsive:test": "node scripts/responsive-wide-test.js",
     "pricing:test": "node scripts/pricing-cms-test.js",
-    "test": "npm run tracks:check && npm run tracks:test-queue && npm run tracks:test-artwork && npm run tracks:test-scale && npm run admin:test && npm run orders:test && npm run responsive:test && npm run pricing:test"
+    "site:test": "node scripts/site-cms-test.js",
+    "test": "npm run tracks:check && npm run tracks:test-queue && npm run tracks:test-artwork && npm run tracks:test-scale && npm run admin:test && npm run orders:test && npm run responsive:test && npm run pricing:test && npm run site:test"
   },
   "engines": {
     "node": ">=18"

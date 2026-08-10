@@ -11,8 +11,16 @@ if(!document.getElementById('tunewrapResponsiveWide')){
   document.head.append(responsiveWide);
 }
 
-// Pricing CMS is independent from Track Catalog.
-// A pricing API failure must never break music or the rest of the site.
+if(!document.getElementById('tunewrapSiteCmsStyles')){
+  const siteCmsStyles=document.createElement('link');
+  siteCmsStyles.id='tunewrapSiteCmsStyles';
+  siteCmsStyles.rel='stylesheet';
+  siteCmsStyles.href='/css/site-cms.css?v=12.3';
+  document.head.append(siteCmsStyles);
+}
+
+// CMS APIs are independent from Track Catalog.
+// A CMS API failure must never break music or the rest of the site.
 const pricingPromise=(async()=>{
   try{
     const response=await fetch('/api/pricing',{headers:{accept:'application/json'},cache:'no-store'});
@@ -21,6 +29,18 @@ const pricingPromise=(async()=>{
     return payload?.ok&&payload?.config?payload.config:null;
   }catch(error){
     console.error('TuneWrap pricing bootstrap failed',error);
+    return null;
+  }
+})();
+
+const siteContentPromise=(async()=>{
+  try{
+    const response=await fetch('/api/site-content',{headers:{accept:'application/json'},cache:'no-store'});
+    if(!response.ok)return null;
+    const payload=await response.json();
+    return payload?.ok&&payload?.config?payload.config:null;
+  }catch(error){
+    console.error('TuneWrap site content bootstrap failed',error);
     return null;
   }
 })();
@@ -35,8 +55,6 @@ try{
   await import('./catalog-runtime.js');
   await import('./script.js');
 
-  // Existing wide copy runs first. Pricing CMS runs afterwards and therefore
-  // remains the final source of truth for the Pricing screen.
   await import('./wide-copy-polish.js');
   await import('./wedding-detail-wide.js');
 
@@ -47,7 +65,18 @@ try{
     console.error('TuneWrap Pricing CMS runtime failed',error);
   }
 
-  // Orders CRM is loaded AFTER Pricing CMS so it stores the final CMS price.
+  // Site CMS is the final content layer for non-pricing marketing text,
+  // contact channels, payment cards and Terms.
+  window.TUNEWRAP_SITE_CMS=await siteContentPromise;
+  if(window.TUNEWRAP_SITE_CMS){
+    try{
+      await import('./site-cms-runtime.js');
+    }catch(error){
+      console.error('TuneWrap Site CMS runtime failed',error);
+    }
+  }
+
+  // Orders CRM is loaded after Pricing + Site CMS so it sees final price/contact state.
   try{
     await import('./orders-submit.js');
   }catch(error){

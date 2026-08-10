@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <base href="/">
+  <title>TuneWrap Admin Studio — Сайт</title>
+  <link rel="stylesheet" href="/admin/admin.css">
+  <link rel="stylesheet" href="/admin/site.css">
+</head>
+<body>
+  <header class="admin-header">
+    <a class="brand" href="/admin/" aria-label="TuneWrap Admin Studio">
+      <span class="brand-mark" aria-hidden="true">TW</span>
+      <span><strong>TuneWrap</strong><small>Admin Studio</small></span>
+    </a>
+    <nav class="admin-section-nav" aria-label="Разделы Admin Studio">
+      <a href="/admin/">Музыка</a>
+      <a href="/admin/orders.html">Заказы</a>
+      <a href="/admin/pricing.html">Стоимость</a>
+      <a class="is-active" href="/admin/site.html" aria-current="page">Сайт</a>
+    </nav>
+    <button class="icon-button" id="refreshSiteButton" type="button" aria-label="Обновить" title="Обновить">↻</button>
+  </header>
+
+  <main class="admin-shell site-admin-shell">
+    <section class="admin-intro site-intro">
+      <div>
+        <p class="eyebrow">SITE CMS</p>
+        <h1>Содержимое сайта</h1>
+        <p>Тексты, контакты, способы оплаты и условия — без GitHub и нового деплоя.</p>
+      </div>
+      <div class="site-intro-actions">
+        <button class="secondary-button" id="translateSiteButton" type="button">Автоперевести язык</button>
+        <button class="gold-button" id="saveSiteButton" type="button">Сохранить</button>
+      </div>
+    </section>
+
+    <section class="site-language-bar">
+      <div>
+        <small>ЯЗЫК РЕДАКТИРОВАНИЯ</small>
+        <div class="site-language-tabs" id="siteLanguageTabs">
+          <button class="is-active" data-language="ru" type="button">RU</button>
+          <button data-language="uk" type="button">UA</button>
+          <button data-language="ka" type="button">GE</button>
+          <button data-language="en" type="button">EN</button>
+          <button data-language="de" type="button">DE</button>
+        </div>
+      </div>
+      <p id="siteLanguageHint">Редактируется RU. Пустые переводы оставляют встроенный текст сайта.</p>
+    </section>
+
+    <div id="siteTextSections"></div>
+
+    <section class="form-section site-section">
+      <div class="section-heading">
+        <span>08</span>
+        <div><h2>Контакты и соцсети</h2><p>Номера и ссылки. Можно включать и выключать отдельные каналы.</p></div>
+      </div>
+      <div class="site-primary-contact">
+        <label class="field">
+          <span>Основной канал «Написать нам»</span>
+          <select id="sitePrimaryContact">
+            <option value="whatsapp">WhatsApp</option>
+            <option value="telegram">Telegram</option>
+            <option value="instagram">Instagram</option>
+            <option value="tiktok">TikTok</option>
+            <option value="youtube">YouTube</option>
+            <option value="email">Email</option>
+          </select>
+        </label>
+      </div>
+      <div class="contact-editor-grid" id="siteContactEditors"></div>
+    </section>
+
+    <section class="form-section site-section">
+      <div class="section-heading">
+        <span>09</span>
+        <div><h2>Способы оплаты</h2><p>Информационные карточки. Реальное подключение платёжного шлюза делается отдельно.</p></div>
+      </div>
+      <div class="site-payment-toolbar">
+        <button class="secondary-button" id="addPaymentButton" type="button">＋ Добавить карточку</button>
+      </div>
+      <div class="payment-editor-grid" id="sitePaymentEditors"></div>
+      <p class="site-empty-note" id="sitePaymentsEmpty">Пока нет карточек оплаты.</p>
+    </section>
+
+    <section class="site-save-bar" id="siteSaveBar">
+      <div>
+        <strong id="siteDirtyLabel">Все изменения сохранены</strong>
+        <small id="siteAudit">—</small>
+      </div>
+      <button class="gold-button" id="saveSiteBottomButton" type="button">Сохранить изменения</button>
+    </section>
+  </main>
+
+  <div class="toast-region" id="siteToastRegion" aria-live="polite"></div>
+  <script type="module" src="/admin/site.js"></script>
+</body>
+</html>
