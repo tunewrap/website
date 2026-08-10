@@ -1,5 +1,3 @@
-import {soundIconSvg} from './sound-icons.js';
-
 const CONFIG=window.TUNEWRAP_SOUND_PREFERENCES;
 if(!CONFIG)throw new Error('Sound Preferences config is missing');
 
@@ -114,17 +112,8 @@ function chip(item,kind,selected){
   button.dataset.soundKind=kind;
   button.dataset.soundId=item.id;
   button.setAttribute('aria-pressed',selected?'true':'false');
-  button.innerHTML=`<span class="sound-choice-icon">${soundIconSvg(item.icon)}</span><span>${escapeHtml(label(item))}</span>`;
+  button.textContent=label(item);
   return button;
-}
-
-function escapeHtml(value){
-  return String(value??'')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#039;');
 }
 
 function maxFor(kind){
