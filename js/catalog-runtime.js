@@ -29,6 +29,9 @@
     de:count => count + (count === 1 ? ' Song' : ' Songs')
   };
   const FILTER_LABELS = {ru:'Язык песен',uk:'Мова пісень',ka:'სიმღერის ენა',en:'Song language',de:'Sprache der Songs'};
+  const CATEGORY_COPY={ru:{label:'Категории',all:'Все истории'},uk:{label:'Категорії',all:'Усі історії'},ka:{label:'კატეგორიები',all:'ყველა ისტორია'},en:{label:'Categories',all:'All stories'},de:{label:'Kategorien',all:'Alle Geschichten'}};
+  const DEFAULT_STORY_CATEGORIES=[{"id":"birthday","enabled":true,"order":1,"labels":{"ru":"День рождения","uk":"День народження","ka":"დაბადების დღე","en":"Birthday","de":"Geburtstag"}},{"id":"anniversary","enabled":true,"order":2,"labels":{"ru":"Юбилей","uk":"Ювілей","ka":"იუბილე","en":"Anniversary","de":"Jubiläum"}},{"id":"wedding","enabled":true,"order":3,"labels":{"ru":"Свадьба","uk":"Весілля","ka":"ქორწილი","en":"Wedding","de":"Hochzeit"}},{"id":"love","enabled":true,"order":4,"labels":{"ru":"Любовь","uk":"Кохання","ka":"სიყვარული","en":"Love","de":"Liebe"}},{"id":"family","enabled":true,"order":5,"labels":{"ru":"Семья","uk":"Родина","ka":"ოჯახი","en":"Family","de":"Familie"}},{"id":"children","enabled":true,"order":6,"labels":{"ru":"Для детей","uk":"Для дітей","ka":"ბავშვებისთვის","en":"For children","de":"Für Kinder"}},{"id":"congratulations","enabled":true,"order":7,"labels":{"ru":"Поздравления","uk":"Привітання","ka":"მილოცვები","en":"Congratulations","de":"Glückwünsche"}},{"id":"life","enabled":true,"order":8,"labels":{"ru":"О жизни","uk":"Про життя","ka":"ცხოვრებაზე","en":"Life","de":"Über das Leben"}}];
+  const storyCategories=((window.TUNEWRAP_STORY_CATEGORIES?.categories||DEFAULT_STORY_CATEGORIES).filter(item=>item?.enabled!==false).slice().sort((a,b)=>(a.order||99)-(b.order||99)||a.id.localeCompare(b.id)));
 
   function interfaceLanguage(){
     const language = document.documentElement.getAttribute('lang') || 'ru';
@@ -43,9 +46,9 @@
     return Core.description(track,language);
   }
 
-  function localizedCategory(track,language = interfaceLanguage()){
-    return Core.category(track,language);
-  }
+  function storyCategoryLabel(id,language = interfaceLanguage()){const item=storyCategories.find(category=>category.id===id);return item?.labels?.[language]||item?.labels?.ru||item?.labels?.en||id||'';}
+
+  function localizedCategory(track,language = interfaceLanguage()){const first=Array.isArray(track?.categoryIds)?track.categoryIds[0]:'';return first?storyCategoryLabel(first,language):Core.category(track,language);}
 
   function durationLabel(track){
     if(track.durationLabel) return track.durationLabel;
@@ -215,6 +218,7 @@
     title:localizedTitle,
     description:localizedDescription,
     category:localizedCategory,
+    categoryLabel:storyCategoryLabel,
     cover:coverSource,
     syncCoverImage,
     titleMaps:Core.titleMaps(tracks),
@@ -277,15 +281,18 @@
       }));
     }
 
+    function usedStoryCategories(){const used=new Set(api.bySection('stories').flatMap(track=>Array.isArray(track.categoryIds)?track.categoryIds:[]));return storyCategories.filter(item=>used.has(item.id));}
+    function renderCategoryFilters(panel){
+      if(panelSection(panel)!=='stories')return;const state=panelState.get(panel);if(!state)return;let row=panel.querySelector('[data-library-categories]');const categories=usedStoryCategories();if(!categories.length){row?.remove();state.category='ALL';return;}if(!row){row=element('div','music-library-category-row');row.dataset.libraryCategories='';panel.querySelector('.music-library-sticky')?.append(row);}const language=interfaceLanguage();const copy=CATEGORY_COPY[language]||CATEGORY_COPY.ru;const label=element('span','music-library-category-label',copy.label);const chips=element('div','music-library-category-chips');chips.setAttribute('role','group');chips.setAttribute('aria-label',copy.label);const all=element('button','music-library-category-chip'+(state.category==='ALL'?' is-active':''),copy.all);all.type='button';all.dataset.libraryCategory='ALL';all.setAttribute('aria-pressed',String(state.category==='ALL'));chips.append(all);categories.forEach(item=>{const active=state.category===item.id;const button=element('button','music-library-category-chip'+(active?' is-active':''),storyCategoryLabel(item.id,language));button.type='button';button.dataset.libraryCategory=item.id;button.setAttribute('aria-pressed',String(active));chips.append(button);});row.replaceChildren(label,chips);row.querySelectorAll('[data-library-category]').forEach(button=>button.addEventListener('click',()=>{state.category=button.dataset.libraryCategory||'ALL';renderPanel(panel,{reset:true});}));
+    }
     function renderPanel(panel,{reset = false} = {}){
-      const state = panelState.get(panel);
-      if(!state) return;
-      const section = panelSection(panel);
-      state.results = api.search(state.query,{section,language:state.language});
+      const state = panelState.get(panel);if(!state) return;const section = panelSection(panel);
+      state.results = api.search(state.query,{section,language:state.language,categoryId:section==='stories'&&state.category!=='ALL'?state.category:''});
       if(reset) state.rendered = Math.min(PAGE_SIZE,state.results.length);
       else state.rendered = Math.min(Math.max(state.rendered,PAGE_SIZE),state.results.length);
       const desired = state.results.slice(0,state.rendered);
       state.list.replaceChildren(...desired.map(renderCard));
+      renderCategoryFilters(panel);
 
       panel.querySelectorAll('[data-library-language]').forEach(tab => {
         const active = tab.dataset.libraryLanguage === state.language;
@@ -350,7 +357,7 @@
       if(authorSignature) resultHost.append(authorSignature);
       const scroller = panel.querySelector('.music-library-scroll');
       const input = panel.querySelector('[data-library-search]');
-      panelState.set(panel,{language:'ALL',query:'',results:[],rendered:0,scrollTop:0,trigger:null,list,scroller});
+      panelState.set(panel,{language:'ALL',category:'ALL',query:'',results:[],rendered:0,scrollTop:0,trigger:null,list,scroller});
 
       panel.querySelectorAll('[data-library-language]').forEach(tab => {
         tab.addEventListener('click',() => {
@@ -376,6 +383,7 @@
         const state = panelState.get(panel);
         state.query = '';
         state.language = 'ALL';
+        state.category = 'ALL';
         if(input) input.value = '';
         renderPanel(panel,{reset:true});
         input?.focus({preventScroll:true});

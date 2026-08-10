@@ -4,7 +4,7 @@ export const SECTIONS = Object.freeze(['stories','author']);
 export const LANGUAGES = Object.freeze(['GE','UA','EN','DE','RU']);
 export const TRACK_COLUMNS = `id, legacy_key, title, original_title, titles_json, descriptions_json,
   section, language, audio_url, cover_url, artwork_json, lyrics_json, translation_json,
-  artist, album, category_json, tags_json, duration_label, duration, audio_quality_json,
+  artist, album, category_json, story_category_ids_json, tags_json, duration_label, duration, audio_quality_json,
   sort_order, featured, published, archived, schema_version, created_at, updated_at,
   published_at, last_edited_by`;
 
@@ -51,6 +51,7 @@ export function rowToTrack(row,{admin = false} = {}){
     artist:row.artist || 'TuneWrap',
     album:row.album || '',
     category:parseJson(row.category_json,{}),
+    categoryIds:parseJson(row.story_category_ids_json,[]),
     tags:parseJson(row.tags_json,[]),
     durationLabel:row.duration_label || '',
     duration:Number(row.duration) || 0,
@@ -92,6 +93,10 @@ export function validateTrack(input,{publishing = false} = {}){
   if(publishing && !String(input.audio || '').trim()) errors.push('Для публикации нужен MP3');
   if(input.audio && !/^(?:https?:\/\/|\/api\/media\/|content\/tracks\/)/.test(input.audio)) errors.push('Недопустимый адрес MP3');
   if(input.cover && !/^(?:https?:\/\/|\/api\/media\/|content\/tracks\/|assets\/)/.test(input.cover)) errors.push('Недопустимый адрес обложки');
+  if(input.categoryIds!==undefined){
+    if(!Array.isArray(input.categoryIds))errors.push('Категории истории должны быть массивом');
+    else if(input.categoryIds.length>12)errors.push('У трека может быть максимум 12 категорий');
+  }
   const order = Number(input.order);
   if(!Number.isInteger(order) || order < 1) errors.push('Порядок должен быть положительным целым числом');
   return errors;
@@ -122,14 +127,14 @@ export function insertStatement(db,track,editor,now = new Date().toISOString()){
   return db.prepare(`INSERT INTO tracks (
     id, legacy_key, title, original_title, titles_json, descriptions_json, section, language,
     audio_url, cover_url, artwork_json, lyrics_json, translation_json, artist, album,
-    category_json, tags_json, duration_label, duration, audio_quality_json, sort_order,
+    category_json, story_category_ids_json, tags_json, duration_label, duration, audio_quality_json, sort_order,
     featured, published, archived, schema_version, created_at, updated_at, published_at, last_edited_by
-  ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(
+  ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(
     track.id, track.legacyKey || null, String(track.title).trim(), track.originalTitle || track.title,
     asJson(track.titles,{}), asJson(track.descriptions,{}), track.section, String(track.language).toUpperCase(),
     track.audio || '', track.cover || '', asJson(track.artwork,{}), asJson(track.lyrics,{}),
     asJson(track.translation,{}), track.artist || 'TuneWrap', track.album || '', asJson(track.category,{}),
-    asJson(track.tags,[]), track.durationLabel || '', Number(track.duration) || 0, asJson(track.audioQuality,{}),
+    asJson(track.categoryIds,[]), asJson(track.tags,[]), track.durationLabel || '', Number(track.duration) || 0, asJson(track.audioQuality,{}),
     Number(track.order), track.featured ? 1 : 0, track.published ? 1 : 0, track.archived ? 1 : 0,
     Number(track.schemaVersion) || 2, track.createdAt || now, now, track.published ? (track.publishedAt || now) : null, editor
   );
@@ -139,19 +144,19 @@ export function updateStatement(db,id,track,editor,now = new Date().toISOString(
   return db.prepare(`UPDATE tracks SET
     title=?, original_title=?, titles_json=?, descriptions_json=?, section=?, language=?,
     audio_url=?, cover_url=?, artwork_json=?, lyrics_json=?, translation_json=?, artist=?, album=?,
-    category_json=?, tags_json=?, duration_label=?, duration=?, audio_quality_json=?, sort_order=?,
+    category_json=?, story_category_ids_json=?, tags_json=?, duration_label=?, duration=?, audio_quality_json=?, sort_order=?,
     featured=?, archived=?, updated_at=?, last_edited_by=? WHERE id=?`).bind(
     String(track.title).trim(), track.originalTitle || track.title, asJson(track.titles,{}), asJson(track.descriptions,{}),
     track.section, String(track.language).toUpperCase(), track.audio || '', track.cover || '', asJson(track.artwork,{}),
     asJson(track.lyrics,{}), asJson(track.translation,{}), track.artist || 'TuneWrap', track.album || '',
-    asJson(track.category,{}), asJson(track.tags,[]), track.durationLabel || '', Number(track.duration) || 0,
+    asJson(track.category,{}), asJson(track.categoryIds,[]), asJson(track.tags,[]), track.durationLabel || '', Number(track.duration) || 0,
     asJson(track.audioQuality,{}), Number(track.order), track.featured ? 1 : 0, track.archived ? 1 : 0, now, editor, id
   );
 }
 
 export function mergeTrack(current,input){
   const allowed = ['title','originalTitle','titles','descriptions','section','language','audio','cover','artwork',
-    'lyrics','translation','artist','album','category','tags','durationLabel','duration','audioQuality','order','featured','archived'];
+    'lyrics','translation','artist','album','category','categoryIds','tags','durationLabel','duration','audioQuality','order','featured','archived'];
   const next = {...current};
   for(const key of allowed){if(Object.prototype.hasOwnProperty.call(input,key)) next[key] = input[key];}
   next.id = current.id;

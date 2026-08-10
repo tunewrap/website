@@ -1,0 +1,38 @@
+NEW
+functions/_shared/story-categories.js
+functions/api/story-categories.js
+functions/api/admin/story-categories.js
+admin/categories.html
+admin/categories.css
+admin/categories.js
+css/story-categories.css
+migrations/0008_story_categories.sql
+scripts/install-stage-12.7-story-categories.js
+scripts/story-categories-test.js
+README-STAGE-12.7.txt
+STAGE-12.7-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+functions/_shared/tracks.js
+admin/index.html
+admin/admin.js
+admin/admin.css
+js/catalog-core.js
+js/catalog-runtime.js
+js/app-bootstrap.js
+js/site-cms-runtime.js
+package.json
+
+D1
+tracks + story_category_ids_json
+story_categories_config
+cms_meta.storyCategoriesSchemaVersion = 1
+
+INTENTIONALLY UNCHANGED
+js/playback-engine.js
+music queue function
+R2 audio/media
+pricing CMS
+orders CRM
+sound CMS
+mobile footer navigation logic <=620px

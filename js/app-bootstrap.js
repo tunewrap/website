@@ -11,6 +11,10 @@ if(!document.getElementById('tunewrapResponsiveWide')){
   document.head.append(responsiveWide);
 }
 
+if(!document.getElementById('tunewrapStoryCategoryStyles')){
+  const storyCategoryStyles=document.createElement('link');storyCategoryStyles.id='tunewrapStoryCategoryStyles';storyCategoryStyles.rel='stylesheet';storyCategoryStyles.href='/css/story-categories.css?v=12.7';document.head.append(storyCategoryStyles);
+}
+
 if(!document.getElementById('tunewrapOrderCompletionStyles')){
   const orderCompletionStyles=document.createElement('link');
   orderCompletionStyles.id='tunewrapOrderCompletionStyles';
@@ -53,6 +57,10 @@ const siteContentPromise=(async()=>{
   }
 })();
 
+const storyCategoriesPromise=(async()=>{
+  try{const response=await fetch('/api/story-categories',{headers:{accept:'application/json'},cache:'no-store'});if(!response.ok)return null;const payload=await response.json();return payload?.ok&&payload?.config?payload.config:null;}catch(error){console.error('TuneWrap Story Categories bootstrap failed',error);return null;}
+})();
+
 const soundPreferencesPromise=(async()=>{
   try{
     const response=await fetch('/api/sound-preferences',{headers:{accept:'application/json'},cache:'no-store'});
@@ -71,6 +79,7 @@ try{
   const payload = await response.json();
   if(!payload || !Array.isArray(payload.tracks)) throw new Error('Track Catalog API returned invalid data');
   window.TUNEWRAP_TRACK_CATALOG = payload.tracks;
+  window.TUNEWRAP_STORY_CATEGORIES = await storyCategoriesPromise;
 
   await import('./catalog-runtime.js');
   await import('./script.js');

@@ -2,7 +2,7 @@ const UI_LOCALES = Object.freeze([['ru','RU'],['uk','UA'],['ka','GE'],['en','EN'
 const PRIMARY_LOCALE = Object.freeze({RU:'ru',UA:'uk',GE:'ka',EN:'en',DE:'de'});
 const FALLBACK_COVER = '/assets/covers/tunewrap-placeholder.svg';
 const $ = selector => document.querySelector(selector);
-const state = {tracks:[],summary:null,tab:'all',query:'',current:null,audioFile:null,audioDuration:0,coverFile:null,coverInfo:null,importBackup:null,busy:false,localeTab:'ru',primaryLocale:'ru'};
+const state = {tracks:[],summary:null,tab:'all',query:'',current:null,audioFile:null,audioDuration:0,coverFile:null,coverInfo:null,importBackup:null,busy:false,localeTab:'ru',primaryLocale:'ru',storyCategories:[],selectedStoryCategories:new Set()};
 
 // ---------- Stage 12: Admin Studio section navigation ----------
 (function installAdminSectionNavigation(){
@@ -42,7 +42,7 @@ const state = {tracks:[],summary:null,tab:'all',query:'',current:null,audioFile:
 const nodes = {
   list:$('#trackList'),empty:$('#emptyState'),search:$('#searchInput'),tabs:$('#catalogTabs'),editor:$('#trackEditor'),form:$('#trackForm'),
   formErrors:$('#formErrors'),trackId:$('#trackId'),title:$('#titleField'),section:$('#sectionField'),language:$('#languageField'),artist:$('#artistField'),
-  album:$('#albumField'),category:$('#categoryField'),tags:$('#tagsField'),description:$('#descriptionField'),lyrics:$('#lyricsField'),translation:$('#translationField'),
+  album:$('#albumField'),category:$('#categoryField'),storyCategoryChoices:$('#storyCategoryChoices'),storyCategoryField:$('#storyCategoryAdminField'),tags:$('#tagsField'),description:$('#descriptionField'),lyrics:$('#lyricsField'),translation:$('#translationField'),
   featured:$('#featuredField'),order:$('#orderField'),audioFile:$('#audioFile'),audioLabel:$('#audioFileLabel'),audioMeta:$('#audioMeta'),audioProgress:$('#audioProgress'),
   audioPreview:$('#audioPreview'),coverFile:$('#coverFile'),coverLabel:$('#coverFileLabel'),coverMeta:$('#coverMeta'),coverProgress:$('#coverProgress'),
   coverPreview:$('#coverPreview'),localized:$('#localizedFields'),previewSheet:$('#previewSheet'),previewCover:$('#previewCover'),previewTitle:$('#previewTitle'),
@@ -78,6 +78,18 @@ async function api(path,options={}){
   return payload;
 }
 function setBusy(value){state.busy=value;document.querySelectorAll('button').forEach(button=>button.disabled=value);}
+function categoryLabel(item){return item?.labels?.ru||item?.labels?.en||item?.id||'Категория';}
+function enabledStoryCategories(){return (state.storyCategories||[]).filter(item=>item?.enabled!==false).slice().sort((a,b)=>(a.order||99)-(b.order||99)||a.id.localeCompare(b.id));}
+function selectedStoryCategoryIds(){return Array.from(state.selectedStoryCategories);}
+function syncStoryCategoryVisibility(){if(nodes.storyCategoryField)nodes.storyCategoryField.hidden=nodes.section.value!=='stories';}
+function renderStoryCategoryChoices(selected=[]){
+  state.selectedStoryCategories=new Set(Array.isArray(selected)?selected:[]);
+  if(!nodes.storyCategoryChoices)return;
+  const categories=enabledStoryCategories();const fragment=document.createDocumentFragment();
+  categories.forEach(item=>{const button=el('button','story-category-admin-chip',categoryLabel(item));button.type='button';button.dataset.storyCategoryId=item.id;const active=state.selectedStoryCategories.has(item.id);button.classList.toggle('is-active',active);button.setAttribute('aria-pressed',String(active));button.addEventListener('click',()=>{if(state.selectedStoryCategories.has(item.id))state.selectedStoryCategories.delete(item.id);else state.selectedStoryCategories.add(item.id);renderStoryCategoryChoices(selectedStoryCategoryIds());});fragment.append(button);});
+  nodes.storyCategoryChoices.replaceChildren(fragment);if(!categories.length)nodes.storyCategoryChoices.append(el('span','story-category-admin-empty','Сначала создайте категории.'));syncStoryCategoryVisibility();
+}
+async function loadStoryCategories(){try{const data=await api('/api/admin/story-categories');state.storyCategories=data?.config?.categories||[];renderStoryCategoryChoices(state.current?.categoryIds||[]);}catch(error){state.storyCategories=[];if(nodes.storyCategoryChoices)nodes.storyCategoryChoices.replaceChildren(el('span','story-category-admin-empty','Категории временно недоступны.'));}}
 async function loadCatalog(message){
   try{const data=await api('/api/admin/tracks');state.tracks=data.tracks;state.summary=data.summary;renderSummary();renderTracks();if(message)toast(message);}
   catch(error){toast(error.message,true);nodes.list.replaceChildren(el('p','empty-state','Не удалось загрузить каталог.'));}
@@ -195,7 +207,7 @@ function openEditor(track=null){
   state.current=track;resetUploads();nodes.form.reset();nodes.trackId.value=track?.id||'';nodes.title.value=track?.title||'';nodes.section.value=track?.section||'stories';nodes.language.value=track?.language||'RU';nodes.artist.value=track?.artist||'TuneWrap';nodes.album.value=track?.album||'';
   const primary=PRIMARY_LOCALE[track?.language]||'ru';
   state.primaryLocale=primary;
-  nodes.category.value=localizedValue(track?.category,primary,'');nodes.tags.value=(track?.tags||[]).join(',');
+  nodes.category.value=localizedValue(track?.category,primary,'');nodes.tags.value=(track?.tags||[]).join(',');renderStoryCategoryChoices(track?.categoryIds||[]);
   nodes.description.value=track?localizedValue(track.descriptions,primary,''):'';
   nodes.lyrics.value=track?localizedValue(track.lyrics,primary,''):'';
   nodes.translation.value=track?localizedValue(track.translation,primary,''):'';
@@ -239,7 +251,7 @@ function mapsFromForm(){
 function readForm(){
   const{titles,descriptions,lyrics,translation,primary}=mapsFromForm();
   const category={...(state.current?.category||{})};if(nodes.category.value.trim())category[primary]=nodes.category.value.trim();
-  return{...(state.current||{}),title:nodes.title.value.trim(),originalTitle:state.current?.originalTitle||nodes.title.value.trim(),titles,descriptions,section:nodes.section.value,language:nodes.language.value,artist:nodes.artist.value.trim()||'TuneWrap',album:nodes.album.value.trim(),category,tags:nodes.tags.value.split(',').map(value=>value.trim()).filter(Boolean),lyrics,translation,order:Number(nodes.order.value)||state.current?.order||0,featured:nodes.featured.checked,audio:state.current?.audio||'',cover:state.current?.cover||'',artwork:state.current?.artwork||{},duration:state.current?.duration||0,durationLabel:state.current?.durationLabel||''};
+  return{...(state.current||{}),title:nodes.title.value.trim(),originalTitle:state.current?.originalTitle||nodes.title.value.trim(),titles,descriptions,section:nodes.section.value,language:nodes.language.value,artist:nodes.artist.value.trim()||'TuneWrap',album:nodes.album.value.trim(),category,categoryIds:nodes.section.value==='stories'?selectedStoryCategoryIds():[],tags:nodes.tags.value.split(',').map(value=>value.trim()).filter(Boolean),lyrics,translation,order:Number(nodes.order.value)||state.current?.order||0,featured:nodes.featured.checked,audio:state.current?.audio||'',cover:state.current?.cover||'',artwork:state.current?.artwork||{},duration:state.current?.duration||0,durationLabel:state.current?.durationLabel||''};
 }
 function isCollapsedStructuredTranslation(sourceText,targetText){
   const source=String(sourceText||'').replace(/\r\n/g,'\n');
@@ -382,6 +394,7 @@ function closePreview(){nodes.sheetAudio.pause();nodes.previewSheet.hidden=true;
 
 for(const node of [nodes.title,nodes.description,nodes.lyrics,nodes.translation])node.addEventListener('input',syncPrimaryToLocale);
 nodes.language.addEventListener('change',()=>{markPrimaryLocale();syncPrimaryToLocale();setLocaleTab(state.primaryLocale);});
+nodes.section.addEventListener('change',syncStoryCategoryVisibility);
 
 nodes.audioFile.addEventListener('change',async()=>{const file=nodes.audioFile.files[0];if(!file)return;if(!/\.mp3$/i.test(file.name)||file.size>80*1024*1024){toast('Нужен MP3 до 80 MB',true);nodes.audioFile.value='';return;}const url=URL.createObjectURL(file);const probe=new Audio();probe.preload='metadata';probe.src=url;try{await new Promise((resolve,reject)=>{probe.onloadedmetadata=resolve;probe.onerror=reject;});if(!Number.isFinite(probe.duration)||probe.duration<=0)throw new Error();state.audioFile=file;state.audioDuration=probe.duration;nodes.audioLabel.textContent=file.name;nodes.audioMeta.textContent=`${(file.size/1048576).toFixed(1)} MB · ${formatDuration(probe.duration)}`;nodes.audioPreview.src=url;nodes.audioPreview.hidden=false;}catch(error){URL.revokeObjectURL(url);toast('Браузер не смог прочитать метаданные MP3',true);nodes.audioFile.value='';}});
 nodes.coverFile.addEventListener('change',async()=>{const file=nodes.coverFile.files[0];if(!file)return;try{if(file.size>8*1024*1024)throw new Error('Обложка превышает 8 MB');const actualType=await detectImageMime(file);if(!actualType)throw new Error('Нужна настоящая JPEG, PNG или WebP обложка');const normalized=file.type===actualType?file:new File([file],file.name,{type:actualType,lastModified:file.lastModified});const url=URL.createObjectURL(normalized);const image=new Image();image.src=url;try{await image.decode();const ratio=image.naturalWidth/image.naturalHeight;if(image.naturalWidth<600||image.naturalHeight<600||ratio<.8||ratio>1.25)throw new Error('Минимум 600×600, форма близкая к квадрату');state.coverFile=normalized;state.coverInfo={width:image.naturalWidth,height:image.naturalHeight};nodes.coverPreview.src=url;nodes.coverLabel.textContent=file.name;const corrected=file.type&&file.type!==actualType?` · формат исправлен: ${actualType.replace('image/','').toUpperCase()}`:'';nodes.coverMeta.textContent=`${image.naturalWidth}×${image.naturalHeight} · ${(file.size/1048576).toFixed(1)} MB${corrected}`;}catch(error){URL.revokeObjectURL(url);throw error;}}catch(error){toast(error.message||'Не удалось прочитать обложку',true);nodes.coverFile.value='';state.coverFile=null;state.coverInfo=null;}});
@@ -403,4 +416,4 @@ $('#importFile').addEventListener('change',async event=>{const file=event.target
 $('#importPreviewButton').addEventListener('click',async()=>{try{const result=await api('/api/admin/import',{method:'POST',body:{mode:'preview',backup:state.importBackup}});const p=result.preview;$('#importResult').textContent=`Dry run: ${p.incoming} записей; создать ${p.create}; обновить ${p.update}; вне backup ${p.unchangedOutsideBackup}.`;if(confirm('Проверка пройдена. Применить этот backup к каталогу?')){await api('/api/admin/import',{method:'POST',body:{mode:'apply',backup:state.importBackup}});await loadCatalog('Backup импортирован');}}catch(error){toast(error.message,true);$('#importResult').textContent=error.message;}});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'){if(!nodes.previewSheet.hidden)closePreview();else if(!nodes.editor.hidden)closeEditor();}});
 buildLocalizedFields();
-loadCatalog();
+Promise.all([loadStoryCategories(),loadCatalog()]);

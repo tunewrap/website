@@ -27,7 +27,10 @@
   <main class="admin-shell">
     <section class="admin-intro">
       <div><p class="eyebrow">TRACK CATALOG</p><h1>Управление музыкой</h1><p>Черновик → проверка → публикация. Без сборки сайта.</p></div>
-      <button class="gold-button" id="newTrackButton" type="button"><span>＋</span> Добавить трек</button>
+      <div class="admin-intro-actions">
+        <a class="secondary-button admin-category-manager-link" href="/admin/categories.html">Категории</a>
+        <button class="gold-button" id="newTrackButton" type="button"><span>＋</span> Добавить трек</button>
+      </div>
     </section>
 
     <section class="metrics" aria-label="Сводка каталога">
@@ -81,7 +84,13 @@
           <label class="field"><span>Язык *</span><select id="languageField" name="language" required><option>GE</option><option>UA</option><option>EN</option><option>DE</option><option>RU</option></select></label>
           <label class="field"><span>Артист</span><input id="artistField" name="artist" value="TuneWrap"></label>
           <label class="field"><span>Альбом</span><input id="albumField" name="album"></label>
-          <label class="field"><span>Категория</span><input id="categoryField" name="category" placeholder="Wedding, Family…"></label>
+          <input id="categoryField" name="category" type="hidden">
+          <div class="field story-category-admin-field" id="storyCategoryAdminField">
+            <span>Категории истории</span>
+            <div class="story-category-admin-choices" id="storyCategoryChoices"></div>
+            <small>Можно выбрать несколько. Фильтры используются только в библиотеке «Музыкальные истории».</small>
+            <a href="/admin/categories.html" target="_blank" rel="noopener">Управлять категориями</a>
+          </div>
           <label class="field"><span>Теги</span><input id="tagsField" name="tags" placeholder="love, wedding"></label>
         </div>
       </section>

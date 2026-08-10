@@ -354,7 +354,13 @@
     const inner=target.querySelector(':scope > .wrap');
     if(inner&&inner.scrollHeight>inner.clientHeight)inner.scrollTop=0;
 
-    if(app&&app.scrollHeight>app.clientHeight+2){
+    const wide=window.matchMedia('(min-width:621px)').matches;
+    if(wide){
+      const header=document.querySelector('body > nav');
+      const headerHeight=Math.max(0,Math.round(header?.getBoundingClientRect().height||82));
+      const top=Math.max(0,target.getBoundingClientRect().top+window.scrollY-headerHeight-10);
+      window.scrollTo({top,behavior});
+    }else if(app&&app.scrollHeight>app.clientHeight+2){
       app.scrollTo({top:target.offsetTop,behavior});
     }else{
       target.scrollIntoView({behavior,block:'start'});

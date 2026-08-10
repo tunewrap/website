@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <base href="/">
+  <title>TuneWrap — Категории историй</title>
+  <link rel="stylesheet" href="/admin/admin.css">
+  <link rel="stylesheet" href="/admin/categories.css">
+</head>
+<body>
+  <header class="admin-header">
+    <a class="brand" href="/admin/" aria-label="TuneWrap Admin Studio">
+      <span class="brand-mark" aria-hidden="true">TW</span>
+      <span><strong>TuneWrap</strong><small>Admin Studio</small></span>
+    </a>
+    <nav class="admin-section-nav" aria-label="Разделы Admin Studio">
+      <a class="is-active" href="/admin/">Музыка</a>
+      <a href="/admin/orders.html">Заказы</a>
+      <a href="/admin/pricing.html">Стоимость</a>
+      <a href="/admin/site.html">Сайт</a>
+      <a href="/admin/sound.html">Звучание</a>
+    </nav>
+    <a class="icon-button category-back" href="/admin/" aria-label="Назад к музыке" title="Назад">←</a>
+  </header>
+
+  <main class="admin-shell category-admin-shell">
+    <section class="admin-intro category-intro">
+      <div>
+        <p class="eyebrow">STORY CATEGORIES</p>
+        <h1>Категории историй</h1>
+        <p>Категории фильтруют только библиотеку «Музыкальные истории». Одна песня может находиться сразу в нескольких категориях.</p>
+      </div>
+      <div class="category-top-actions">
+        <button class="secondary-button" id="translateCategoriesButton" type="button">Автоперевести пустые</button>
+        <button class="gold-button" id="saveCategoriesButton" type="button">Сохранить</button>
+      </div>
+    </section>
+
+    <section class="category-add-panel">
+      <div>
+        <strong>Новая категория</strong>
+        <small>Введите название по-русски. Технический ID создастся автоматически и дальше останется стабильным.</small>
+      </div>
+      <div class="category-add-controls">
+        <input id="newCategoryLabel" type="text" maxlength="100" placeholder="Например: Дружба">
+        <button class="secondary-button" id="addCategoryButton" type="button">＋ Добавить</button>
+      </div>
+    </section>
+
+    <section class="category-list-panel">
+      <div class="category-list-head"><span>Категория</span><span>RU / UA / GE / EN / DE</span><span>Порядок</span></div>
+      <div id="categoryList" class="category-editor-list" aria-live="polite"></div>
+      <p id="categoryEmpty" class="empty-state" hidden>Категорий пока нет.</p>
+    </section>
+
+    <div class="category-savebar">
+      <div><strong id="saveState">Все изменения сохранены</strong><small id="saveMeta">—</small></div>
+      <button class="gold-button" id="saveCategoriesBottomButton" type="button">Сохранить изменения</button>
+    </div>
+  </main>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+  <script type="module" src="/admin/categories.js"></script>
+</body>
+</html>

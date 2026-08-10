@@ -46,6 +46,7 @@
       track.artist,
       track.album,
       ...Object.values(track.category || {}),
+      ...(track.categoryIds || []),
       ...(track.tags || [])
     ].join(' '));
   }
@@ -73,10 +74,12 @@
   function filter(tracks,options = {}){
     const section = options.section || '';
     const language = String(options.language || 'ALL').toUpperCase();
+    const categoryId = String(options.categoryId || '').trim();
     const tokens = normalize(options.query).split(/\s+/).filter(Boolean);
     return published(tracks).filter(track => {
       if(section && track.section !== section) return false;
       if(language !== 'ALL' && track.language !== language) return false;
+      if(categoryId && !(Array.isArray(track.categoryIds) && track.categoryIds.includes(categoryId))) return false;
       return tokens.every(token => track._search.includes(token));
     });
   }
