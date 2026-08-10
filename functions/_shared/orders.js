@@ -142,7 +142,7 @@ export async function insertOrder(db,order,id){
       tier_label,wedding_package_id,wedding_package_label,styles_json,instruments_json,sound_prompt,urgent,
       quoted_price,raw_message,source,source_url,internal_notes,schema_version,
       created_at,updated_at,last_edited_by
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   `).bind(
     id,order.clientSubmissionId,order.status,order.orderType,order.language,order.name,order.contact,
     order.occasion,order.occasionDetail,order.storyCore,order.description,JSON.stringify(order.goldenAnswers),
