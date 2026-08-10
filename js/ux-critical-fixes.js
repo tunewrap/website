@@ -426,6 +426,7 @@
     };
 
     let dragging=false;
+    const fullSeek=document.getElementById('songPlayerSeek');
 
     function paint(){
       const playback=window.__tuneWrapPlayback;
@@ -440,15 +441,55 @@
       seek.setAttribute('aria-label',seekLabels[lang()]||seekLabels.ru);
     }
 
-    seek.addEventListener('pointerdown',()=>{dragging=true;});
-    seek.addEventListener('input',paint);
-    seek.addEventListener('change',()=>{
+    function mirrorIntoFullSeek(type){
       const value=Number(seek.value)||0;
+      if(fullSeek){
+        fullSeek.value=String(value);
+        fullSeek.dispatchEvent(new Event(type,{bubbles:false,cancelable:true}));
+        return true;
+      }
+      if(type==='change'){
+        window.__tuneWrapPlayback?.seekTo?.(value);
+        return true;
+      }
+      return false;
+    }
+
+    function beginMiniSeek(){
+      dragging=true;
+    }
+
+    function previewMiniSeek(){
+      dragging=true;
+      mirrorIntoFullSeek('input');
+      paint();
+    }
+
+    function commitMiniSeek(){
+      if(!dragging)return;
+      mirrorIntoFullSeek('change');
       dragging=false;
-      window.__tuneWrapPlayback?.seekTo?.(value);
+      window.setTimeout(paint,0);
+    }
+
+    seek.addEventListener('pointerdown',beginMiniSeek);
+    seek.addEventListener('input',previewMiniSeek);
+    seek.addEventListener('change',commitMiniSeek);
+    seek.addEventListener('pointerup',commitMiniSeek);
+    seek.addEventListener('pointercancel',()=>{
+      commitMiniSeek();
+      dragging=false;
       paint();
     });
-    seek.addEventListener('pointercancel',()=>{dragging=false;paint();});
+    seek.addEventListener('keyup',event=>{
+      if(['ArrowLeft','ArrowRight','Home','End','PageUp','PageDown'].includes(event.key)){
+        dragging=true;
+        mirrorIntoFullSeek('input');
+        mirrorIntoFullSeek('change');
+        dragging=false;
+        paint();
+      }
+    });
 
     ['loadedmetadata','durationchange','timeupdate','seeked','play','pause','ended'].forEach(type=>{
       audio.addEventListener(type,paint);
