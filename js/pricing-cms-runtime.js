@@ -256,7 +256,18 @@
   schedule();
 
   window.__tuneWrapPricing={
-    config,refresh:schedule,getSelected:()=>state.selected,
-    getSelectedOffer:selectedOffer,getTotal:()=>totalFor(selectedOffer())
+    config,
+    refresh:schedule,
+    getSelected:()=>state.selected,
+    getSelectedOffer:selectedOffer,
+    getTotal:()=>totalFor(selectedOffer()),
+    selectTier:index=>{
+      const numeric=Number(index);
+      const offer=tierByIndex(numeric);
+      if(!offer || offer.enabled===false)return false;
+      state.selected={type:'tier',index:numeric};
+      patchOrderSummary();
+      return true;
+    }
   };
 })();

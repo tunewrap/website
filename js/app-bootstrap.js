@@ -86,6 +86,12 @@ try{
   await import('./responsive-wide.js');
   await import('./playback-engine.js');
 
+  try{
+    await import('./ux-critical-fixes.js');
+  }catch(error){
+    console.error('TuneWrap Stage 12.4 UX runtime failed',error);
+  }
+
   if(document.readyState !== 'loading') document.dispatchEvent(new Event('DOMContentLoaded'));
   loading.remove();
 }catch(error){

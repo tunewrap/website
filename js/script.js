@@ -1789,7 +1789,7 @@ function applyTuneWrapTrackTitles(language){
       btn.addEventListener('click', ()=>{
         if(selectedStyles.includes(id)){
           selectedStyles = selectedStyles.filter(s=>s!==id);
-        } else if(selectedStyles.length < 2){
+        } else if(selectedStyles.length < 5){
           selectedStyles.push(id);
         }
         const labels = selectedStyles.map(sid=> STYLES[currentLang][STYLE_IDS.indexOf(sid)]);
@@ -1975,6 +1975,12 @@ function applyTuneWrapTrackTitles(language){
     updateOtherOccasion();
   });
   document.addEventListener('tunewrap:reset-order-selection',resetOrderSelection);
+  document.addEventListener('tunewrap:set-order-tier',event => {
+    const index=Number(event.detail?.index);
+    if(Number.isInteger(index) && index >= 0 && index < TIERS[currentLang].length){
+      applySelectedTier(index);
+    }
+  });
   document.getElementById('corpQty').addEventListener('input', updateCorpTotal);
   document.getElementById('corpTier').addEventListener('change', updateCorpTotal);
 

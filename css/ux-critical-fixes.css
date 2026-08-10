@@ -1,0 +1,136 @@
+/* TuneWrap Stage 12.4 — Critical UX fixes */
+
+/* One clear library action: tapping the card opens the full player and starts the track.
+   The old separate play circle is removed visually; playback-engine already owns card click. */
+.play-btn[data-track]{
+  display:none!important;
+}
+
+.track[data-track-id],
+.author-card[data-track-id]{
+  cursor:pointer;
+}
+
+/* Mini-player seek bar: thin, touch-friendly progress line at the bottom of the fixed player. */
+@media(max-width:620px){
+  .top-mini-player{
+    position:fixed;
+    padding-bottom:12px;
+  }
+
+  .top-mini-seek{
+    --mini-seek-progress:0%;
+    position:absolute;
+    z-index:3;
+    right:10px;
+    bottom:1px;
+    left:10px;
+    width:calc(100% - 20px);
+    height:12px;
+    margin:0;
+    padding:0;
+    border:0;
+    appearance:none;
+    -webkit-appearance:none;
+    background:transparent;
+    cursor:pointer;
+    touch-action:none;
+  }
+
+  .top-mini-seek::-webkit-slider-runnable-track{
+    width:100%;
+    height:3px;
+    border-radius:100px;
+    background:
+      linear-gradient(
+        90deg,
+        #d9a441 0 var(--mini-seek-progress),
+        rgba(245,241,232,.18) var(--mini-seek-progress) 100%
+      );
+    box-shadow:0 0 12px rgba(217,164,65,.10);
+  }
+
+  .top-mini-seek::-moz-range-track{
+    width:100%;
+    height:3px;
+    border-radius:100px;
+    background:rgba(245,241,232,.18);
+  }
+
+  .top-mini-seek::-moz-range-progress{
+    height:3px;
+    border-radius:100px;
+    background:#d9a441;
+  }
+
+  .top-mini-seek::-webkit-slider-thumb{
+    width:12px;
+    height:12px;
+    margin-top:-4.5px;
+    border:2px solid #f0cf86;
+    border-radius:50%;
+    appearance:none;
+    -webkit-appearance:none;
+    background:#d9a441;
+    box-shadow:0 0 0 4px rgba(217,164,65,.10),0 0 14px rgba(217,164,65,.30);
+  }
+
+  .top-mini-seek::-moz-range-thumb{
+    width:12px;
+    height:12px;
+    border:2px solid #f0cf86;
+    border-radius:50%;
+    background:#d9a441;
+    box-shadow:0 0 0 4px rgba(217,164,65,.10),0 0 14px rgba(217,164,65,.30);
+  }
+}
+
+/* Required fields and validation */
+.ux-required-label::after,
+.ux-required-title::after{
+  content:" *";
+  color:#d9a441;
+  font-weight:800;
+}
+
+.ux-required-note{
+  margin:-2px 0 16px;
+  color:#8e8890;
+  font-size:10px;
+  line-height:1.5;
+}
+
+.ux-field-error input,
+.ux-field-error select,
+.ux-field-error textarea,
+.ux-field-error .style-chips{
+  border-color:rgba(224,103,83,.72)!important;
+  box-shadow:0 0 0 3px rgba(224,103,83,.08)!important;
+}
+
+.ux-field-error-message{
+  margin-top:7px;
+  color:#e8a297;
+  font-size:10px;
+  line-height:1.45;
+}
+
+.ux-validation-summary{
+  margin:0 0 12px;
+  padding:11px 13px;
+  border:1px solid rgba(224,103,83,.28);
+  border-radius:12px;
+  background:rgba(224,103,83,.055);
+  color:#edb5aa;
+  font-size:11px;
+  line-height:1.5;
+}
+
+#styleChips + .field-hint.is-limit,
+#styleChips ~ .field-hint.is-limit{
+  color:#d9a441;
+}
+
+#regularPackageField[hidden]{
+  display:none!important;
+}

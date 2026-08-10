@@ -1061,7 +1061,16 @@
       play:playCurrent,
       pause:pauseCurrent,
       next:() => advance(1,'diagnostic'),
-      previous:() => advance(-1,'diagnostic')
+      previous:() => advance(-1,'diagnostic'),
+      seekTo:time => {
+        const target=Number(time);
+        if(!currentItem || !Number.isFinite(target))return false;
+        seekToken += 1;
+        commitSeek(target,seekToken,!audio.paused);
+        return true;
+      },
+      getDuration:mediaDuration,
+      getCurrentTime:() => Number(audio.currentTime) || 0
     });
   });
 })();

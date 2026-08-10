@@ -1,0 +1,17 @@
+NEW
+js/ux-critical-fixes.js
+css/ux-critical-fixes.css
+scripts/install-stage-12.4-ux-fixes.js
+scripts/ux-critical-fixes-test.js
+README-STAGE-12.4.txt
+STAGE-12.4-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+js/app-bootstrap.js
+js/script.js
+js/pricing-cms-runtime.js
+js/playback-engine.js
+
+NO D1 MIGRATION
+NO ORDERS API CHANGE
+NO MUSIC CATALOG / R2 CHANGE
