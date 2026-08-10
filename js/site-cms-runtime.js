@@ -253,17 +253,21 @@
     panel.setAttribute('aria-modal','true');
     panel.setAttribute('role','dialog');
     panel.innerHTML=`
-      <div class="site-legal-shell">
+      <div class="site-legal-shell" role="document">
         <div class="site-legal-topbar">
-          <button class="site-legal-close" type="button" data-site-legal-close>Закрыть</button>
-          <div class="site-legal-brand">TuneWrap</div>
-          <span></span>
+          <div class="site-legal-brand">Tune<span>Wrap</span></div>
+          <button class="site-legal-close" type="button" data-site-legal-close aria-label="Закрыть условия">
+            <span aria-hidden="true">×</span>
+            <em>Закрыть</em>
+          </button>
         </div>
-        <div class="site-legal-body">
-          <div class="eyebrow">TuneWrap</div>
-          <h2 data-site-terms-title></h2>
-          <p class="site-legal-intro" data-site-terms-intro></p>
-          <div class="site-legal-copy" data-site-terms-body></div>
+        <div class="site-legal-scroll" data-site-legal-scroll>
+          <div class="site-legal-body">
+            <div class="eyebrow">TuneWrap · Legal</div>
+            <h2 data-site-terms-title></h2>
+            <p class="site-legal-intro" data-site-terms-intro></p>
+            <div class="site-legal-copy" data-site-terms-body></div>
+          </div>
         </div>
       </div>`;
     document.body.appendChild(panel);
@@ -284,6 +288,7 @@
     panel.classList.add('is-open');
     panel.setAttribute('aria-hidden','false');
     document.documentElement.classList.add('overlay-open');
+    panel.querySelector('[data-site-legal-scroll]')?.scrollTo({top:0,left:0});
     panel.querySelector('[data-site-legal-close]')?.focus({preventScroll:true});
   }
 
@@ -298,9 +303,14 @@
   function patchTermsPanel(){
     const texts=localized(config.texts)||{};
     const panel=ensureTermsPanel();
+    const body=String(texts.terms_body||'').trim();
     setTextContent(panel.querySelector('[data-site-terms-title]'),texts.terms_title||'Условия использования');
     setTextContent(panel.querySelector('[data-site-terms-intro]'),texts.terms_intro||'');
-    setTextContent(panel.querySelector('[data-site-terms-body]'),texts.terms_body||'');
+    setTextContent(
+      panel.querySelector('[data-site-terms-body]'),
+      body || 'Текст условий будет опубликован здесь. Его можно добавить в Admin Studio → Сайт без нового деплоя.'
+    );
+    panel.classList.toggle('is-empty',!body);
   }
 
   function setTextContent(node,value){
@@ -308,11 +318,10 @@
   }
 
   function patchTermsLink(){
-    const texts=localized(config.texts)||{};
     let node=$('[data-i18n="contact_nav_terms"]');
     if(!node)return;
 
-    const enabled=Boolean(String(texts.terms_body||'').trim());
+    // Stage 12.3.1: Terms is always an active in-page overlay.
     if(node.tagName!=='BUTTON'){
       const button=document.createElement('button');
       button.type='button';
@@ -324,15 +333,16 @@
       node=button;
     }
 
-    node.classList.toggle('is-pending',!enabled);
-    node.disabled=!enabled;
+    node.classList.remove('is-pending');
+    node.disabled=false;
     node.removeAttribute('aria-disabled');
+
     if(!node.dataset.siteTermsBound){
       node.dataset.siteTermsBound='1';
       node.addEventListener('click',openTerms);
     }
 
-    if(enabled)patchTermsPanel();
+    patchTermsPanel();
   }
 
   function currentPreviewMessage(){

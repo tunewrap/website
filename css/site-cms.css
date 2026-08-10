@@ -115,3 +115,152 @@
   .site-legal-shell{max-height:88dvh;border-radius:22px}
   .site-legal-body{padding:24px 20px 30px}
 }
+
+
+/* Stage 12.3.1 — floating inset Terms overlay */
+.site-legal-panel{
+  position:fixed;
+  z-index:1200;
+  inset:0;
+  display:grid;
+  place-items:center;
+  padding:clamp(14px,3vw,38px);
+  background:rgba(0,0,0,.36);
+  backdrop-filter:blur(6px) saturate(.82);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .22s ease,visibility .22s ease;
+}
+.site-legal-panel.is-open{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+.site-legal-shell{
+  width:min(1040px,100%);
+  height:min(91dvh,920px);
+  min-height:420px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  border:1px solid rgba(217,164,65,.24);
+  border-radius:28px;
+  background:
+    radial-gradient(circle at 50% -20%,rgba(217,164,65,.10),transparent 34rem),
+    linear-gradient(155deg,rgba(20,19,22,.985),rgba(8,8,10,.99));
+  box-shadow:0 42px 130px rgba(0,0,0,.72),0 0 0 1px rgba(255,255,255,.025) inset;
+  transform:translateY(14px) scale(.985);
+  transition:transform .24s ease;
+}
+.site-legal-panel.is-open .site-legal-shell{transform:translateY(0) scale(1)}
+.site-legal-topbar{
+  flex:0 0 auto;
+  min-height:66px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:11px 14px 11px 22px;
+  border-bottom:1px solid rgba(255,255,255,.055);
+  background:rgba(11,11,13,.88);
+  backdrop-filter:blur(18px);
+}
+.site-legal-brand{
+  color:#f0e9e0;
+  font-family:"Fraunces","Noto Serif Georgian",serif;
+  font-size:24px;
+  font-weight:600;
+  letter-spacing:-.04em;
+}
+.site-legal-brand span{color:#d9a441}
+.site-legal-close{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-height:40px;
+  padding:0 13px;
+  border:1px solid rgba(217,164,65,.20);
+  border-radius:12px;
+  background:rgba(255,255,255,.035);
+  color:#d8d0c8;
+  cursor:pointer;
+}
+.site-legal-close span{font-size:23px;font-weight:300;line-height:1}
+.site-legal-close em{font-size:10px;font-style:normal;font-weight:800;letter-spacing:.04em}
+.site-legal-scroll{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+.site-legal-body{
+  width:min(780px,calc(100% - 44px));
+  margin:0 auto;
+  padding:clamp(34px,6vw,70px) 0 clamp(70px,10vw,110px);
+}
+.site-legal-body .eyebrow{
+  margin-bottom:14px;
+  color:#d9a441;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+.site-legal-body h2{
+  margin:0;
+  color:#f1ebe4;
+  font-family:"Fraunces","Noto Serif Georgian",serif;
+  font-size:clamp(38px,6vw,62px);
+  font-weight:600;
+  line-height:1;
+  letter-spacing:-.045em;
+}
+.site-legal-intro{
+  max-width:650px;
+  margin:18px 0 0;
+  color:#aaa2aa;
+  font-size:13px;
+  line-height:1.75;
+}
+.site-legal-copy{
+  margin-top:34px;
+  color:#d1c8ce;
+  font-size:14px;
+  line-height:1.9;
+  white-space:pre-wrap;
+}
+.site-legal-panel.is-empty .site-legal-copy{
+  min-height:48vh;
+  display:grid;
+  place-items:center;
+  color:#817a82;
+  text-align:center;
+}
+html.overlay-open,html.overlay-open body{overflow:hidden}
+
+@media(max-width:620px){
+  .site-legal-panel{
+    padding:max(10px,env(safe-area-inset-top)) 10px max(10px,env(safe-area-inset-bottom));
+    background:rgba(0,0,0,.30);
+    backdrop-filter:blur(5px);
+  }
+  .site-legal-shell{
+    width:100%;
+    height:calc(100dvh - 20px);
+    max-height:none;
+    border-radius:22px;
+  }
+  .site-legal-topbar{min-height:58px;padding:9px 9px 9px 16px}
+  .site-legal-brand{font-size:21px}
+  .site-legal-close{width:40px;min-width:40px;min-height:40px;padding:0}
+  .site-legal-close em{display:none}
+  .site-legal-body{width:calc(100% - 34px);padding:30px 0 80px}
+  .site-legal-body h2{font-size:38px}
+  .site-legal-copy{margin-top:28px;font-size:13px;line-height:1.84}
+}
+@media(prefers-reduced-motion:reduce){
+  .site-legal-panel,.site-legal-shell{transition:none}
+}
