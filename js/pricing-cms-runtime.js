@@ -1,53 +1,49 @@
-// TuneWrap Stage 12.2 — Pricing CMS runtime.
-// Content/prices come from D1 and overlay the existing tested pricing core.
-// If the API is unavailable, the built-in pricing remains a safe fallback.
+// TuneWrap Stage 12.2.1 — Pricing CMS runtime hotfix.
 (function(){
   'use strict';
-
   const config=window.TUNEWRAP_PRICING_CMS;
   if(!config)return;
 
   const TIER_INDEX={simple:0,advanced:1,hit:2};
   const state={panel:null,selected:null,scheduled:false};
+  const $=s=>document.querySelector(s);
 
-  const $=selector=>document.querySelector(selector);
-  const lang=()=>{
-    const value=(document.documentElement.lang||'ru').toLowerCase();
-    if(value.startsWith('uk'))return 'uk';
-    if(value.startsWith('ka'))return 'ka';
-    if(value.startsWith('en'))return 'en';
-    if(value.startsWith('de'))return 'de';
+  function lang(){
+    const v=(document.documentElement.lang||'ru').toLowerCase();
+    if(v.startsWith('uk'))return 'uk';
+    if(v.startsWith('ka'))return 'ka';
+    if(v.startsWith('en'))return 'en';
+    if(v.startsWith('de'))return 'de';
     return 'ru';
-  };
-
-  function locale(map){
-    return map?.[lang()]||null;
   }
-
-  function settings(){
-    return locale(config.settings?.locales);
-  }
-
+  const locale=map=>map?.[lang()]||null;
+  const settings=()=>locale(config.settings?.locales);
+  const money=v=>`$${Number(v)||0}`;
   function tierByIndex(index){
-    const id=Object.keys(TIER_INDEX).find(key=>TIER_INDEX[key]===Number(index));
-    return config.tiers?.find(item=>item.id===id)||null;
+    const id=Object.keys(TIER_INDEX).find(k=>TIER_INDEX[k]===Number(index));
+    return config.tiers?.find(x=>x.id===id)||null;
+  }
+  const weddingById=id=>config.weddings?.find(x=>x.id===id)||null;
+  const offerLocale=offer=>locale(offer?.locales);
+
+  function setTextNode(node,value){
+    if(!node||typeof value!=='string'||!value.trim()||node.textContent===value)return;
+    node.textContent=value;
+  }
+  const setText=(sel,value)=>setTextNode($(sel),value);
+  function setHidden(node,value){
+    if(node&&node.hidden!==Boolean(value))node.hidden=Boolean(value);
   }
 
-  function weddingById(id){
-    return config.weddings?.find(item=>item.id===id)||null;
-  }
-
-  function offerLocale(offer){
-    return locale(offer?.locales);
-  }
-
-  function money(value){
-    return `$${Number(value)||0}`;
-  }
-
-  function setText(selector,value){
-    const node=$(selector);
-    if(node&&typeof value==='string'&&value.trim())node.textContent=value;
+  function patchOpenLabel(open,value){
+    if(!open||!value)return;
+    const current=Array.from(open.childNodes)
+      .filter(n=>n.nodeType===Node.TEXT_NODE)
+      .map(n=>n.textContent).join('').trim();
+    if(current===value)return;
+    const svg=open.querySelector('svg');
+    open.replaceChildren(document.createTextNode(value));
+    if(svg)open.appendChild(svg);
   }
 
   function patchPageCopy(){
@@ -60,42 +56,31 @@
     setText('[data-i18n="pricing_promo_until"]',s.promoUntil);
     setText('#pricing .wedding-packages-eyebrow',s.weddingTitle);
     setText('#pricing .wedding-packages-heading p',s.weddingSubtitle);
-
     const urgent=$('#fieldUrgent')?.closest('label')?.querySelector('span');
-    if(urgent&&s.urgentLabel){
-      urgent.textContent=s.urgentLabel.replace('${fee}',money(config.urgentFee));
-    }
+    if(urgent&&s.urgentLabel)setTextNode(urgent,s.urgentLabel.replace('${fee}',money(config.urgentFee)));
+  }
+
+  function reorderIfNeeded(grid,cards,getOrder){
+    if(!grid||cards.length<2)return;
+    const sorted=[...cards].sort((a,b)=>(getOrder(a)||99)-(getOrder(b)||99));
+    const current=Array.from(grid.children).filter(n=>cards.includes(n));
+    const same=sorted.length===current.length&&sorted.every((n,i)=>n===current[i]);
+    if(!same)sorted.forEach(card=>grid.appendChild(card));
   }
 
   function patchTierCards(){
     const cards=Array.from(document.querySelectorAll('#tiersGrid .tier-card'));
     cards.forEach(card=>{
-      const index=Number(card.dataset.tierIndex);
-      const offer=tierByIndex(index);
+      const offer=tierByIndex(card.dataset.tierIndex);
       if(!offer)return;
       const loc=offerLocale(offer);
-      card.hidden=offer.enabled===false;
-      if(loc?.name)card.querySelector('.tier-name').textContent=loc.name;
-      const old=card.querySelector('.tier-price s');
-      const price=card.querySelector('.tier-price strong');
-      if(old)old.textContent=money(offer.oldPrice);
-      if(price)price.textContent=money(offer.price);
-      const open=card.querySelector('.tier-card-open');
-      if(open&&settings()?.detailsLabel){
-        const svg=open.querySelector('svg');
-        open.textContent=settings().detailsLabel;
-        if(svg)open.appendChild(svg);
-      }
+      setHidden(card,offer.enabled===false);
+      if(loc?.name)setTextNode(card.querySelector('.tier-name'),loc.name);
+      setTextNode(card.querySelector('.tier-price s'),money(offer.oldPrice));
+      setTextNode(card.querySelector('.tier-price strong'),money(offer.price));
+      patchOpenLabel(card.querySelector('.tier-card-open'),settings()?.detailsLabel);
     });
-
-    const grid=$('#tiersGrid');
-    if(grid){
-      [...cards].sort((a,b)=>{
-        const ao=tierByIndex(a.dataset.tierIndex)?.order||99;
-        const bo=tierByIndex(b.dataset.tierIndex)?.order||99;
-        return ao-bo;
-      }).forEach(card=>grid.appendChild(card));
-    }
+    reorderIfNeeded($('#tiersGrid'),cards,card=>tierByIndex(card.dataset.tierIndex)?.order);
   }
 
   function patchWeddingCards(){
@@ -104,28 +89,13 @@
       const offer=weddingById(card.dataset.weddingPackage);
       if(!offer)return;
       const loc=offerLocale(offer);
-      card.hidden=offer.enabled===false;
-      if(loc?.name)card.querySelector('.tier-name').textContent=loc.name;
-      const old=card.querySelector('.tier-price s');
-      const price=card.querySelector('.tier-price strong');
-      if(old)old.textContent=money(offer.oldPrice);
-      if(price)price.textContent=money(offer.price);
-      const open=card.querySelector('.tier-card-open');
-      if(open&&settings()?.detailsLabel){
-        const svg=open.querySelector('svg');
-        open.textContent=settings().detailsLabel;
-        if(svg)open.appendChild(svg);
-      }
+      setHidden(card,offer.enabled===false);
+      if(loc?.name)setTextNode(card.querySelector('.tier-name'),loc.name);
+      setTextNode(card.querySelector('.tier-price s'),money(offer.oldPrice));
+      setTextNode(card.querySelector('.tier-price strong'),money(offer.price));
+      patchOpenLabel(card.querySelector('.tier-card-open'),settings()?.detailsLabel);
     });
-
-    const grid=$('#weddingPackagesGrid');
-    if(grid){
-      [...cards].sort((a,b)=>{
-        const ao=weddingById(a.dataset.weddingPackage)?.order||99;
-        const bo=weddingById(b.dataset.weddingPackage)?.order||99;
-        return ao-bo;
-      }).forEach(card=>grid.appendChild(card));
-    }
+    reorderIfNeeded($('#weddingPackagesGrid'),cards,card=>weddingById(card.dataset.weddingPackage)?.order);
     patchWeddingSelect();
   }
 
@@ -133,103 +103,84 @@
     const select=$('#fieldWeddingPackage');
     if(!select)return;
     Array.from(select.options).forEach(option=>{
-      const offer=weddingById(option.value);
-      const loc=offerLocale(offer);
-      if(offer&&loc?.name)option.textContent=loc.name;
+      const offer=weddingById(option.value), loc=offerLocale(offer);
+      if(offer&&loc?.name)setTextNode(option,loc.name);
     });
   }
 
   function buildList(node,items){
     if(!node||!Array.isArray(items))return;
-    node.innerHTML='';
-    items.forEach(text=>{
-      const li=document.createElement('li');
-      li.textContent=text;
-      node.appendChild(li);
-    });
+    const current=Array.from(node.children).map(li=>li.textContent).join('\n');
+    const next=items.join('\n');
+    if(current===next)return;
+    const frag=document.createDocumentFragment();
+    items.forEach(text=>{const li=document.createElement('li');li.textContent=text;frag.appendChild(li);});
+    node.replaceChildren(frag);
   }
 
   function patchPanel(){
     const panel=$('#tierDetailPanel');
     if(!panel?.classList.contains('is-open')||!state.panel)return;
     const s=settings();
+
     if(state.panel.type==='tier'){
-      const offer=tierByIndex(state.panel.index);
-      const loc=offerLocale(offer);
+      const offer=tierByIndex(state.panel.index), loc=offerLocale(offer);
       if(!offer)return;
       if(loc?.name)setText('#tierDetailTitle',loc.name);
       setText('#tierDetailKicker',s?.promoTitle||'');
       setText('#tierDetailUntil',s?.promoUntil||'');
       const badge=$('#tierDetailBadge');
-      if(badge&&loc){
-        badge.textContent=loc.badge||'';
-        badge.hidden=!loc.badge;
-      }
+      if(badge&&loc){setTextNode(badge,loc.badge||' ');setHidden(badge,!loc.badge);}
       $('#tierDetailPriceWrap')?.removeAttribute('hidden');
-      const old=$('#tierDetailOldPrice'); if(old)old.textContent=money(offer.oldPrice);
-      const price=$('#tierDetailPrice'); if(price)price.textContent=money(offer.price);
+      setText('#tierDetailOldPrice',money(offer.oldPrice));
+      setText('#tierDetailPrice',money(offer.price));
       if(loc?.features)buildList($('#tierDetailFeatures'),loc.features);
       if(s?.tierSelect)setText('#tierDetailSelect',s.tierSelect);
-    }else{
-      const offer=weddingById(state.panel.id);
-      const loc=offerLocale(offer);
-      if(!offer)return;
-      if(loc?.name)setText('#tierDetailTitle',loc.name);
-      if(loc?.description)setText('#tierDetailDescription',loc.description);
-      setText('#tierDetailKicker',s?.weddingTitle||'');
-      setText('#tierDetailStep',s?.weddingPanelLabel||'');
-      $('#tierDetailPriceWrap')?.removeAttribute('hidden');
-      $('#tierDetailUntil')?.removeAttribute('hidden');
-      const old=$('#tierDetailOldPrice'); if(old)old.textContent=money(offer.oldPrice);
-      const price=$('#tierDetailPrice'); if(price)price.textContent=money(offer.price);
-      setText('#tierDetailUntil',s?.promoUntil||'');
-      if(s?.whatIncluded)setText('.tier-detail-info-block h3',s.whatIncluded);
-      const headings=document.querySelectorAll('.tier-detail-info-block h3');
-      if(headings[1]&&s?.idealFor)headings[1].textContent=s.idealFor;
-      if(loc?.includes)buildList($('#tierDetailWeddingIncludes'),loc.includes);
-      if(loc?.ideal)setText('#tierDetailWeddingIdeal',loc.ideal);
-      if(loc?.button)setText('#tierDetailSelect',loc.button);
+      return;
     }
+
+    const offer=weddingById(state.panel.id), loc=offerLocale(offer);
+    if(!offer)return;
+    if(loc?.name)setText('#tierDetailTitle',loc.name);
+    if(loc?.description)setText('#tierDetailDescription',loc.description);
+    setText('#tierDetailKicker',s?.weddingTitle||'');
+    setText('#tierDetailStep',s?.weddingPanelLabel||'');
+    $('#tierDetailPriceWrap')?.removeAttribute('hidden');
+    $('#tierDetailUntil')?.removeAttribute('hidden');
+    setText('#tierDetailOldPrice',money(offer.oldPrice));
+    setText('#tierDetailPrice',money(offer.price));
+    setText('#tierDetailUntil',s?.promoUntil||'');
+    const heads=document.querySelectorAll('.tier-detail-info-block h3');
+    if(heads[0]&&s?.whatIncluded)setTextNode(heads[0],s.whatIncluded);
+    if(heads[1]&&s?.idealFor)setTextNode(heads[1],s.idealFor);
+    if(loc?.includes)buildList($('#tierDetailWeddingIncludes'),loc.includes);
+    if(loc?.ideal)setText('#tierDetailWeddingIdeal',loc.ideal);
+    if(loc?.button)setText('#tierDetailSelect',loc.button);
   }
 
   function selectedOffer(){
     if(!state.selected)return null;
-    return state.selected.type==='tier'
-      ? tierByIndex(state.selected.index)
-      : weddingById(state.selected.id);
+    return state.selected.type==='tier'?tierByIndex(state.selected.index):weddingById(state.selected.id);
   }
-
-  function urgent(){
-    return Boolean($('#fieldUrgent')?.checked);
-  }
-
-  function totalFor(offer){
-    return (Number(offer?.price)||0)+(urgent()?Number(config.urgentFee||0):0);
-  }
+  const urgent=()=>Boolean($('#fieldUrgent')?.checked);
+  const totalFor=offer=>(Number(offer?.price)||0)+(urgent()?Number(config.urgentFee||0):0);
 
   function patchOrderSummary(){
     const offer=selectedOffer();
     if(!offer)return;
     const loc=offerLocale(offer);
     if(loc?.name){
-      const tier=$('#sumTier');
-      if(tier)tier.textContent=state.selected.type==='tier'
-        ? `${loc.name} (${money(offer.price)})`
-        : loc.name;
+      const value=state.selected.type==='tier'?`${loc.name} (${money(offer.price)})`:loc.name;
+      setTextNode($('#sumTier'),value);
     }
-    const total=$('#sumTotal');
-    if(total)total.textContent=money(totalFor(offer));
+    setText('#sumTotal',money(totalFor(offer)));
     patchWeddingSelect();
   }
 
   function patchPreview(){
-    const offer=selectedOffer();
-    const preview=$('#previewText');
+    const offer=selectedOffer(), preview=$('#previewText');
     if(!offer||!preview)return;
-    const loc=offerLocale(offer);
-    const lines=preview.textContent.split('\n');
-    const total=money(totalFor(offer));
-
+    const loc=offerLocale(offer), lines=preview.textContent.split('\n'), total=money(totalFor(offer));
     if(state.selected.type==='tier'){
       if(lines.length>2&&loc?.name){
         const colon=lines[2].indexOf(':');
@@ -244,30 +195,19 @@
         if(colon>=0)lines[index]=lines[index].slice(0,colon+1)+' '+loc.name;
       }
       const totalLabel=$('#sumTotal')?.parentElement?.querySelector('span')?.textContent?.trim()||'Итого:';
-      if(!lines.some(line=>line.startsWith(totalLabel.replace(/\s+$/,'')))){
-        lines.splice(index+1,0,`${totalLabel} ${total}`);
-      }
+      if(!lines.some(line=>line.startsWith(totalLabel.replace(/\s+$/,''))))lines.splice(index+1,0,`${totalLabel} ${total}`);
     }
-
     const urgentFee=money(config.urgentFee||0);
     for(let i=0;i<lines.length;i++){
       if(/\(\+\$\d+(?:\.\d+)?\)/.test(lines[i])&&urgent())lines[i]=lines[i].replace(/\(\+\$\d+(?:\.\d+)?\)/,`(+${urgentFee})`);
     }
-
     const totalIndex=lines.findIndex((line,index)=>index>2&&/\$\d+/.test(line)&&!/\(\+\$/.test(line)&&line!==lines[2]);
     if(totalIndex>=0&&state.selected.type==='tier'){
       const colon=lines[totalIndex].indexOf(':');
       if(colon>=0)lines[totalIndex]=lines[totalIndex].slice(0,colon+1)+' '+total;
     }
-
-    preview.textContent=lines.join('\n');
-  }
-
-  function captureOffer(event){
-    const tier=event.target.closest?.('#tiersGrid .tier-card');
-    if(tier)state.panel={type:'tier',index:Number(tier.dataset.tierIndex)};
-    const wedding=event.target.closest?.('#weddingPackagesGrid .wedding-offer-card');
-    if(wedding)state.panel={type:'wedding',id:wedding.dataset.weddingPackage};
+    const value=lines.join('\n');
+    if(preview.textContent!==value)preview.textContent=value;
   }
 
   function schedule(){
@@ -283,42 +223,40 @@
     });
   }
 
-  document.addEventListener('click',captureOffer,true);
+  function captureOffer(event){
+    const tier=event.target.closest?.('#tiersGrid .tier-card');
+    if(tier){
+      state.panel={type:'tier',index:Number(tier.dataset.tierIndex)};
+      requestAnimationFrame(patchPanel);
+      return;
+    }
+    const wedding=event.target.closest?.('#weddingPackagesGrid .wedding-offer-card');
+    if(wedding){
+      state.panel={type:'wedding',id:wedding.dataset.weddingPackage};
+      requestAnimationFrame(patchPanel);
+    }
+  }
 
+  document.addEventListener('click',captureOffer,true);
   $('#tierDetailSelect')?.addEventListener('click',()=>{
     if(!state.panel)return;
-    state.selected=state.panel.type==='tier'
-      ? {type:'tier',index:state.panel.index}
-      : {type:'wedding',id:state.panel.id};
+    state.selected=state.panel.type==='tier'?{type:'tier',index:state.panel.index}:{type:'wedding',id:state.panel.id};
     patchOrderSummary();
   });
-
   $('#fieldUrgent')?.addEventListener('change',patchOrderSummary);
-
   $('#fieldWeddingPackage')?.addEventListener('change',event=>{
-    if(weddingById(event.target.value)){
-      state.selected={type:'wedding',id:event.target.value};
-      patchOrderSummary();
-    }
+    if(weddingById(event.target.value)){state.selected={type:'wedding',id:event.target.value};patchOrderSummary();}
   });
+  $('#btnGenerate')?.addEventListener('click',()=>{patchOrderSummary();patchPreview();});
 
-  // Registered after the core listener and before Orders CRM.
-  // Core builds the preview first; CMS then corrects package/price; CRM stores it last.
-  $('#btnGenerate')?.addEventListener('click',()=>{
-    patchOrderSummary();
-    patchPreview();
-  });
-
-  const observer=new MutationObserver(schedule);
-  observer.observe(document.documentElement,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['lang','class','hidden']});
+  // No global MutationObserver: the core owns opening/closing.
+  document.addEventListener('tunewrap:languagechange',()=>setTimeout(schedule,0));
+  document.addEventListener('DOMContentLoaded',schedule);
+  window.addEventListener('pageshow',schedule);
+  schedule();
 
   window.__tuneWrapPricing={
-    config,
-    refresh:schedule,
-    getSelected:()=>state.selected,
-    getSelectedOffer:selectedOffer,
-    getTotal:()=>totalFor(selectedOffer())
+    config,refresh:schedule,getSelected:()=>state.selected,
+    getSelectedOffer:selectedOffer,getTotal:()=>totalFor(selectedOffer())
   };
-
-  schedule();
 })();
