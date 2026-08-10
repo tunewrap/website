@@ -1064,10 +1064,23 @@
       previous:() => advance(-1,'diagnostic'),
       seekTo:time => {
         const target=Number(time);
-        if(!currentItem || !Number.isFinite(target))return false;
+        const total=mediaDuration();
+        if(!currentItem || !Number.isFinite(target) || !(total>0))return false;
+        const requested=Math.max(0,Math.min(total,target));
         seekToken += 1;
-        commitSeek(target,seekToken,!audio.paused);
-        return true;
+        userSeeking=false;
+        pendingSeekTime=null;
+        resumeAfterSeek=false;
+        try{
+          if(typeof audio.fastSeek==='function') audio.fastSeek(requested);
+          else audio.currentTime=requested;
+          updateTimeline(true);
+          return true;
+        }catch(error){
+          const operation=seekToken;
+          commitSeek(requested,operation,!audio.paused && !audio.ended);
+          return true;
+        }
       },
       getDuration:mediaDuration,
       getCurrentTime:() => Number(audio.currentTime) || 0
