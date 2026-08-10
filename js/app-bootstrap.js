@@ -3,15 +3,27 @@ loading.className = 'catalog-bootstrap';
 loading.innerHTML = '<span class="catalog-bootstrap-mark" aria-hidden="true"></span><span>Загружаем музыкальную библиотеку…</span>';
 document.body.append(loading);
 
-// Stage 12.1: wide layout is an additive layer. Its CSS starts at 621px,
-// therefore the verified phone UI is byte-for-byte governed by the old stylesheet.
 if(!document.getElementById('tunewrapResponsiveWide')){
   const responsiveWide=document.createElement('link');
   responsiveWide.id='tunewrapResponsiveWide';
   responsiveWide.rel='stylesheet';
-  responsiveWide.href='/css/responsive-wide.css?v=12.1';
+  responsiveWide.href='/css/responsive-wide.css?v=12.2';
   document.head.append(responsiveWide);
 }
+
+// Pricing CMS is independent from Track Catalog.
+// A pricing API failure must never break music or the rest of the site.
+const pricingPromise=(async()=>{
+  try{
+    const response=await fetch('/api/pricing',{headers:{accept:'application/json'},cache:'no-store'});
+    if(!response.ok)return null;
+    const payload=await response.json();
+    return payload?.ok&&payload?.config?payload.config:null;
+  }catch(error){
+    console.error('TuneWrap pricing bootstrap failed',error);
+    return null;
+  }
+})();
 
 try{
   const response = await fetch('/api/tracks',{headers:{accept:'application/json'},cache:'no-store'});
@@ -19,28 +31,32 @@ try{
   const payload = await response.json();
   if(!payload || !Array.isArray(payload.tracks)) throw new Error('Track Catalog API returned invalid data');
   window.TUNEWRAP_TRACK_CATALOG = payload.tracks;
+
   await import('./catalog-runtime.js');
   await import('./script.js');
 
-  // Stage 12 order intake is deliberately isolated from the music/player bootstrap.
-  // A CRM/API problem must never make the music library unavailable.
+  // Existing wide copy runs first. Pricing CMS runs afterwards and therefore
+  // remains the final source of truth for the Pricing screen.
+  await import('./wide-copy-polish.js');
+  await import('./wedding-detail-wide.js');
+
+  window.TUNEWRAP_PRICING_CMS=await pricingPromise;
+  try{
+    await import('./pricing-cms-runtime.js');
+  }catch(error){
+    console.error('TuneWrap Pricing CMS runtime failed',error);
+  }
+
+  // Orders CRM is loaded AFTER Pricing CMS so it stores the final CMS price.
   try{
     await import('./orders-submit.js');
   }catch(error){
     console.error('TuneWrap order intake bootstrap failed',error);
   }
 
-  // Register the tablet/desktop presentation adapter before the playback engine.
-  // It never owns audio; it only reveals the existing player UI on wider screens.
-  await import('./wide-copy-polish.js');
-  await import('./wedding-detail-wide.js');
   await import('./responsive-wide.js');
   await import('./playback-engine.js');
 
-  // Dynamic imports may finish after the browser's native DOMContentLoaded.
-  // Stage 10 modules register on that event, so replay it only when it has
-  // already passed. When the document is still loading, the native event is
-  // allowed to initialize everything exactly once.
   if(document.readyState !== 'loading') document.dispatchEvent(new Event('DOMContentLoaded'));
   loading.remove();
 }catch(error){

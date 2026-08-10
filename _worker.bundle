@@ -1,9 +1,9 @@
-------formdata-undici-096242187565
+------formdata-undici-034070750860
 Content-Disposition: form-data; name="metadata"
 
-{"main_module":"functionsWorker-0.5738239469212061.js"}
-------formdata-undici-096242187565
-Content-Disposition: form-data; name="functionsWorker-0.5738239469212061.js"; filename="functionsWorker-0.5738239469212061.js"
+{"main_module":"functionsWorker-0.7155956368225196.js"}
+------formdata-undici-034070750860
+Content-Disposition: form-data; name="functionsWorker-0.7155956368225196.js"; filename="functionsWorker-0.7155956368225196.js"
 Content-Type: application/javascript+module
 
 var __defProp = Object.defineProperty;
@@ -2029,6 +2029,175 @@ async function onRequestGet4(context) {
 }
 __name(onRequestGet4, "onRequestGet");
 
+// _shared/pricing.js
+var PRICING_LOCALES = Object.freeze(["ru", "uk", "ka", "en", "de"]);
+var PRICING_TIER_IDS = Object.freeze(["simple", "advanced", "hit"]);
+var PRICING_WEDDING_IDS = Object.freeze(["first-dance", "love-story", "wedding-collection"]);
+var SETTINGS_FIELDS = Object.freeze([
+  "pricingEyebrow",
+  "pricingTitle",
+  "pricingIntro",
+  "promoTitle",
+  "promoUntil",
+  "weddingTitle",
+  "weddingSubtitle",
+  "detailsLabel",
+  "weddingPanelLabel",
+  "whatIncluded",
+  "idealFor",
+  "tierSelect",
+  "urgentLabel"
+]);
+function cleanText(value, max = 4e3) {
+  return String(value ?? "").replace(/\r\n?/g, "\n").trim().slice(0, max);
+}
+__name(cleanText, "cleanText");
+function cleanPrice(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number) || number < 0 || number > 99999) throw new HttpError(400, "\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C");
+  return Math.round(number);
+}
+__name(cleanPrice, "cleanPrice");
+function cleanOrder(value, fallback) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return fallback;
+  return Math.max(1, Math.min(99, Math.round(number)));
+}
+__name(cleanOrder, "cleanOrder");
+function cleanStringList(value, maxItems = 24, maxLength = 500) {
+  if (!Array.isArray(value)) return [];
+  return value.slice(0, maxItems).map((item) => cleanText(item, maxLength)).filter(Boolean);
+}
+__name(cleanStringList, "cleanStringList");
+function cleanSettingsLocales(value) {
+  const output = {};
+  for (const locale of PRICING_LOCALES) {
+    const source = value?.[locale];
+    if (!source || typeof source !== "object") continue;
+    const target = {};
+    for (const field of SETTINGS_FIELDS) target[field] = cleanText(source[field], 1200);
+    output[locale] = target;
+  }
+  return output;
+}
+__name(cleanSettingsLocales, "cleanSettingsLocales");
+function cleanOfferLocales(value, type) {
+  const output = {};
+  for (const locale of PRICING_LOCALES) {
+    const source = value?.[locale];
+    if (!source || typeof source !== "object") continue;
+    if (type === "tier") {
+      output[locale] = {
+        name: cleanText(source.name, 120),
+        badge: cleanText(source.badge, 80),
+        features: cleanStringList(source.features, 20, 500)
+      };
+    } else {
+      output[locale] = {
+        name: cleanText(source.name, 120),
+        short: cleanText(source.short, 300),
+        description: cleanText(source.description, 1800),
+        includes: cleanStringList(source.includes, 24, 500),
+        ideal: cleanText(source.ideal, 800),
+        button: cleanText(source.button, 180)
+      };
+    }
+  }
+  return output;
+}
+__name(cleanOfferLocales, "cleanOfferLocales");
+function normalizeOffers(value, ids, type) {
+  const source = Array.isArray(value) ? value : [];
+  return ids.map((id, index) => {
+    const item = source.find((candidate) => candidate?.id === id) || {};
+    return {
+      id,
+      enabled: item.enabled !== false,
+      order: cleanOrder(item.order, index + 1),
+      oldPrice: cleanPrice(item.oldPrice ?? 0),
+      price: cleanPrice(item.price ?? 0),
+      locales: cleanOfferLocales(item.locales, type)
+    };
+  });
+}
+__name(normalizeOffers, "normalizeOffers");
+function normalizePricingConfig(value) {
+  if (!value || typeof value !== "object") throw new HttpError(400, "\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430\u044F \u043A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u0438");
+  const currency = cleanText(value.currency || "USD", 3).toUpperCase();
+  if (!/^[A-Z]{3}$/.test(currency)) throw new HttpError(400, "\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430\u044F \u0432\u0430\u043B\u044E\u0442\u0430");
+  return {
+    schemaVersion: 1,
+    currency,
+    urgentFee: cleanPrice(value.urgentFee ?? 25),
+    settings: { locales: cleanSettingsLocales(value.settings?.locales) },
+    tiers: normalizeOffers(value.tiers, PRICING_TIER_IDS, "tier"),
+    weddings: normalizeOffers(value.weddings, PRICING_WEDDING_IDS, "wedding")
+  };
+}
+__name(normalizePricingConfig, "normalizePricingConfig");
+async function readPricingConfig(db) {
+  if (!db) throw new HttpError(503, "D1 binding TUNEWRAP_DB \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D");
+  const row = await db.prepare(
+    "SELECT config_json, schema_version, updated_at, last_edited_by FROM pricing_config WHERE id = ?"
+  ).bind("main").first();
+  if (!row) throw new HttpError(503, "Pricing CMS \u0435\u0449\u0451 \u043D\u0435 \u0438\u043D\u0438\u0446\u0438\u0430\u043B\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u043D");
+  let parsed;
+  try {
+    parsed = JSON.parse(row.config_json);
+  } catch (error) {
+    throw new HttpError(500, "Pricing CMS \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442 \u043F\u043E\u0432\u0440\u0435\u0436\u0434\u0451\u043D\u043D\u044B\u0439 JSON");
+  }
+  return {
+    config: normalizePricingConfig(parsed),
+    schemaVersion: Number(row.schema_version) || 1,
+    updatedAt: String(row.updated_at || ""),
+    lastEditedBy: String(row.last_edited_by || "")
+  };
+}
+__name(readPricingConfig, "readPricingConfig");
+async function writePricingConfig(db, value, identity = "admin") {
+  if (!db) throw new HttpError(503, "D1 binding TUNEWRAP_DB \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D");
+  const config = normalizePricingConfig(value);
+  const serialized = JSON.stringify(config);
+  if (serialized.length > 18e4) throw new HttpError(413, "\u041A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F \u0441\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u0438 \u0441\u043B\u0438\u0448\u043A\u043E\u043C \u0431\u043E\u043B\u044C\u0448\u0430\u044F");
+  const updatedAt = (/* @__PURE__ */ new Date()).toISOString();
+  await db.prepare(`
+    INSERT INTO pricing_config(id,config_json,schema_version,updated_at,last_edited_by)
+    VALUES('main',?,1,?,?)
+    ON CONFLICT(id) DO UPDATE SET
+      config_json=excluded.config_json,
+      schema_version=excluded.schema_version,
+      updated_at=excluded.updated_at,
+      last_edited_by=excluded.last_edited_by
+  `).bind(serialized, updatedAt, String(identity || "admin").slice(0, 240)).run();
+  return { config, updatedAt, lastEditedBy: String(identity || "admin") };
+}
+__name(writePricingConfig, "writePricingConfig");
+
+// api/admin/pricing.js
+async function onRequestGet5(context) {
+  try {
+    await requireAdmin(context);
+    const result = await readPricingConfig(context.env.TUNEWRAP_DB);
+    return json({ ok: true, ...result });
+  } catch (error) {
+    return handleError(error);
+  }
+}
+__name(onRequestGet5, "onRequestGet");
+async function onRequestPut(context) {
+  try {
+    requireSameOrigin(context.request);
+    const identity = await requireAdmin(context);
+    const payload = await readJson(context.request);
+    const result = await writePricingConfig(context.env.TUNEWRAP_DB, payload?.config, identity);
+    return json({ ok: true, ...result });
+  } catch (error) {
+    return handleError(error);
+  }
+}
+__name(onRequestPut, "onRequestPut");
+
 // api/admin/reorder.js
 async function onRequestPost7(context) {
   try {
@@ -2053,7 +2222,7 @@ async function onRequestPost7(context) {
 __name(onRequestPost7, "onRequestPost");
 
 // api/admin/tracks/index.js
-async function onRequestGet5(context) {
+async function onRequestGet6(context) {
   try {
     await requireAdmin(context);
     const url = new URL(context.request.url);
@@ -2070,7 +2239,7 @@ async function onRequestGet5(context) {
     return handleError(error);
   }
 }
-__name(onRequestGet5, "onRequestGet");
+__name(onRequestGet6, "onRequestGet");
 async function onRequestPost8(context) {
   try {
     requireSameOrigin(context.request);
@@ -2445,7 +2614,7 @@ async function serve(context, headOnly = false) {
   }
 }
 __name(serve, "serve");
-var onRequestGet6 = /* @__PURE__ */ __name((context) => serve(context, false), "onRequestGet");
+var onRequestGet7 = /* @__PURE__ */ __name((context) => serve(context, false), "onRequestGet");
 var onRequestHead = /* @__PURE__ */ __name((context) => serve(context, true), "onRequestHead");
 
 // api/orders.js
@@ -2483,13 +2652,29 @@ async function onRequestPost10(context) {
   }
 }
 __name(onRequestPost10, "onRequestPost");
-function onRequestGet7() {
+function onRequestGet8() {
   return json({ ok: false, error: "\u041C\u0435\u0442\u043E\u0434 \u043D\u0435 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442\u0441\u044F" }, 405, { allow: "POST" });
 }
-__name(onRequestGet7, "onRequestGet");
+__name(onRequestGet8, "onRequestGet");
+
+// api/pricing.js
+async function onRequestGet9(context) {
+  try {
+    const result = await readPricingConfig(context.env.TUNEWRAP_DB);
+    return json({
+      ok: true,
+      config: result.config,
+      updatedAt: result.updatedAt,
+      schemaVersion: result.schemaVersion
+    });
+  } catch (error) {
+    return handleError(error);
+  }
+}
+__name(onRequestGet9, "onRequestGet");
 
 // api/tracks.js
-async function onRequestGet8(context) {
+async function onRequestGet10(context) {
   try {
     const tracks = await listTracks(context.env.TUNEWRAP_DB);
     return json({
@@ -2503,9 +2688,9 @@ async function onRequestGet8(context) {
     return handleError(error);
   }
 }
-__name(onRequestGet8, "onRequestGet");
+__name(onRequestGet10, "onRequestGet");
 
-// ../.wrangler/tmp/pages-EseUOP/functionsRoutes-0.27750024401637274.mjs
+// ../.wrangler/tmp/pages-ibpbHL/functionsRoutes-0.4516737401192581.mjs
 var routes = [
   {
     routePath: "/api/admin/tracks/:id/archive",
@@ -2599,6 +2784,20 @@ var routes = [
     modules: [onRequestGet4]
   },
   {
+    routePath: "/api/admin/pricing",
+    mountPath: "/api/admin",
+    method: "GET",
+    middlewares: [],
+    modules: [onRequestGet5]
+  },
+  {
+    routePath: "/api/admin/pricing",
+    mountPath: "/api/admin",
+    method: "PUT",
+    middlewares: [],
+    modules: [onRequestPut]
+  },
+  {
     routePath: "/api/admin/reorder",
     mountPath: "/api/admin",
     method: "POST",
@@ -2610,7 +2809,7 @@ var routes = [
     mountPath: "/api/admin/tracks",
     method: "GET",
     middlewares: [],
-    modules: [onRequestGet5]
+    modules: [onRequestGet6]
   },
   {
     routePath: "/api/admin/tracks",
@@ -2631,7 +2830,7 @@ var routes = [
     mountPath: "/api/media",
     method: "GET",
     middlewares: [],
-    modules: [onRequestGet6]
+    modules: [onRequestGet7]
   },
   {
     routePath: "/api/media/:path*",
@@ -2645,7 +2844,7 @@ var routes = [
     mountPath: "/api",
     method: "GET",
     middlewares: [],
-    modules: [onRequestGet7]
+    modules: [onRequestGet8]
   },
   {
     routePath: "/api/orders",
@@ -2655,11 +2854,18 @@ var routes = [
     modules: [onRequestPost10]
   },
   {
+    routePath: "/api/pricing",
+    mountPath: "/api",
+    method: "GET",
+    middlewares: [],
+    modules: [onRequestGet9]
+  },
+  {
     routePath: "/api/tracks",
     mountPath: "/api",
     method: "GET",
     middlewares: [],
-    modules: [onRequestGet8]
+    modules: [onRequestGet10]
   }
 ];
 
@@ -3112,4 +3318,4 @@ export {
   pages_template_worker_default as default
 };
 
-------formdata-undici-096242187565--
+------formdata-undici-034070750860--
