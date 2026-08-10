@@ -1,0 +1,66 @@
+/* TuneWrap Stage 12.5 — Sound Preferences CMS */
+
+.sound-choice-chip{
+  display:inline-flex!important;
+  align-items:center;
+  gap:7px;
+  min-height:39px;
+}
+
+.sound-choice-icon{
+  width:19px;
+  height:19px;
+  display:inline-grid;
+  place-items:center;
+  color:rgba(238,204,125,.78);
+  flex:0 0 19px;
+}
+
+.sound-choice-chip.selected .sound-choice-icon{
+  color:#f2cf7b;
+}
+
+.sound-icon{
+  width:100%;
+  height:100%;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.sound-instrument-field{
+  margin-top:4px;
+}
+
+.sound-instrument-summary strong{
+  max-width:min(54vw,420px);
+}
+
+@media(max-width:620px){
+  .sound-choice-chip{
+    gap:6px;
+    min-height:36px;
+    padding-left:10px!important;
+    padding-right:10px!important;
+  }
+  .sound-choice-icon{
+    width:17px;
+    height:17px;
+    flex-basis:17px;
+  }
+  .sound-instrument-summary strong{
+    max-width:58vw;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+}
+
+@media(min-width:621px){
+  .sound-instrument-chips,
+  #styleChips{
+    gap:10px;
+  }
+}

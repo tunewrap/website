@@ -47,6 +47,8 @@ export function rowToOrder(row){
     weddingPackageId:row.wedding_package_id,
     weddingPackageLabel:row.wedding_package_label,
     styles:parseJson(row.styles_json,[]),
+    instruments:parseJson(row.instruments_json,[]),
+    soundPrompt:row.sound_prompt||'',
     urgent:Boolean(row.urgent),
     quotedPrice:Number.isFinite(row.quoted_price)?row.quoted_price:(row.quoted_price==null?null:Number(row.quoted_price)),
     rawMessage:row.raw_message,
@@ -103,14 +105,16 @@ export function normalizePublicOrder(input,request){
     tierLabel:clean(input?.tierLabel,300),
     weddingPackageId:clean(input?.weddingPackageId,100),
     weddingPackageLabel:clean(input?.weddingPackageLabel,300),
-    styles:listStrings(input?.styles,4,120),
+    styles:listStrings(input?.styles,5,160),
+    instruments:listStrings(input?.instruments,5,160),
+    soundPrompt:clean(input?.soundPrompt,1600,{label:'Sound prompt'}),
     urgent:Boolean(input?.urgent),
     quotedPrice,
     rawMessage:clean(input?.rawMessage,32000),
     source:clean(input?.source,40)||'web',
     sourceUrl,
     internalNotes:'',
-    schemaVersion:1
+    schemaVersion:2
   };
 }
 
@@ -135,14 +139,14 @@ export async function insertOrder(db,order,id){
     INSERT INTO orders (
       id,client_submission_id,status,order_type,interface_language,name,contact,
       occasion,occasion_detail,story_core,description,golden_answers_json,
-      tier_label,wedding_package_id,wedding_package_label,styles_json,urgent,
+      tier_label,wedding_package_id,wedding_package_label,styles_json,instruments_json,sound_prompt,urgent,
       quoted_price,raw_message,source,source_url,internal_notes,schema_version,
       created_at,updated_at,last_edited_by
     ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   `).bind(
     id,order.clientSubmissionId,order.status,order.orderType,order.language,order.name,order.contact,
     order.occasion,order.occasionDetail,order.storyCore,order.description,JSON.stringify(order.goldenAnswers),
-    order.tierLabel,order.weddingPackageId,order.weddingPackageLabel,JSON.stringify(order.styles),order.urgent?1:0,
+    order.tierLabel,order.weddingPackageId,order.weddingPackageLabel,JSON.stringify(order.styles),JSON.stringify(order.instruments),order.soundPrompt,order.urgent?1:0,
     order.quotedPrice,order.rawMessage,order.source,order.sourceUrl,order.internalNotes,order.schemaVersion,
     now,now,'public-form'
   ).run();

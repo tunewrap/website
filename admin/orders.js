@@ -72,7 +72,8 @@ function summary(){
 function searchable(order){
   return [
     order.id,order.name,order.contact,order.occasion,order.occasionDetail,order.storyCore,
-    order.description,order.tierLabel,order.weddingPackageLabel,...(order.styles||[])
+    order.description,order.tierLabel,order.weddingPackageLabel,...(order.styles||[]),
+    ...(order.instruments||[]),order.soundPrompt
   ].join(' ').toLocaleLowerCase();
 }
 
@@ -157,6 +158,8 @@ function openEditor(order){
   $('#detailLanguage').textContent=(order.language||'ru').toUpperCase();
   $('#detailTier').textContent=order.weddingPackageLabel||order.tierLabel||'—';
   $('#detailStyles').textContent=(order.styles||[]).join(', ')||'—';
+  $('#detailInstruments').textContent=(order.instruments||[]).join(', ')||'—';
+  $('#detailSoundPrompt').textContent=order.soundPrompt||'—';
   $('#detailPrice').textContent=order.quotedPrice==null?'—':`$${order.quotedPrice}${order.urgent?' + urgent':''}`;
   $('#detailCreated').textContent=formatDate(order.createdAt);
   $('#orderStatusField').value=order.status;
@@ -201,6 +204,9 @@ function orderAsText(order){
     `Контакт: ${order.contact}`,
     `Тип: ${TYPE_LABELS[order.orderType]||order.orderType}`,
     `Пакет: ${order.weddingPackageLabel||order.tierLabel||'—'}`,
+    `Стиль: ${(order.styles||[]).join(', ')||'—'}`,
+    `Инструменты: ${(order.instruments||[]).join(', ')||'—'}`,
+    `Suno: ${order.soundPrompt||'—'}`,
     `Событие: ${order.occasion||'—'}`,
     '',
     order.storyCore,

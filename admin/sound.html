@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <base href="/">
+  <title>TuneWrap Admin Studio — Звучание</title>
+  <link rel="stylesheet" href="/admin/admin.css">
+  <link rel="stylesheet" href="/admin/sound.css">
+</head>
+<body>
+  <header class="admin-header">
+    <a class="brand" href="/admin/" aria-label="TuneWrap Admin Studio">
+      <span class="brand-mark" aria-hidden="true">TW</span>
+      <span><strong>TuneWrap</strong><small>Admin Studio</small></span>
+    </a>
+    <nav class="admin-section-nav" aria-label="Разделы Admin Studio">
+      <a href="/admin/">Музыка</a>
+      <a href="/admin/orders.html">Заказы</a>
+      <a href="/admin/pricing.html">Стоимость</a>
+      <a href="/admin/site.html">Сайт</a>
+      <a class="is-active" href="/admin/sound.html" aria-current="page">Звучание</a>
+    </nav>
+    <button class="icon-button" id="refreshSoundButton" type="button" aria-label="Обновить" title="Обновить">↻</button>
+  </header>
+
+  <main class="admin-shell sound-admin-shell">
+    <section class="admin-intro sound-intro">
+      <div>
+        <p class="eyebrow">SOUND CMS</p>
+        <h1>Стили и звучание</h1>
+        <p>Добавляйте стили и инструменты — после сохранения они сразу появляются в анкете без GitHub и нового деплоя.</p>
+      </div>
+      <div class="sound-intro-actions">
+        <button class="secondary-button" id="translateSoundButton" type="button">Автоперевести язык</button>
+        <button class="gold-button" id="saveSoundButton" type="button">Сохранить</button>
+      </div>
+    </section>
+
+    <section class="sound-language-bar">
+      <div>
+        <small>ЯЗЫК РЕДАКТИРОВАНИЯ</small>
+        <div class="sound-language-tabs" id="soundLanguageTabs">
+          <button class="is-active" data-language="ru" type="button">RU</button>
+          <button data-language="uk" type="button">UA</button>
+          <button data-language="ka" type="button">GE</button>
+          <button data-language="en" type="button">EN</button>
+          <button data-language="de" type="button">DE</button>
+        </div>
+      </div>
+      <p id="soundLanguageHint">Редактируется RU. Название для Suno / prompt остаётся общим для всех языков.</p>
+    </section>
+
+    <section class="form-section sound-section">
+      <div class="section-heading">
+        <span>01</span>
+        <div>
+          <h2>Музыкальные стили</h2>
+          <p>На сайте можно смешивать до 5 стилей. Вы можете добавлять, отключать, удалять и менять порядок.</p>
+        </div>
+      </div>
+      <div class="sound-quick-add">
+        <input id="newStyleName" type="text" placeholder="Например: Neo Soul">
+        <button class="secondary-button" id="addStyleButton" type="button">＋ Добавить стиль</button>
+      </div>
+      <div class="sound-editor-list" id="styleEditors"></div>
+      <p class="sound-empty" id="stylesEmpty">Нет стилей.</p>
+    </section>
+
+    <section class="form-section sound-section">
+      <div class="section-heading">
+        <span>02</span>
+        <div>
+          <h2>Инструменты и звучание</h2>
+          <p>Клиент выбирает 1–5 вариантов. «На усмотрение TuneWrap» работает как отдельный эксклюзивный выбор.</p>
+        </div>
+      </div>
+      <div class="sound-quick-add">
+        <input id="newInstrumentName" type="text" placeholder="Например: Арфа">
+        <button class="secondary-button" id="addInstrumentButton" type="button">＋ Добавить инструмент</button>
+      </div>
+      <div class="sound-editor-list" id="instrumentEditors"></div>
+      <p class="sound-empty" id="instrumentsEmpty">Нет инструментов.</p>
+    </section>
+
+    <section class="sound-save-bar" id="soundSaveBar">
+      <div>
+        <strong id="soundDirtyLabel">Все изменения сохранены</strong>
+        <small id="soundAudit">—</small>
+      </div>
+      <button class="gold-button" id="saveSoundBottomButton" type="button">Сохранить изменения</button>
+    </section>
+  </main>
+
+  <div class="toast-region" id="soundToastRegion" aria-live="polite"></div>
+  <script type="module" src="/admin/sound.js"></script>
+</body>
+</html>

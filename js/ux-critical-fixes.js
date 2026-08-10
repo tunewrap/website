@@ -19,6 +19,7 @@
       errors:{
         package:'Выберите пакет и стоимость.',
         style:'Выберите хотя бы один стиль песни.',
+        instrument:'Выберите инструменты/звучание или «На усмотрение TuneWrap».',
         name:'Укажите ваше имя.',
         occasion:'Выберите повод или историю.',
         story:'Выберите пример истории или напишите свою.',
@@ -36,6 +37,7 @@
       errors:{
         package:'Оберіть пакет і вартість.',
         style:'Оберіть хоча б один стиль пісні.',
+        instrument:'Оберіть інструменти/звучання або «На розсуд TuneWrap».',
         name:'Вкажіть ваше ім’я.',
         occasion:'Оберіть подію або історію.',
         story:'Оберіть приклад історії або напишіть свою.',
@@ -53,6 +55,7 @@
       errors:{
         package:'აირჩიეთ პაკეტი და ფასი.',
         style:'აირჩიეთ მინიმუმ ერთი მუსიკალური სტილი.',
+        instrument:'აირჩიეთ ინსტრუმენტები/ჟღერადობა ან „TuneWrap-ის არჩევანი“.',
         name:'მიუთითეთ თქვენი სახელი.',
         occasion:'აირჩიეთ შემთხვევა ან ისტორია.',
         story:'აირჩიეთ მაგალითი ან დაწერეთ თქვენი ისტორია.',
@@ -70,6 +73,7 @@
       errors:{
         package:'Choose a package and price.',
         style:'Choose at least one music style.',
+        instrument:'Choose instruments/sound or “TuneWrap choice”.',
         name:'Enter your name.',
         occasion:'Choose an occasion or story.',
         story:'Choose a story example or write your own.',
@@ -87,6 +91,7 @@
       errors:{
         package:'Bitte Paket und Preis auswählen.',
         style:'Bitte mindestens einen Musikstil auswählen.',
+        instrument:'Bitte Instrumente/Klang oder „TuneWrap-Auswahl“ wählen.',
         name:'Bitte Ihren Namen eingeben.',
         occasion:'Bitte Anlass oder Geschichte auswählen.',
         story:'Bitte ein Beispiel wählen oder Ihre eigene Geschichte schreiben.',
@@ -224,6 +229,7 @@
     return {
       package:regularPackageField(),
       style:$('#styleChips')?.closest('.field-group'),
+      instrument:$('#instrumentChips')?.closest('.field-group'),
       name:$('#fieldName')?.closest('.field-group'),
       occasion:$('#fieldOccasion')?.closest('.field-group'),
       story:$('#storyCore'),
@@ -234,10 +240,11 @@
 
   function markRequired(){
     const targets=requiredTargets();
-    ['style','name','occasion','story','description','contact'].forEach(key=>{
+    ['style','instrument','name','occasion','story','description','contact'].forEach(key=>{
       targets[key]?.classList.add('ux-required');
     });
     $('#styleChips')?.closest('.field-group')?.querySelector('.field-label')?.classList.add('ux-required-label');
+    $('#instrumentChips')?.closest('.field-group')?.querySelector('.field-label')?.classList.add('ux-required-label');
     $('#fieldName')?.closest('.field-group')?.querySelector('.field-label')?.classList.add('ux-required-label');
     $('#fieldOccasion')?.closest('.field-group')?.querySelector('.field-label')?.classList.add('ux-required-label');
     $('#fieldDescription')?.closest('.field-group')?.querySelector('.field-label')?.classList.add('ux-required-label');
@@ -257,6 +264,10 @@
 
   function styleCount(){
     return Array.from(document.querySelectorAll('#styleChips .chip.selected')).length;
+  }
+
+  function instrumentCount(){
+    return Array.from(document.querySelectorAll('#instrumentChips .chip.selected')).length;
   }
 
   function updateStyleHint(){
@@ -359,6 +370,7 @@
     // package + buyer name + contact are required, recipient details come later.
     if(currentMode()!=='certificate'){
       if(styleCount()<1)errors.push([groups.style,c.errors.style]);
+      if($('#instrumentChips')&&instrumentCount()<1)errors.push([groups.instrument,c.errors.instrument]);
       if(!text('fieldOccasion'))errors.push([groups.occasion,c.errors.occasion]);
       if(!text('fieldStoryCore'))errors.push([groups.story,c.errors.story]);
       if(!text('fieldDescription'))errors.push([groups.description,c.errors.description]);

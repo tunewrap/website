@@ -45,6 +45,18 @@ const siteContentPromise=(async()=>{
   }
 })();
 
+const soundPreferencesPromise=(async()=>{
+  try{
+    const response=await fetch('/api/sound-preferences',{headers:{accept:'application/json'},cache:'no-store'});
+    if(!response.ok)return null;
+    const payload=await response.json();
+    return payload?.ok&&payload?.config?payload.config:null;
+  }catch(error){
+    console.error('TuneWrap Sound Preferences bootstrap failed',error);
+    return null;
+  }
+})();
+
 try{
   const response = await fetch('/api/tracks',{headers:{accept:'application/json'},cache:'no-store'});
   if(!response.ok) throw new Error(`Track Catalog API: HTTP ${response.status}`);
@@ -73,6 +85,17 @@ try{
       await import('./site-cms-runtime.js');
     }catch(error){
       console.error('TuneWrap Site CMS runtime failed',error);
+    }
+  }
+
+  // Sound Preferences CMS owns the public style/instrument choices.
+  // API failure keeps the built-in style form as a safe fallback.
+  window.TUNEWRAP_SOUND_PREFERENCES=await soundPreferencesPromise;
+  if(window.TUNEWRAP_SOUND_PREFERENCES){
+    try{
+      await import('./sound-preferences-runtime.js');
+    }catch(error){
+      console.error('TuneWrap Sound Preferences runtime failed',error);
     }
   }
 

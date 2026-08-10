@@ -1,0 +1,39 @@
+NEW
+admin/sound.html
+admin/sound.css
+admin/sound.js
+css/sound-preferences.css
+js/sound-icons.js
+js/sound-preferences-runtime.js
+functions/_shared/sound-preferences.js
+functions/api/sound-preferences.js
+functions/api/admin/sound-preferences.js
+migrations/0006_sound_preferences_cms.sql
+scripts/install-stage-12.5-sound-cms.js
+scripts/sound-preferences-cms-test.js
+README-STAGE-12.5.txt
+STAGE-12.5-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+js/app-bootstrap.js
+js/orders-submit.js
+js/ux-critical-fixes.js
+functions/_shared/orders.js
+admin/orders.html
+admin/orders.js
+admin/index.html
+admin/pricing.html
+admin/site.html
+package.json
+
+D1
+NEW table: sound_preferences_config
+ALTER orders: + instruments_json
+ALTER orders: + sound_prompt
+
+NO CHANGES
+music catalog D1/R2
+track queue
+persistent audio architecture
+pricing CMS schema
+site CMS schema

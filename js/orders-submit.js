@@ -130,7 +130,10 @@ function collect(){
     tierLabel:content('sumTier'),
     weddingPackageId:wedding?weddingSelect?.value||'':'',
     weddingPackageLabel:wedding?weddingSelect?.selectedOptions?.[0]?.textContent?.trim()||'':'',
-    styles:content('sumStyle')&&content('sumStyle')!=='—'?content('sumStyle').split(',').map(v=>v.trim()).filter(Boolean):[],
+    styles:window.__tuneWrapSoundPreferences?.getSelectedStyleLabels?.()
+      ||(content('sumStyle')&&content('sumStyle')!=='—'?content('sumStyle').split(',').map(v=>v.trim()).filter(Boolean):[]),
+    instruments:window.__tuneWrapSoundPreferences?.getSelectedInstrumentLabels?.()||[],
+    soundPrompt:window.__tuneWrapSoundPreferences?.getSoundPrompt?.()||'',
     urgent:Boolean(document.getElementById('fieldUrgent')?.checked),
     quotedPrice:parsePrice(),
     rawMessage:content('previewText'),
