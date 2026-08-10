@@ -30,7 +30,8 @@ assert.match(adminApi,/requireSameOrigin/);
 assert.match(runtime,/getSelectedInstrumentLabels/);
 assert.match(runtime,/getSoundPrompt/);
 assert.match(runtime,/exclusive/);
-assert.match(runtime,/maxInstruments/);
+assert.match(shared,/maxInstruments:null/);
+assert.doesNotMatch(runtime,/maxFor\('instruments'\)/);
 assert.match(icons,/soundIconSvg/);
 assert.match(migration,/CREATE TABLE IF NOT EXISTS sound_preferences_config/);
 assert.match(migration,/ADD COLUMN instruments_json/);
@@ -59,4 +60,4 @@ for(const rel of ['admin/index.html','admin/orders.html','admin/pricing.html','a
   assert.match(read(rel),/href="\/admin\/sound\.html"/);
 }
 
-console.log('PASS: Stage 12.5 Sound Preferences CMS — live styles/instruments, Admin editor, multilingual labels, required instrument choice, Orders/Suno snapshot and safe fallback.');
+console.log('PASS: Stage 12.5 Sound Preferences CMS — live styles/instruments, unlimited instrument selection, Admin editor, multilingual labels, required instrument choice, Orders/Suno snapshot and safe fallback.');

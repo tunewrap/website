@@ -58,7 +58,7 @@ export function normalizeSoundPreferencesConfig(value){
     schemaVersion:1,
     settings:{
       maxStyles:5,
-      maxInstruments:5
+      maxInstruments:null
     },
     styles:cleanItems(value.styles,'style'),
     instruments:cleanItems(value.instruments,'instrument')

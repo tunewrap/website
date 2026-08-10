@@ -4,7 +4,7 @@ if(!CONFIG)throw new Error('Sound Preferences config is missing');
 const COPY={
   ru:{
     instruments:'Инструменты и звучание',
-    instrumentsHint:'Выберите от 1 до 5 вариантов. «На усмотрение TuneWrap» заменяет остальные.',
+    instrumentsHint:'Выберите нужные инструменты — количество не ограничено. «На усмотрение TuneWrap» заменяет остальные.',
     instrumentsSummary:'Инструменты:',
     instrumentsMessage:'Инструменты',
     instrumentRequired:'Выберите инструменты/звучание или «На усмотрение TuneWrap».',
@@ -13,7 +13,7 @@ const COPY={
   },
   uk:{
     instruments:'Інструменти та звучання',
-    instrumentsHint:'Оберіть від 1 до 5 варіантів. «На розсуд TuneWrap» замінює решту.',
+    instrumentsHint:'Оберіть потрібні інструменти — кількість не обмежена. «На розсуд TuneWrap» замінює решту.',
     instrumentsSummary:'Інструменти:',
     instrumentsMessage:'Інструменти',
     instrumentRequired:'Оберіть інструменти/звучання або «На розсуд TuneWrap».',
@@ -22,7 +22,7 @@ const COPY={
   },
   ka:{
     instruments:'ინსტრუმენტები და ჟღერადობა',
-    instrumentsHint:'აირჩიეთ 1-დან 5-მდე ვარიანტი. „TuneWrap-ის არჩევანი“ დანარჩენებს ცვლის.',
+    instrumentsHint:'აირჩიეთ სასურველი ინსტრუმენტები — რაოდენობა შეზღუდული არ არის. „TuneWrap-ის არჩევანი“ დანარჩენებს ცვლის.',
     instrumentsSummary:'ინსტრუმენტები:',
     instrumentsMessage:'ინსტრუმენტები',
     instrumentRequired:'აირჩიეთ ინსტრუმენტები/ჟღერადობა ან „TuneWrap-ის არჩევანი“.',
@@ -31,7 +31,7 @@ const COPY={
   },
   en:{
     instruments:'Instruments and sound',
-    instrumentsHint:'Choose 1–5 options. “TuneWrap choice” replaces the other selections.',
+    instrumentsHint:'Choose any instruments you want — there is no selection limit. “TuneWrap choice” replaces the other selections.',
     instrumentsSummary:'Instruments:',
     instrumentsMessage:'Instruments',
     instrumentRequired:'Choose instruments/sound or “TuneWrap choice”.',
@@ -40,7 +40,7 @@ const COPY={
   },
   de:{
     instruments:'Instrumente und Klang',
-    instrumentsHint:'Wählen Sie 1–5 Optionen. „TuneWrap-Auswahl“ ersetzt die anderen.',
+    instrumentsHint:'Wählen Sie beliebig viele gewünschte Instrumente. „TuneWrap-Auswahl“ ersetzt die anderen.',
     instrumentsSummary:'Instrumente:',
     instrumentsMessage:'Instrumente',
     instrumentRequired:'Bitte Instrumente/Klang oder „TuneWrap-Auswahl“ wählen.',
@@ -116,8 +116,8 @@ function chip(item,kind,selected){
   return button;
 }
 
-function maxFor(kind){
-  const raw=kind==='styles'?CONFIG?.settings?.maxStyles:CONFIG?.settings?.maxInstruments;
+function maxStyles(){
+  const raw=CONFIG?.settings?.maxStyles;
   return Math.max(1,Math.min(5,Number(raw)||5));
 }
 
@@ -191,7 +191,7 @@ function renderInstruments(){
 }
 
 function toggleStyle(id){
-  const max=maxFor('styles');
+  const max=maxStyles();
   if(state.selectedStyles.includes(id)){
     state.selectedStyles=state.selectedStyles.filter(value=>value!==id);
   }else if(state.selectedStyles.length<max){
@@ -207,18 +207,14 @@ function toggleStyle(id){
 function toggleInstrument(id){
   const item=itemById('instruments',id);
   if(!item)return;
-  const max=maxFor('instruments');
   if(item.exclusive){
     state.selectedInstruments=state.selectedInstruments.includes(id)?[]:[id];
   }else{
     state.selectedInstruments=state.selectedInstruments.filter(value=>!itemById('instruments',value)?.exclusive);
     if(state.selectedInstruments.includes(id)){
       state.selectedInstruments=state.selectedInstruments.filter(value=>value!==id);
-    }else if(state.selectedInstruments.length<max){
-      state.selectedInstruments=[...state.selectedInstruments,id];
     }else{
-      setHint($('#soundInstrumentField'),copy().instrumentLimit,true);
-      return;
+      state.selectedInstruments=[...state.selectedInstruments,id];
     }
   }
   renderInstruments();
