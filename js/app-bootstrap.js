@@ -27,6 +27,14 @@ if(!document.getElementById('tunewrapStage1281UX')){
   document.head.append(stage1281);
 }
 
+if(!document.getElementById('tunewrapStage1282CertificateFit')){
+  const stage1282=document.createElement('link');
+  stage1282.id='tunewrapStage1282CertificateFit';
+  stage1282.rel='stylesheet';
+  stage1282.href='/css/stage-12.8.2-certificate-fit.css?v=12.8.2';
+  document.head.append(stage1282);
+}
+
 if(!document.getElementById('tunewrapStoryCategoryStyles')){
   const storyCategoryStyles=document.createElement('link');storyCategoryStyles.id='tunewrapStoryCategoryStyles';storyCategoryStyles.rel='stylesheet';storyCategoryStyles.href='/css/story-categories.css?v=12.7';document.head.append(storyCategoryStyles);
 }

@@ -1,0 +1,101 @@
+/* TuneWrap Stage 12.8.2 — Certificate six-package fit hotfix */
+
+/*
+Root cause:
+.gift-certificate-groups was still a CSS Grid. In the compact overlay
+the grid tracks stretched vertically, creating a large empty area after
+the first three cards. Because Stage 12.8.1 intentionally disabled
+normal scrolling, the wedding row was pushed below the visible area.
+
+This hotfix makes the two package groups normal block-flow sections.
+No package data/runtime/CRM logic changes.
+*/
+
+.gift-certificate-groups{
+  display:block!important;
+  height:auto!important;
+  min-height:0!important;
+  margin-top:12px!important;
+}
+
+.gift-certificate-group{
+  display:block!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+
+.gift-certificate-group + .gift-certificate-group{
+  margin-top:10px!important;
+}
+
+.gift-certificate-group-title{
+  margin:0 0 5px!important;
+}
+
+.gift-certificate-grid{
+  align-content:start!important;
+  align-items:stretch!important;
+  height:auto!important;
+  min-height:0!important;
+}
+
+/* Desktop: keep the whole modal compact and centered. */
+@media(min-width:901px){
+  .gift-certificate-shell{
+    height:auto!important;
+    max-height:calc(100dvh - 20px)!important;
+  }
+
+  .gift-certificate-scroll{
+    height:auto!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+
+  .gift-certificate-card{
+    min-height:112px!important;
+  }
+
+  .gift-certificate-card-description{
+    -webkit-line-clamp:1!important;
+  }
+}
+
+/* Tablet: 3 + 3 stays on two rows. */
+@media(max-width:900px) and (min-width:621px){
+  .gift-certificate-groups{
+    margin-top:9px!important;
+  }
+
+  .gift-certificate-group + .gift-certificate-group{
+    margin-top:8px!important;
+  }
+
+  .gift-certificate-card{
+    min-height:106px!important;
+  }
+}
+
+/* Phone: two columns, 3 cards per group = four compact rows total. */
+@media(max-width:620px){
+  .gift-certificate-groups{
+    margin-top:7px!important;
+  }
+
+  .gift-certificate-group + .gift-certificate-group{
+    margin-top:6px!important;
+  }
+
+  .gift-certificate-card{
+    min-height:74px!important;
+  }
+}
+
+/* Very short / landscape screens retain the safety scroll fallback. */
+@media(max-height:560px){
+  .gift-certificate-scroll{
+    overflow:auto!important;
+  }
+}

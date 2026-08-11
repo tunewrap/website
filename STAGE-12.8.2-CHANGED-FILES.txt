@@ -1,0 +1,13 @@
+NEW
+css/stage-12.8.2-certificate-fit.css
+scripts/install-stage-12.8.2-certificate-fit.js
+scripts/stage-12.8.2-certificate-fit-test.js
+README-STAGE-12.8.2.txt
+STAGE-12.8.2-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+js/app-bootstrap.js
+package.json
+
+NO D1 MIGRATION
+NO runtime/API/CRM/player changes
