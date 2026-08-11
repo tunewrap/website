@@ -18,14 +18,15 @@
     "responsive:test": "node scripts/responsive-wide-test.js",
     "pricing:test": "node scripts/pricing-cms-test.js",
     "site:test": "node scripts/site-cms-test.js",
-    "test": "npm run tracks:check && npm run tracks:test-queue && npm run tracks:test-artwork && npm run tracks:test-scale && npm run admin:test && npm run orders:test && npm run responsive:test && npm run pricing:test && npm run site:test && npm run sound:test && npm run intake:test && npm run categories:test && npm run certificate:test && npm run ux1281:test && npm run certificate-fit:test && npm run closeux:test",
+    "test": "npm run tracks:check && npm run tracks:test-queue && npm run tracks:test-artwork && npm run tracks:test-scale && npm run admin:test && npm run orders:test && npm run responsive:test && npm run pricing:test && npm run site:test && npm run sound:test && npm run intake:test && npm run categories:test && npm run certificate:test && npm run ux1281:test && npm run certificate-fit:test && npm run closeux:test && npm run corpclose:test",
     "sound:test": "node scripts/sound-preferences-cms-test.js",
     "intake:test": "node scripts/order-intake-completion-test.js",
     "categories:test": "node scripts/story-categories-test.js",
     "certificate:test": "node scripts/gift-certificate-overlay-test.js",
     "ux1281:test": "node scripts/stage-12.8.1-ux-hotfix-test.js",
     "certificate-fit:test": "node scripts/stage-12.8.2-certificate-fit-test.js",
-    "closeux:test": "node scripts/stage-12.8.3-right-close-ux-test.js"
+    "closeux:test": "node scripts/stage-12.8.3-right-close-ux-test.js",
+    "corpclose:test": "node scripts/stage-12.8.4-corporate-card-close-test.js"
   },
   "engines": {
     "node": ">=18"

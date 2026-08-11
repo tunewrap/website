@@ -43,6 +43,14 @@ if(!document.getElementById('tunewrapStage1283RightClose')){
   document.head.append(stage1283);
 }
 
+if(!document.getElementById('tunewrapStage1284CorporateClose')){
+  const stage1284=document.createElement('link');
+  stage1284.id='tunewrapStage1284CorporateClose';
+  stage1284.rel='stylesheet';
+  stage1284.href='/css/stage-12.8.4-corporate-card-close.css?v=12.8.4';
+  document.head.append(stage1284);
+}
+
 if(!document.getElementById('tunewrapStoryCategoryStyles')){
   const storyCategoryStyles=document.createElement('link');storyCategoryStyles.id='tunewrapStoryCategoryStyles';storyCategoryStyles.rel='stylesheet';storyCategoryStyles.href='/css/story-categories.css?v=12.7';document.head.append(storyCategoryStyles);
 }
@@ -188,6 +196,12 @@ try{
     await import('./stage-12.8.3-right-close-ux.js');
   }catch(error){
     console.error('TuneWrap Stage 12.8.3 right-side close UX failed',error);
+  }
+
+  try{
+    await import('./stage-12.8.4-corporate-card-close.js');
+  }catch(error){
+    console.error('TuneWrap Stage 12.8.4 corporate card close failed',error);
   }
 
   if(document.readyState !== 'loading') document.dispatchEvent(new Event('DOMContentLoaded'));

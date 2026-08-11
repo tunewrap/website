@@ -1,0 +1,23 @@
+NEW
+js/stage-12.8.4-corporate-card-close.js
+css/stage-12.8.4-corporate-card-close.css
+scripts/install-stage-12.8.4-corporate-card-close.js
+scripts/stage-12.8.4-corporate-card-close-test.js
+README-STAGE-12.8.4.txt
+STAGE-12.8.4-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+js/app-bootstrap.js
+package.json
+
+NO D1 MIGRATION
+
+INTENTIONALLY UNCHANGED
+index.html
+js/script.js
+corporate pricing logic
+pricing CMS
+orders
+gift certificate
+music/author libraries
+player/queue
