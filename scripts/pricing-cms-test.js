@@ -43,9 +43,9 @@ assert.match(runtime,/tierDetailWeddingIncludes/);
 assert.match(runtime,/sumTotal/);
 assert.doesNotMatch(runtime,/new Audio\s*\(/);
 
-const scriptImport=bootstrap.indexOf("import('./script.js')");
-const pricingImport=bootstrap.indexOf("import('./pricing-cms-runtime.js')");
-const ordersImport=bootstrap.indexOf("import('./orders-submit.js')");
+const scriptImport=bootstrap.search(/import\('\.\/script\.js(?:\?v=[^']+)?'\)/);
+const pricingImport=bootstrap.search(/import\('\.\/pricing-cms-runtime\.js(?:\?v=[^']+)?'\)/);
+const ordersImport=bootstrap.search(/import\('\.\/orders-submit\.js(?:\?v=[^']+)?'\)/);
 assert.ok(scriptImport>=0&&pricingImport>scriptImport,'Pricing runtime must load after core');
 assert.ok(ordersImport>pricingImport,'Orders CRM must load after Pricing CMS');
 assert.match(bootstrap,/\/api\/pricing/);

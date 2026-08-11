@@ -49,7 +49,7 @@ const COPY=Object.freeze({
 const state={method:''};
 
 function lang(){
-  const value=(document.documentElement.lang||'ru').toLowerCase();
+  const value=String(window.TuneWrapLanguage?.get?.()||'en').toLowerCase();
   if(value.startsWith('uk'))return'uk';
   if(value.startsWith('ka'))return'ka';
   if(value.startsWith('en'))return'en';

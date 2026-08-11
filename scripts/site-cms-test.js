@@ -46,9 +46,9 @@ assert.match(runtime,/corpTgLink/);
 assert.doesNotMatch(runtime,/new MutationObserver/);
 assert.doesNotMatch(runtime,/new Audio\s*\(/);
 
-const core=bootstrap.indexOf("import('./script.js')");
-const site=bootstrap.indexOf("import('./site-cms-runtime.js')");
-const orders=bootstrap.indexOf("import('./orders-submit.js')");
+const core=bootstrap.search(/import\('\.\/script\.js(?:\?v=[^']+)?'\)/);
+const site=bootstrap.search(/import\('\.\/site-cms-runtime\.js(?:\?v=[^']+)?'\)/);
+const orders=bootstrap.search(/import\('\.\/orders-submit\.js(?:\?v=[^']+)?'\)/);
 assert.ok(core>=0&&site>core,'Site CMS must load after core');
 assert.ok(orders>site,'Orders CRM must load after Site CMS');
 assert.match(bootstrap,/\/api\/site-content/);

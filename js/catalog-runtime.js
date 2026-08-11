@@ -34,12 +34,7 @@
   const storyCategories=((window.TUNEWRAP_STORY_CATEGORIES?.categories||DEFAULT_STORY_CATEGORIES).filter(item=>item?.enabled!==false).slice().sort((a,b)=>(a.order||99)-(b.order||99)||a.id.localeCompare(b.id)));
 
   function interfaceLanguage(){
-    const language = String(
-      window.TUNEWRAP_CURRENT_LANGUAGE ||
-      window.TUNEWRAP_INITIAL_LANGUAGE ||
-      document.documentElement.getAttribute('lang') ||
-      'en'
-    ).toLowerCase();
+    const language=String(window.TuneWrapLanguage?.get?.()||'en').toLowerCase();
     return Core.UI_LANGUAGES.includes(language) ? language : 'en';
   }
 
@@ -51,7 +46,7 @@
     return Core.description(track,language);
   }
 
-  function storyCategoryLabel(id,language = interfaceLanguage()){const item=storyCategories.find(category=>category.id===id);return item?.labels?.[language]||item?.labels?.ru||item?.labels?.en||id||'';}
+  function storyCategoryLabel(id,language = interfaceLanguage()){const item=storyCategories.find(category=>category.id===id);return item?.labels?.[language]||item?.labels?.en||item?.labels?.ru||id||'';}
 
   function localizedCategory(track,language = interfaceLanguage()){const first=Array.isArray(track?.categoryIds)?track.categoryIds[0]:'';return first?storyCategoryLabel(first,language):Core.category(track,language);}
 

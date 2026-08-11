@@ -19,7 +19,7 @@ const state={
 };
 
 function lang(){
-  const value=(document.documentElement.lang||'ru').toLowerCase();
+  const value=String(window.TuneWrapLanguage?.get?.()||'en').toLowerCase();
   if(value.startsWith('uk'))return'uk';
   if(value.startsWith('ka'))return'ka';
   if(value.startsWith('en'))return'en';
@@ -28,10 +28,10 @@ function lang(){
 }
 function copy(){return COPY[lang()]||COPY.ru}
 function config(){return window.__tuneWrapPricing?.config||window.TUNEWRAP_PRICING_CMS||null}
-function localesOf(offer){return offer?.locales?.[lang()]||offer?.locales?.ru||offer?.locales?.en||{}}
+function localesOf(offer){return offer?.locales?.[lang()]||offer?.locales?.en||offer?.locales?.ru||{}}
 function settings(){
   const cfg=config();
-  return cfg?.settings?.locales?.[lang()]||cfg?.settings?.locales?.ru||cfg?.settings?.locales?.en||{};
+  return cfg?.settings?.locales?.[lang()]||cfg?.settings?.locales?.en||cfg?.settings?.locales?.ru||{};
 }
 function money(value){return'$'+(Number(value)||0)}
 function tierIndex(offer){return Number.isInteger(TIER_INDEX[offer?.id])?TIER_INDEX[offer.id]:-1}

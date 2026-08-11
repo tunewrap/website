@@ -30,14 +30,6 @@
     }
   });
 
-  const PLAYER_VISIBLE_UI = Object.freeze({
-    en:{back:'Back',minimize:'Minimize',showFull:'Show full',lyrics:'Lyrics',translation:'Translation',order:'Order a similar story',fullDescription:'Song description',collapse:'Collapse'},
-    ru:{back:'Назад',minimize:'Свернуть',showFull:'Показать полностью',lyrics:'Текст песни',translation:'Перевод',order:'Заказать похожую историю',fullDescription:'Описание песни',collapse:'Свернуть'},
-    uk:{back:'Назад',minimize:'Згорнути',showFull:'Показати повністю',lyrics:'Текст пісні',translation:'Переклад',order:'Замовити схожу історію',fullDescription:'Опис пісні',collapse:'Згорнути'},
-    ka:{back:'უკან',minimize:'ჩაკეცვა',showFull:'სრულად ჩვენება',lyrics:'სიმღერის ტექსტი',translation:'თარგმანი',order:'მსგავსი ისტორიის შეკვეთა',fullDescription:'სიმღერის აღწერა',collapse:'ჩაკეცვა'},
-    de:{back:'Zurück',minimize:'Minimieren',showFull:'Vollständig anzeigen',lyrics:'Songtext',translation:'Übersetzung',order:'Eine ähnliche Geschichte bestellen',fullDescription:'Songbeschreibung',collapse:'Einklappen'}
-  });
-
   document.addEventListener('DOMContentLoaded',function(){
     const audio = document.getElementById('tuneWrapAudioEngine');
     if(!audio) return;
@@ -128,12 +120,7 @@
     audio.playsInline = true;
 
     function interfaceLanguage(){
-      const code = String(
-        window.TUNEWRAP_CURRENT_LANGUAGE ||
-        window.TUNEWRAP_INITIAL_LANGUAGE ||
-        document.documentElement.getAttribute('lang') ||
-        'en'
-      ).toLowerCase();
+      const code=String(window.TuneWrapLanguage?.get?.()||'en').toLowerCase();
       return PLAYER_UI[code] ? code : 'en';
     }
 
@@ -396,17 +383,8 @@
       requestAnimationFrame(() => descriptionCollapse.focus({preventScroll:true}));
     }
 
-    function syncVisiblePlayerLabels(){
-      const visible = PLAYER_VISIBLE_UI[interfaceLanguage()] || PLAYER_VISIBLE_UI.en;
-      screen.querySelectorAll('[data-player-i18n]').forEach(node=>{
-        const key=node.dataset.playerI18n;
-        if(visible[key])node.textContent=visible[key];
-      });
-    }
-
     function fillPlayer(item){
       if(!item) return;
-      syncVisiblePlayerLabels();
       closeDescriptionSheet(false);
       const currentTitle = localizedTitle(item.name);
       const currentDescription = catalog.description(item,interfaceLanguage());
@@ -433,7 +411,6 @@
 
     function syncLocalizedPlayer(){
       const labels = ui();
-      syncVisiblePlayerLabels();
       seek.setAttribute('aria-label',labels.seek);
       previousButton.setAttribute('aria-label',labels.previous);
       nextButton.setAttribute('aria-label',labels.next);
@@ -448,7 +425,6 @@
 
     function openPlayer(item,origin,autoplay){
       if(!item) return;
-      syncVisiblePlayerLabels();
       restoreFocus = origin || cardFor(item);
       if(currentItem !== item){
         selectTrack(item.name,{autoplay:autoplay !== false,reason:'open-player'});

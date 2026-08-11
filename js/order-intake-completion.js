@@ -39,7 +39,7 @@
   const $=selector=>document.querySelector(selector);
 
   function lang(){
-    const value=(document.documentElement.lang||'ru').toLowerCase();
+    const value=String(window.TuneWrapLanguage?.get?.()||'en').toLowerCase();
     if(value.startsWith('uk'))return 'uk';
     if(value.startsWith('ka'))return 'ka';
     if(value.startsWith('en'))return 'en';
@@ -50,7 +50,7 @@
   function copy(){return COPY[lang()]||COPY.ru;}
   function isCertificate(){return document.querySelector('.mode-btn.active')?.dataset.mode==='certificate';}
   function item(id){return VOCALS.find(value=>value.id===id)||null;}
-  function label(value){return value?.labels?.[lang()]||value?.labels?.ru||value?.id||'';}
+  function label(value){return value?.labels?.[lang()]||value?.labels?.en||value?.labels?.ru||value?.id||'';}
 
   function ensureField(){
     let group=$('#orderVocalField');

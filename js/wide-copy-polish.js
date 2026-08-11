@@ -21,7 +21,7 @@
 
   function language(){
     const active=document.querySelector('.lang-switch .lang-btn.active, .mobile-lang .lang-btn.active');
-    const raw=(active?.dataset.lang||document.documentElement.lang||'ru').toLowerCase();
+    const raw=String(window.TuneWrapLanguage?.get?.()||active?.dataset.lang||'en').toLowerCase();
     return raw.startsWith('ru')?'ru':raw;
   }
 

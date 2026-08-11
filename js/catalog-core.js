@@ -25,7 +25,7 @@
   function localized(value,language,fallback = ''){
     if(typeof value === 'string') return value;
     if(!value || typeof value !== 'object') return fallback;
-    return value[language] || value.ru || value.en || value.uk || value.ka || value.de || value.original || Object.values(value)[0] || fallback;
+    return value[language] || value.en || value.original || value.ru || value.uk || value.ka || value.de || Object.values(value)[0] || fallback;
   }
 
   function title(track,language){

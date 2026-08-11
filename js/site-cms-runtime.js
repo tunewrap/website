@@ -13,7 +13,7 @@
   const $$=selector=>Array.from(document.querySelectorAll(selector));
 
   function language(){
-    const value=(document.documentElement.lang||'ru').toLowerCase();
+    const value=String(window.TuneWrapLanguage?.get?.()||'en').toLowerCase();
     if(value.startsWith('uk'))return 'uk';
     if(value.startsWith('ka'))return 'ka';
     if(value.startsWith('en'))return 'en';
@@ -22,7 +22,7 @@
   }
 
   function localized(bucket){
-    return bucket?.locales?.[language()]||null;
+    return bucket?.locales?.[language()]||bucket?.locales?.en||bucket?.locales?.ru||null;
   }
 
   function normalize(value){
@@ -191,7 +191,7 @@
   }
 
   function paymentLocale(item){
-    return item?.locales?.[language()]||item?.locales?.ru||null;
+    return item?.locales?.[language()]||item?.locales?.en||item?.locales?.ru||null;
   }
 
   function patchPayments(){
@@ -265,7 +265,7 @@
   }
 
   function announcementDateLocale(){
-    return {ru:'ru-RU',uk:'uk-UA',ka:'ka-GE',en:'en-US',de:'de-DE'}[language()]||'ru-RU';
+    return {ru:'ru-RU',uk:'uk-UA',ka:'ka-GE',en:'en-US',de:'de-DE'}[language()]||'en-US';
   }
 
   function formatAnnouncementDate(value){

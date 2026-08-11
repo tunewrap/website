@@ -49,7 +49,7 @@ const COPY={
 const state={busy:false,lastFingerprint:'',lastOrderId:''};
 
 function lang(){
-  const value=(document.documentElement.lang||'ru').toLowerCase();
+  const value=String(window.TuneWrapLanguage?.get?.()||'en').toLowerCase();
   if(value.startsWith('uk'))return 'uk';
   if(value.startsWith('ka'))return 'ka';
   if(value.startsWith('en'))return 'en';
@@ -118,7 +118,7 @@ function selectedPricing(){
 
 function localizedPricingName(offer){
   const locales=offer?.locales||{};
-  return locales[lang()]?.name||locales.ru?.name||offer?.id||'';
+  return locales[lang()]?.name||locales.en?.name||locales.ru?.name||offer?.id||'';
 }
 
 function parsePrice(){

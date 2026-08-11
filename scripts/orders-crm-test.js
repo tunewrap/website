@@ -22,7 +22,7 @@ assert.match(migration,/client_submission_id TEXT NOT NULL UNIQUE/);
 assert.match(migration,/new','in_progress','waiting_client','done','archived/);
 assert.match(publicModule,/fetch\('\/api\/orders'/);
 assert.match(publicModule,/crypto\.randomUUID/);
-assert.match(bootstrap,/import\('\.\/orders-submit\.js'\)/);
+assert.match(bootstrap,/import\('\.\/orders-submit\.js(?:\?v=[^']+)?'\)/);
 assert.match(bootstrap,/order intake bootstrap failed/,'Order CRM must be isolated from music bootstrap errors');
 assert.doesNotMatch(publicApi,/requireAdmin/,'Public order intake must not require Admin login');
 assert.match(publicApi,/requireSameOrigin/);

@@ -57,7 +57,7 @@ const state={
 const $=selector=>document.querySelector(selector);
 
 function language(){
-  const value=(document.documentElement.lang||'ru').toLowerCase();
+  const value=String(window.TuneWrapLanguage?.get?.()||'en').toLowerCase();
   if(value.startsWith('uk'))return 'uk';
   if(value.startsWith('ka'))return 'ka';
   if(value.startsWith('en'))return 'en';
@@ -78,8 +78,8 @@ function itemById(kind,id){
 
 function label(item,lang=language()){
   return item?.locales?.[lang]?.label
-    ||item?.locales?.ru?.label
     ||item?.locales?.en?.label
+    ||item?.locales?.ru?.label
     ||item?.id
     ||'';
 }

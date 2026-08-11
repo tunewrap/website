@@ -16,7 +16,7 @@ assert.equal(catalog.tracks.length,29,'Stage 11 migration source must contain al
 assert.equal((seed.match(/INSERT OR IGNORE INTO tracks/g)||[]).length,29,'D1 seed must contain 29 track inserts');
 assert.match(seed,/Imported: 29; Missing: 0; Duplicates: 0/);
 assert.doesNotMatch(index,/track-catalog\.generated\.js/,'Production HTML must not load the static catalog');
-assert.match(index,/type="module" src="js\/app-bootstrap\.js"/);
+assert.match(index,/type="module" src="js\/app-bootstrap\.js(?:\?v=[^"]+)?"/);
 assert.match(bootstrap,/fetch\('\/api\/tracks'/,'Production bootstrap must use the public Track Catalog API');
 assert.match(admin,/\/api\/admin\/tracks/,'Admin Studio must use authenticated admin API routes');
 assert.doesNotMatch(admin,/password|api[_-]?key|bearer\s+[a-z0-9]/i,'Admin frontend must not contain credentials');

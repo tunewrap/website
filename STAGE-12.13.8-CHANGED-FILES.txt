@@ -1,0 +1,34 @@
+TUNEWRAP STAGE 12.13.8 — CHANGED FILES
+
+NEW
+scripts/install-stage-12.13.8-global-i18n-consistency.js
+scripts/stage-12.13.8-global-i18n-audit.js
+README-STAGE-12.13.8.txt
+STAGE-12.13.8-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+index.html
+js/app-bootstrap.js
+js/script.js
+js/catalog-core.js
+js/catalog-runtime.js
+js/playback-engine.js
+js/site-cms-runtime.js
+js/pricing-cms-runtime.js
+js/sound-preferences-runtime.js
+js/gift-certificate-overlay.js
+js/order-intake-completion.js
+js/orders-submit.js
+js/stage-12.10-package-ui-polish.js
+js/stage-12.11-contact-channel-selector.js
+js/ux-critical-fixes.js
+js/wide-copy-polish.js
+package.json
+
+NO D1 MIGRATION
+NO AUDIO LOGIC CHANGE
+NO QUEUE CHANGE
+NO SEEK CHANGE
+NO ADMIN CHANGE
+NO CMS DATA CHANGE
+NO FIRST-PAINT CHANGE

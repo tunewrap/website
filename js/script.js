@@ -348,8 +348,8 @@ const TUNEWRAP_LISTEN_LABELS = {
 const TUNEWRAP_TRACK_ORIGINAL_TITLES = window.TuneWrapCatalog?.originalTitles || Object.freeze({});
 
 function applyTuneWrapTrackTitles(language){
-  const titles = TUNEWRAP_TRACK_TITLES[language] || TUNEWRAP_TRACK_TITLES.ru;
-  const listen = TUNEWRAP_LISTEN_LABELS[language] || TUNEWRAP_LISTEN_LABELS.ru;
+  const titles = TUNEWRAP_TRACK_TITLES[language] || TUNEWRAP_TRACK_TITLES.en;
+  const listen = TUNEWRAP_LISTEN_LABELS[language] || TUNEWRAP_LISTEN_LABELS.en;
 
   document.querySelectorAll('.play-btn[data-track]').forEach(button => {
     const track = button.dataset.track;
@@ -382,6 +382,14 @@ function applyTuneWrapTrackTitles(language){
 (function(){
   const I18N = {
     ru: {
+      player_back:"Назад",
+      player_minimize:"Свернуть",
+      player_show_full:"Показать полностью",
+      player_lyrics:"Текст песни",
+      player_translation:"Перевод",
+      player_order:"Заказать похожую историю",
+      player_full_description:"Описание песни",
+      player_collapse:"Свернуть",
       mobile_hero_h1:"История становится <em>песней</em>",
       mobile_menu_philosophy:"Философия",
       mobile_nav_home:"Главная",
@@ -555,6 +563,14 @@ function applyTuneWrapTrackTitles(language){
       author_signature:"Автор песен, продюсер и основатель TuneWrap.",
     },
     uk: {
+      player_back:"Назад",
+      player_minimize:"Згорнути",
+      player_show_full:"Показати повністю",
+      player_lyrics:"Текст пісні",
+      player_translation:"Переклад",
+      player_order:"Замовити схожу історію",
+      player_full_description:"Опис пісні",
+      player_collapse:"Згорнути",
       mobile_hero_h1:"Історія стає <em>піснею</em>",
       mobile_menu_philosophy:"Філософія",
       mobile_nav_home:"Головна",
@@ -728,6 +744,14 @@ function applyTuneWrapTrackTitles(language){
       author_signature:"Автор пісень, продюсер і засновник TuneWrap.",
     },
     ka: {
+      player_back:"უკან",
+      player_minimize:"ჩაკეცვა",
+      player_show_full:"სრულად ჩვენება",
+      player_lyrics:"სიმღერის ტექსტი",
+      player_translation:"თარგმანი",
+      player_order:"მსგავსი ისტორიის შეკვეთა",
+      player_full_description:"სიმღერის აღწერა",
+      player_collapse:"ჩაკეცვა",
       mobile_hero_h1:"ისტორია <em>სიმღერად იქცევა</em>",
       mobile_menu_philosophy:"ფილოსოფია",
       mobile_nav_home:"მთავარი",
@@ -901,6 +925,14 @@ function applyTuneWrapTrackTitles(language){
       author_signature:"სიმღერების ავტორი, პროდიუსერი და TuneWrap-ის დამფუძნებელი.",
     },
     en: {
+      player_back:"Back",
+      player_minimize:"Minimize",
+      player_show_full:"Show full",
+      player_lyrics:"Lyrics",
+      player_translation:"Translation",
+      player_order:"Order a similar story",
+      player_full_description:"Song description",
+      player_collapse:"Collapse",
       mobile_hero_h1:"A story becomes <em>a song</em>",
       mobile_menu_philosophy:"Philosophy",
       mobile_nav_home:"Home",
@@ -1074,6 +1106,14 @@ function applyTuneWrapTrackTitles(language){
       author_signature:"Songwriter, producer and founder of TuneWrap.",
     },
     de: {
+      player_back:"Zurück",
+      player_minimize:"Minimieren",
+      player_show_full:"Vollständig anzeigen",
+      player_lyrics:"Songtext",
+      player_translation:"Übersetzung",
+      player_order:"Eine ähnliche Geschichte bestellen",
+      player_full_description:"Songbeschreibung",
+      player_collapse:"Einklappen",
       mobile_hero_h1:"Eine Geschichte wird <em>zum Lied</em>",
       mobile_menu_philosophy:"Philosophie",
       mobile_nav_home:"Start",
@@ -1911,7 +1951,8 @@ function applyTuneWrapTrackTitles(language){
   function applyLang(lang){
     currentLang = lang;
     window.TUNEWRAP_CURRENT_LANGUAGE = lang;
-    const dict = I18N[lang] || I18N.ru;
+    document.documentElement.dataset.tunewrapLang = lang;
+    const dict = I18N[lang] || I18N.en;
     els.forEach(el=>{
       const key = el.getAttribute('data-i18n');
       if(!dict[key]) return;

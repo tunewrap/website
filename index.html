@@ -22,11 +22,36 @@
     var supported=['en','ru','uk','ka','de'];
     var initial=supported.indexOf(raw)>=0?raw:'en';
     document.documentElement.lang=initial;
+    document.documentElement.dataset.tunewrapLang=initial;
     window.TUNEWRAP_INITIAL_LANGUAGE=initial;
+    window.TUNEWRAP_CURRENT_LANGUAGE=initial;
   }catch(error){
     document.documentElement.lang='en';
+    document.documentElement.dataset.tunewrapLang='en';
     window.TUNEWRAP_INITIAL_LANGUAGE='en';
+    window.TUNEWRAP_CURRENT_LANGUAGE='en';
   }
+})();
+</script>
+<script id="tunewrapLanguageRuntime">
+(function(){
+  var supported=['en','ru','uk','ka','de'];
+  var aliases={ge:'ka',ua:'uk'};
+
+  function normalize(value){
+    var raw=String(value||'').toLowerCase().trim();
+    raw=aliases[raw]||raw;
+    return supported.indexOf(raw)>=0?raw:'';
+  }
+
+  function get(){
+    return normalize(document.documentElement.dataset.tunewrapLang)
+      ||normalize(window.TUNEWRAP_CURRENT_LANGUAGE)
+      ||normalize(window.TUNEWRAP_INITIAL_LANGUAGE)
+      ||'en';
+  }
+
+  window.TuneWrapLanguage=Object.freeze({normalize:normalize,get:get});
 })();
 </script>
 <style id="tunewrapFirstPaintGuard">
@@ -109,11 +134,11 @@
   </div>
 </nav>
 
-<section class="top-mini-player notranslate" id="topMiniPlayer" aria-hidden="true" aria-label="TuneWrap Mini Player" translate="no">
+<section class="top-mini-player" id="topMiniPlayer" aria-hidden="true" aria-label="TuneWrap Mini Player">
   <button class="top-mini-expand" id="topMiniExpand" type="button" aria-label="Expand player">
     <span class="top-mini-brand">
       <span class="top-mini-artwork" aria-hidden="true"><img id="topMiniCover" src="assets/covers/tunewrap-placeholder.svg" alt=""></span>
-      <span class="top-mini-wordmark">Tune<em>Wrap</em></span>
+      <span class="top-mini-wordmark notranslate" translate="no">Tune<em>Wrap</em></span>
     </span>
     <strong id="topMiniTitle">TuneWrap</strong>
   </button>
@@ -480,7 +505,7 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
         <span data-i18n="corp_close">Close</span>
       </button>
-      <div class="song-player-brand">Tune<span>Wrap</span></div>
+      <div class="song-player-brand notranslate" translate="no">Tune<span>Wrap</span></div>
       <span class="corporate-panel-label" data-i18n="corp_panel_label">For companies</span>
     </div>
     <div class="wrap">
@@ -759,15 +784,15 @@
   </div>
 </section>
 
-<section class="song-player-screen notranslate" id="songPlayerScreen" aria-hidden="true" aria-modal="true" role="dialog" aria-labelledby="songPlayerTitle" translate="no">
+<section class="song-player-screen" id="songPlayerScreen" aria-hidden="true" aria-modal="true" role="dialog" aria-labelledby="songPlayerTitle">
   <div class="song-player-shell">
     <div class="song-player-topbar">
       <button class="song-player-back" id="songPlayerBack" type="button">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
-        <span data-player-i18n="back">Back</span>
+        <span data-i18n="player_back" data-player-i18n="back">Back</span>
       </button>
       <div class="song-player-brand">Tune<span>Wrap</span></div>
-      <button class="song-player-minimize" id="songPlayerMinimize" type="button" data-player-i18n="minimize">Minimize</button>
+      <button class="song-player-minimize" id="songPlayerMinimize" type="button" data-i18n="player_minimize" data-player-i18n="minimize">Minimize</button>
     </div>
 
     <div class="song-player-scroll">
@@ -781,24 +806,24 @@
 
       <div class="song-player-copy">
         <h1 id="songPlayerTitle">TuneWrap</h1>
-        <span class="song-player-language" id="songPlayerLanguage"></span>
+        <span class="song-player-language notranslate" id="songPlayerLanguage" translate="no"></span>
         <div class="song-player-description-preview">
           <p id="songPlayerDescription"></p>
-          <button class="song-player-description-toggle" id="songPlayerDescriptionToggle" type="button" aria-expanded="false" aria-controls="songPlayerDescriptionSheet" data-player-i18n="showFull" hidden>Show full</button>
+          <button class="song-player-description-toggle" id="songPlayerDescriptionToggle" type="button" aria-expanded="false" aria-controls="songPlayerDescriptionSheet" data-i18n="player_show_full" data-player-i18n="showFull" hidden>Show full</button>
         </div>
       </div>
 
       <div class="song-player-text-block">
-        <h2 data-player-i18n="lyrics">Lyrics</h2>
+        <h2 data-i18n="player_lyrics" data-player-i18n="lyrics">Lyrics</h2>
         <div class="song-player-text" id="songPlayerLyrics"></div>
       </div>
 
       <div class="song-player-text-block" id="songPlayerTranslationBlock" hidden>
-        <h2 data-player-i18n="translation">Translation</h2>
+        <h2 data-i18n="player_translation" data-player-i18n="translation">Translation</h2>
         <div class="song-player-text" id="songPlayerTranslation"></div>
       </div>
 
-      <a class="song-player-order" id="songPlayerOrder" href="#contact" data-player-i18n="order">Order a similar story</a>
+      <a class="song-player-order" id="songPlayerOrder" href="#contact" data-i18n="player_order" data-player-i18n="order">Order a similar story</a>
     </div>
 
     <div class="song-player-controls">
@@ -824,8 +849,8 @@
 
     <aside class="song-player-description-sheet" id="songPlayerDescriptionSheet" aria-hidden="true" aria-labelledby="songPlayerDescriptionSheetTitle" inert>
       <div class="song-player-description-sheet-head">
-        <h2 id="songPlayerDescriptionSheetTitle" data-player-i18n="fullDescription">Song description</h2>
-        <button id="songPlayerDescriptionCollapse" type="button" data-player-i18n="collapse">Collapse</button>
+        <h2 id="songPlayerDescriptionSheetTitle" data-i18n="player_full_description" data-player-i18n="fullDescription">Song description</h2>
+        <button id="songPlayerDescriptionCollapse" type="button" data-i18n="player_collapse" data-player-i18n="collapse">Collapse</button>
       </div>
       <div class="song-player-description-sheet-scroll" id="songPlayerDescriptionFull" tabindex="0"></div>
     </aside>
@@ -880,6 +905,6 @@
 <audio id="tuneWrapAudioEngine" preload="metadata" playsinline></audio>
 
 <script src="js/catalog-core.js"></script>
-<script type="module" src="js/app-bootstrap.js"></script>
+<script type="module" src="js/app-bootstrap.js?v=12.13.8"></script>
 </body>
 </html>

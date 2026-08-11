@@ -25,7 +25,7 @@ assert.match(runtime,/Получатель расскажет историю и 
 assert.match(css,/gift-certificate-grid/);
 assert.match(css,/certificate-checkout-heading/);
 assert.match(bootstrap,/gift-certificate-overlay\.css\?v=12\.8/);
-assert.match(bootstrap,/import\('\.\/gift-certificate-overlay\.js'\)/);
+assert.match(bootstrap,/import\('\.\/gift-certificate-overlay\.js(?:\?v=[^']+)?'\)/);
 assert.match(orders,/const weddingFromPricing=mode!=='certificate'/);
 assert.match(orders,/const orderType=wedding\?'wedding':mode==='certificate'\?'certificate':'order'/);
 assert.match(pricing,/selectTier:index/);

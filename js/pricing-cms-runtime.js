@@ -9,14 +9,14 @@
   const $=s=>document.querySelector(s);
 
   function lang(){
-    const v=(document.documentElement.lang||'ru').toLowerCase();
+    const v=String(window.TuneWrapLanguage?.get?.()||'en').toLowerCase();
     if(v.startsWith('uk'))return 'uk';
     if(v.startsWith('ka'))return 'ka';
     if(v.startsWith('en'))return 'en';
     if(v.startsWith('de'))return 'de';
     return 'ru';
   }
-  const locale=map=>map?.[lang()]||null;
+  const locale=map=>map?.[lang()]||map?.en||map?.ru||null;
   const settings=()=>locale(config.settings?.locales);
   const money=v=>`$${Number(v)||0}`;
   function tierByIndex(index){

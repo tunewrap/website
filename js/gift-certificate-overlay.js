@@ -11,10 +11,10 @@ en:{label:'GIFT CERTIFICATE',title:'Give a personal song',intro:'Choose a certif
 de:{label:'GESCHENKGUTSCHEIN',title:'Einen persönlichen Song verschenken',intro:'Wähle ein Gutscheinpaket. Die beschenkte Person kann ihre Geschichte und Songdetails später mitteilen.',regular:'Persönlicher Song',wedding:'Hochzeitsformat',choose:'Auswählen',selected:'Ausgewählt',continue:'Mit Gutschein fortfahren',close:'Schließen',current:'Gutscheinwert',checkoutTitle:'Geschenkgutschein',checkoutButton:'Gutschein-Anfrage erstellen',change:'Paket ändern',noOffers:'Zurzeit sind keine Pakete verfügbar.'}
 };
 const state={open:false,selection:null,restoreFocus:null,bypass:false};
-function lang(){const v=(document.documentElement.lang||'ru').toLowerCase();if(v.startsWith('uk'))return'uk';if(v.startsWith('ka'))return'ka';if(v.startsWith('en'))return'en';if(v.startsWith('de'))return'de';return'ru';}
+function lang(){const v=String(window.TuneWrapLanguage?.get?.()||'en').toLowerCase();if(v.startsWith('uk'))return'uk';if(v.startsWith('ka'))return'ka';if(v.startsWith('en'))return'en';if(v.startsWith('de'))return'de';return'ru';}
 function c(){return COPY[lang()]||COPY.ru}
 function money(v){return`$${Number(v)||0}`}
-function loc(map){return map?.[lang()]||map?.ru||map?.en||null}
+function loc(map){return map?.[lang()]||map?.en||map?.ru||null}
 function offers(){
  if(!pricingConfig)return[];
  const tiers=(pricingConfig.tiers||[]).filter(x=>x&&x.enabled!==false).map(x=>({type:'tier',id:x.id,offer:x})).sort((a,b)=>(+a.offer.order||99)-(+b.offer.order||99));

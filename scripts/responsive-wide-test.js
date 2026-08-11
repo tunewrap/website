@@ -34,7 +34,7 @@ assert.doesNotMatch(adapter,/TUNEWRAP_TRACK_CATALOG\s*=/,
 
 const cssLoad=bootstrap.indexOf('/css/responsive-wide.css');
 const adapterLoad=bootstrap.indexOf("import('./responsive-wide.js')");
-const engineLoad=bootstrap.indexOf("import('./playback-engine.js')");
+const engineLoad=bootstrap.search(/import\('\.\/playback-engine\.js(?:\?v=[^']+)?'\)/);
 assert.ok(cssLoad>=0,'Wide stylesheet must be loaded');
 assert.ok(adapterLoad>=0,'Wide adapter must be imported');
 assert.ok(engineLoad>=0,'Playback engine must remain imported');

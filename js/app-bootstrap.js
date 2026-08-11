@@ -243,22 +243,22 @@ try{
   window.TUNEWRAP_TRACK_CATALOG = payload.tracks;
   window.TUNEWRAP_STORY_CATEGORIES = await storyCategoriesPromise;
 
-  await import('./catalog-runtime.js');
-  await import('./script.js');
+  await import('./catalog-runtime.js?v=12.13.8');
+  await import('./script.js?v=12.13.8');
 
   await import('./wide-copy-polish.js');
   await import('./wedding-detail-wide.js');
 
   window.TUNEWRAP_PRICING_CMS=await pricingPromise;
   try{
-    await import('./pricing-cms-runtime.js');
+    await import('./pricing-cms-runtime.js?v=12.13.8');
   }catch(error){
     console.error('TuneWrap Pricing CMS runtime failed',error);
   }
 
   // Gift Certificate uses live Pricing CMS and the existing certificate CRM flow.
   try{
-    await import('./gift-certificate-overlay.js');
+    await import('./gift-certificate-overlay.js?v=12.13.8');
   }catch(error){
     console.error('TuneWrap Stage 12.8 gift certificate overlay failed',error);
   }
@@ -268,7 +268,7 @@ try{
   window.TUNEWRAP_SITE_CMS=await siteContentPromise;
   if(window.TUNEWRAP_SITE_CMS){
     try{
-      await import('./site-cms-runtime.js');
+      await import('./site-cms-runtime.js?v=12.13.8');
     }catch(error){
       console.error('TuneWrap Site CMS runtime failed',error);
     }
@@ -279,7 +279,7 @@ try{
   window.TUNEWRAP_SOUND_PREFERENCES=await soundPreferencesPromise;
   if(window.TUNEWRAP_SOUND_PREFERENCES){
     try{
-      await import('./sound-preferences-runtime.js');
+      await import('./sound-preferences-runtime.js?v=12.13.8');
     }catch(error){
       console.error('TuneWrap Sound Preferences runtime failed',error);
     }
@@ -287,23 +287,23 @@ try{
 
   // Stage 12.6: vocal preference is part of the structured order payload.
   try{
-    await import('./order-intake-completion.js');
+    await import('./order-intake-completion.js?v=12.13.8');
   }catch(error){
     console.error('TuneWrap Stage 12.6 order completion runtime failed',error);
   }
 
   // Orders CRM is loaded after Pricing + Site CMS so it sees final price/contact state.
   try{
-    await import('./orders-submit.js');
+    await import('./orders-submit.js?v=12.13.8');
   }catch(error){
     console.error('TuneWrap order intake bootstrap failed',error);
   }
 
   await import('./responsive-wide.js');
-  await import('./playback-engine.js');
+  await import('./playback-engine.js?v=12.13.8');
 
   try{
-    await import('./ux-critical-fixes.js');
+    await import('./ux-critical-fixes.js?v=12.13.8');
   }catch(error){
     console.error('TuneWrap Stage 12.4 UX runtime failed',error);
   }
@@ -328,14 +328,14 @@ try{
 
 
   try{
-    await import('./stage-12.10-package-ui-polish.js');
+    await import('./stage-12.10-package-ui-polish.js?v=12.13.8');
   }catch(error){
     console.error('TuneWrap Stage 12.10 package UI polish failed',error);
   }
 
 
   try{
-    await import('./stage-12.11-contact-channel-selector.js');
+    await import('./stage-12.11-contact-channel-selector.js?v=12.13.8');
   }catch(error){
     console.error('TuneWrap Stage 12.11 contact channel selector failed',error);
   }
