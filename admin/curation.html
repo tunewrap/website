@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <base href="/">
+  <title>TuneWrap Admin — Порядок и витрина</title>
+  <link rel="stylesheet" href="/admin/admin.css">
+  <link rel="stylesheet" href="/admin/curation.css">
+</head>
+<body>
+  <header class="admin-header">
+    <a class="brand" href="/admin/" aria-label="TuneWrap Admin Studio">
+      <span class="brand-mark" aria-hidden="true">TW</span>
+      <span><strong>TuneWrap</strong><small>Admin Studio</small></span>
+    </a>
+    <nav class="admin-section-nav" aria-label="Разделы Admin Studio">
+      <a class="is-active" aria-current="page" href="/admin/">Музыка</a>
+      <a href="/admin/orders.html">Заказы</a>
+      <a href="/admin/pricing.html">Стоимость</a>
+      <a href="/admin/site.html">Сайт</a>
+      <a href="/admin/sound.html">Звучание</a>
+    </nav>
+    <a class="icon-button curation-home-button" href="/admin/" aria-label="Назад к музыке" title="Назад">←</a>
+  </header>
+
+  <main class="admin-shell curation-shell">
+    <section class="admin-intro curation-intro">
+      <div>
+        <p class="eyebrow">MUSIC CURATION</p>
+        <h1>Порядок и витрина</h1>
+        <p>Здесь задаётся порядок треков в библиотеках и главная песня каждого музыкального раздела.</p>
+      </div>
+      <button class="secondary-button" id="reloadButton" type="button">Обновить</button>
+    </section>
+
+    <div class="curation-note">
+      <strong>Как это работает</strong>
+      <span>Порядок Stories управляет библиотекой «Музыкальные истории» и первой частью глобальной очереди. Порядок Author — авторской библиотекой и второй частью очереди. «Главная песня» меняет большой трек на основном экране раздела.</span>
+    </div>
+
+    <section class="curation-board" data-curation-section="stories">
+      <div class="curation-section-head">
+        <div>
+          <span class="curation-index">01</span>
+          <div>
+            <p class="eyebrow">MUSICAL STORIES</p>
+            <h2>Музыкальные истории</h2>
+          </div>
+        </div>
+        <span class="curation-count" id="storiesCount">—</span>
+      </div>
+
+      <div class="featured-manager">
+        <div class="featured-copy">
+          <span class="featured-kicker">ГЛАВНАЯ ПЕСНЯ НА ОСНОВНОМ ЭКРАНЕ</span>
+          <strong>Витрина «Музыкальные истории»</strong>
+          <small>Можно выбрать любой опубликованный трек из этого раздела.</small>
+        </div>
+        <div class="featured-control">
+          <select id="storiesFeaturedSelect" aria-label="Главная песня Музыкальные истории"></select>
+          <button class="gold-button" id="storiesFeaturedSave" type="button">Поставить на витрину</button>
+        </div>
+        <div class="featured-current" id="storiesFeaturedCurrent"></div>
+      </div>
+
+      <div class="sort-panel">
+        <div class="sort-panel-head">
+          <div>
+            <strong>Порядок треков</strong>
+            <small>Перетаскивай мышкой или используй стрелки. Черновики тоже можно заранее поставить в нужное место.</small>
+          </div>
+          <button class="gold-button" id="storiesOrderSave" type="button" disabled>Сохранить порядок</button>
+        </div>
+        <div class="sort-list" id="storiesSortList" data-section="stories" aria-label="Порядок Музыкальных историй"></div>
+      </div>
+    </section>
+
+    <section class="curation-board" data-curation-section="author">
+      <div class="curation-section-head">
+        <div>
+          <span class="curation-index">02</span>
+          <div>
+            <p class="eyebrow">AUTHOR SONGS</p>
+            <h2>Авторские песни</h2>
+          </div>
+        </div>
+        <span class="curation-count" id="authorCount">—</span>
+      </div>
+
+      <div class="featured-manager">
+        <div class="featured-copy">
+          <span class="featured-kicker">ГЛАВНАЯ ПЕСНЯ НА ОСНОВНОМ ЭКРАНЕ</span>
+          <strong>Витрина «Авторские песни»</strong>
+          <small>Например, сюда можно поставить Intro TuneWrap или любой другой опубликованный авторский трек.</small>
+        </div>
+        <div class="featured-control">
+          <select id="authorFeaturedSelect" aria-label="Главная песня Авторские песни"></select>
+          <button class="gold-button" id="authorFeaturedSave" type="button">Поставить на витрину</button>
+        </div>
+        <div class="featured-current" id="authorFeaturedCurrent"></div>
+      </div>
+
+      <div class="sort-panel">
+        <div class="sort-panel-head">
+          <div>
+            <strong>Порядок треков</strong>
+            <small>Этот порядок используется в авторской библиотеке и после Stories в глобальной очереди.</small>
+          </div>
+          <button class="gold-button" id="authorOrderSave" type="button" disabled>Сохранить порядок</button>
+        </div>
+        <div class="sort-list" id="authorSortList" data-section="author" aria-label="Порядок Авторских песен"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+  <script type="module" src="/admin/curation.js"></script>
+</body>
+</html>
