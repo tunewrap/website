@@ -1,0 +1,34 @@
+NEW
+scripts/install-stage-12.13.6.3-immediate-first-paint.js
+scripts/stage-12.13.6.3-immediate-first-paint-test.js
+README-STAGE-12.13.6.3.txt
+STAGE-12.13.6.3-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+index.html
+package.json
+
+INTENTIONALLY NOT MODIFIED
+js/app-bootstrap.js
+js/playback-engine.js
+js/catalog-runtime.js
+js/script.js
+functions/*
+admin/*
+D1 / migrations
+
+REMOVES FROM index.html
+Stage 12.13.6.1 aggressive preload block
+
+SUPERSEDES IN npm test CHAIN
+firstpaint:test
+fastboot:test
+
+ADDS
+immediatepaint:test
+
+NO D1 MIGRATION
+NO PLAYER CHANGE
+NO CMS CHANGE
+NO API CHANGE
+NO ADMIN CHANGE

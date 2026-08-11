@@ -18,7 +18,7 @@
     "responsive:test": "node scripts/responsive-wide-test.js",
     "pricing:test": "node scripts/pricing-cms-test.js",
     "site:test": "node scripts/site-cms-test.js",
-    "test": "npm run tracks:check && npm run tracks:test-queue && npm run tracks:test-artwork && npm run tracks:test-scale && npm run admin:test && npm run orders:test && npm run responsive:test && npm run pricing:test && npm run site:test && npm run sound:test && npm run intake:test && npm run categories:test && npm run certificate:test && npm run ux1281:test && npm run certificate-fit:test && npm run closeux:test && npm run corpclose:test && npm run refreshtop:test && npm run curation:test && npm run dragreorder:test && npm run longdrag:test && npm run truehold:test && npm run packageui:test && npm run choosercompact:test && npm run contactchannel:test && npm run sitepolish:test && npm run paymentsection:test && npm run packageannouncefix:test && npm run englishlaunch:test && npm run languagecodes:test && npm run englishorder:test && npm run homelogo:test && npm run featuredplay:test && npm run widefeaturedplay:test && npm run mobilelibrary2col:test && npm run firstpaint:test && npm run fastboot:test",
+    "test": "npm run tracks:check && npm run tracks:test-queue && npm run tracks:test-artwork && npm run tracks:test-scale && npm run admin:test && npm run orders:test && npm run responsive:test && npm run pricing:test && npm run site:test && npm run sound:test && npm run intake:test && npm run categories:test && npm run certificate:test && npm run ux1281:test && npm run certificate-fit:test && npm run closeux:test && npm run corpclose:test && npm run refreshtop:test && npm run curation:test && npm run dragreorder:test && npm run longdrag:test && npm run truehold:test && npm run packageui:test && npm run choosercompact:test && npm run contactchannel:test && npm run sitepolish:test && npm run paymentsection:test && npm run packageannouncefix:test && npm run englishlaunch:test && npm run languagecodes:test && npm run englishorder:test && npm run homelogo:test && npm run featuredplay:test && npm run widefeaturedplay:test && npm run mobilelibrary2col:test && npm run immediatepaint:test",
     "sound:test": "node scripts/sound-preferences-cms-test.js",
     "intake:test": "node scripts/order-intake-completion-test.js",
     "categories:test": "node scripts/story-categories-test.js",
@@ -46,7 +46,8 @@
     "widefeaturedplay:test": "node scripts/stage-12.13.4.1-wide-featured-play-test.js",
     "mobilelibrary2col:test": "node scripts/stage-12.13.5-mobile-library-2col-test.js",
     "firstpaint:test": "node scripts/stage-12.13.6-first-paint-guard-test.js",
-    "fastboot:test": "node scripts/stage-12.13.6.1-fast-boot-test.js"
+    "fastboot:test": "node scripts/stage-12.13.6.1-fast-boot-test.js",
+    "immediatepaint:test": "node scripts/stage-12.13.6.3-immediate-first-paint-test.js"
   },
   "engines": {
     "node": ">=18"
