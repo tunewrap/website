@@ -1910,6 +1910,7 @@ function applyTuneWrapTrackTitles(language){
 
   function applyLang(lang){
     currentLang = lang;
+    window.TUNEWRAP_CURRENT_LANGUAGE = lang;
     const dict = I18N[lang] || I18N.ru;
     els.forEach(el=>{
       const key = el.getAttribute('data-i18n');

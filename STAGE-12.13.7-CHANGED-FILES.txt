@@ -1,0 +1,20 @@
+NEW
+scripts/install-stage-12.13.7-full-player-language-sync.js
+scripts/stage-12.13.7-full-player-language-sync-test.js
+README-STAGE-12.13.7.txt
+STAGE-12.13.7-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+js/script.js
+js/catalog-runtime.js
+js/catalog-core.js
+js/playback-engine.js
+package.json
+
+NO D1 MIGRATION
+NO AUDIO LOGIC CHANGE
+NO QUEUE CHANGE
+NO SEEK CHANGE
+NO ADMIN CHANGE
+NO CMS DATA CHANGE
+NO BOOT / FIRST-PAINT CHANGE

@@ -7,6 +7,11 @@
 
   const UI_LANGUAGES = ['en','ru','uk','ka','de'];
   const SECTION_ORDER = Object.freeze(['stories','author']);
+  const TRACK_LANGUAGE_LOCALE = Object.freeze({EN:'en',RU:'ru',UA:'uk',GE:'ka',DE:'de'});
+
+  function trackLocale(track){
+    return TRACK_LANGUAGE_LOCALE[String(track?.language||'').toUpperCase()] || '';
+  }
 
   function normalize(value){
     return String(value || '')
@@ -24,11 +29,35 @@
   }
 
   function title(track,language){
-    return localized(track?.titles,language,track?.title || 'TuneWrap');
+    const titles=track?.titles;
+    if(titles && typeof titles === 'object' && titles[language]) return titles[language];
+
+    const originalLocale=trackLocale(track);
+    // If the requested interface language is also the song's source language,
+    // the canonical base title is safer than falling into an unrelated locale.
+    if(language===originalLocale && track?.title) return track.title;
+
+    return titles?.en ||
+      (originalLocale ? titles?.[originalLocale] : '') ||
+      track?.title ||
+      localized(titles,language,'TuneWrap');
   }
 
   function description(track,language){
-    return localized(track?.descriptions,language,'');
+    const descriptions=track?.descriptions;
+    if(descriptions && typeof descriptions === 'object' && descriptions[language]) return descriptions[language];
+
+    const originalLocale=trackLocale(track);
+    // Never show a random foreign translation when the UI already matches
+    // the source language. Empty is better than a misleading RU fallback.
+    if(language===originalLocale){
+      return typeof track?.description === 'string' ? track.description : '';
+    }
+
+    return descriptions?.en ||
+      (originalLocale ? descriptions?.[originalLocale] : '') ||
+      (typeof track?.description === 'string' ? track.description : '') ||
+      localized(descriptions,language,'');
   }
 
   function category(track,language){

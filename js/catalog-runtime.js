@@ -34,8 +34,13 @@
   const storyCategories=((window.TUNEWRAP_STORY_CATEGORIES?.categories||DEFAULT_STORY_CATEGORIES).filter(item=>item?.enabled!==false).slice().sort((a,b)=>(a.order||99)-(b.order||99)||a.id.localeCompare(b.id)));
 
   function interfaceLanguage(){
-    const language = document.documentElement.getAttribute('lang') || 'ru';
-    return Core.UI_LANGUAGES.includes(language) ? language : 'ru';
+    const language = String(
+      window.TUNEWRAP_CURRENT_LANGUAGE ||
+      window.TUNEWRAP_INITIAL_LANGUAGE ||
+      document.documentElement.getAttribute('lang') ||
+      'en'
+    ).toLowerCase();
+    return Core.UI_LANGUAGES.includes(language) ? language : 'en';
   }
 
   function localizedTitle(track,language = interfaceLanguage()){
