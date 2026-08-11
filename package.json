@@ -18,7 +18,7 @@
     "responsive:test": "node scripts/responsive-wide-test.js",
     "pricing:test": "node scripts/pricing-cms-test.js",
     "site:test": "node scripts/site-cms-test.js",
-    "test": "npm run tracks:check && npm run tracks:test-queue && npm run tracks:test-artwork && npm run tracks:test-scale && npm run admin:test && npm run orders:test && npm run responsive:test && npm run pricing:test && npm run site:test && npm run sound:test && npm run intake:test && npm run categories:test && npm run certificate:test && npm run ux1281:test && npm run certificate-fit:test && npm run closeux:test && npm run corpclose:test && npm run refreshtop:test && npm run curation:test && npm run dragreorder:test && npm run longdrag:test && npm run truehold:test && npm run packageui:test && npm run choosercompact:test && npm run contactchannel:test && npm run sitepolish:test && npm run paymentsection:test && npm run packageannouncefix:test && npm run englishlaunch:test",
+    "test": "npm run tracks:check && npm run tracks:test-queue && npm run tracks:test-artwork && npm run tracks:test-scale && npm run admin:test && npm run orders:test && npm run responsive:test && npm run pricing:test && npm run site:test && npm run sound:test && npm run intake:test && npm run categories:test && npm run certificate:test && npm run ux1281:test && npm run certificate-fit:test && npm run closeux:test && npm run corpclose:test && npm run refreshtop:test && npm run curation:test && npm run dragreorder:test && npm run longdrag:test && npm run truehold:test && npm run packageui:test && npm run choosercompact:test && npm run contactchannel:test && npm run sitepolish:test && npm run paymentsection:test && npm run packageannouncefix:test && npm run englishlaunch:test && npm run languagecodes:test",
     "sound:test": "node scripts/sound-preferences-cms-test.js",
     "intake:test": "node scripts/order-intake-completion-test.js",
     "categories:test": "node scripts/story-categories-test.js",
@@ -38,7 +38,8 @@
     "sitepolish:test": "node scripts/stage-12.12-site-polish-test.js",
     "paymentsection:test": "node scripts/stage-12.12.1-payment-section-test.js",
     "packageannouncefix:test": "node scripts/stage-12.12.2-package-announcement-test.js",
-    "englishlaunch:test": "node scripts/stage-12.13-english-launch-test.js"
+    "englishlaunch:test": "node scripts/stage-12.13-english-launch-test.js",
+    "languagecodes:test": "node scripts/stage-12.13.1-language-codes-test.js"
   },
   "engines": {
     "node": ">=18"
