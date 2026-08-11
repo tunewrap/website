@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const root=path.resolve(__dirname,'..');
+const bootstrap=fs.readFileSync(path.join(root,'js','app-bootstrap.js'),'utf8');
+const pkg=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8'));
+assert.match(bootstrap,/Stage 12\\.8\\.5 — desktop refresh starts at top/);
+assert.match(bootstrap,/navEntry\\?\\.type==='reload'/);
+assert.match(bootstrap,/min-width:621px/);
+assert.match(bootstrap,/history\\.scrollRestoration='manual'/);
+assert.match(bootstrap,/history\\.replaceState/);
+assert.match(bootstrap,/location\\.pathname\\+location\\.search/);
+assert.match(bootstrap,/window\\.scrollTo\\(\\{top:0,left:0,behavior:'auto'\\}\\)/);
+assert.match(bootstrap,/app\\.scrollTop=0/);
+assert.match(bootstrap,/if\\(!isReload\\|\\|!isWide\\)return/);
+assert.equal(pkg.scripts['refreshtop:test'],'node scripts/stage-12.8.5-refresh-top-test.js');
+assert.match(pkg.scripts.test,/refreshtop:test/);
+console.log('PASS: Stage 12.8.5 — desktop/tablet browser refresh starts at TuneWrap top; mobile navigation behavior remains unchanged.');

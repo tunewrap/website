@@ -1,3 +1,36 @@
+/* Stage 12.8.5 — desktop refresh starts at top */
+(function(){
+  try{
+    const navEntry=performance.getEntriesByType?.('navigation')?.[0];
+    const isReload=navEntry?.type==='reload';
+    const isWide=window.matchMedia?.('(min-width:621px)').matches;
+    if(!isReload||!isWide)return;
+    const previousRestoration=('scrollRestoration' in history)?history.scrollRestoration:null;
+    if(previousRestoration!==null)history.scrollRestoration='manual';
+    if(location.hash){history.replaceState(history.state,'',location.pathname+location.search);}
+    const resetToTop=()=>{
+      window.scrollTo({top:0,left:0,behavior:'auto'});
+      const app=document.getElementById('appScroll');
+      if(app)app.scrollTop=0;
+    };
+    resetToTop();
+    if(document.readyState==='loading'){
+      document.addEventListener('DOMContentLoaded',()=>{
+        resetToTop();
+        requestAnimationFrame(()=>requestAnimationFrame(resetToTop));
+      },{once:true});
+    }else{
+      requestAnimationFrame(()=>requestAnimationFrame(resetToTop));
+    }
+    window.addEventListener('load',()=>{
+      resetToTop();
+      setTimeout(resetToTop,0);
+      setTimeout(resetToTop,120);
+      setTimeout(()=>{if(previousRestoration!==null)history.scrollRestoration=previousRestoration;},700);
+    },{once:true});
+  }catch(error){console.error('TuneWrap Stage 12.8.5 refresh-top failed',error);}
+})();
+
 const loading = document.createElement('div');
 loading.className = 'catalog-bootstrap';
 loading.innerHTML = '<span class="catalog-bootstrap-mark" aria-hidden="true"></span><span>Загружаем музыкальную библиотеку…</span>';
