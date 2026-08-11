@@ -1,0 +1,26 @@
+NEW
+js/stage-12.8.1-ux-hotfix.js
+css/stage-12.8.1-ux-hotfix.css
+scripts/install-stage-12.8.1-ux-hotfix.js
+scripts/stage-12.8.1-ux-hotfix-test.js
+README-STAGE-12.8.1.txt
+STAGE-12.8.1-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+js/app-bootstrap.js
+package.json
+
+NO D1 MIGRATION
+
+INTENTIONALLY UNCHANGED
+index.html
+js/script.js
+js/gift-certificate-overlay.js
+js/playback-engine.js
+js/orders-submit.js
+pricing CMS
+orders DB/API
+music catalog / queue
+story categories
+corporate overlay
+terms overlay

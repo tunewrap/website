@@ -19,6 +19,14 @@ if(!document.getElementById('tunewrapGiftCertificateStyles')){
   document.head.append(giftCertificateStyles);
 }
 
+if(!document.getElementById('tunewrapStage1281UX')){
+  const stage1281=document.createElement('link');
+  stage1281.id='tunewrapStage1281UX';
+  stage1281.rel='stylesheet';
+  stage1281.href='/css/stage-12.8.1-ux-hotfix.css?v=12.8.1';
+  document.head.append(stage1281);
+}
+
 if(!document.getElementById('tunewrapStoryCategoryStyles')){
   const storyCategoryStyles=document.createElement('link');storyCategoryStyles.id='tunewrapStoryCategoryStyles';storyCategoryStyles.rel='stylesheet';storyCategoryStyles.href='/css/story-categories.css?v=12.7';document.head.append(storyCategoryStyles);
 }
@@ -152,6 +160,12 @@ try{
     await import('./ux-critical-fixes.js');
   }catch(error){
     console.error('TuneWrap Stage 12.4 UX runtime failed',error);
+  }
+
+  try{
+    await import('./stage-12.8.1-ux-hotfix.js');
+  }catch(error){
+    console.error('TuneWrap Stage 12.8.1 UX hotfix failed',error);
   }
 
   if(document.readyState !== 'loading') document.dispatchEvent(new Event('DOMContentLoaded'));

@@ -1,0 +1,381 @@
+/* TuneWrap Stage 12.8.1 — Compact Certificate + Explicit Close Controls */
+
+/* ---------- Gift certificate: all six offers visible in one normal viewport ---------- */
+.gift-certificate-overlay{
+  padding:10px!important;
+}
+
+.gift-certificate-shell{
+  width:min(1180px,calc(100vw - 20px))!important;
+  height:auto!important;
+  max-height:calc(100dvh - 20px)!important;
+  grid-template-rows:54px auto 62px!important;
+  border-radius:22px!important;
+}
+
+.gift-certificate-topbar{
+  min-height:54px!important;
+  padding:7px 14px!important;
+}
+
+.gift-certificate-brand{
+  font-size:24px!important;
+}
+
+.gift-certificate-close{
+  min-height:38px!important;
+  padding:0 12px!important;
+}
+
+.gift-certificate-scroll{
+  min-height:0!important;
+  overflow:hidden!important;
+  padding:14px 22px 16px!important;
+}
+
+.gift-certificate-hero{
+  max-width:none!important;
+}
+
+.gift-certificate-eyebrow{
+  margin-bottom:5px!important;
+  font-size:8px!important;
+}
+
+.gift-certificate-hero h2{
+  font-size:clamp(28px,3.1vw,40px)!important;
+  line-height:1!important;
+}
+
+.gift-certificate-hero p{
+  max-width:none!important;
+  margin-top:7px!important;
+  font-size:11px!important;
+  line-height:1.4!important;
+}
+
+.gift-certificate-groups{
+  gap:10px!important;
+  margin-top:13px!important;
+}
+
+.gift-certificate-group-title{
+  margin-bottom:5px!important;
+  font-size:9px!important;
+}
+
+.gift-certificate-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+
+.gift-certificate-card{
+  min-height:122px!important;
+  padding:11px 13px!important;
+  border-radius:15px!important;
+}
+
+.gift-certificate-card-type{
+  font-size:7px!important;
+}
+
+.gift-certificate-card-name{
+  margin-top:4px!important;
+  font-size:18px!important;
+  line-height:1.05!important;
+}
+
+.gift-certificate-card-description{
+  display:-webkit-box!important;
+  margin-top:5px!important;
+  overflow:hidden!important;
+  -webkit-box-orient:vertical!important;
+  -webkit-line-clamp:2!important;
+  font-size:9px!important;
+  line-height:1.35!important;
+}
+
+.gift-certificate-card-price{
+  gap:6px!important;
+  padding-top:7px!important;
+}
+
+.gift-certificate-card-price s{
+  font-size:9px!important;
+}
+
+.gift-certificate-card-price b{
+  font-size:22px!important;
+}
+
+.gift-certificate-card-price small{
+  font-size:7px!important;
+}
+
+.gift-certificate-card-action{
+  margin-top:5px!important;
+  font-size:8px!important;
+}
+
+.gift-certificate-footer{
+  min-height:62px!important;
+  padding:7px 14px!important;
+}
+
+.gift-certificate-continue{
+  min-height:42px!important;
+  padding:0 18px!important;
+  border-radius:12px!important;
+  font-size:11px!important;
+}
+
+/* ---------- Questionnaire: obvious close button, always available ---------- */
+#storyOrderForm{
+  position:relative;
+}
+
+.story-order-close-bar{
+  position:sticky;
+  top:8px;
+  z-index:45;
+  height:0;
+  display:flex;
+  justify-content:flex-end;
+  pointer-events:none;
+}
+
+.story-order-close{
+  pointer-events:auto;
+  min-height:38px;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:0 12px;
+  border:1px solid rgba(217,164,65,.34);
+  border-radius:12px;
+  background:rgba(12,12,13,.94);
+  color:#d9a441;
+  box-shadow:0 8px 24px rgba(0,0,0,.28);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  cursor:pointer;
+  font:800 10px/1 'Manrope',sans-serif;
+}
+
+.story-order-close svg{
+  width:16px;
+  height:16px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+}
+
+.story-order-close:active{
+  transform:scale(.96);
+}
+
+/* ---------- Top Mini Player: make the existing X unmistakable ---------- */
+#topMiniStop[data-explicit-close="true"]{
+  position:relative;
+  border:1px solid rgba(217,164,65,.40)!important;
+  background:rgba(217,164,65,.10)!important;
+  color:#d9a441!important;
+  box-shadow:0 0 0 1px rgba(217,164,65,.04) inset;
+}
+
+#topMiniStop[data-explicit-close="true"]:hover,
+#topMiniStop[data-explicit-close="true"]:focus-visible{
+  border-color:rgba(217,164,65,.72)!important;
+  background:rgba(217,164,65,.17)!important;
+  color:#efc469!important;
+}
+
+#topMiniStop[data-explicit-close="true"] svg{
+  width:21px!important;
+  height:21px!important;
+  stroke-width:2.3!important;
+}
+
+/* ---------- Tablet ---------- */
+@media(max-width:900px) and (min-width:621px){
+  .gift-certificate-shell{
+    width:calc(100vw - 16px)!important;
+    max-height:calc(100dvh - 16px)!important;
+  }
+
+  .gift-certificate-scroll{
+    padding:11px 14px 13px!important;
+  }
+
+  .gift-certificate-hero h2{
+    font-size:29px!important;
+  }
+
+  .gift-certificate-card{
+    min-height:116px!important;
+    padding:10px 11px!important;
+  }
+
+  .gift-certificate-card-name{
+    font-size:16px!important;
+  }
+
+  .gift-certificate-card-description{
+    -webkit-line-clamp:1!important;
+  }
+}
+
+/* ---------- Phone ----------
+   Two-column compact cards keep all 6 offers in the same floating window
+   on a normal portrait phone. Descriptions are removed here because the
+   package name + price are the decision-critical information. */
+@media(max-width:620px){
+  .gift-certificate-overlay{
+    padding:6px!important;
+  }
+
+  .gift-certificate-shell{
+    width:calc(100vw - 12px)!important;
+    max-height:calc(100dvh - 12px)!important;
+    grid-template-rows:48px auto 54px!important;
+    border-radius:18px!important;
+  }
+
+  .gift-certificate-topbar{
+    min-height:48px!important;
+    padding:5px 8px!important;
+  }
+
+  .gift-certificate-brand{
+    font-size:20px!important;
+  }
+
+  .gift-certificate-close{
+    min-height:34px!important;
+    padding:0 8px!important;
+    font-size:9px!important;
+  }
+
+  .gift-certificate-scroll{
+    overflow:hidden!important;
+    padding:8px 8px 9px!important;
+  }
+
+  .gift-certificate-eyebrow{
+    margin-bottom:3px!important;
+    font-size:7px!important;
+  }
+
+  .gift-certificate-hero h2{
+    font-size:23px!important;
+    line-height:1!important;
+  }
+
+  .gift-certificate-hero p{
+    margin-top:4px!important;
+    font-size:9px!important;
+    line-height:1.25!important;
+  }
+
+  .gift-certificate-groups{
+    gap:7px!important;
+    margin-top:8px!important;
+  }
+
+  .gift-certificate-group-title{
+    margin-bottom:3px!important;
+    font-size:7px!important;
+  }
+
+  .gift-certificate-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:5px!important;
+  }
+
+  .gift-certificate-card{
+    min-height:80px!important;
+    padding:8px!important;
+    border-radius:12px!important;
+  }
+
+  .gift-certificate-card-type,
+  .gift-certificate-card-description{
+    display:none!important;
+  }
+
+  .gift-certificate-card-name{
+    margin-top:0!important;
+    font-size:13px!important;
+    line-height:1.05!important;
+  }
+
+  .gift-certificate-card-price{
+    margin-top:auto!important;
+    padding-top:4px!important;
+  }
+
+  .gift-certificate-card-price s{
+    font-size:8px!important;
+  }
+
+  .gift-certificate-card-price b{
+    font-size:18px!important;
+  }
+
+  .gift-certificate-card-price small{
+    font-size:6px!important;
+  }
+
+  .gift-certificate-card-action{
+    margin-top:3px!important;
+    font-size:7px!important;
+  }
+
+  .gift-certificate-footer{
+    min-height:54px!important;
+    grid-template-columns:1fr!important;
+    gap:0!important;
+    padding:6px 8px!important;
+  }
+
+  .gift-certificate-selected{
+    display:none!important;
+  }
+
+  .gift-certificate-continue{
+    min-height:40px!important;
+    width:100%!important;
+    font-size:10px!important;
+  }
+
+  .story-order-close{
+    width:38px;
+    min-width:38px;
+    height:38px;
+    padding:0;
+    justify-content:center;
+    border-radius:50%;
+  }
+
+  .story-order-close span{
+    position:absolute;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+    clip:rect(0 0 0 0);
+    white-space:nowrap;
+  }
+
+  #topMiniStop[data-explicit-close="true"]{
+    border-radius:50%!important;
+  }
+}
+
+/* Accessibility fallback for unusually short screens / landscape.
+   Normal portrait phones, tablets and desktop remain no-scroll. */
+@media(max-height:560px){
+  .gift-certificate-scroll{
+    overflow:auto!important;
+  }
+}
