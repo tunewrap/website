@@ -102,6 +102,15 @@ if(!document.getElementById('tunewrapStage12104CompactChooser')){
   document.head.append(stage12104);
 }
 
+
+if(!document.getElementById('tunewrapStage1211ContactChannel')){
+  const stage1211=document.createElement('link');
+  stage1211.id='tunewrapStage1211ContactChannel';
+  stage1211.rel='stylesheet';
+  stage1211.href='/css/stage-12.11-contact-channel-selector.css?v=12.11';
+  document.head.append(stage1211);
+}
+
 if(!document.getElementById('tunewrapStoryCategoryStyles')){
   const storyCategoryStyles=document.createElement('link');storyCategoryStyles.id='tunewrapStoryCategoryStyles';storyCategoryStyles.rel='stylesheet';storyCategoryStyles.href='/css/story-categories.css?v=12.7';document.head.append(storyCategoryStyles);
 }
@@ -260,6 +269,13 @@ try{
     await import('./stage-12.10-package-ui-polish.js');
   }catch(error){
     console.error('TuneWrap Stage 12.10 package UI polish failed',error);
+  }
+
+
+  try{
+    await import('./stage-12.11-contact-channel-selector.js');
+  }catch(error){
+    console.error('TuneWrap Stage 12.11 contact channel selector failed',error);
   }
 
   if(document.readyState !== 'loading') document.dispatchEvent(new Event('DOMContentLoaded'));

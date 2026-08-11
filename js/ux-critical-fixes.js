@@ -25,7 +25,7 @@
         occasion:'Выберите повод или историю.',
         story:'Выберите пример истории или напишите свою.',
         description:'Расскажите о человеке или вставьте готовый текст песни.',
-        contact:'Укажите номер телефона или e-mail.'
+        contact:'Выберите WhatsApp, Telegram или Email и укажите корректный контакт.'
       }
     },
     uk:{
@@ -44,7 +44,7 @@
         occasion:'Оберіть подію або історію.',
         story:'Оберіть приклад історії або напишіть свою.',
         description:'Розкажіть про людину або вставте готовий текст пісні.',
-        contact:'Вкажіть номер телефону або e-mail.'
+        contact:'Оберіть WhatsApp, Telegram або Email і вкажіть коректний контакт.'
       }
     },
     ka:{
@@ -63,7 +63,7 @@
         occasion:'აირჩიეთ შემთხვევა ან ისტორია.',
         story:'აირჩიეთ მაგალითი ან დაწერეთ თქვენი ისტორია.',
         description:'მოგვიყევით ადამიანზე ან ჩასვით მზა ტექსტი.',
-        contact:'მიუთითეთ ტელეფონის ნომერი ან e-mail.'
+        contact:'აირჩიეთ WhatsApp, Telegram ან Email და მიუთითეთ სწორი კონტაქტი.'
       }
     },
     en:{
@@ -82,7 +82,7 @@
         occasion:'Choose an occasion or story.',
         story:'Choose a story example or write your own.',
         description:'Tell us about the person or paste ready song lyrics.',
-        contact:'Enter a phone number or e-mail.'
+        contact:'Choose WhatsApp, Telegram or Email and enter a valid contact.'
       }
     },
     de:{
@@ -101,7 +101,7 @@
         occasion:'Bitte Anlass oder Geschichte auswählen.',
         story:'Bitte ein Beispiel wählen oder Ihre eigene Geschichte schreiben.',
         description:'Beschreiben Sie die Person oder fügen Sie einen fertigen Songtext ein.',
-        contact:'Bitte Telefonnummer oder E-Mail eingeben.'
+        contact:'Wählen Sie WhatsApp, Telegram oder E-Mail und geben Sie einen gültigen Kontakt an.'
       }
     }
   };
@@ -350,8 +350,38 @@
 
   function validContact(value){
     const v=String(value||'').trim();
-    const email=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(v);
-    const digits=v.replace(/\D+/g,'');
+
+    // Stage 12.11 stores the preferred channel in the existing contact field:
+    // "WhatsApp: ...", "Telegram: ..." or "Email: ...".
+    const match=v.match(/^(WhatsApp|Telegram|Email):\\s*(.+)$/i);
+    if(match){
+      const method=match[1].toLowerCase();
+      const detail=String(match[2]||'').trim();
+
+      if(method==='email'){
+        return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/i.test(detail);
+      }
+
+      if(method==='whatsapp'){
+        const digits=detail.replace(/\\D+/g,'');
+        return digits.length>=7&&digits.length<=16;
+      }
+
+      if(method==='telegram'){
+        const digits=detail.replace(/\\D+/g,'');
+        if(digits.length>=7&&digits.length<=16)return true;
+
+        const username=detail
+          .replace(/^https?:\\/\\/(?:www\\.)?t\\.me\\//i,'')
+          .replace(/^@/,'')
+          .trim();
+        return /^[A-Za-z0-9_]{5,32}$/.test(username);
+      }
+    }
+
+    // Legacy orders/old cached form state remain accepted.
+    const email=/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/i.test(v);
+    const digits=v.replace(/\\D+/g,'');
     const phone=digits.length>=7&&digits.length<=16;
     return email||phone;
   }

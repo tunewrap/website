@@ -1,0 +1,16 @@
+NEW
+js/stage-12.11-contact-channel-selector.js
+css/stage-12.11-contact-channel-selector.css
+scripts/install-stage-12.11-contact-channel-selector.js
+scripts/stage-12.11-contact-channel-test.js
+README-STAGE-12.11.txt
+STAGE-12.11-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+js/app-bootstrap.js
+js/ux-critical-fixes.js
+package.json
+
+NO D1 MIGRATION
+NO ORDERS API SCHEMA CHANGE
+NO ADMIN CHANGE REQUIRED
