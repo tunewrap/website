@@ -1,0 +1,16 @@
+NEW
+scripts/install-stage-12.13.7.1-player-native-i18n-lock.js
+scripts/stage-12.13.7.1-player-native-i18n-lock-test.js
+README-STAGE-12.13.7.1.txt
+STAGE-12.13.7.1-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+index.html
+js/playback-engine.js
+package.json
+
+NO D1
+NO AUDIO LOGIC CHANGE
+NO QUEUE CHANGE
+NO SEEK CHANGE
+NO CMS DATA CHANGE

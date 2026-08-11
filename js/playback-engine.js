@@ -396,8 +396,17 @@
       requestAnimationFrame(() => descriptionCollapse.focus({preventScroll:true}));
     }
 
+    function syncVisiblePlayerLabels(){
+      const visible = PLAYER_VISIBLE_UI[interfaceLanguage()] || PLAYER_VISIBLE_UI.en;
+      screen.querySelectorAll('[data-player-i18n]').forEach(node=>{
+        const key=node.dataset.playerI18n;
+        if(visible[key])node.textContent=visible[key];
+      });
+    }
+
     function fillPlayer(item){
       if(!item) return;
+      syncVisiblePlayerLabels();
       closeDescriptionSheet(false);
       const currentTitle = localizedTitle(item.name);
       const currentDescription = catalog.description(item,interfaceLanguage());
@@ -424,11 +433,7 @@
 
     function syncLocalizedPlayer(){
       const labels = ui();
-      const visible = PLAYER_VISIBLE_UI[interfaceLanguage()] || PLAYER_VISIBLE_UI.en;
-      document.querySelectorAll('[data-player-i18n]').forEach(node=>{
-        const key=node.dataset.playerI18n;
-        if(visible[key])node.textContent=visible[key];
-      });
+      syncVisiblePlayerLabels();
       seek.setAttribute('aria-label',labels.seek);
       previousButton.setAttribute('aria-label',labels.previous);
       nextButton.setAttribute('aria-label',labels.next);
@@ -443,6 +448,7 @@
 
     function openPlayer(item,origin,autoplay){
       if(!item) return;
+      syncVisiblePlayerLabels();
       restoreFocus = origin || cardFor(item);
       if(currentItem !== item){
         selectTrack(item.name,{autoplay:autoplay !== false,reason:'open-player'});
