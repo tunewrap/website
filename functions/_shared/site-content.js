@@ -64,6 +64,15 @@ function cleanPaymentLocale(source){
   };
 }
 
+function cleanPaymentSection(value){
+  const source=value&&typeof value==='object'?value:{};
+  return {
+    // Backward compatible: old Site CMS configs did not have this object,
+    // therefore the payment section stays enabled until Admin turns it off.
+    enabled:source.enabled!==false
+  };
+}
+
 function cleanPayments(value){
   if(!Array.isArray(value))return [];
   const used=new Set();
@@ -111,6 +120,7 @@ export function normalizeSiteContentConfig(value){
     placeholders:{locales:cleanLocaleMap(value.placeholders?.locales,80,1200)},
     contacts:cleanContacts(value.contacts),
     payments:cleanPayments(value.payments),
+    paymentSection:cleanPaymentSection(value.paymentSection),
     announcement:cleanAnnouncement(value.announcement)
   };
 }

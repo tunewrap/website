@@ -1,0 +1,15 @@
+NEW
+admin/site-stage-12.12.1.css
+scripts/install-stage-12.12.1-payment-section-visibility.js
+scripts/stage-12.12.1-payment-section-test.js
+README-STAGE-12.12.1.txt
+STAGE-12.12.1-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+functions/_shared/site-content.js
+admin/site.html
+admin/site.js
+js/site-cms-runtime.js
+package.json
+
+NO D1 MIGRATION

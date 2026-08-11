@@ -338,7 +338,48 @@ function addPayment(){
   renderPayments();
 }
 
+function ensurePaymentSectionToggle(){
+  state.config.paymentSection ||= {enabled:true};
+
+  const toolbar=$('.site-payment-toolbar');
+  if(!toolbar)return;
+
+  let label=$('#sitePaymentMasterToggle');
+  if(!label){
+    label=document.createElement('label');
+    label.id='sitePaymentMasterToggle';
+    label.className='site-payment-master-toggle';
+
+    const check=document.createElement('input');
+    check.id='sitePaymentSectionEnabled';
+    check.type='checkbox';
+
+    const text=document.createElement('span');
+    text.textContent='Показывать весь блок оплаты на сайте';
+
+    label.append(check,text);
+    toolbar.prepend(label);
+
+    const note=document.createElement('p');
+    note.className='site-payment-master-note';
+    note.id='sitePaymentMasterNote';
+    note.textContent='Выключите — и весь блок «Способы оплаты» вместе со ссылкой «Оплата» исчезнет с публичного сайта. Если нет ни одного включённого способа оплаты, пустой блок также скрывается автоматически.';
+    toolbar.insertAdjacentElement('afterend',note);
+
+    check.addEventListener('change',()=>{
+      state.config.paymentSection.enabled=check.checked;
+      label.classList.toggle('is-off',!check.checked);
+      markDirty();
+    });
+  }
+
+  const check=$('#sitePaymentSectionEnabled');
+  check.checked=state.config.paymentSection.enabled!==false;
+  label.classList.toggle('is-off',!check.checked);
+}
+
 function renderPayments(){
+  ensurePaymentSectionToggle();
   const root=$('#sitePaymentEditors');
   const empty=$('#sitePaymentsEmpty');
   root.innerHTML='';
@@ -359,7 +400,7 @@ function renderPayments(){
     check.type='checkbox';
     check.checked=payment.enabled!==false;
     check.addEventListener('change',()=>{payment.enabled=check.checked;markDirty();renderPayments();});
-    toggle.append(check,document.createTextNode('Показывать'));
+    toggle.append(check,document.createTextNode('Показывать карточку'));
     head.appendChild(toggle);
     card.appendChild(head);
 

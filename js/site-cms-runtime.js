@@ -196,14 +196,28 @@
 
   function patchPayments(){
     const slot=$('[data-payment-methods-slot]');
+    const section=$('#contactHubPayment');
+    const navPayment=$('[data-contact-action="payment"]');
     if(!slot)return;
+
+    const sectionEnabled=config.paymentSection?.enabled!==false;
     const items=(Array.isArray(config.payments)?config.payments:[])
       .filter(item=>item?.enabled!==false)
       .sort((a,b)=>(a.order||99)-(b.order||99));
 
-    if(!items.length){
+    // A payment block with no actual payment method is not useful to a client.
+    // Hide the whole public card and its navigation link when globally disabled
+    // OR when every individual payment method is disabled / absent.
+    const showSection=sectionEnabled&&items.length>0;
+    if(section)section.hidden=!showSection;
+    if(navPayment)navPayment.hidden=!showSection;
+
+    if(!showSection){
+      slot.replaceChildren();
       slot.classList.remove('has-methods');
       slot.setAttribute('aria-hidden','true');
+      const pending=$('[data-i18n="contact_payment_pending"]');
+      if(pending)pending.hidden=true;
       return;
     }
 

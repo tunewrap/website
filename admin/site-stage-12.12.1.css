@@ -1,0 +1,50 @@
+/* TuneWrap Stage 12.12.1 — Payment Section Master Visibility */
+
+.site-payment-toolbar{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  flex-wrap:wrap!important;
+  gap:12px!important;
+}
+
+.site-payment-master-toggle{
+  min-height:44px;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  border:1px solid rgba(216,177,86,.26);
+  border-radius:13px;
+  background:rgba(216,177,86,.055);
+  color:#d9c58e;
+  font-size:12px;
+  font-weight:800;
+}
+
+.site-payment-master-toggle input{
+  width:18px;
+  height:18px;
+  accent-color:#d9a441;
+}
+
+.site-payment-master-toggle.is-off{
+  border-color:rgba(243,239,230,.10);
+  background:rgba(255,255,255,.025);
+  color:#8b8580;
+}
+
+.site-payment-master-note{
+  width:100%;
+  margin:-2px 0 3px;
+  color:#857e76;
+  font-size:10px;
+  line-height:1.45;
+}
+
+@media(max-width:620px){
+  .site-payment-master-toggle{
+    width:100%;
+    justify-content:flex-start;
+  }
+}
