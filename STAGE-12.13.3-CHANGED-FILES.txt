@@ -1,0 +1,17 @@
+NEW
+css/stage-12.13.3-home-logo-link.css
+js/stage-12.13.3-home-logo-link.js
+scripts/install-stage-12.13.3-home-logo-link.js
+scripts/stage-12.13.3-home-logo-link-test.js
+README-STAGE-12.13.3.txt
+STAGE-12.13.3-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+index.html
+js/app-bootstrap.js
+package.json
+
+NO D1 MIGRATION
+NO PLAYER CHANGE
+NO ORDERS CHANGE
+NO CMS CHANGE

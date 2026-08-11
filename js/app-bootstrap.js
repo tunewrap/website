@@ -1,3 +1,21 @@
+
+if(!document.getElementById('tunewrapStage12133HomeLogoScript')){
+  const stage12133Script=document.createElement('script');
+  stage12133Script.id='tunewrapStage12133HomeLogoScript';
+  stage12133Script.src='/js/stage-12.13.3-home-logo-link.js?v=12.13.3';
+  stage12133Script.defer=true;
+  document.head.append(stage12133Script);
+}
+
+
+if(!document.getElementById('tunewrapStage12133HomeLogoStyles')){
+  const stage12133=document.createElement('link');
+  stage12133.id='tunewrapStage12133HomeLogoStyles';
+  stage12133.rel='stylesheet';
+  stage12133.href='/css/stage-12.13.3-home-logo-link.css?v=12.13.3';
+  document.head.append(stage12133);
+}
+
 /* Stage 12.8.5 — desktop refresh starts at top */
 (function(){
   try{
