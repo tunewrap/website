@@ -35,6 +35,14 @@ if(!document.getElementById('tunewrapStage1282CertificateFit')){
   document.head.append(stage1282);
 }
 
+if(!document.getElementById('tunewrapStage1283RightClose')){
+  const stage1283=document.createElement('link');
+  stage1283.id='tunewrapStage1283RightClose';
+  stage1283.rel='stylesheet';
+  stage1283.href='/css/stage-12.8.3-right-close-ux.css?v=12.8.3';
+  document.head.append(stage1283);
+}
+
 if(!document.getElementById('tunewrapStoryCategoryStyles')){
   const storyCategoryStyles=document.createElement('link');storyCategoryStyles.id='tunewrapStoryCategoryStyles';storyCategoryStyles.rel='stylesheet';storyCategoryStyles.href='/css/story-categories.css?v=12.7';document.head.append(storyCategoryStyles);
 }
@@ -174,6 +182,12 @@ try{
     await import('./stage-12.8.1-ux-hotfix.js');
   }catch(error){
     console.error('TuneWrap Stage 12.8.1 UX hotfix failed',error);
+  }
+
+  try{
+    await import('./stage-12.8.3-right-close-ux.js');
+  }catch(error){
+    console.error('TuneWrap Stage 12.8.3 right-side close UX failed',error);
   }
 
   if(document.readyState !== 'loading') document.dispatchEvent(new Event('DOMContentLoaded'));

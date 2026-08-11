@@ -1,0 +1,232 @@
+/* TuneWrap Stage 12.8.3 — Right-side Close UX */
+
+/* =========================================================
+   QUESTIONNAIRE / ORDER CARD
+   One clear close action inside the card, top-right.
+   The old left "Back to selection" control stays as the
+   behavior owner but is visually removed while the form is open.
+   ========================================================= */
+
+#storyOrderForm{
+  position:relative!important;
+}
+
+#contact.is-story-path-form #storyPathBack{
+  display:none!important;
+}
+
+#storyOrderCloseBar.story-order-close-bar{
+  position:absolute!important;
+  z-index:70!important;
+  top:14px!important;
+  right:14px!important;
+  left:auto!important;
+  width:auto!important;
+  height:auto!important;
+  display:block!important;
+  margin:0!important;
+  pointer-events:none!important;
+}
+
+#storyOrderClose.story-order-close{
+  position:relative!important;
+  top:auto!important;
+  right:auto!important;
+  left:auto!important;
+  width:auto!important;
+  min-width:0!important;
+  min-height:40px!important;
+  height:40px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:7px!important;
+  margin:0!important;
+  padding:0 13px!important;
+  pointer-events:auto!important;
+  border:1px solid rgba(217,164,65,.36)!important;
+  border-radius:12px!important;
+  background:rgba(11,11,12,.94)!important;
+  color:#d9a441!important;
+  box-shadow:0 8px 24px rgba(0,0,0,.30)!important;
+  backdrop-filter:blur(12px)!important;
+  -webkit-backdrop-filter:blur(12px)!important;
+  cursor:pointer!important;
+  font:800 10px/1 'Manrope',sans-serif!important;
+}
+
+#storyOrderClose.story-order-close:hover,
+#storyOrderClose.story-order-close:focus-visible{
+  border-color:rgba(217,164,65,.72)!important;
+  background:rgba(217,164,65,.10)!important;
+  color:#efc469!important;
+}
+
+#storyOrderClose.story-order-close svg{
+  width:16px!important;
+  height:16px!important;
+  flex:none!important;
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:2.2!important;
+  stroke-linecap:round!important;
+}
+
+/* Reserve the top-right action row so it never overlaps mode/package UI. */
+#contact.is-story-path-form #storyOrderForm{
+  padding-top:66px!important;
+}
+
+/* =========================================================
+   STORIES + AUTHOR LIBRARY
+   Standard modal convention:
+   context label left / TuneWrap centered / close right.
+   ========================================================= */
+
+.music-library-topbar{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;
+  align-items:center!important;
+  gap:12px!important;
+}
+
+.music-library-topbar > .music-library-kind{
+  grid-column:1!important;
+  grid-row:1!important;
+  justify-self:start!important;
+  min-width:0!important;
+  text-align:left!important;
+}
+
+.music-library-topbar > .song-player-brand{
+  grid-column:2!important;
+  grid-row:1!important;
+  justify-self:center!important;
+}
+
+.music-library-topbar > .music-library-close{
+  grid-column:3!important;
+  grid-row:1!important;
+  justify-self:end!important;
+  order:initial!important;
+}
+
+.music-library-close.music-library-close-right{
+  min-height:40px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:7px!important;
+  padding:0 13px!important;
+  border:1px solid rgba(217,164,65,.34)!important;
+  border-radius:12px!important;
+  background:rgba(13,13,14,.92)!important;
+  color:#d9a441!important;
+  box-shadow:none!important;
+  font:800 10px/1 'Manrope',sans-serif!important;
+}
+
+.music-library-close.music-library-close-right:hover,
+.music-library-close.music-library-close-right:focus-visible{
+  border-color:rgba(217,164,65,.68)!important;
+  background:rgba(217,164,65,.10)!important;
+  color:#efc469!important;
+}
+
+.music-library-close.music-library-close-right svg{
+  width:17px!important;
+  height:17px!important;
+  flex:none!important;
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:2.2!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+}
+
+/* Tablet */
+@media(max-width:900px) and (min-width:621px){
+  #contact.is-story-path-form #storyOrderForm{
+    padding-top:62px!important;
+  }
+
+  #storyOrderCloseBar.story-order-close-bar{
+    top:11px!important;
+    right:11px!important;
+  }
+
+  .music-library-topbar{
+    gap:9px!important;
+  }
+}
+
+/* Phone: clear, familiar circular X on the right. */
+@media(max-width:620px){
+  #contact.is-story-path-form #storyOrderForm{
+    padding-top:56px!important;
+  }
+
+  #storyOrderCloseBar.story-order-close-bar{
+    top:9px!important;
+    right:9px!important;
+  }
+
+  #storyOrderClose.story-order-close{
+    width:38px!important;
+    min-width:38px!important;
+    height:38px!important;
+    min-height:38px!important;
+    padding:0!important;
+    border-radius:50%!important;
+  }
+
+  #storyOrderClose.story-order-close span{
+    position:absolute!important;
+    width:1px!important;
+    height:1px!important;
+    padding:0!important;
+    margin:-1px!important;
+    overflow:hidden!important;
+    clip:rect(0,0,0,0)!important;
+    white-space:nowrap!important;
+    border:0!important;
+  }
+
+  .music-library-topbar{
+    grid-template-columns:minmax(0,1fr) auto 42px!important;
+    gap:7px!important;
+  }
+
+  .music-library-topbar > .music-library-kind{
+    max-width:100%!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+  }
+
+  .music-library-close.music-library-close-right{
+    width:40px!important;
+    min-width:40px!important;
+    height:40px!important;
+    min-height:40px!important;
+    padding:0!important;
+    border-radius:50%!important;
+  }
+
+  .music-library-close.music-library-close-right span{
+    position:absolute!important;
+    width:1px!important;
+    height:1px!important;
+    padding:0!important;
+    margin:-1px!important;
+    overflow:hidden!important;
+    clip:rect(0,0,0,0)!important;
+    white-space:nowrap!important;
+    border:0!important;
+  }
+
+  .music-library-close.music-library-close-right svg{
+    width:19px!important;
+    height:19px!important;
+  }
+}

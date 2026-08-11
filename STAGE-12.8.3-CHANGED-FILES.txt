@@ -1,0 +1,24 @@
+NEW
+js/stage-12.8.3-right-close-ux.js
+css/stage-12.8.3-right-close-ux.css
+scripts/install-stage-12.8.3-right-close-ux.js
+scripts/stage-12.8.3-right-close-ux-test.js
+README-STAGE-12.8.3.txt
+STAGE-12.8.3-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+js/app-bootstrap.js
+package.json
+
+NO D1 MIGRATION
+
+INTENTIONALLY UNCHANGED
+index.html
+js/catalog-runtime.js
+js/script.js
+js/playback-engine.js
+js/orders-submit.js
+pricing CMS
+orders API/database
+story categories
+gift certificate runtime
