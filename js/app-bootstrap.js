@@ -75,32 +75,10 @@ const tuneWrapBootLang=(()=>{
 })();
 const tuneWrapBootCopy=TUNEWRAP_BOOT_COPY[tuneWrapBootLang]||TUNEWRAP_BOOT_COPY.en;
 
-const loading = document.getElementById('tunewrapBootSplash') || document.createElement('div');
-if(!loading.id)loading.id='tunewrapBootSplash';
-loading.className='catalog-bootstrap';
-if(!loading.parentNode){
-  loading.innerHTML='<strong class="catalog-bootstrap-brand">Tune<span>Wrap</span></strong><span class="catalog-bootstrap-mark" aria-hidden="true"></span><span class="catalog-bootstrap-copy"></span>';
-  document.body.append(loading);
-}
-const bootCopyNode=loading.querySelector('.catalog-bootstrap-copy');
-if(bootCopyNode)bootCopyNode.textContent=tuneWrapBootCopy.loading;
-
-let tuneWrapBootReleased=false;
-function releaseTuneWrapBoot(){
-  if(tuneWrapBootReleased)return;
-  tuneWrapBootReleased=true;
-
-  if(window.TUNEWRAP_BOOT_GUARD_TIMER){
-    clearTimeout(window.TUNEWRAP_BOOT_GUARD_TIMER);
-    window.TUNEWRAP_BOOT_GUARD_TIMER=null;
-  }
-
-  document.documentElement.classList.remove('tw-boot-pending');
-  requestAnimationFrame(()=>{
-    loading.classList.add('is-leaving');
-    window.setTimeout(()=>loading.remove(),180);
-  });
-}
+const loading = document.createElement('div');
+loading.className = 'catalog-bootstrap';
+loading.innerHTML = '<strong class="catalog-bootstrap-brand">Tune<span>Wrap</span></strong><span class="catalog-bootstrap-mark" aria-hidden="true"></span><span class="catalog-bootstrap-copy">'+tuneWrapBootCopy.loading+'</span>';
+document.body.append(loading);
 
 if(!document.getElementById('tunewrapResponsiveWide')){
   const responsiveWide=document.createElement('link');
@@ -268,22 +246,8 @@ try{
   await import('./catalog-runtime.js');
   await import('./script.js');
 
-  // Critical interaction/presentation layer. Once these are ready, the
-  // customer can already use the visible TuneWrap page.
-  releaseTuneWrapBoot();
-
-  // Everything below enhances lower sections / forms and must not hold the
-  // first screen hostage on a cold network.
-  try{
-    await import('./wide-copy-polish.js');
-  }catch(error){
-    console.error('TuneWrap wide copy polish failed',error);
-  }
-  try{
-    await import('./wedding-detail-wide.js');
-  }catch(error){
-    console.error('TuneWrap wedding detail wide failed',error);
-  }
+  await import('./wide-copy-polish.js');
+  await import('./wedding-detail-wide.js');
 
   window.TUNEWRAP_PRICING_CMS=await pricingPromise;
   try{
@@ -378,16 +342,20 @@ try{
 
   if(document.readyState !== 'loading') document.dispatchEvent(new Event('DOMContentLoaded'));
 
-  releaseTuneWrapBoot();
-}catch(error){
-  console.error('TuneWrap catalog bootstrap failed',error);
-
-  if(tuneWrapBootReleased){
-    // Core UI is already visible. Do not cover it again because a secondary
-    // enhancement failed after first paint.
-    return;
+  if(window.TUNEWRAP_BOOT_GUARD_TIMER){
+    clearTimeout(window.TUNEWRAP_BOOT_GUARD_TIMER);
+    window.TUNEWRAP_BOOT_GUARD_TIMER=null;
   }
 
+  // Reveal the completed page underneath first, then fade the loader away.
+  // This guarantees there is never an empty black frame between loading and UI.
+  document.documentElement.classList.remove('tw-boot-pending');
+  requestAnimationFrame(()=>{
+    loading.classList.add('is-leaving');
+    window.setTimeout(()=>loading.remove(),180);
+  });
+}catch(error){
+  console.error('TuneWrap catalog bootstrap failed',error);
   loading.classList.add('is-error');
   loading.innerHTML = '<strong>'+tuneWrapBootCopy.error+'</strong><span>'+tuneWrapBootCopy.retry+'</span><button type="button">'+tuneWrapBootCopy.button+'</button>';
   loading.querySelector('button').addEventListener('click',() => location.reload());

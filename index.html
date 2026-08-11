@@ -13,7 +13,7 @@
     if(!document.querySelector('.catalog-bootstrap')){
       document.documentElement.classList.remove('tw-boot-pending');
     }
-  },4000);
+  },10000);
 
   try{
     var raw=(new URLSearchParams(location.search).get('lang')||'').toLowerCase();
@@ -47,13 +47,44 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Noto+Serif+Georgian:wght@500;600;700&family=Noto+Sans+Georgian:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<!-- Stage 12.13.6.1: preload current runtime assets in parallel; execution order is unchanged. -->
+<meta id="tunewrapFastBootPreloads" name="tunewrap-fast-boot" content="12.13.6.1">
+<link rel="preload" as="style" href="/css/responsive-wide.css?v=12.2">
+<link rel="preload" as="style" href="/css/gift-certificate-overlay.css?v=12.8">
+<link rel="preload" as="style" href="/css/stage-12.8.1-ux-hotfix.css?v=12.8.1">
+<link rel="preload" as="style" href="/css/stage-12.8.2-certificate-fit.css?v=12.8.2">
+<link rel="preload" as="style" href="/css/stage-12.8.3-right-close-ux.css?v=12.8.3">
+<link rel="preload" as="style" href="/css/stage-12.8.4-corporate-card-close.css?v=12.8.4">
+<link rel="preload" as="style" href="/css/stage-12.10-package-ui-polish.css?v=12.10">
+<link rel="preload" as="style" href="/css/stage-12.10.4-compact-desktop-package-chooser.css?v=12.10.4">
+<link rel="preload" as="style" href="/css/stage-12.11-contact-channel-selector.css?v=12.11">
+<link rel="preload" as="style" href="/css/stage-12.12-site-polish.css?v=12.12">
+<link rel="preload" as="style" href="/css/stage-12.12.2-announcement-position.css?v=12.12.2">
+<link rel="preload" as="style" href="/css/story-categories.css?v=12.7">
+<link rel="preload" as="style" href="/css/order-intake-completion.css?v=12.6">
+<link rel="preload" as="style" href="/css/site-cms.css?v=12.3">
+<link rel="preload" as="style" href="/css/stage-12.13.3-home-logo-link.css?v=12.13.3">
+<link rel="preload" as="style" href="/css/stage-12.13.5-mobile-library-2col.css?v=12.13.5">
+<link rel="modulepreload" href="/js/catalog-runtime.js">
+<link rel="modulepreload" href="/js/script.js">
+<link rel="modulepreload" href="/js/wide-copy-polish.js">
+<link rel="modulepreload" href="/js/wedding-detail-wide.js">
+<link rel="modulepreload" href="/js/pricing-cms-runtime.js">
+<link rel="modulepreload" href="/js/gift-certificate-overlay.js">
+<link rel="modulepreload" href="/js/site-cms-runtime.js">
+<link rel="modulepreload" href="/js/sound-preferences-runtime.js">
+<link rel="modulepreload" href="/js/order-intake-completion.js">
+<link rel="modulepreload" href="/js/orders-submit.js">
+<link rel="modulepreload" href="/js/responsive-wide.js">
+<link rel="modulepreload" href="/js/playback-engine.js">
+<link rel="modulepreload" href="/js/ux-critical-fixes.js">
+<link rel="modulepreload" href="/js/stage-12.8.1-ux-hotfix.js">
+<link rel="modulepreload" href="/js/stage-12.8.3-right-close-ux.js">
+<link rel="modulepreload" href="/js/stage-12.8.4-corporate-card-close.js">
+<link rel="modulepreload" href="/js/stage-12.10-package-ui-polish.js">
+<link rel="modulepreload" href="/js/stage-12.11-contact-channel-selector.js">
 </head>
 <body>
-<div class="catalog-bootstrap" id="tunewrapBootSplash" role="status" aria-live="polite">
-  <strong class="catalog-bootstrap-brand">Tune<span>Wrap</span></strong>
-  <span class="catalog-bootstrap-mark" aria-hidden="true"></span>
-  <span class="catalog-bootstrap-copy"></span>
-</div>
 
 <nav id="top">
   <div class="wrap">
