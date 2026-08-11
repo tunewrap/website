@@ -72,3 +72,34 @@
   .sort-cover{width:40px;height:40px}
   .sort-actions button{width:34px;height:34px}
 }
+
+
+/* Stage 12.9.1 Pointer Drag */
+.drag-handle{
+  cursor:grab!important;
+  touch-action:none!important;
+  user-select:none!important;
+  -webkit-user-select:none!important;
+  color:var(--gold)!important;
+  font-size:20px!important;
+  letter-spacing:0!important;
+}
+.drag-handle:hover,
+.drag-handle:focus-visible{
+  border-color:rgba(217,181,97,.55)!important;
+  background:rgba(217,181,97,.08)!important;
+  color:var(--gold2)!important;
+  outline:none!important;
+}
+.drag-handle.is-grabbing{
+  cursor:grabbing!important;
+  border-color:rgba(217,181,97,.78)!important;
+  background:rgba(217,181,97,.14)!important;
+  color:var(--gold2)!important;
+}
+.sort-row.is-pointer-dragging{
+  opacity:.58!important;
+  border-color:rgba(217,181,97,.42)!important;
+  background:rgba(217,181,97,.07)!important;
+  box-shadow:0 14px 32px rgba(0,0,0,.28)!important;
+}

@@ -85,6 +85,7 @@ function cover(track){
   image.src=track.cover||FALLBACK_COVER;
   image.alt='';
   image.loading='lazy';
+  image.draggable=false;
   image.addEventListener('error',()=>{image.src=FALLBACK_COVER;},{once:true});
   return image;
 }
@@ -148,13 +149,113 @@ function move(section,id,direction){
   renderList(section);
 }
 
+function syncDomPositions(section){
+  nodes[section].list.querySelectorAll('.sort-row').forEach((row,index)=>{
+    const position=row.querySelector('.sort-position');
+    if(position)position.textContent='#'+(index+1);
+  });
+}
+
+function installPointerDrag(section,track,row,handle){
+  let active=false;
+  let changed=false;
+
+  handle.style.touchAction='none';
+  handle.tabIndex=0;
+  handle.setAttribute('role','button');
+  handle.setAttribute('aria-label','Перетащить трек');
+  handle.title='Зажмите и перетащите';
+
+  const finish=(event,cancelled=false)=>{
+    if(!active)return;
+    active=false;
+
+    try{
+      if(handle.hasPointerCapture?.(event.pointerId)){
+        handle.releasePointerCapture(event.pointerId);
+      }
+    }catch(error){}
+
+    row.classList.remove('is-dragging','is-pointer-dragging');
+    handle.classList.remove('is-grabbing');
+
+    if(cancelled){
+      renderList(section);
+      return;
+    }
+
+    if(changed){
+      const ids=Array.from(nodes[section].list.querySelectorAll('.sort-row'))
+        .map(item=>item.dataset.id)
+        .filter(Boolean);
+
+      if(ids.length===state.sections[section].ids.length){
+        state.sections[section].ids=ids;
+        updateDirty(section,true);
+      }
+    }
+
+    renderList(section);
+  };
+
+  handle.addEventListener('pointerdown',event=>{
+    if(state.busy)return;
+    if(event.pointerType==='mouse'&&event.button!==0)return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    active=true;
+    changed=false;
+    row.classList.add('is-dragging','is-pointer-dragging');
+    handle.classList.add('is-grabbing');
+
+    try{handle.setPointerCapture?.(event.pointerId);}catch(error){}
+  });
+
+  handle.addEventListener('pointermove',event=>{
+    if(!active)return;
+
+    event.preventDefault();
+
+    const list=nodes[section].list;
+    const target=document.elementsFromPoint(event.clientX,event.clientY)
+      .map(node=>node.closest?.('.sort-row'))
+      .find(candidate=>candidate&&candidate!==row&&candidate.parentElement===list);
+
+    if(target){
+      const rect=target.getBoundingClientRect();
+      const insertAfter=event.clientY>rect.top+(rect.height/2);
+      const reference=insertAfter?target.nextElementSibling:target;
+
+      if(reference!==row&&row.nextElementSibling!==reference){
+        list.insertBefore(row,reference);
+        changed=true;
+        syncDomPositions(section);
+      }
+    }
+
+    const edge=92;
+    if(event.clientY<edge){
+      window.scrollBy({top:-18,left:0,behavior:'auto'});
+    }else if(event.clientY>window.innerHeight-edge){
+      window.scrollBy({top:18,left:0,behavior:'auto'});
+    }
+  });
+
+  handle.addEventListener('pointerup',event=>finish(event,false));
+  handle.addEventListener('pointercancel',event=>finish(event,true));
+  handle.addEventListener('lostpointercapture',event=>{
+    if(active)finish(event,false);
+  });
+}
+
 function sortRow(section,track,index,total){
   const row=el('article','sort-row');
   row.dataset.id=track.id;
-  row.draggable=true;
+  row.draggable=false;
 
-  const handle=el('span','drag-handle','⋮⋮');
-  handle.title='Перетащить';
+  const handle=el('span','drag-handle','⠿');
 
   const identity=el('div','sort-identity');
   identity.append(
@@ -180,6 +281,7 @@ function sortRow(section,track,index,total){
   actions.append(up,down);
 
   row.append(handle,cover(track),identity,position,status,actions);
+  installPointerDrag(section,track,row,handle);
 
   row.addEventListener('dragstart',event=>{
     state.sections[section].dragId=track.id;

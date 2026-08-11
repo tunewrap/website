@@ -1,0 +1,13 @@
+NEW
+scripts/install-stage-12.9.1-drag-reorder-hotfix.js
+scripts/stage-12.9.1-drag-reorder-test.js
+README-STAGE-12.9.1.txt
+STAGE-12.9.1-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+admin/curation.js
+admin/curation.css
+package.json
+
+NO D1 MIGRATION
+NO API/PLAYER/CATALOG CHANGES
