@@ -93,6 +93,15 @@ if(!document.getElementById('tunewrapStage1210PackageUI')){
   document.head.append(stage1210);
 }
 
+
+if(!document.getElementById('tunewrapStage12104CompactChooser')){
+  const stage12104=document.createElement('link');
+  stage12104.id='tunewrapStage12104CompactChooser';
+  stage12104.rel='stylesheet';
+  stage12104.href='/css/stage-12.10.4-compact-desktop-package-chooser.css?v=12.10.4';
+  document.head.append(stage12104);
+}
+
 if(!document.getElementById('tunewrapStoryCategoryStyles')){
   const storyCategoryStyles=document.createElement('link');storyCategoryStyles.id='tunewrapStoryCategoryStyles';storyCategoryStyles.rel='stylesheet';storyCategoryStyles.href='/css/story-categories.css?v=12.7';document.head.append(storyCategoryStyles);
 }
