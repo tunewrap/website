@@ -158,12 +158,12 @@ function syncDomPositions(section){
 
 function installPointerDrag(section,track,row,handle){
   let active=false;
-  let changed=false;
   let pointerId=null;
-  let ghost=null;
+  let placeholder=null;
   let grabOffsetY=0;
   let lastClientY=0;
   let autoScrollFrame=0;
+  let originalStyle=null;
   let originalIds=[];
 
   handle.style.touchAction='none';
@@ -179,40 +179,60 @@ function installPointerDrag(section,track,row,handle){
       .filter(Boolean);
   }
 
-  function createGhost(clientY){
-    const rect=row.getBoundingClientRect();
+  function makePlaceholder(rect){
+    placeholder=document.createElement('div');
+    placeholder.className='sort-drop-slot';
+    placeholder.setAttribute('aria-hidden','true');
+    placeholder.style.height=rect.height+'px';
+    row.parentElement.insertBefore(placeholder,row);
+  }
+
+  function turnRowIntoFloatingGhost(rect,clientY){
+    originalStyle=row.getAttribute('style');
     grabOffsetY=Math.max(8,Math.min(rect.height-8,clientY-rect.top));
 
-    ghost=row.cloneNode(true);
-    ghost.classList.remove('is-dragging','is-pointer-dragging','is-drag-placeholder');
-    ghost.classList.add('sort-row-drag-ghost');
-    ghost.removeAttribute('data-id');
-    ghost.querySelectorAll('button').forEach(button=>button.disabled=true);
+    row.classList.add(
+      'is-dragging',
+      'is-pointer-dragging',
+      'is-long-drag-active',
+      'sort-row-live-ghost'
+    );
 
-    ghost.style.position='fixed';
-    ghost.style.left=rect.left+'px';
-    ghost.style.top=(clientY-grabOffsetY)+'px';
-    ghost.style.width=rect.width+'px';
-    ghost.style.height=rect.height+'px';
-    ghost.style.margin='0';
-    ghost.style.zIndex='9999';
-    ghost.style.pointerEvents='none';
+    row.style.position='fixed';
+    row.style.left=rect.left+'px';
+    row.style.top=(clientY-grabOffsetY)+'px';
+    row.style.width=rect.width+'px';
+    row.style.height=rect.height+'px';
+    row.style.margin='0';
+    row.style.zIndex='9999';
+    row.style.pointerEvents='none';
+  }
 
-    document.body.append(ghost);
+  function restoreRowStyle(){
+    if(originalStyle===null)row.removeAttribute('style');
+    else row.setAttribute('style',originalStyle);
+
+    row.classList.remove(
+      'is-dragging',
+      'is-pointer-dragging',
+      'is-long-drag-active',
+      'sort-row-live-ghost'
+    );
+    handle.classList.remove('is-grabbing');
   }
 
   function moveGhost(clientY){
-    if(!ghost)return;
-    ghost.style.top=(clientY-grabOffsetY)+'px';
+    row.style.top=(clientY-grabOffsetY)+'px';
   }
 
-  function placePlaceholder(clientY){
+  function placeSlot(clientY){
     const list=nodes[section].list;
-    const siblings=Array.from(list.querySelectorAll('.sort-row'))
+    const candidates=Array.from(list.querySelectorAll('.sort-row'))
       .filter(item=>item!==row);
 
     let reference=null;
-    for(const item of siblings){
+
+    for(const item of candidates){
       const rect=item.getBoundingClientRect();
       if(clientY<rect.top+(rect.height/2)){
         reference=item;
@@ -220,51 +240,51 @@ function installPointerDrag(section,track,row,handle){
       }
     }
 
-    const before=row.previousElementSibling;
-    const after=row.nextElementSibling;
-
     if(reference){
-      if(reference!==after){
-        list.insertBefore(row,reference);
-        changed=true;
+      if(placeholder.nextElementSibling!==reference){
+        list.insertBefore(placeholder,reference);
       }
-    }else if(row!==list.lastElementChild){
-      list.append(row);
-      changed=true;
+    }else if(placeholder!==list.lastElementChild){
+      list.append(placeholder);
     }
 
-    if(before!==row.previousElementSibling||after!==row.nextElementSibling){
-      changed=true;
-      syncDomPositions(section);
-    }
+    let visualIndex=0;
+    Array.from(list.children).forEach(child=>{
+      if(child===row)return;
+      if(child===placeholder){
+        placeholder.dataset.position=String(visualIndex+1);
+        return;
+      }
+      if(child.classList?.contains('sort-row'))visualIndex+=1;
+    });
   }
 
   function autoScrollTick(){
     autoScrollFrame=0;
     if(!active)return;
 
-    const edge=118;
+    const edge=120;
     let delta=0;
 
     if(lastClientY<edge){
-      const strength=(edge-lastClientY)/edge;
-      delta=-Math.max(10,Math.round(30*strength));
+      const strength=Math.min(1,(edge-lastClientY)/edge);
+      delta=-Math.max(10,Math.round(34*strength));
     }else if(lastClientY>window.innerHeight-edge){
-      const strength=(lastClientY-(window.innerHeight-edge))/edge;
-      delta=Math.max(10,Math.round(30*strength));
+      const strength=Math.min(1,(lastClientY-(window.innerHeight-edge))/edge);
+      delta=Math.max(10,Math.round(34*strength));
     }
 
     if(delta){
       window.scrollBy({top:delta,left:0,behavior:'auto'});
       moveGhost(lastClientY);
-      placePlaceholder(lastClientY);
+      placeSlot(lastClientY);
       autoScrollFrame=requestAnimationFrame(autoScrollTick);
     }
   }
 
   function ensureAutoScroll(){
     if(autoScrollFrame)return;
-    const edge=118;
+    const edge=120;
     if(lastClientY<edge||lastClientY>window.innerHeight-edge){
       autoScrollFrame=requestAnimationFrame(autoScrollTick);
     }
@@ -288,28 +308,28 @@ function installPointerDrag(section,track,row,handle){
       }
     }catch(error){}
 
-    ghost?.remove();
-    ghost=null;
-
-    row.classList.remove(
-      'is-dragging',
-      'is-pointer-dragging',
-      'is-drag-placeholder',
-      'is-long-drag-active'
-    );
-    handle.classList.remove('is-grabbing');
-
     if(cancelled){
+      placeholder?.remove();
+      placeholder=null;
+      restoreRowStyle();
       state.sections[section].ids=originalIds.slice();
       renderList(section);
       return;
     }
 
+    if(placeholder?.parentElement){
+      placeholder.parentElement.insertBefore(row,placeholder);
+      placeholder.remove();
+      placeholder=null;
+    }
+
+    restoreRowStyle();
+
     const ids=currentDomIds();
-    if(ids.length===state.sections[section].ids.length){
+    if(ids.length===originalIds.length){
       const differs=ids.some((id,index)=>id!==originalIds[index]);
       state.sections[section].ids=ids;
-      if(changed||differs)updateDirty(section,true);
+      if(differs)updateDirty(section,true);
     }
 
     renderList(section);
@@ -319,26 +339,25 @@ function installPointerDrag(section,track,row,handle){
     if(state.busy||active)return;
     if(event.pointerType==='mouse'&&event.button!==0)return;
 
+    const fromHandle=event.target===handle||event.target.closest?.('.drag-handle');
     const interactive=event.target.closest?.('button,a,input,select,textarea');
-    if(interactive&&!interactive.classList.contains('drag-handle'))return;
+
+    // Desktop: grab the handle OR any free part of the track row.
+    // Touch: use the handle so normal page scrolling stays natural.
+    if(event.pointerType!=='mouse'&&!fromHandle)return;
+    if(interactive&&!fromHandle)return;
 
     event.preventDefault();
     event.stopPropagation();
 
     active=true;
-    changed=false;
     pointerId=event.pointerId;
     lastClientY=event.clientY;
     originalIds=state.sections[section].ids.slice();
 
-    createGhost(event.clientY);
-
-    row.classList.add(
-      'is-dragging',
-      'is-pointer-dragging',
-      'is-drag-placeholder',
-      'is-long-drag-active'
-    );
+    const rect=row.getBoundingClientRect();
+    makePlaceholder(rect);
+    turnRowIntoFloatingGhost(rect,event.clientY);
     handle.classList.add('is-grabbing');
 
     try{row.setPointerCapture?.(event.pointerId);}catch(error){}
@@ -351,7 +370,7 @@ function installPointerDrag(section,track,row,handle){
     lastClientY=event.clientY;
 
     moveGhost(lastClientY);
-    placePlaceholder(lastClientY);
+    placeSlot(lastClientY);
     ensureAutoScroll();
   }
 
