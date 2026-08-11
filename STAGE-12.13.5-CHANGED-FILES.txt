@@ -1,0 +1,15 @@
+NEW
+css/stage-12.13.5-mobile-library-2col.css
+scripts/install-stage-12.13.5-mobile-library-2col.js
+scripts/stage-12.13.5-mobile-library-2col-test.js
+README-STAGE-12.13.5.txt
+STAGE-12.13.5-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+js/app-bootstrap.js
+package.json
+
+NO D1 MIGRATION
+NO PLAYER CHANGE
+NO CATALOG RUNTIME CHANGE
+NO CMS CHANGE

@@ -1,4 +1,13 @@
 
+if(!document.getElementById('tunewrapStage12135MobileLibrary2Col')){
+  const stage12135=document.createElement('link');
+  stage12135.id='tunewrapStage12135MobileLibrary2Col';
+  stage12135.rel='stylesheet';
+  stage12135.href='/css/stage-12.13.5-mobile-library-2col.css?v=12.13.5';
+  document.head.append(stage12135);
+}
+
+
 if(!document.getElementById('tunewrapStage12133HomeLogoScript')){
   const stage12133Script=document.createElement('script');
   stage12133Script.id='tunewrapStage12133HomeLogoScript';
