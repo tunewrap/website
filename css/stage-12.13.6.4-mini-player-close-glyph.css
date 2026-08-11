@@ -1,0 +1,26 @@
+/* TuneWrap Stage 12.13.6.4 — Mini Player Close Glyph
+   Visual-only fix. Behavior remains owned by #topMiniStop / playback-engine. */
+
+#topMiniStop{
+  position:relative;
+}
+
+#topMiniStop::before{
+  content:"×";
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  color:#e7b64d;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:25px;
+  font-weight:400;
+  line-height:1;
+  transform:translateY(-1px);
+  pointer-events:none;
+}
+
+#topMiniStop:focus-visible{
+  outline:2px solid rgba(231,182,77,.72);
+  outline-offset:3px;
+}

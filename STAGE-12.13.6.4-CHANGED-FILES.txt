@@ -1,0 +1,15 @@
+NEW
+css/stage-12.13.6.4-mini-player-close-glyph.css
+scripts/install-stage-12.13.6.4-mini-player-close-glyph.js
+scripts/stage-12.13.6.4-mini-player-close-glyph-test.js
+README-STAGE-12.13.6.4.txt
+STAGE-12.13.6.4-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+index.html
+package.json
+
+NO JS PLAYER CHANGE
+NO D1
+NO API
+NO ADMIN
