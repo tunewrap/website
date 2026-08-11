@@ -1,0 +1,19 @@
+/*
+  TuneWrap Stage 12.13.9 — Mobile Header Simplification
+
+  Mobile navigation is already owned by the persistent Bottom Nav.
+  Keep the mobile top header intentionally minimal:
+  TuneWrap logo + language selector.
+
+  Desktop header remains unchanged.
+*/
+
+@media (max-width: 620px) {
+  #top .mobile-menu {
+    display: none !important;
+  }
+
+  #top .nav-right {
+    gap: 0;
+  }
+}
