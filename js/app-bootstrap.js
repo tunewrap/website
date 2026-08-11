@@ -84,6 +84,15 @@ if(!document.getElementById('tunewrapStage1284CorporateClose')){
   document.head.append(stage1284);
 }
 
+
+if(!document.getElementById('tunewrapStage1210PackageUI')){
+  const stage1210=document.createElement('link');
+  stage1210.id='tunewrapStage1210PackageUI';
+  stage1210.rel='stylesheet';
+  stage1210.href='/css/stage-12.10-package-ui-polish.css?v=12.10';
+  document.head.append(stage1210);
+}
+
 if(!document.getElementById('tunewrapStoryCategoryStyles')){
   const storyCategoryStyles=document.createElement('link');storyCategoryStyles.id='tunewrapStoryCategoryStyles';storyCategoryStyles.rel='stylesheet';storyCategoryStyles.href='/css/story-categories.css?v=12.7';document.head.append(storyCategoryStyles);
 }
@@ -235,6 +244,13 @@ try{
     await import('./stage-12.8.4-corporate-card-close.js');
   }catch(error){
     console.error('TuneWrap Stage 12.8.4 corporate card close failed',error);
+  }
+
+
+  try{
+    await import('./stage-12.10-package-ui-polish.js');
+  }catch(error){
+    console.error('TuneWrap Stage 12.10 package UI polish failed',error);
   }
 
   if(document.readyState !== 'loading') document.dispatchEvent(new Event('DOMContentLoaded'));

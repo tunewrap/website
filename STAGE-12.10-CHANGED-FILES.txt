@@ -1,0 +1,16 @@
+NEW
+js/stage-12.10-package-ui-polish.js
+css/stage-12.10-package-ui-polish.css
+scripts/install-stage-12.10-package-ui-polish.js
+scripts/stage-12.10-package-ui-test.js
+README-STAGE-12.10.txt
+STAGE-12.10-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+js/app-bootstrap.js
+package.json
+
+NO D1 MIGRATION
+NO API CHANGE
+NO PRICING CMS CHANGE
+NO PLAYER / MUSIC / QUEUE CHANGE

@@ -12,33 +12,33 @@ const css=read('admin/curation.css');
 const reorder=read('functions/api/admin/reorder.js');
 const pkg=JSON.parse(read('package.json'));
 
-assert.match(js,/function installPointerDrag/);
-assert.match(js,/sort-row-drag-ghost/);
-assert.match(js,/is-drag-placeholder/);
-assert.match(js,/createGhost/);
-assert.match(js,/moveGhost/);
-assert.match(js,/placePlaceholder/);
-assert.match(js,/getBoundingClientRect/);
-assert.match(js,/list\.insertBefore\(row,reference\)/);
-assert.match(js,/list\.append\(row\)/);
-assert.match(js,/requestAnimationFrame\(autoScrollTick\)/);
-assert.match(js,/window\.scrollBy/);
-assert.match(js,/row\.setPointerCapture/);
-assert.match(js,/row\.addEventListener\('pointermove'/);
-assert.match(js,/row\.addEventListener\('pointerup'/);
-assert.match(js,/state\.sections\[section\]\.ids=ids/);
-assert.match(js,/updateDirty\(section,true\)/);
+[
+  'function installPointerDrag',
+  'makePlaceholder',
+  'turnRowIntoFloatingGhost',
+  'moveGhost',
+  'placeSlot',
+  'getBoundingClientRect',
+  'requestAnimationFrame(autoScrollTick)',
+  'window.scrollBy',
+  'row.setPointerCapture',
+  "row.addEventListener('pointermove'",
+  "row.addEventListener('pointerup'",
+  'currentDomIds',
+  'updateDirty(section,true)',
+  'list.insertBefore(placeholder,reference)',
+  'list.append(placeholder)',
+  'placeholder.parentElement.insertBefore(row,placeholder)',
+  'function move(section,id,direction)',
+  '/api/admin/reorder'
+].forEach(token=>assert.ok(js.includes(token),token));
 
-// Existing arrow fallback and persistence are preserved.
-assert.match(js,/function move\(section,id,direction\)/);
-assert.match(js,/\/api\/admin\/reorder/);
-assert.match(reorder,/UPDATE tracks SET sort_order/);
-
-assert.match(css,/Stage 12\.9\.2 Continuous Drag/);
-assert.match(css,/\.sort-row-drag-ghost/);
-assert.match(css,/\.sort-row\.is-drag-placeholder/);
+assert.ok(reorder.includes('UPDATE tracks SET sort_order'));
+assert.ok(css.includes('Stage 12.9.3 True Hold Drag'));
+assert.ok(css.includes('.sort-drop-slot'));
+assert.ok(css.includes('.sort-row.sort-row-live-ghost'));
 
 assert.equal(pkg.scripts['longdrag:test'],'node scripts/stage-12.9.2-continuous-drag-test.js');
-assert.match(pkg.scripts.test,/longdrag:test/);
+assert.ok(pkg.scripts.test.includes('longdrag:test'));
 
-console.log('PASS: Stage 12.9.2 — continuous hold-and-drag reorder with floating ghost and edge auto-scroll is installed.');
+console.log('PASS: Continuous drag + edge auto-scroll capability remains present under final Stage 12.9.3.');
