@@ -1,0 +1,26 @@
+NEW
+js/gift-certificate-overlay.js
+css/gift-certificate-overlay.css
+scripts/install-stage-12.8-gift-certificate-overlay.js
+scripts/gift-certificate-overlay-test.js
+README-STAGE-12.8.txt
+STAGE-12.8-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+js/app-bootstrap.js
+package.json
+
+NO D1 MIGRATION
+
+UNCHANGED
+index.html
+js/script.js
+js/orders-submit.js
+js/pricing-cms-runtime.js
+functions/_shared/orders.js
+pricing CMS schema/config
+music catalog
+playback-engine.js
+story categories
+corporate overlay
+terms overlay

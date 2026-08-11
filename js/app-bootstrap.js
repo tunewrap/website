@@ -11,6 +11,14 @@ if(!document.getElementById('tunewrapResponsiveWide')){
   document.head.append(responsiveWide);
 }
 
+if(!document.getElementById('tunewrapGiftCertificateStyles')){
+  const giftCertificateStyles=document.createElement('link');
+  giftCertificateStyles.id='tunewrapGiftCertificateStyles';
+  giftCertificateStyles.rel='stylesheet';
+  giftCertificateStyles.href='/css/gift-certificate-overlay.css?v=12.8';
+  document.head.append(giftCertificateStyles);
+}
+
 if(!document.getElementById('tunewrapStoryCategoryStyles')){
   const storyCategoryStyles=document.createElement('link');storyCategoryStyles.id='tunewrapStoryCategoryStyles';storyCategoryStyles.rel='stylesheet';storyCategoryStyles.href='/css/story-categories.css?v=12.7';document.head.append(storyCategoryStyles);
 }
@@ -92,6 +100,13 @@ try{
     await import('./pricing-cms-runtime.js');
   }catch(error){
     console.error('TuneWrap Pricing CMS runtime failed',error);
+  }
+
+  // Gift Certificate uses live Pricing CMS and the existing certificate CRM flow.
+  try{
+    await import('./gift-certificate-overlay.js');
+  }catch(error){
+    console.error('TuneWrap Stage 12.8 gift certificate overlay failed',error);
   }
 
   // Site CMS is the final content layer for non-pricing marketing text,

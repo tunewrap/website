@@ -18,10 +18,11 @@
     "responsive:test": "node scripts/responsive-wide-test.js",
     "pricing:test": "node scripts/pricing-cms-test.js",
     "site:test": "node scripts/site-cms-test.js",
-    "test": "npm run tracks:check && npm run tracks:test-queue && npm run tracks:test-artwork && npm run tracks:test-scale && npm run admin:test && npm run orders:test && npm run responsive:test && npm run pricing:test && npm run site:test && npm run sound:test && npm run intake:test && npm run categories:test",
+    "test": "npm run tracks:check && npm run tracks:test-queue && npm run tracks:test-artwork && npm run tracks:test-scale && npm run admin:test && npm run orders:test && npm run responsive:test && npm run pricing:test && npm run site:test && npm run sound:test && npm run intake:test && npm run categories:test && npm run certificate:test",
     "sound:test": "node scripts/sound-preferences-cms-test.js",
     "intake:test": "node scripts/order-intake-completion-test.js",
-    "categories:test": "node scripts/story-categories-test.js"
+    "categories:test": "node scripts/story-categories-test.js",
+    "certificate:test": "node scripts/gift-certificate-overlay-test.js"
   },
   "engines": {
     "node": ">=18"
