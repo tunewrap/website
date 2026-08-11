@@ -833,7 +833,15 @@
         if(!item) return;
         event.preventDefault();
         event.stopImmediatePropagation();
-        openPlayer(item,featured,true);
+
+        // Homepage Featured Story / Featured Author must behave like a normal
+        // play surface. Starting playback must NOT cover the page with the
+        // mobile Full Player. The Full Player remains available explicitly
+        // through the Mini Player expand action.
+        restoreFocus = featured;
+        if(currentItem === item) toggleCurrent();
+        else selectTrack(item.name,{autoplay:true,reason:'featured-play'});
+        syncMiniPlayer();
         return;
       }
       const ribbon = event.target.closest('[data-start-track]');
