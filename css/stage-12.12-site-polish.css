@@ -1,0 +1,87 @@
+/* TuneWrap Stage 12.12 — Contact Centering + Homepage Announcement */
+
+.contact-hub-socials{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  justify-content:center!important;
+  align-items:stretch!important;
+  width:min(100%,620px)!important;
+  gap:9px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+.contact-hub-socials > .contact-hub-channel{
+  flex:0 1 94px!important;
+  width:94px!important;
+}
+.contact-hub-socials > .contact-hub-channel[hidden]{
+  display:none!important;
+}
+
+.hero-announcement[hidden]{display:none!important}
+.hero-announcement{
+  position:relative;
+  max-width:620px;
+  margin:14px 0 12px;
+  padding:13px 15px 14px 17px;
+  overflow:hidden;
+  border:1px solid rgba(217,164,65,.34);
+  border-radius:16px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(217,164,65,.11),transparent 15rem),
+    linear-gradient(180deg,rgba(217,164,65,.065),rgba(255,255,255,.014));
+  box-shadow:0 14px 38px rgba(0,0,0,.18);
+}
+.hero-announcement::before{
+  content:"";
+  position:absolute;
+  left:0; top:12px; bottom:12px; width:2px;
+  border-radius:2px;
+  background:linear-gradient(180deg,#f0c46b,#9d6b20);
+}
+.hero-announcement-meta{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:7px 10px;
+  margin-bottom:5px;
+}
+.hero-announcement-label{
+  color:#e4b557;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+}
+.hero-announcement-date{
+  color:#817b83;
+  font-size:9px;
+  font-weight:700;
+}
+.hero-announcement strong{
+  display:block;
+  color:#f3eee7;
+  font:600 17px/1.16 'Fraunces',Georgia,serif;
+}
+.hero-announcement p{
+  margin:5px 0 0;
+  color:#aaa4ac;
+  font-size:12px;
+  line-height:1.48;
+  white-space:pre-line;
+}
+@media(max-width:620px){
+  .contact-hub-socials{gap:5px!important}
+  .contact-hub-socials > .contact-hub-channel{
+    flex:0 1 72px!important;
+    width:72px!important;
+  }
+  .hero-announcement{
+    width:100%;
+    margin:10px 0;
+    padding:11px 12px 12px 14px;
+    border-radius:14px;
+  }
+  .hero-announcement strong{font-size:15px}
+  .hero-announcement p{font-size:11px;line-height:1.4}
+}

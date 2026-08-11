@@ -89,6 +89,20 @@ function cleanPayments(value){
   });
 }
 
+function cleanDate(value){
+  const raw=cleanText(value,20);
+  return /^\d{4}-\d{2}-\d{2}$/.test(raw)?raw:'';
+}
+
+function cleanAnnouncement(value){
+  const source=value&&typeof value==='object'?value:{};
+  return {
+    enabled:source.enabled===true,
+    startDate:cleanDate(source.startDate),
+    endDate:cleanDate(source.endDate)
+  };
+}
+
 export function normalizeSiteContentConfig(value){
   if(!value||typeof value!=='object')throw new HttpError(400,'Некорректная конфигурация Site CMS');
   return {
@@ -96,7 +110,8 @@ export function normalizeSiteContentConfig(value){
     texts:{locales:cleanLocaleMap(value.texts?.locales,220,12000)},
     placeholders:{locales:cleanLocaleMap(value.placeholders?.locales,80,1200)},
     contacts:cleanContacts(value.contacts),
-    payments:cleanPayments(value.payments)
+    payments:cleanPayments(value.payments),
+    announcement:cleanAnnouncement(value.announcement)
   };
 }
 

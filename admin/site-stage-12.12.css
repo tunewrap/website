@@ -1,0 +1,36 @@
+/* TuneWrap Stage 12.12 — Admin announcement editor */
+.site-announcement-admin .site-announcement-controls{
+  display:grid;
+  grid-template-columns:minmax(190px,.8fr) repeat(2,minmax(160px,.7fr));
+  gap:12px;
+  align-items:end;
+  margin-bottom:14px;
+}
+.site-announcement-switch{
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:11px 13px;
+  border:1px solid rgba(216,177,86,.22);
+  border-radius:13px;
+  background:rgba(216,177,86,.045);
+  color:#d8c89f;
+  font-weight:700;
+}
+.site-announcement-switch input{
+  width:18px;height:18px;accent-color:#d9a441;
+}
+.site-announcement-date{display:grid;gap:7px}
+.site-announcement-date > span{
+  color:#a89f92;font-size:11px;font-weight:800;
+}
+.site-announcement-date input{
+  width:100%;min-height:48px;
+}
+.site-announcement-note{
+  margin-top:10px;color:#817b83;font-size:11px;line-height:1.5;
+}
+@media(max-width:760px){
+  .site-announcement-admin .site-announcement-controls{grid-template-columns:1fr}
+}

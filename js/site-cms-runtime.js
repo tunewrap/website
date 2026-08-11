@@ -242,6 +242,84 @@
     if(pending)pending.hidden=true;
   }
 
+  function announcementTodayKey(){
+    const now=new Date();
+    const y=now.getFullYear();
+    const m=String(now.getMonth()+1).padStart(2,'0');
+    const d=String(now.getDate()).padStart(2,'0');
+    return `${y}-${m}-${d}`;
+  }
+
+  function announcementDateLocale(){
+    return {ru:'ru-RU',uk:'uk-UA',ka:'ka-GE',en:'en-US',de:'de-DE'}[language()]||'ru-RU';
+  }
+
+  function formatAnnouncementDate(value){
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(String(value||'')))return '';
+    const [year,month,day]=value.split('-').map(Number);
+    const date=new Date(year,month-1,day);
+    if(Number.isNaN(date.getTime()))return '';
+    return new Intl.DateTimeFormat(announcementDateLocale(),{day:'numeric',month:'short'}).format(date);
+  }
+
+  function announcementRangeText(announcement){
+    const start=formatAnnouncementDate(announcement?.startDate);
+    const end=formatAnnouncementDate(announcement?.endDate);
+    if(start&&end)return start===end?start:`${start} — ${end}`;
+    return start||end||'';
+  }
+
+  function announcementIsActive(announcement,texts){
+    if(announcement?.enabled!==true)return false;
+    if(!String(texts?.announcement_title||'').trim()&&!String(texts?.announcement_text||'').trim())return false;
+    const today=announcementTodayKey();
+    const start=String(announcement.startDate||'');
+    const end=String(announcement.endDate||'');
+    if(start&&today<start)return false;
+    if(end&&today>end)return false;
+    return true;
+  }
+
+  function patchAnnouncement(){
+    const hero=$('#hero .hero-grid > div:first-child');
+    const texts=localized(config.texts)||{};
+    const announcement=config.announcement||{};
+    if(!hero)return;
+
+    let node=$('#heroAnnouncement');
+    if(!node){
+      node=document.createElement('aside');
+      node.id='heroAnnouncement';
+      node.className='hero-announcement';
+      node.setAttribute('role','status');
+      node.setAttribute('aria-live','polite');
+      node.innerHTML=`
+        <div class="hero-announcement-meta">
+          <span class="hero-announcement-label"></span>
+          <time class="hero-announcement-date"></time>
+        </div>
+        <strong></strong>
+        <p></p>`;
+
+      const eyebrow=hero.querySelector('.eyebrow');
+      if(eyebrow)eyebrow.insertAdjacentElement('afterend',node);
+      else hero.prepend(node);
+    }
+
+    const active=announcementIsActive(announcement,texts);
+    node.hidden=!active;
+    if(!active)return;
+
+    node.querySelector('.hero-announcement-label').textContent=String(texts.announcement_label||'Новости').trim();
+    node.querySelector('strong').textContent=String(texts.announcement_title||'').trim();
+    node.querySelector('p').textContent=String(texts.announcement_text||'').trim();
+
+    const date=node.querySelector('.hero-announcement-date');
+    const range=announcementRangeText(announcement);
+    date.textContent=range;
+    date.hidden=!range;
+  }
+
   function ensureTermsPanel(){
     let panel=$('#siteTermsPanel');
     if(panel)return panel;
@@ -473,6 +551,7 @@
     patchTexts();
     patchChannels();
     patchPayments();
+    patchAnnouncement();
     patchTermsLink();
     installFooterNavigation();
     patchOrderContactLinks();

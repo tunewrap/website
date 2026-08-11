@@ -1,0 +1,17 @@
+NEW
+css/stage-12.12-site-polish.css
+admin/site-stage-12.12.css
+scripts/install-stage-12.12-site-polish.js
+scripts/stage-12.12-site-polish-test.js
+README-STAGE-12.12.txt
+STAGE-12.12-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+functions/_shared/site-content.js
+admin/site.html
+admin/site.js
+js/site-cms-runtime.js
+js/app-bootstrap.js
+package.json
+
+NO D1 MIGRATION

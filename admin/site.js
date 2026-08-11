@@ -302,7 +302,7 @@ function renderContacts(){
       markDirty();
       renderContacts();
     });
-    toggle.append(check,document.createTextNode('Показывать'));
+    toggle.append(check,document.createTextNode('Показывать на сайте'));
     head.appendChild(toggle);
     card.appendChild(head);
 
@@ -400,12 +400,79 @@ function renderLanguage(){
   $('#siteLanguageHint').textContent=`Редактируется ${names[state.language]}. Пустые поля оставляют встроенный перевод сайта.`;
 }
 
+function renderAnnouncement(){
+  let section=$('#siteAnnouncementSection');
+  if(!section){
+    section=document.createElement('section');
+    section.id='siteAnnouncementSection';
+    section.className='form-section site-section site-announcement-admin';
+    $('#siteSaveBar')?.insertAdjacentElement('beforebegin',section);
+  }
+
+  state.config.announcement ||= {enabled:false,startDate:'',endDate:''};
+  const announcement=state.config.announcement;
+  const locale=texts();
+
+  section.replaceChildren();
+
+  const heading=document.createElement('div');
+  heading.className='section-heading';
+  heading.innerHTML='<span>10</span><div><h2>Новости / уведомление на главной</h2><p>Акции, важные сообщения, временная недоступность и другие объявления. Можно задать период показа.</p></div>';
+  section.appendChild(heading);
+
+  const controls=document.createElement('div');
+  controls.className='site-announcement-controls';
+
+  const enabled=document.createElement('label');
+  enabled.className='site-announcement-switch';
+  const checkbox=document.createElement('input');
+  checkbox.type='checkbox';
+  checkbox.checked=announcement.enabled===true;
+  checkbox.addEventListener('change',()=>{announcement.enabled=checkbox.checked;markDirty();});
+  enabled.append(checkbox,document.createTextNode('Показывать на главной'));
+  controls.appendChild(enabled);
+
+  const dateField=(label,key)=>{
+    const wrap=document.createElement('label');
+    wrap.className='site-announcement-date';
+    const title=document.createElement('span');
+    title.textContent=label;
+    const input=document.createElement('input');
+    input.type='date';
+    input.value=announcement[key]||'';
+    input.addEventListener('change',()=>{announcement[key]=input.value;markDirty();});
+    wrap.append(title,input);
+    return wrap;
+  };
+
+  controls.append(
+    dateField('Показывать с','startDate'),
+    dateField('Показывать до','endDate')
+  );
+  section.appendChild(controls);
+
+  const grid=document.createElement('div');
+  grid.className='site-fields-grid';
+  grid.append(
+    makeField('Метка',locale.announcement_label||'',value=>{locale.announcement_label=value;},{help:'Например: НОВОСТИ, ВАЖНО, АКЦИЯ'}),
+    makeField('Заголовок',locale.announcement_title||'',value=>{locale.announcement_title=value;},{wide:true}),
+    makeField('Текст объявления',locale.announcement_text||'',value=>{locale.announcement_text=value;},{textarea:4,wide:true})
+  );
+  section.appendChild(grid);
+
+  const note=document.createElement('p');
+  note.className='site-announcement-note';
+  note.textContent='Тексты объявления участвуют в кнопке «Автоперевести язык». Если период не указан, объявление показывается постоянно, пока включён переключатель.';
+  section.appendChild(note);
+}
+
 function render(){
   if(!state.config)return;
   renderLanguage();
   renderTextSections();
   renderContacts();
   renderPayments();
+  renderAnnouncement();
   renderAudit();
 }
 
