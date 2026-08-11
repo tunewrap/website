@@ -96,8 +96,15 @@
       );
       if(!origin)return;
 
+      // Homepage Featured Story / Featured Author are quick-play surfaces
+      // on every viewport. They must never auto-open the Wide Full Player.
+      if(origin.matches('[data-featured-track]')){
+        afterEngine(syncWideMini);
+        return;
+      }
+
       // The small play button stays a quick play/pause control.
-      // Clicking the artwork/card opens the complete story player.
+      // Library artwork/cards can still open the complete story player.
       if(event.target.closest('.play-btn[data-track]')){
         afterEngine(syncWideMini);
         return;

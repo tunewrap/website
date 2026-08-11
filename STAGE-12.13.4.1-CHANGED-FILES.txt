@@ -1,0 +1,13 @@
+NEW
+scripts/install-stage-12.13.4.1-wide-featured-play-no-fullscreen.js
+scripts/stage-12.13.4.1-wide-featured-play-test.js
+README-STAGE-12.13.4.1.txt
+STAGE-12.13.4.1-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+js/responsive-wide.js
+package.json
+
+NO D1 MIGRATION
+NO PLAYER ARCHITECTURE REWRITE
+NO CATALOG CHANGE
