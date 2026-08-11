@@ -1,4 +1,4 @@
-const LOCALES=[['ru','RU'],['uk','UA'],['ka','GE'],['en','EN'],['de','DE']];
+const LOCALES=[['en','EN'],['ru','RU'],['uk','UA'],['ka','GE'],['de','DE']];
 const $=selector=>document.querySelector(selector);
 const state={config:null,busy:false,dirty:false,updatedAt:'',lastEditedBy:''};
 function el(tag,className,text){const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;}

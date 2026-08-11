@@ -5,7 +5,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this,function(){
   'use strict';
 
-  const UI_LANGUAGES = ['ru','uk','ka','en','de'];
+  const UI_LANGUAGES = ['en','ru','uk','ka','de'];
   const SECTION_ORDER = Object.freeze(['stories','author']);
 
   function normalize(value){

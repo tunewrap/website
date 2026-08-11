@@ -36,10 +36,10 @@
     </div>
     <div class="nav-right">
       <div class="lang-switch notranslate" id="langSwitch" translate="no">
+        <button class="lang-btn active" data-lang="en">EN</button>
         <button class="lang-btn" data-lang="ru">RU</button>
         <button class="lang-btn" data-lang="uk">UA</button>
         <button class="lang-btn" data-lang="ka">GE</button>
-        <button class="lang-btn active" data-lang="en">EN</button>
         <button class="lang-btn" data-lang="de">DE</button>
       </div>
       <details class="mobile-lang notranslate" translate="no">
@@ -48,10 +48,10 @@
           <span class="mobile-lang-current" aria-hidden="true"></span>
         </summary>
         <div class="mobile-lang-options">
+          <button class="lang-btn active" data-lang="en">EN</button>
           <button class="lang-btn" data-lang="ru">RU</button>
           <button class="lang-btn" data-lang="uk">UA</button>
           <button class="lang-btn" data-lang="ka">GE</button>
-          <button class="lang-btn active" data-lang="en">EN</button>
           <button class="lang-btn" data-lang="de">DE</button>
         </div>
       </details>
@@ -243,20 +243,20 @@
 
     <div class="songs-library-filters" data-songs-filter-root>
       <div class="songs-language-rail notranslate" translate="no" role="tablist" aria-label="Song language" data-filter-level="language">
-        <button class="songs-language-tab" id="songsLangGE" type="button" role="tab" aria-selected="false" aria-controls="songsLibraryPanel" tabindex="-1" data-song-language-filter="GE">
-          <strong>GE</strong>
+        <button class="songs-language-tab is-active" id="songsLangEN" type="button" role="tab" aria-selected="true" aria-controls="songsLibraryPanel" tabindex="0" data-song-language-filter="EN">
+          <strong>EN</strong>
+        </button>
+        <button class="songs-language-tab" id="songsLangRU" type="button" role="tab" aria-selected="false" aria-controls="songsLibraryPanel" tabindex="-1" data-song-language-filter="RU">
+          <strong>RU</strong>
         </button>
         <button class="songs-language-tab" id="songsLangUA" type="button" role="tab" aria-selected="false" aria-controls="songsLibraryPanel" tabindex="-1" data-song-language-filter="UA">
           <strong>UA</strong>
         </button>
-        <button class="songs-language-tab is-active" id="songsLangEN" type="button" role="tab" aria-selected="true" aria-controls="songsLibraryPanel" tabindex="0" data-song-language-filter="EN">
-          <strong>EN</strong>
+        <button class="songs-language-tab" id="songsLangGE" type="button" role="tab" aria-selected="false" aria-controls="songsLibraryPanel" tabindex="-1" data-song-language-filter="GE">
+          <strong>GE</strong>
         </button>
         <button class="songs-language-tab" id="songsLangDE" type="button" role="tab" aria-selected="false" aria-controls="songsLibraryPanel" tabindex="-1" data-song-language-filter="DE">
           <strong>DE</strong>
-        </button>
-        <button class="songs-language-tab" id="songsLangRU" type="button" role="tab" aria-selected="false" aria-controls="songsLibraryPanel" tabindex="-1" data-song-language-filter="RU">
-          <strong>RU</strong>
         </button>
       </div>
       <div class="songs-library-context" role="status" aria-live="polite">
@@ -684,10 +684,10 @@
         <label class="tier-detail-language">
           <span class="sr-only">Language</span>
           <select id="tierDetailLanguageSelect" class="notranslate" translate="no" aria-label="Language">
+            <option value="en">EN</option>
             <option value="ru">RU</option>
             <option value="uk">UA</option>
             <option value="ka">GE</option>
-            <option value="en">EN</option>
             <option value="de">DE</option>
           </select>
         </label>

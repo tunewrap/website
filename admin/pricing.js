@@ -1,4 +1,4 @@
-const LANGUAGES=['ru','uk','ka','en','de'];
+const LANGUAGES=['en','ru','uk','ka','de'];
 const AI_CODES={ru:'RU',uk:'UA',ka:'GE',en:'EN',de:'DE'};
 const state={config:null,language:'ru',dirty:false,busy:false,audit:null};
 

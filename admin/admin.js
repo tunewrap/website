@@ -1,4 +1,4 @@
-const UI_LOCALES = Object.freeze([['ru','RU'],['uk','UA'],['ka','GE'],['en','EN'],['de','DE']]);
+const UI_LOCALES = Object.freeze([['en','EN'],['ru','RU'],['uk','UA'],['ka','GE'],['de','DE']]);
 const PRIMARY_LOCALE = Object.freeze({RU:'ru',UA:'uk',GE:'ka',EN:'en',DE:'de'});
 const FALLBACK_COVER = '/assets/covers/tunewrap-placeholder.svg';
 const $ = selector => document.querySelector(selector);
