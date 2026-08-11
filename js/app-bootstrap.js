@@ -31,9 +31,26 @@
   }catch(error){console.error('TuneWrap Stage 12.8.5 refresh-top failed',error);}
 })();
 
+const TUNEWRAP_BOOT_COPY={
+  en:{loading:'Loading the music library…',error:'The library is temporarily unavailable',retry:'Refresh the page in a few seconds.',button:'Refresh'},
+  ru:{loading:'Загружаем музыкальную библиотеку…',error:'Библиотека временно недоступна',retry:'Обновите страницу через несколько секунд.',button:'Обновить'},
+  uk:{loading:'Завантажуємо музичну бібліотеку…',error:'Бібліотека тимчасово недоступна',retry:'Оновіть сторінку за кілька секунд.',button:'Оновити'},
+  ka:{loading:'მუსიკალური ბიბლიოთეკა იტვირთება…',error:'ბიბლიოთეკა დროებით მიუწვდომელია',retry:'განაახლეთ გვერდი რამდენიმე წამში.',button:'განახლება'},
+  de:{loading:'Musikbibliothek wird geladen…',error:'Die Bibliothek ist vorübergehend nicht verfügbar',retry:'Aktualisieren Sie die Seite in wenigen Sekunden.',button:'Aktualisieren'}
+};
+const tuneWrapBootLang=(()=>{
+  const value=String(document.documentElement.lang||'en').toLowerCase();
+  if(value.startsWith('ru'))return'ru';
+  if(value.startsWith('uk'))return'uk';
+  if(value.startsWith('ka'))return'ka';
+  if(value.startsWith('de'))return'de';
+  return'en';
+})();
+const tuneWrapBootCopy=TUNEWRAP_BOOT_COPY[tuneWrapBootLang]||TUNEWRAP_BOOT_COPY.en;
+
 const loading = document.createElement('div');
 loading.className = 'catalog-bootstrap';
-loading.innerHTML = '<span class="catalog-bootstrap-mark" aria-hidden="true"></span><span>Загружаем музыкальную библиотеку…</span>';
+loading.innerHTML = '<span class="catalog-bootstrap-mark" aria-hidden="true"></span><span>'+tuneWrapBootCopy.loading+'</span>';
 document.body.append(loading);
 
 if(!document.getElementById('tunewrapResponsiveWide')){
@@ -301,6 +318,6 @@ try{
 }catch(error){
   console.error('TuneWrap catalog bootstrap failed',error);
   loading.classList.add('is-error');
-  loading.innerHTML = '<strong>Библиотека временно недоступна</strong><span>Обновите страницу через несколько секунд.</span><button type="button">Обновить</button>';
+  loading.innerHTML = '<strong>'+tuneWrapBootCopy.error+'</strong><span>'+tuneWrapBootCopy.retry+'</span><button type="button">'+tuneWrapBootCopy.button+'</button>';
   loading.querySelector('button').addEventListener('click',() => location.reload());
 }

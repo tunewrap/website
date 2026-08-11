@@ -1,9 +1,26 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TuneWrap — Ваша история в песне · WEB v1.1</title>
+<meta name="description" content="Turn real memories, people and life stories into personal songs with TuneWrap.">
+<title>TuneWrap — Your Story, Your Song</title>
+<script id="tunewrapLanguageBoot">
+(function(){
+  try{
+    var raw=(new URLSearchParams(location.search).get('lang')||'').toLowerCase();
+    var aliases={ge:'ka',ua:'uk'};
+    raw=aliases[raw]||raw;
+    var supported=['en','ru','uk','ka','de'];
+    var initial=supported.indexOf(raw)>=0?raw:'en';
+    document.documentElement.lang=initial;
+    window.TUNEWRAP_INITIAL_LANGUAGE=initial;
+  }catch(error){
+    document.documentElement.lang='en';
+    window.TUNEWRAP_INITIAL_LANGUAGE='en';
+  }
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Noto+Serif+Georgian:wght@500;600;700&family=Noto+Sans+Georgian:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,18 +32,18 @@
   <div class="wrap">
     <div class="logo-block">
       <div class="logo">Tune<span>Wrap</span></div>
-      <div class="tagline" data-i18n="tagline">Ваша история — в песне</div>
+      <div class="tagline" data-i18n="tagline">Your story — in a song</div>
     </div>
     <div class="nav-right">
       <div class="lang-switch" id="langSwitch">
         <button class="lang-btn" data-lang="ru">RU</button>
         <button class="lang-btn" data-lang="uk">UA</button>
         <button class="lang-btn" data-lang="ka">GE</button>
-        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn active" data-lang="en">EN</button>
         <button class="lang-btn" data-lang="de">DE</button>
       </div>
       <details class="mobile-lang">
-        <summary aria-label="Выбрать язык">
+        <summary aria-label="Choose language">
           <span class="mobile-lang-icon" aria-hidden="true">◎</span>
           <span class="mobile-lang-current" aria-hidden="true"></span>
         </summary>
@@ -34,32 +51,32 @@
           <button class="lang-btn" data-lang="ru">RU</button>
           <button class="lang-btn" data-lang="uk">UA</button>
           <button class="lang-btn" data-lang="ka">GE</button>
-          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn active" data-lang="en">EN</button>
           <button class="lang-btn" data-lang="de">DE</button>
         </div>
       </details>
       <details class="mobile-menu">
-        <summary aria-label="Открыть меню">
+        <summary aria-label="Open menu">
           <span></span>
           <span></span>
           <span></span>
         </summary>
         <div class="mobile-menu-panel">
-          <a href="#philosophy" data-i18n="mobile_menu_philosophy">Философия</a>
-          <a href="#how" data-i18n="how_eyebrow">Как это работает</a>
-          <a href="#tracks" data-i18n="tracks_eyebrow">Музыкальные истории</a>
-          <a href="#pricing" data-i18n="pricing_eyebrow">Стоимость и форматы</a>
-          <a href="#author" data-i18n="mobile_nav_author">Авторские</a>
-          <a href="#contact" data-i18n="hero_btn_order">Рассказать свою историю</a>
+          <a href="#philosophy" data-i18n="mobile_menu_philosophy">Philosophy</a>
+          <a href="#how" data-i18n="how_eyebrow">How it works</a>
+          <a href="#tracks" data-i18n="tracks_eyebrow">Musical stories</a>
+          <a href="#pricing" data-i18n="pricing_eyebrow">Formats and pricing</a>
+          <a href="#author" data-i18n="mobile_nav_author">Originals</a>
+          <a href="#contact" data-i18n="hero_btn_order">Tell your story</a>
         </div>
       </details>
-      <a class="nav-cta" href="#contact" data-i18n="nav_cta">Рассказать свою историю</a>
+      <a class="nav-cta" href="#contact" data-i18n="nav_cta">Get a quote</a>
     </div>
   </div>
 </nav>
 
 <section class="top-mini-player" id="topMiniPlayer" aria-hidden="true" aria-label="TuneWrap Mini Player">
-  <button class="top-mini-expand" id="topMiniExpand" type="button" aria-label="Развернуть плеер">
+  <button class="top-mini-expand" id="topMiniExpand" type="button" aria-label="Expand player">
     <span class="top-mini-brand">
       <span class="top-mini-artwork" aria-hidden="true"><img id="topMiniCover" src="assets/covers/tunewrap-placeholder.svg" alt=""></span>
       <span class="top-mini-wordmark">Tune<em>Wrap</em></span>
@@ -67,24 +84,24 @@
     <strong id="topMiniTitle">TuneWrap</strong>
   </button>
   <div class="top-mini-controls">
-    <button id="topMiniPrevious" type="button" aria-label="Предыдущий трек">
+    <button id="topMiniPrevious" type="button" aria-label="Previous track">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M18 6l-9 6 9 6V6z"/></svg>
     </button>
-    <button class="top-mini-toggle" id="topMiniToggle" type="button" aria-label="Воспроизвести">
+    <button class="top-mini-toggle" id="topMiniToggle" type="button" aria-label="Play">
       <span class="top-mini-toggle-icon" aria-hidden="true"></span>
     </button>
-    <button id="topMiniNext" type="button" aria-label="Следующий трек">
+    <button id="topMiniNext" type="button" aria-label="Next track">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M6 6l9 6-9 6V6z"/></svg>
     </button>
   </div>
-  <button class="top-mini-stop" id="topMiniStop" type="button" aria-label="Остановить музыку">
+  <button class="top-mini-stop" id="topMiniStop" type="button" aria-label="Stop music">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
   </button>
 </section>
 
 <main class="app-scroll" id="appScroll">
 <div class="mobile-top-stack">
-<div class="story-ribbon" aria-label="Музыкальные истории">
+<div class="story-ribbon" aria-label="Musical stories">
   <div class="story-ribbon-track">
         <a class="story-ribbon-card" href="#tracks" data-start-track="grow-old-together-ua">
       <img src="assets/covers/image-a1f0d25aaa9f.png" alt="Ми будемо старіти разом">
@@ -110,17 +127,17 @@
 <header class="hero" id="hero">
   <div class="wrap hero-grid">
     <div>
-      <div class="eyebrow" data-i18n="hero_eyebrow">ВАША ИСТОРИЯ</div>
-      <p class="brand-manifesto" data-i18n="brand_manifesto">Мы сохраняем самые важные моменты вашей жизни языком музыки.</p>
+      <div class="eyebrow" data-i18n="hero_eyebrow">YOUR STORY</div>
+      <p class="brand-manifesto" data-i18n="brand_manifesto">We preserve the most important moments of your life through the language of music.</p>
       <h1 class="hero-title">
-        <span class="desktop-hero-title" data-i18n="hero_h1">У каждой истории есть <em>своя мелодия</em></span>
-        <span class="mobile-hero-title" data-i18n="mobile_hero_h1">История становится <em>песней</em></span>
+        <span class="desktop-hero-title" data-i18n="hero_h1">Every story deserves <em>its own melody</em></span>
+        <span class="mobile-hero-title" data-i18n="mobile_hero_h1">A story becomes <em>a song</em></span>
       </h1>
-      <p class="lead" data-i18n="hero_lead">Первая встреча. Любимая фраза мамы. Семейная шутка. Число на обручальном кольце.<br><br>Расскажите нам самое важное — и мы создадим для вас персональную песню, к которой захочется возвращаться спустя годы.</p>
+      <p class="lead" data-i18n="hero_lead">A first meeting. Mom’s favorite phrase. A family joke. A number engraved on a wedding ring.<br><br>Tell us what matters most, and we will create a personal song for you — one you will want to return to years from now.</p>
       <div class="hero-actions">
-        <a class="btn-primary" href="#contact" data-i18n="hero_btn_order">Рассказать свою историю</a>
-        <a class="btn-ghost" href="#tracks" data-i18n="hero_btn_listen">Послушать истории</a>
-        <a class="btn-ghost" href="#author" data-i18n="hero_btn_author">Автор проекта и его песни</a>
+        <a class="btn-primary" href="#contact" data-i18n="hero_btn_order">Tell your story</a>
+        <a class="btn-ghost" href="#tracks" data-i18n="hero_btn_listen">Listen to the stories</a>
+        <a class="btn-ghost" href="#author" data-i18n="hero_btn_author">Author of the project and his songs</a>
       </div>
     </div>
     <canvas id="ambientWave" data-brand-wave aria-hidden="true"></canvas>
@@ -158,39 +175,39 @@
 
 <section id="philosophy" class="philosophy-section">
   <div class="wrap philosophy-inner">
-    <div class="philosophy-kicker" data-i18n="philosophy_kicker">Философия TuneWrap</div>
+    <div class="philosophy-kicker" data-i18n="philosophy_kicker">TuneWrap Philosophy</div>
     <canvas id="philosophyWave" class="philosophy-wave" data-brand-wave aria-hidden="true"></canvas>
-    <blockquote class="philosophy-quote" data-i18n="philosophy_quote">«Сначала — ваша история.<br>Потом — слова.<br>Потом — музыка.»</blockquote>
-    <p class="philosophy-text" data-i18n="philosophy_text">В TuneWrap всё начинается не с аккордов и мелодии, а с человека — с его воспоминаний, чувств и самых важных моментов. Мы бережно превращаем их в слова, а затем создаём музыку, которая раскрывает и усиливает историю. Так рождается личная песня, в которой можно узнать себя и к которой захочется возвращаться спустя годы.</p>
+    <blockquote class="philosophy-quote" data-i18n="philosophy_quote">“First comes your story.<br>Then come the words.<br>Then comes the music.”</blockquote>
+    <p class="philosophy-text" data-i18n="philosophy_text">At TuneWrap, everything begins not with chords or melody, but with a person — their memories, feelings, and most meaningful moments. We carefully turn them into words, then create music that reveals and strengthens the story. The result is a personal song in which you can recognize yourself, and one you will want to return to for years to come.</p>
   </div>
 </section>
 <section id="how">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow" data-i18n="how_eyebrow">Как это работает</div>
+      <div class="eyebrow" data-i18n="how_eyebrow">How it works</div>
       <canvas id="processWave" class="process-wave" data-brand-wave aria-hidden="true"></canvas>
-      <h2 data-i18n="how_h2">Три шага от вашей истории до готовой песни</h2>
+      <h2 data-i18n="how_h2">Three steps from your story to a finished song</h2>
     </div>
     <div class="steps">
       <div class="step">
         <div class="step-num">01</div>
         <div>
-          <h3 data-i18n="step1_title">Расскажите свою историю</h3>
-          <p data-i18n="step1_desc">Заполните короткую форму: расскажите, для кого создаётся песня, какое событие вас объединяет и какие детали особенно важно сохранить.</p>
+          <h3 data-i18n="step1_title">Tell us your story</h3>
+          <p data-i18n="step1_desc">Complete a short form: tell us who the song is for, what occasion or experience brings you together, and which details matter most to preserve.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">02</div>
         <div>
-          <h3 data-i18n="step2_title">Мы создадим вашу песню</h3>
-          <p data-i18n="step2_desc">Найдём главное в вашей истории, превратим важные детали в слова и создадим музыку в выбранном стиле и настроении.</p>
+          <h3 data-i18n="step2_title">We will create your song</h3>
+          <p data-i18n="step2_desc">We will find the heart of your story, turn its meaningful details into words, and create music in your chosen style and mood.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">03</div>
         <div>
-          <h3 data-i18n="step3_title">Получите готовую песню</h3>
-          <p data-i18n="step3_desc">Мы отправим вам готовую песню в высоком качестве. Вы сможете прослушать результат и при необходимости внести правки в рамках выбранного пакета.</p>
+          <h3 data-i18n="step3_title">Receive your finished song</h3>
+          <p data-i18n="step3_desc">We will send you the finished song in high quality. You can listen to the result and request revisions, if needed, within the terms of your selected package.</p>
         </div>
       </div>
     </div>
@@ -200,60 +217,60 @@
 <section id="tracks" data-library-architecture="fullscreen">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow" data-i18n="tracks_eyebrow">Музыкальные истории</div>
+      <div class="eyebrow" data-i18n="tracks_eyebrow">Musical stories</div>
       <canvas id="storiesWave" class="music-showcase-wave" data-brand-wave aria-hidden="true"></canvas>
-      <h2 data-i18n="tracks_h2">Истории, которые можно услышать</h2>
-      <p data-i18n="tracks_p">Сначала — человек и важные детали его жизни. Потом — текст, музыка и момент, в котором близкие узнают себя.</p>
+      <h2 data-i18n="tracks_h2">Stories you can hear</h2>
+      <p data-i18n="tracks_p">First comes the person and the details that matter. Then come the lyrics, the music, and the moment loved ones recognize themselves.</p>
     </div>
 
     <div class="library-showcase" data-library-showcase="stories">
-      <button class="library-featured-card" type="button" data-featured-track="grow-old-together-ua" aria-label="Открыть песню">
+      <button class="library-featured-card" type="button" data-featured-track="grow-old-together-ua" aria-label="Open song">
         <span class="library-featured-cover">
           <img src="assets/covers/image-a1f0d25aaa9f.png" alt="" loading="eager">
           <span class="library-featured-play" aria-hidden="true"></span>
         </span>
         <span class="library-featured-copy">
-          <small data-i18n="library_featured_story">Выбранная история</small>
+          <small data-i18n="library_featured_story">Featured story</small>
           <strong data-featured-title>Ми будемо старіти разом</strong>
           <span data-featured-language>UA</span>
         </span>
       </button>
       <div class="library-showcase-footer">
-        <p class="library-catalog-count"><strong id="storiesCatalogCount">0</strong> <span data-i18n="stories_count_label">музыкальных историй</span></p>
-        <button class="library-open-button" id="openStoriesLibrary" type="button" data-i18n="stories_open_all">Открыть все истории</button>
+        <p class="library-catalog-count"><strong id="storiesCatalogCount">0</strong> <span data-i18n="stories_count_label">musical stories</span></p>
+        <button class="library-open-button" id="openStoriesLibrary" type="button" data-i18n="stories_open_all">Open all stories</button>
       </div>
     </div>
 
     <div class="songs-library-filters" data-songs-filter-root>
-      <div class="songs-language-rail" role="tablist" aria-label="Язык песен" data-filter-level="language">
+      <div class="songs-language-rail" role="tablist" aria-label="Song language" data-filter-level="language">
         <button class="songs-language-tab" id="songsLangGE" type="button" role="tab" aria-selected="false" aria-controls="songsLibraryPanel" tabindex="-1" data-song-language-filter="GE">
           <strong>GE</strong>
         </button>
         <button class="songs-language-tab" id="songsLangUA" type="button" role="tab" aria-selected="false" aria-controls="songsLibraryPanel" tabindex="-1" data-song-language-filter="UA">
           <strong>UA</strong>
         </button>
-        <button class="songs-language-tab" id="songsLangEN" type="button" role="tab" aria-selected="false" aria-controls="songsLibraryPanel" tabindex="-1" data-song-language-filter="EN">
+        <button class="songs-language-tab is-active" id="songsLangEN" type="button" role="tab" aria-selected="true" aria-controls="songsLibraryPanel" tabindex="0" data-song-language-filter="EN">
           <strong>EN</strong>
         </button>
         <button class="songs-language-tab" id="songsLangDE" type="button" role="tab" aria-selected="false" aria-controls="songsLibraryPanel" tabindex="-1" data-song-language-filter="DE">
           <strong>DE</strong>
         </button>
-        <button class="songs-language-tab is-active" id="songsLangRU" type="button" role="tab" aria-selected="true" aria-controls="songsLibraryPanel" tabindex="0" data-song-language-filter="RU">
+        <button class="songs-language-tab" id="songsLangRU" type="button" role="tab" aria-selected="false" aria-controls="songsLibraryPanel" tabindex="-1" data-song-language-filter="RU">
           <strong>RU</strong>
         </button>
       </div>
       <div class="songs-library-context" role="status" aria-live="polite">
-        <span class="songs-library-language" id="songsLibraryLanguage">Русский</span>
-        <span class="songs-library-count" id="songsLibraryCount">3 истории</span>
+        <span class="songs-library-language" id="songsLibraryLanguage">English</span>
+        <span class="songs-library-count" id="songsLibraryCount">3 stories</span>
       </div>
     </div>
 
-    <div class="songs-library-stage" id="songsLibraryPanel" role="tabpanel" aria-labelledby="songsLangRU" aria-live="polite">
+    <div class="songs-library-stage" id="songsLibraryPanel" role="tabpanel" aria-labelledby="songsLangEN" aria-live="polite">
     <div class="tracks" data-catalog-placeholder="stories" aria-hidden="true"></div>
       <div class="songs-library-empty" id="songsLibraryEmpty" hidden>
         <span class="songs-library-empty-mark" aria-hidden="true">♪</span>
-        <strong id="songsLibraryEmptyTitle">Песни скоро появятся</strong>
-        <p id="songsLibraryEmptyText">Библиотека TuneWrap постоянно пополняется новыми музыкальными историями.</p>
+        <strong id="songsLibraryEmptyTitle">More songs are coming soon</strong>
+        <p id="songsLibraryEmptyText">The TuneWrap library is constantly growing with new musical stories.</p>
       </div>
     </div>
 </div>
@@ -262,23 +279,23 @@
 <section id="pricing">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow" data-i18n="pricing_eyebrow">Стоимость и форматы</div>
+      <div class="eyebrow" data-i18n="pricing_eyebrow">Formats and pricing</div>
       <canvas id="pricingWave" class="pricing-wave" data-brand-wave aria-hidden="true"></canvas>
-      <h2 data-i18n="pricing_h2">Выберите свой формат</h2>
-      <p data-i18n="pricing_p">Выберите глубину работы: от песни по готовому тексту до полного создания истории и текста.</p>
-      <div class="pricing-promo" aria-label="Ограниченная стартовая акция">
-        <strong data-i18n="pricing_promo_title">Ограниченная стартовая акция</strong>
-        <span data-i18n="pricing_promo_until">Только до 31 августа</span>
+      <h2 data-i18n="pricing_h2">Choose your format</h2>
+      <p data-i18n="pricing_p">Choose the depth of the work: from a song based on ready lyrics to the complete creation of the story and lyrics.</p>
+      <div class="pricing-promo" aria-label="Limited launch offer">
+        <strong data-i18n="pricing_promo_title">Limited launch offer</strong>
+        <span data-i18n="pricing_promo_until">Only until August 31</span>
       </div>
     </div>
     <div class="tiers-grid" id="tiersGrid"></div>
 
     <div class="wedding-packages" id="weddingPackages">
       <div class="wedding-packages-heading">
-        <div class="wedding-packages-eyebrow" data-i18n="wedding_eyebrow">СВАДЕБНЫЙ ФОРМАТ</div>
-        <p data-i18n="wedding_subtitle">Музыка для моментов, которые останутся с вами навсегда.</p>
+        <div class="wedding-packages-eyebrow" data-i18n="wedding_eyebrow">WEDDING FORMAT</div>
+        <p data-i18n="wedding_subtitle">Music for the moments you will carry with you forever.</p>
       </div>
-      <div class="wedding-packages-grid" id="weddingPackagesGrid" aria-label="Свадебные пакеты"></div>
+      <div class="wedding-packages-grid" id="weddingPackagesGrid" aria-label="Wedding packages"></div>
     </div>
 
     <canvas id="pricingClosingWave" class="pricing-wave pricing-wave-lower" data-brand-wave aria-hidden="true"></canvas>
@@ -289,9 +306,9 @@
 <section id="contact">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow" data-i18n="contact_eyebrow">Начать свою историю</div>
-      <h2 data-i18n="contact_h2">Расскажите нам свою историю</h2>
-      <p data-i18n="contact_p">Выберите пакет и стиль, расскажите о человеке — и мы отправим готовую заявку в один клик.</p>
+      <div class="eyebrow" data-i18n="contact_eyebrow">Begin your story</div>
+      <h2 data-i18n="contact_h2">Tell us your story</h2>
+      <p data-i18n="contact_p">Pick a package and style, tell us about the person — and we'll send a ready order in one click.</p>
     </div>
 
     <div class="story-path-picker" id="storyPathPicker">
@@ -300,122 +317,122 @@
           <svg viewBox="0 0 24 24"><path d="M5 13v-2m3 5V8m3 10V6m3 9V9m3 4v-2m2 5.5V7.5"/></svg>
         </span>
         <div>
-          <h3 data-i18n="path_order_title">Заказать песню</h3>
-          <p data-i18n="path_order_desc">Расскажите историю человека — мы превратим её в личную песню.</p>
+          <h3 data-i18n="path_order_title">Order a song</h3>
+          <p data-i18n="path_order_desc">Tell us someone’s story and we’ll turn it into a personal song.</p>
         </div>
-        <button type="button" data-story-path="order" data-i18n="path_order_action">Начать заказ</button>
+        <button type="button" data-story-path="order" data-i18n="path_order_action">Start your order</button>
       </article>
       <article class="story-path-card">
         <span class="story-path-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M4 8h16v12H4V8zm-1-4h18v4H3V4zm9 0v16M8.5 4C7 4 6 3.2 6 2.2 6 1.5 6.6 1 7.4 1 9.4 1 12 4 12 4m3.5 0C17 4 18 3.2 18 2.2 18 1.5 17.4 1 16.6 1 14.6 1 12 4 12 4"/></svg>
         </span>
         <div>
-          <h3 data-i18n="path_certificate_title">Подарочный сертификат</h3>
-          <p data-i18n="path_certificate_desc">Подарите возможность сохранить важную историю в собственной песне.</p>
+          <h3 data-i18n="path_certificate_title">Gift certificate</h3>
+          <p data-i18n="path_certificate_desc">Give someone the chance to preserve an important story in their own song.</p>
         </div>
-        <button type="button" data-story-path="certificate" data-i18n="path_certificate_action">Выбрать сертификат</button>
+        <button type="button" data-story-path="certificate" data-i18n="path_certificate_action">Choose a certificate</button>
       </article>
       <article class="story-path-card">
         <span class="story-path-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M8.5 10.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7-1.5a2.3 2.3 0 1 0 0-4.6A2.3 2.3 0 0 0 15.5 9zM3 19c0-3.4 2.2-5.5 5.5-5.5S14 15.6 14 19M13 13c.7-.4 1.5-.6 2.5-.6 3 0 5 1.9 5 4.8V19"/></svg>
         </span>
         <div>
-          <h3 data-i18n="path_corporate_title">Корпоративная песня</h3>
-          <p data-i18n="path_corporate_desc">Песни для команды, компании, партнёров и важных корпоративных событий.</p>
+          <h3 data-i18n="path_corporate_title">Corporate song</h3>
+          <p data-i18n="path_corporate_desc">Songs for teams, companies, partners and meaningful corporate occasions.</p>
         </div>
-        <button type="button" data-story-path="corporate" data-i18n="path_corporate_action">Перейти к форме</button>
+        <button type="button" data-story-path="corporate" data-i18n="path_corporate_action">Open the form</button>
       </article>
     </div>
 
     <div class="order-box" id="storyOrderForm">
       <button class="story-path-back" id="storyPathBack" type="button">
         <span aria-hidden="true">←</span>
-        <span data-i18n="path_back">Назад к выбору</span>
+        <span data-i18n="path_back">Back to choices</span>
       </button>
       <div class="mode-switch" id="modeSwitch">
-        <button type="button" class="mode-btn active" data-mode="order" data-i18n="mode_order">Заказать песню</button>
-        <button type="button" class="mode-btn" data-mode="certificate" data-i18n="mode_certificate">Подарить сертификат</button>
+        <button type="button" class="mode-btn active" data-mode="order" data-i18n="mode_order">Order a song</button>
+        <button type="button" class="mode-btn" data-mode="certificate" data-i18n="mode_certificate">Gift a certificate</button>
       </div>
-      <p class="mode-hint" id="modeHint" data-i18n="mode_order_hint">Заполните детали — и мы напишем песню под конкретного человека.</p>
+      <p class="mode-hint" id="modeHint" data-i18n="mode_order_hint">Fill in the details and we'll write a song for a specific person.</p>
 
       <div class="order-summary">
-        <div class="order-pill wedding-order-type-pill" id="weddingOrderTypePill" hidden><span data-i18n="wedding_order_type_label">Тип заказа:</span> <strong id="sumOrderType">Свадебный пакет</strong></div>
-        <div class="order-pill"><span data-i18n="summary_tier">Пакет:</span> <strong id="sumTier">—</strong></div>
-        <div class="order-pill"><span data-i18n="summary_style">Стиль:</span> <strong id="sumStyle">—</strong></div>
-        <div class="order-pill"><span data-i18n="summary_total">Итого:</span> <strong id="sumTotal">—</strong></div>
+        <div class="order-pill wedding-order-type-pill" id="weddingOrderTypePill" hidden><span data-i18n="wedding_order_type_label">Order type:</span> <strong id="sumOrderType">Свадебный пакет</strong></div>
+        <div class="order-pill"><span data-i18n="summary_tier">Package:</span> <strong id="sumTier">—</strong></div>
+        <div class="order-pill"><span data-i18n="summary_style">Style:</span> <strong id="sumStyle">—</strong></div>
+        <div class="order-pill"><span data-i18n="summary_total">Total:</span> <strong id="sumTotal">—</strong></div>
       </div>
 
       <div class="field-group wedding-package-field" id="weddingPackageField" hidden>
-        <label class="field-label" for="fieldWeddingPackage" data-i18n="wedding_selected_package_label">Выбранный свадебный пакет</label>
+        <label class="field-label" for="fieldWeddingPackage" data-i18n="wedding_selected_package_label">Selected wedding package</label>
         <select id="fieldWeddingPackage"></select>
-        <span class="field-hint" data-i18n="wedding_change_hint">Вы можете изменить пакет перед отправкой заявки.</span>
+        <span class="field-hint" data-i18n="wedding_change_hint">You can change the package before sending your request.</span>
       </div>
 
       <div class="field-group">
-        <span class="field-label" data-i18n="label_style">Стиль песни</span>
+        <span class="field-label" data-i18n="label_style">Song style</span>
         <div class="style-chips" id="styleChips"></div>
-        <span class="field-hint" data-i18n="style_hint">Можно выбрать до двух</span>
+        <span class="field-hint" data-i18n="style_hint">Choose up to two</span>
       </div>
 
       <div class="field-group">
         <label class="checkbox-row">
           <input type="checkbox" id="fieldUrgent">
-          <span data-i18n="urgent_label">Срочная доставка за 24 часа (+$25)</span>
+          <span data-i18n="urgent_label">Rush delivery in 24 hours (+$25)</span>
         </label>
       </div>
 
       <div class="form-row">
         <div class="field-group">
-          <label class="field-label" data-i18n="label_name">Имя</label>
-          <input type="text" id="fieldName" data-i18n-ph="placeholder_name" placeholder="Как вас зовут?">
+          <label class="field-label" data-i18n="label_name">Your name</label>
+          <input type="text" id="fieldName" data-i18n-ph="placeholder_name" placeholder="What's your name?">
         </div>
         <div class="field-group" id="occasionGroup">
-          <label class="field-label" data-i18n="label_occasion">Выберите историю или событие</label>
+          <label class="field-label" data-i18n="label_occasion">Occasion</label>
           <select id="fieldOccasion"></select>
         </div>
       </div>
 
       <div class="field-group conditional-field" id="otherOccasionGroup">
-        <label class="field-label" data-i18n="label_other_occasion">Какое это событие?</label>
-        <input type="text" id="fieldOtherOccasion" data-i18n-ph="placeholder_other_occasion" placeholder="Напишите своими словами">
+        <label class="field-label" data-i18n="label_other_occasion">What is the event?</label>
+        <input type="text" id="fieldOtherOccasion" data-i18n-ph="placeholder_other_occasion" placeholder="Describe it in your own words">
       </div>
 
       <div class="story-core" id="storyCore">
-        <h3 data-i18n="story_core_title">Каким вы хотите запомнить этот день через 20 лет?</h3>
-        <p data-i18n="story_core_hint">Одним или несколькими предложениями расскажите, что самое важное в вашей истории. Нажмите на пример или выберите «Своя история».</p>
+        <h3 data-i18n="story_core_title">How would you like to remember this day in 20 years?</h3>
+        <p data-i18n="story_core_hint">In one or several sentences, tell us what matters most in your story. Choose an example or select “My own story”.</p>
         <div class="story-examples" id="storyExamples"></div>
-        <textarea id="fieldStoryCore" data-i18n-ph="placeholder_story_core" placeholder="Напишите главное своими словами"></textarea>
-        <span class="field-hint" data-i18n="story_core_note">Не переживайте, если не умеете красиво писать. Иногда одной простой фразы достаточно, чтобы родилась песня.</span>
+        <textarea id="fieldStoryCore" data-i18n-ph="placeholder_story_core" placeholder="Write the heart of your story in your own words"></textarea>
+        <span class="field-hint" data-i18n="story_core_note">Don't worry if you're not a writer. Sometimes one simple sentence is enough for a song to begin.</span>
       </div>
 
       <div id="orderOnlyFields">
       <div class="field-group">
-        <label class="field-label" data-i18n="label_description">О человеке или готовый текст песни</label>
-        <textarea id="fieldDescription" data-i18n-ph="placeholder_description" placeholder="Расскажите историю, факты, шутки — или вставьте свой текст песни, если он уже готов"></textarea>
+        <label class="field-label" data-i18n="label_description">About the person, or a ready lyric</label>
+        <textarea id="fieldDescription" data-i18n-ph="placeholder_description" placeholder="Tell the story, facts, jokes — or paste your own lyrics if you already have them"></textarea>
       </div>
 
       <div class="field-group">
-        <button type="button" class="golden-toggle" id="goldenToggle" data-i18n="golden_toggle">Ответить на несколько вопросов, чтобы текст получился живее (2 минуты, необязательно)</button>
+        <button type="button" class="golden-toggle" id="goldenToggle" data-i18n="golden_toggle">Answer a few questions to make the lyrics come alive (2 minutes, optional)</button>
         <div class="golden-box" id="goldenBox"></div>
       </div>
       </div>
 
       <div class="field-group">
-        <label class="field-label" data-i18n="label_contact">Как с вами связаться</label>
-        <input type="text" id="fieldContact" data-i18n-ph="placeholder_contact" placeholder="Telegram, WhatsApp или телефон">
+        <label class="field-label" data-i18n="label_contact">How to reach you</label>
+        <input type="text" id="fieldContact" data-i18n-ph="placeholder_contact" placeholder="Telegram, WhatsApp, or phone">
       </div>
 
-      <button class="btn-generate" id="btnGenerate" data-i18n="btn_generate">Сформировать заявку</button>
+      <button class="btn-generate" id="btnGenerate" data-i18n="btn_generate">Generate order</button>
 
       <div class="order-preview" id="orderPreview">
-        <div class="field-label" data-i18n="preview_title">Ваша заявка:</div>
+        <div class="field-label" data-i18n="preview_title">Your order:</div>
         <div class="preview-text" id="previewText"></div>
         <div class="send-actions">
           <a class="btn-primary btn-wa" id="waLink" href="#" target="_blank" rel="noopener" data-i18n="contact_wa">WhatsApp</a>
-          <a class="btn-primary" id="tgLink" href="#" target="_blank" rel="noopener" data-i18n="contact_tg">Написать в Telegram</a>
-          <button class="btn-copy" id="btnCopy" data-i18n="btn_copy">Скопировать текст</button>
+          <a class="btn-primary" id="tgLink" href="#" target="_blank" rel="noopener" data-i18n="contact_tg">Message on Telegram</a>
+          <button class="btn-copy" id="btnCopy" data-i18n="btn_copy">Copy text</button>
         </div>
-        <div class="copied-note" id="copiedNote" data-i18n="copied_msg">Скопировано</div>
+        <div class="copied-note" id="copiedNote" data-i18n="copied_msg">Copied</div>
       </div>
     </div>
 
@@ -427,31 +444,31 @@
     <div class="corporate-panel-topbar">
       <button class="corporate-panel-close" id="corporatePanelClose" type="button">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-        <span data-i18n="corp_close">Закрыть</span>
+        <span data-i18n="corp_close">Close</span>
       </button>
       <div class="song-player-brand">Tune<span>Wrap</span></div>
-      <span class="corporate-panel-label" data-i18n="corp_panel_label">Для компаний</span>
+      <span class="corporate-panel-label" data-i18n="corp_panel_label">For companies</span>
     </div>
     <div class="wrap">
     <div class="corporate-box">
       <div>
-        <div class="eyebrow" data-i18n="corp_eyebrow">Для компаний</div>
-        <h2 id="corporatePanelTitle" data-i18n="corp_h2">Нужно несколько песен?</h2>
-        <p data-i18n="corp_p" class="corp-text">Поздравления сотрудникам, подарки партнёрам, корпоративный гимн — при заказе от 5 песен действует скидка.</p>
+        <div class="eyebrow" data-i18n="corp_eyebrow">For companies</div>
+        <h2 id="corporatePanelTitle" data-i18n="corp_h2">Need more than one song?</h2>
+        <p data-i18n="corp_p" class="corp-text">Shout-outs for employees, gifts for partners, a company anthem — orders of 5+ songs get a discount.</p>
         <div class="corp-controls">
           <div class="corp-field">
-            <label class="field-label" data-i18n="corp_qty_label">Количество песен</label>
+            <label class="field-label" data-i18n="corp_qty_label">Number of songs</label>
             <input type="number" id="corpQty" min="1" value="5">
           </div>
           <div class="corp-field">
-            <label class="field-label" data-i18n="corp_tier_label">Базовый пакет</label>
+            <label class="field-label" data-i18n="corp_tier_label">Base package</label>
             <select id="corpTier"></select>
           </div>
         </div>
         <div class="corp-total" id="corpTotal">—</div>
       </div>
       <div class="corp-actions">
-        <a class="btn-primary" id="corpTgLink" href="#" target="_blank" rel="noopener" data-i18n="corp_btn">Обсудить в Telegram</a>
+        <a class="btn-primary" id="corpTgLink" href="#" target="_blank" rel="noopener" data-i18n="corp_btn">Discuss on Telegram</a>
       </div>
     </div>
   </div>
@@ -461,27 +478,27 @@
 <section id="author">
   <div class="wrap">
     <div class="sec-head author-intro">
-      <div class="eyebrow" data-i18n="author_eyebrow">Авторские песни</div>
+      <div class="eyebrow" data-i18n="author_eyebrow">Original songs</div>
       <canvas id="authorWave" class="music-showcase-wave" data-brand-wave aria-hidden="true"></canvas>
-      <h2 data-i18n="author_h2">Автор проекта и его песни</h2>
-      <p data-i18n="author_showcase_p">Авторские песни из путешествий, встреч, свободы выбора и любви к жизни.</p>
+      <h2 data-i18n="author_h2">The project author and his songs</h2>
+      <p data-i18n="author_showcase_p">Original songs shaped by travel, encounters, freedom of choice, and a love of life.</p>
     </div>
 
     <div class="library-showcase" data-library-showcase="author">
-      <button class="library-featured-card library-featured-card-author" type="button" data-featured-track="amsterdam-ru" aria-label="Открыть песню">
+      <button class="library-featured-card library-featured-card-author" type="button" data-featured-track="amsterdam-ru" aria-label="Open song">
         <span class="library-featured-cover">
           <img src="assets/covers/tunewrap-placeholder.svg" alt="" loading="eager">
           <span class="library-featured-play" aria-hidden="true"></span>
         </span>
         <span class="library-featured-copy">
-          <small data-i18n="library_featured_author">Выбранная авторская песня</small>
+          <small data-i18n="library_featured_author">Featured original song</small>
           <strong data-featured-title>Amsterdam</strong>
           <span data-featured-language>RU</span>
         </span>
       </button>
       <div class="library-showcase-footer">
-        <p class="library-catalog-count"><strong id="authorCatalogCount">0</strong> <span data-i18n="author_count_label">авторских треков</span></p>
-        <button class="library-open-button" id="openAuthorLibrary" type="button" data-i18n="author_open_library">Открыть авторскую библиотеку</button>
+        <p class="library-catalog-count"><strong id="authorCatalogCount">0</strong> <span data-i18n="author_count_label">original tracks</span></p>
+        <button class="library-open-button" id="openAuthorLibrary" type="button" data-i18n="author_open_library">Open the artist library</button>
       </div>
     </div>
 
@@ -489,7 +506,7 @@
 
     <div class="author-signature">
       <strong>Kosta Trufakin</strong>
-      <p data-i18n="author_signature">Автор песен, продюсер и основатель TuneWrap.<br><em>Я сохраняю самые важные моменты человеческой жизни языком музыки.</em></p>
+      <p data-i18n="author_signature">Songwriter, producer and founder of TuneWrap.</p>
     </div>
   </div>
 </section>
@@ -498,8 +515,8 @@
   <div class="wrap contact-hub-scroll">
     <header class="contact-hub-heading" id="contactHubTop">
       <div class="eyebrow">TuneWrap</div>
-      <h2 id="contactHubTitle" data-i18n="contact_hub_title">Контакты</h2>
-      <p data-i18n="contact_hub_subtitle">Музыка начинается с вашей истории.</p>
+      <h2 id="contactHubTitle" data-i18n="contact_hub_title">Contacts</h2>
+      <p data-i18n="contact_hub_subtitle">Music begins with your story.</p>
     </header>
 
     <div class="contact-hub-socials" aria-label="TuneWrap social media">
@@ -531,37 +548,37 @@
 
     <section class="contact-hub-payment" id="contactHubPayment" aria-labelledby="contactHubPaymentTitle">
       <div>
-        <h3 id="contactHubPaymentTitle" data-i18n="contact_payment_title">Способы оплаты</h3>
-        <p data-i18n="contact_payment_pending">Подключённые способы оплаты появятся здесь.</p>
+        <h3 id="contactHubPaymentTitle" data-i18n="contact_payment_title">Payment methods</h3>
+        <p data-i18n="contact_payment_pending">Connected payment methods will appear here.</p>
       </div>
       <div class="contact-payment-slot" data-payment-methods-slot aria-hidden="true"><span></span><span></span><span></span></div>
     </section>
 
     <nav class="contact-hub-navigation" aria-label="TuneWrap information">
       <div class="contact-hub-column">
-        <h3 data-i18n="contact_about_title">О нас</h3>
-        <a href="#philosophy" data-contact-target="philosophy" data-i18n="contact_nav_philosophy">Философия TuneWrap</a>
-        <a href="#how" data-contact-target="how" data-i18n="contact_nav_process">Как это работает</a>
-        <a href="#tracks" data-contact-target="tracks" data-i18n="contact_nav_stories">Музыкальные истории</a>
-        <a href="#pricing" data-contact-target="pricing" data-i18n="contact_nav_pricing">Стоимость и форматы</a>
-        <a href="#author" data-contact-target="author" data-i18n="contact_nav_author">Авторские песни создателя проекта</a>
-        <a href="#contact" data-contact-target="contact" data-i18n="contact_nav_order">Рассказать свою историю</a>
+        <h3 data-i18n="contact_about_title">About us</h3>
+        <a href="#philosophy" data-contact-target="philosophy" data-i18n="contact_nav_philosophy">TuneWrap philosophy</a>
+        <a href="#how" data-contact-target="how" data-i18n="contact_nav_process">How it works</a>
+        <a href="#tracks" data-contact-target="tracks" data-i18n="contact_nav_stories">Musical stories</a>
+        <a href="#pricing" data-contact-target="pricing" data-i18n="contact_nav_pricing">Formats and pricing</a>
+        <a href="#author" data-contact-target="author" data-i18n="contact_nav_author">Original songs by the project founder</a>
+        <a href="#contact" data-contact-target="contact" data-i18n="contact_nav_order">Tell your story</a>
       </div>
       <div class="contact-hub-column">
-        <h3 data-i18n="contact_info_title">Информация</h3>
-        <button type="button" data-contact-action="corporate" data-i18n="contact_nav_corporate">Для корпоративных клиентов</button>
-        <button type="button" data-contact-action="wedding" data-i18n="contact_nav_wedding">Свадебный формат</button>
-        <a href="#contactHubTop" data-contact-action="contacts" data-i18n="contact_nav_contacts">Контакты</a>
-        <a href="#contactHubPayment" data-contact-action="payment" data-i18n="contact_nav_payment">Оплата</a>
-        <span class="is-pending" aria-disabled="true" data-i18n="contact_nav_terms">Условия использования</span>
-        <a href="https://t.me/tunewrap" target="_blank" rel="noopener" data-i18n="contact_nav_write">Написать нам</a>
+        <h3 data-i18n="contact_info_title">Information</h3>
+        <button type="button" data-contact-action="corporate" data-i18n="contact_nav_corporate">For corporate clients</button>
+        <button type="button" data-contact-action="wedding" data-i18n="contact_nav_wedding">Wedding format</button>
+        <a href="#contactHubTop" data-contact-action="contacts" data-i18n="contact_nav_contacts">Contacts</a>
+        <a href="#contactHubPayment" data-contact-action="payment" data-i18n="contact_nav_payment">Payment</a>
+        <span class="is-pending" aria-disabled="true" data-i18n="contact_nav_terms">Terms of use</span>
+        <a href="https://t.me/tunewrap" target="_blank" rel="noopener" data-i18n="contact_nav_write">Write to us</a>
       </div>
     </nav>
 
     <div class="contact-hub-copyright">
       <strong>TuneWrap</strong>
       <span>© 2026 TuneWrap</span>
-      <small data-i18n="footer_location">Тбилиси · Киев · онлайн</small>
+      <small data-i18n="footer_location">Tbilisi · Kyiv · online</small>
     </div>
     <canvas id="contactSignatureWave" class="contact-signature-wave" data-brand-wave aria-hidden="true"></canvas>
   </div>
@@ -574,25 +591,25 @@
     <div class="music-library-topbar">
       <button class="music-library-close" type="button" data-library-close>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
-        <span data-i18n="library_close">Назад</span>
+        <span data-i18n="library_close">Back</span>
       </button>
       <div class="song-player-brand">Tune<span>Wrap</span></div>
-      <span class="music-library-kind" data-i18n="tracks_eyebrow">Музыкальные истории</span>
+      <span class="music-library-kind" data-i18n="tracks_eyebrow">Musical stories</span>
     </div>
     <div class="music-library-scroll">
       <header class="music-library-heading">
-        <p class="eyebrow" data-i18n="tracks_eyebrow">Музыкальные истории</p>
-        <h2 id="storiesLibraryTitle" data-i18n="stories_library_title">Все музыкальные истории</h2>
-        <p data-i18n="stories_library_subtitle">Выберите язык или откройте любую историю из полного каталога.</p>
+        <p class="eyebrow" data-i18n="tracks_eyebrow">Musical stories</p>
+        <h2 id="storiesLibraryTitle" data-i18n="stories_library_title">All musical stories</h2>
+        <p data-i18n="stories_library_subtitle">Choose a language or open any story from the complete catalog.</p>
       </header>
       <div class="music-library-sticky" data-library-controls>
         <label class="music-library-search" for="storiesLibrarySearch">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.75" cy="10.75" r="6.75"/><path d="m16 16 4 4"/></svg>
-          <span class="sr-only" data-i18n="library_search_label">Поиск песен</span>
-          <input id="storiesLibrarySearch" type="search" autocomplete="off" enterkeyhint="search" data-library-search data-i18n-ph="library_search_placeholder" placeholder="Поиск песен">
+          <span class="sr-only" data-i18n="library_search_label">Search songs</span>
+          <input id="storiesLibrarySearch" type="search" autocomplete="off" enterkeyhint="search" data-library-search data-i18n-ph="library_search_placeholder" placeholder="Search songs">
         </label>
-        <div class="music-library-filters" role="tablist" aria-label="Язык песен" data-library-filters>
-          <button type="button" role="tab" data-library-language="ALL" data-i18n="library_filter_all">Все</button>
+        <div class="music-library-filters" role="tablist" aria-label="Song language" data-library-filters>
+          <button type="button" role="tab" data-library-language="ALL" data-i18n="library_filter_all">All</button>
           <button type="button" role="tab" data-library-language="RU">RU</button>
           <button type="button" role="tab" data-library-language="UA">UA</button>
           <button type="button" role="tab" data-library-language="EN">EN</button>
@@ -604,8 +621,8 @@
       <div class="music-library-results" id="storiesLibraryList"></div>
       <div class="music-library-empty" data-library-empty hidden>
         <span aria-hidden="true">♪</span>
-        <strong data-i18n="library_no_results">Песни не найдены</strong>
-        <button type="button" data-library-reset-search data-i18n="library_reset_search">Сбросить поиск</button>
+        <strong data-i18n="library_no_results">No songs found</strong>
+        <button type="button" data-library-reset-search data-i18n="library_reset_search">Reset search</button>
       </div>
     </div>
   </div>
@@ -616,25 +633,25 @@
     <div class="music-library-topbar">
       <button class="music-library-close" type="button" data-library-close>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
-        <span data-i18n="library_close">Назад</span>
+        <span data-i18n="library_close">Back</span>
       </button>
       <div class="song-player-brand">Tune<span>Wrap</span></div>
-      <span class="music-library-kind" data-i18n="mobile_nav_author">Авторские</span>
+      <span class="music-library-kind" data-i18n="mobile_nav_author">Originals</span>
     </div>
     <div class="music-library-scroll">
       <header class="music-library-heading">
-        <p class="eyebrow" data-i18n="author_eyebrow">Авторские песни</p>
-        <h2 id="authorLibraryTitle" data-i18n="author_library_title">Авторская библиотека</h2>
-        <p data-i18n="author_library_subtitle">Полный каталог песен автора TuneWrap.</p>
+        <p class="eyebrow" data-i18n="author_eyebrow">Original songs</p>
+        <h2 id="authorLibraryTitle" data-i18n="author_library_title">Artist library</h2>
+        <p data-i18n="author_library_subtitle">The complete catalog of songs by the TuneWrap author.</p>
       </header>
       <div class="music-library-sticky" data-library-controls>
         <label class="music-library-search" for="authorLibrarySearch">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.75" cy="10.75" r="6.75"/><path d="m16 16 4 4"/></svg>
-          <span class="sr-only" data-i18n="library_search_label">Поиск песен</span>
-          <input id="authorLibrarySearch" type="search" autocomplete="off" enterkeyhint="search" data-library-search data-i18n-ph="library_search_placeholder" placeholder="Поиск песен">
+          <span class="sr-only" data-i18n="library_search_label">Search songs</span>
+          <input id="authorLibrarySearch" type="search" autocomplete="off" enterkeyhint="search" data-library-search data-i18n-ph="library_search_placeholder" placeholder="Search songs">
         </label>
-        <div class="music-library-filters" role="tablist" aria-label="Язык песен" data-library-filters>
-          <button type="button" role="tab" data-library-language="ALL" data-i18n="library_filter_all">Все</button>
+        <div class="music-library-filters" role="tablist" aria-label="Song language" data-library-filters>
+          <button type="button" role="tab" data-library-language="ALL" data-i18n="library_filter_all">All</button>
           <button type="button" role="tab" data-library-language="RU">RU</button>
           <button type="button" role="tab" data-library-language="UA">UA</button>
           <button type="button" role="tab" data-library-language="EN">EN</button>
@@ -646,24 +663,24 @@
       <div class="music-library-results" id="authorLibraryList"></div>
       <div class="music-library-empty" data-library-empty hidden>
         <span aria-hidden="true">♪</span>
-        <strong data-i18n="library_no_results">Песни не найдены</strong>
-        <button type="button" data-library-reset-search data-i18n="library_reset_search">Сбросить поиск</button>
+        <strong data-i18n="library_no_results">No songs found</strong>
+        <button type="button" data-library-reset-search data-i18n="library_reset_search">Reset search</button>
       </div>
     </div>
   </div>
 </section>
 
 <section class="tier-detail-panel" id="tierDetailPanel" aria-hidden="true" aria-modal="true" role="dialog" aria-labelledby="tierDetailTitle" inert>
-  <button class="tier-detail-backdrop" type="button" data-tier-panel-close aria-label="Закрыть"></button>
+  <button class="tier-detail-backdrop" type="button" data-tier-panel-close aria-label="Close"></button>
   <div class="tier-detail-shell">
     <div class="tier-detail-topbar">
       <button class="tier-detail-close" id="tierDetailClose" type="button">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-        <span data-i18n="tier_detail_close">Закрыть</span>
+        <span data-i18n="tier_detail_close">Close</span>
       </button>
       <div class="song-player-brand">Tune<span>Wrap</span></div>
       <div class="tier-detail-meta">
-        <span class="tier-detail-step" id="tierDetailStep" data-i18n="tier_detail_label">Формат песни</span>
+        <span class="tier-detail-step" id="tierDetailStep" data-i18n="tier_detail_label">Song format</span>
         <label class="tier-detail-language">
           <span class="sr-only">Language</span>
           <select id="tierDetailLanguageSelect" aria-label="Language">
@@ -682,7 +699,7 @@
         <div class="tier-detail-visual" id="tierDetailVisual" hidden>
           <img id="tierDetailVisualImage" src="assets/covers/wedding-package-placeholder.svg" alt="" loading="eager">
         </div>
-        <p class="tier-detail-kicker" id="tierDetailKicker" data-i18n="pricing_promo_title">Ограниченная стартовая акция</p>
+        <p class="tier-detail-kicker" id="tierDetailKicker" data-i18n="pricing_promo_title">Limited launch offer</p>
         <h2 id="tierDetailTitle">TuneWrap</h2>
         <p class="tier-detail-description" id="tierDetailDescription" hidden></p>
         <div class="tier-detail-price" id="tierDetailPriceWrap">
@@ -690,19 +707,19 @@
           <strong id="tierDetailPrice">$19</strong>
           <small>USD</small>
         </div>
-        <p class="tier-detail-until" id="tierDetailUntil" data-i18n="pricing_promo_until">Только до 31 августа</p>
+        <p class="tier-detail-until" id="tierDetailUntil" data-i18n="pricing_promo_until">Only until August 31</p>
         <ul class="tier-detail-features" id="tierDetailFeatures"></ul>
         <div class="tier-detail-wedding-content" id="tierDetailWeddingContent" hidden>
           <section class="tier-detail-info-block">
-            <h3 data-i18n="wedding_what_included">Что входит</h3>
+            <h3 data-i18n="wedding_what_included">What is included</h3>
             <ul id="tierDetailWeddingIncludes"></ul>
           </section>
           <section class="tier-detail-info-block">
-            <h3 data-i18n="wedding_ideal_for">Идеально подходит для</h3>
+            <h3 data-i18n="wedding_ideal_for">Perfect for</h3>
             <p id="tierDetailWeddingIdeal"></p>
           </section>
         </div>
-        <button class="tier-detail-select" id="tierDetailSelect" type="button" data-i18n="tier_detail_select">Выбрать тариф и продолжить</button>
+        <button class="tier-detail-select" id="tierDetailSelect" type="button" data-i18n="tier_detail_select">Choose this plan and continue</button>
       </article>
     </div>
   </div>
@@ -759,13 +776,13 @@
         </div>
       </div>
       <div class="song-player-transport">
-        <button class="song-player-skip" id="songPlayerPrevious" type="button" aria-label="Предыдущий трек">
+        <button class="song-player-skip" id="songPlayerPrevious" type="button" aria-label="Previous track">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5.5L9 12l6.5 6.5"/></svg>
         </button>
-        <button class="song-player-toggle" id="songPlayerToggle" type="button" aria-label="Воспроизвести">
+        <button class="song-player-toggle" id="songPlayerToggle" type="button" aria-label="Play">
           <span class="song-player-toggle-icon" aria-hidden="true"></span>
         </button>
-        <button class="song-player-skip" id="songPlayerNext" type="button" aria-label="Следующий трек">
+        <button class="song-player-skip" id="songPlayerNext" type="button" aria-label="Next track">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.5L15 12l-6.5 6.5"/></svg>
         </button>
       </div>
@@ -788,13 +805,13 @@
   </div>
   <div class="mobile-player-copy">
     <strong id="mobilePlayerTitle">127</strong>
-    <span id="mobilePlayerArtist" data-i18n="mobile_story_label">Музыкальная история</span>
+    <span id="mobilePlayerArtist" data-i18n="mobile_story_label">Musical story</span>
   </div>
   <div class="mobile-player-controls">
     <button type="button" id="mobilePrev" aria-label="Предыдущая песня">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M18 6l-9 6 9 6V6z"/></svg>
     </button>
-    <button type="button" id="mobilePlay" class="mobile-main-play" aria-label="Воспроизвести">
+    <button type="button" id="mobilePlay" class="mobile-main-play" aria-label="Play">
       <span class="mobile-play-icon" aria-hidden="true"></span>
     </button>
     <button type="button" id="mobileNext" aria-label="Следующая песня">
@@ -806,23 +823,23 @@
 <div class="mobile-bottom-nav" role="navigation" aria-label="Основная навигация">
   <a href="#hero" class="active" data-mobile-section="hero">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5L12 4l9 7.5V21h-6v-6H9v6H3v-9.5z"/></svg>
-    <span data-i18n="mobile_nav_home">Главная</span>
+    <span data-i18n="mobile_nav_home">Home</span>
   </a>
   <a href="#tracks" data-mobile-section="tracks">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v12H9l-4 4V4zM9 8h6M9 12h4"/></svg>
-    <span data-i18n="mobile_nav_stories">Истории</span>
+    <span data-i18n="mobile_nav_stories">Stories</span>
   </a>
   <a href="#author" data-mobile-section="author">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12M9 10l10-2M6.5 21A2.5 2.5 0 106.5 16a2.5 2.5 0 000 5zm10-2a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"/></svg>
-    <span data-i18n="mobile_nav_author">Авторские</span>
+    <span data-i18n="mobile_nav_author">Originals</span>
   </a>
   <a href="#pricing" data-mobile-section="pricing">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v13H4V7zm3-3h10v3H7V4zm5 6v7m-3.5-3.5h7"/></svg>
-    <span data-i18n="mobile_nav_packages">Пакеты</span>
+    <span data-i18n="mobile_nav_packages">Packages</span>
   </a>
   <a href="#contactHub" data-mobile-section="contactHub">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H8l-4 4V5zm4 4h8m-8 3h6"/></svg>
-    <span data-i18n="mobile_nav_contacts">Контакты</span>
+    <span data-i18n="mobile_nav_contacts">Contact</span>
   </a>
 </div>
 

@@ -1,0 +1,40 @@
+#!/usr/bin/env node
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const {spawnSync}=require('node:child_process');
+const root=path.resolve(__dirname,'..');
+const read=rel=>fs.readFileSync(path.join(root,rel),'utf8');
+const html=read('index.html');
+const script=read('js/script.js');
+const bootstrap=read('js/app-bootstrap.js');
+const site=read('js/site-cms-runtime.js');
+const pkg=JSON.parse(read('package.json'));
+for(const rel of ['js/script.js','js/app-bootstrap.js','js/site-cms-runtime.js']){
+  const syntax=spawnSync(process.execPath,['--check',path.join(root,rel)],{encoding:'utf8'});
+  assert.equal(syntax.status,0,`${rel}\n${syntax.stderr||syntax.stdout}`);
+}
+assert.ok(html.includes('<html lang="en">'));
+assert.ok(html.includes('<title>TuneWrap — Your Story, Your Song</title>'));
+assert.ok(html.includes('id="tunewrapLanguageBoot"'));
+assert.ok(html.includes('class="lang-btn active" data-lang="en"'));
+assert.ok(html.includes('data-i18n="hero_eyebrow">YOUR STORY<'));
+assert.ok(html.includes('data-i18n="hero_btn_order">Tell your story<'));
+assert.ok(html.includes('data-i18n="pricing_eyebrow">Formats and pricing<'));
+assert.ok(html.includes('data-i18n="contact_h2">Tell us your story<'));
+assert.ok(script.includes("let currentLang = 'en'"));
+assert.ok(script.includes('function resolveInitialLanguage(){'));
+assert.ok(script.includes('function syncLanguageUrl(lang){'));
+assert.ok(script.includes("aliases={ge:'ka',ua:'uk'}"));
+assert.ok(script.includes('applyLang(resolveInitialLanguage());'));
+assert.equal(script.includes("applyLang('ru');"),false);
+assert.ok(bootstrap.includes('const TUNEWRAP_BOOT_COPY='));
+assert.ok(bootstrap.includes("en:{loading:'Loading the music library…'"));
+assert.ok(site.includes('function siteFallbackCopy(){'));
+assert.ok(site.includes("en:{news:'News',terms:'Terms of use',close:'Close'"));
+assert.ok(site.includes('siteFallbackCopy().news'));
+assert.ok(site.includes('siteFallbackCopy().terms'));
+assert.equal(pkg.scripts['englishlaunch:test'],'node scripts/stage-12.13-english-launch-test.js');
+assert.ok(pkg.scripts.test.includes('englishlaunch:test'));
+console.log('PASS: Stage 12.13 — TuneWrap root is English-first while RU/UA/GE/DE remain available.');

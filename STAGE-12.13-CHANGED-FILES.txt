@@ -1,0 +1,18 @@
+NEW
+scripts/install-stage-12.13-english-first-launch.js
+scripts/stage-12.13-english-launch-test.js
+README-STAGE-12.13.txt
+STAGE-12.13-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+index.html
+js/script.js
+js/app-bootstrap.js
+js/site-cms-runtime.js
+package.json
+
+NO D1 MIGRATION
+NO ADMIN TRANSLATION
+NO PRICING SCHEMA CHANGE
+NO ORDERS API CHANGE
+NO MUSIC / PLAYER ARCHITECTURE CHANGE

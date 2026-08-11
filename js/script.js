@@ -1514,7 +1514,7 @@ function applyTuneWrapTrackTitles(language){
   const phEls = document.querySelectorAll('[data-i18n-ph]');
   const buttons = document.querySelectorAll('.lang-btn');
 
-  let currentLang = 'ru';
+  let currentLang = 'en';
   let selectedTierIdx = null;
   let selectedWeddingPackageId = null;
   let selectedStyles = [];
@@ -1545,10 +1545,10 @@ function applyTuneWrapTrackTitles(language){
   const weddingPackageSelect = document.getElementById('fieldWeddingPackage');
   const tierPanelLanguageSelect = document.getElementById('tierDetailLanguageSelect');
 
-  function t(key){ return (I18N[currentLang] || I18N.ru)[key] || ''; }
+  function t(key){ return (I18N[currentLang] || I18N.en)[key] || ''; }
 
   function weddingPackageById(lang,id){
-    return (WEDDING_PACKAGES[lang] || WEDDING_PACKAGES.ru).find(item => item.id === id) || null;
+    return (WEDDING_PACKAGES[lang] || WEDDING_PACKAGES.en).find(item => item.id === id) || null;
   }
 
   function weddingIconMarkup(id){
@@ -1924,7 +1924,7 @@ function applyTuneWrapTrackTitles(language){
       const key = el.getAttribute('data-i18n-ph');
       if(dict[key]) el.setAttribute('placeholder', dict[key]);
     });
-    document.documentElement.setAttribute('lang', LANG_TAGS[lang] || 'ru');
+    document.documentElement.setAttribute('lang', LANG_TAGS[lang] || 'en');
     document.body.classList.toggle('lang-ka', lang === 'ka');
     buttons.forEach(b=> b.classList.toggle('active', b.getAttribute('data-lang') === lang));
     if(tierPanelLanguageSelect) tierPanelLanguageSelect.value = lang;
@@ -1932,8 +1932,40 @@ function applyTuneWrapTrackTitles(language){
     applyTuneWrapTrackTitles(lang);
   }
 
+  function normalizeLanguage(value){
+    const raw=String(value||'').toLowerCase().trim();
+    const aliases={ge:'ka',ua:'uk'};
+    const normalized=aliases[raw]||raw;
+    return ['en','ru','uk','ka','de'].includes(normalized)?normalized:'';
+  }
+
+  function resolveInitialLanguage(){
+    const boot=normalizeLanguage(window.TUNEWRAP_INITIAL_LANGUAGE);
+    if(boot)return boot;
+    try{
+      const requested=normalizeLanguage(new URLSearchParams(location.search).get('lang'));
+      return requested||'en';
+    }catch(error){
+      return 'en';
+    }
+  }
+
+  function syncLanguageUrl(lang){
+    try{
+      const url=new URL(location.href);
+      if(lang==='en')url.searchParams.delete('lang');
+      else url.searchParams.set('lang',lang);
+      history.replaceState(history.state,'',url.pathname+url.search+url.hash);
+      window.TUNEWRAP_INITIAL_LANGUAGE=lang;
+    }catch(error){}
+  }
+
   buttons.forEach(btn=>{
-    btn.addEventListener('click', ()=> applyLang(btn.getAttribute('data-lang')));
+    btn.addEventListener('click', ()=>{
+      const next=normalizeLanguage(btn.getAttribute('data-lang'))||'en';
+      applyLang(next);
+      syncLanguageUrl(next);
+    });
   });
   tierPanelLanguageSelect?.addEventListener('change',event => {
     const languageButton = document.querySelector('.lang-btn[data-lang="' + event.target.value + '"]');
@@ -2068,7 +2100,7 @@ function applyTuneWrapTrackTitles(language){
     });
   });
 
-  applyLang('ru');
+  applyLang(resolveInitialLanguage());
 })();
 
 

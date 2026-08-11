@@ -294,6 +294,17 @@
     return true;
   }
 
+  function siteFallbackCopy(){
+    const map={
+      en:{news:'News',terms:'Terms of use',close:'Close',empty:'Terms of use will be published here. You can update them in Admin Studio → Site without a new deployment.'},
+      ru:{news:'Новости',terms:'Условия использования',close:'Закрыть',empty:'Текст условий будет опубликован здесь. Его можно добавить в Admin Studio → Сайт без нового деплоя.'},
+      uk:{news:'Новини',terms:'Умови користування',close:'Закрити',empty:'Текст умов буде опубліковано тут. Його можна змінити в Admin Studio → Сайт без нового деплою.'},
+      ka:{news:'სიახლეები',terms:'გამოყენების პირობები',close:'დახურვა',empty:'გამოყენების პირობები გამოქვეყნდება აქ. მათი განახლება შესაძლებელია Admin Studio → Site-ში ახალი დეპლოის გარეშე.'},
+      de:{news:'News',terms:'Nutzungsbedingungen',close:'Schließen',empty:'Die Nutzungsbedingungen werden hier veröffentlicht. Sie können sie in Admin Studio → Site ohne neues Deployment aktualisieren.'}
+    };
+    return map[language()]||map.en;
+  }
+
   function patchAnnouncement(){
     const hero=$('#hero .hero-grid > div:first-child');
     const heroSection=$('#hero');
@@ -326,7 +337,7 @@
     node.hidden=!active;
     if(!active)return;
 
-    node.querySelector('.hero-announcement-label').textContent=String(texts.announcement_label||'Новости').trim();
+    node.querySelector('.hero-announcement-label').textContent=String(texts.announcement_label||siteFallbackCopy().news).trim();
     node.querySelector('strong').textContent=String(texts.announcement_title||'').trim();
     node.querySelector('p').textContent=String(texts.announcement_text||'').trim();
 
@@ -398,12 +409,16 @@
     const texts=localized(config.texts)||{};
     const panel=ensureTermsPanel();
     const body=String(texts.terms_body||'').trim();
-    setTextContent(panel.querySelector('[data-site-terms-title]'),texts.terms_title||'Условия использования');
+    setTextContent(panel.querySelector('[data-site-terms-title]'),texts.terms_title||siteFallbackCopy().terms);
     setTextContent(panel.querySelector('[data-site-terms-intro]'),texts.terms_intro||'');
     setTextContent(
       panel.querySelector('[data-site-terms-body]'),
-      body || 'Текст условий будет опубликован здесь. Его можно добавить в Admin Studio → Сайт без нового деплоя.'
+      body || siteFallbackCopy().empty
     );
+    const closeCopy=siteFallbackCopy().close;
+    const closeButton=panel.querySelector('[data-site-legal-close]');
+    setTextContent(closeButton?.querySelector('em'),closeCopy);
+    closeButton?.setAttribute('aria-label',closeCopy);
     panel.classList.toggle('is-empty',!body);
   }
 
