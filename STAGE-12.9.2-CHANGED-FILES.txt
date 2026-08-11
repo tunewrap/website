@@ -1,0 +1,14 @@
+NEW
+scripts/install-stage-12.9.2-continuous-drag.js
+scripts/stage-12.9.2-continuous-drag-test.js
+README-STAGE-12.9.2.txt
+STAGE-12.9.2-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+admin/curation.js
+admin/curation.css
+package.json
+
+NO D1 MIGRATION
+NO API CHANGE
+NO PLAYER/CATALOG CHANGE
