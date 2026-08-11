@@ -77,7 +77,7 @@ const tuneWrapBootCopy=TUNEWRAP_BOOT_COPY[tuneWrapBootLang]||TUNEWRAP_BOOT_COPY.
 
 const loading = document.createElement('div');
 loading.className = 'catalog-bootstrap';
-loading.innerHTML = '<span class="catalog-bootstrap-mark" aria-hidden="true"></span><span>'+tuneWrapBootCopy.loading+'</span>';
+loading.innerHTML = '<strong class="catalog-bootstrap-brand">Tune<span>Wrap</span></strong><span class="catalog-bootstrap-mark" aria-hidden="true"></span><span class="catalog-bootstrap-copy">'+tuneWrapBootCopy.loading+'</span>';
 document.body.append(loading);
 
 if(!document.getElementById('tunewrapResponsiveWide')){
@@ -347,8 +347,13 @@ try{
     window.TUNEWRAP_BOOT_GUARD_TIMER=null;
   }
 
+  // Reveal the completed page underneath first, then fade the loader away.
+  // This guarantees there is never an empty black frame between loading and UI.
   document.documentElement.classList.remove('tw-boot-pending');
-  loading.remove();
+  requestAnimationFrame(()=>{
+    loading.classList.add('is-leaving');
+    window.setTimeout(()=>loading.remove(),180);
+  });
 }catch(error){
   console.error('TuneWrap catalog bootstrap failed',error);
   loading.classList.add('is-error');

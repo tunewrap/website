@@ -10117,3 +10117,47 @@ body.lang-ka .wedding-package-name{
 }
 @keyframes catalog-bootstrap-spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.catalog-bootstrap-mark{animation:none}}
+
+
+/* Stage 12.13.6.1 — Fast seamless boot */
+.catalog-bootstrap{
+  gap:11px;
+  padding:24px;
+  opacity:1;
+  transition:opacity .18s ease;
+}
+.catalog-bootstrap-brand{
+  display:block;
+  margin-bottom:4px;
+  color:#f6f0e5;
+  font-family:'Fraunces',Georgia,serif;
+  font-size:clamp(28px,5vw,38px);
+  font-weight:600;
+  letter-spacing:-.025em;
+}
+.catalog-bootstrap-brand span{
+  color:#d9a441;
+}
+.catalog-bootstrap-copy{
+  display:block;
+  min-width:min(290px,78vw);
+  color:#aaa4a9;
+  font:600 12px/1.45 'Manrope',Inter,system-ui,sans-serif;
+  letter-spacing:.02em;
+}
+.catalog-bootstrap.is-leaving{
+  opacity:0;
+  pointer-events:none;
+}
+@media(max-width:620px){
+  .catalog-bootstrap{
+    padding:20px;
+  }
+  .catalog-bootstrap-brand{
+    font-size:30px;
+  }
+  .catalog-bootstrap-copy{
+    min-width:min(250px,74vw);
+    font-size:11px;
+  }
+}
