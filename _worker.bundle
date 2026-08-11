@@ -1,9 +1,9 @@
-------formdata-undici-058452861512
+------formdata-undici-052954823717
 Content-Disposition: form-data; name="metadata"
 
-{"main_module":"functionsWorker-0.5476836315152933.js"}
-------formdata-undici-058452861512
-Content-Disposition: form-data; name="functionsWorker-0.5476836315152933.js"; filename="functionsWorker-0.5476836315152933.js"
+{"main_module":"functionsWorker-0.44243127329263143.js"}
+------formdata-undici-052954823717
+Content-Disposition: form-data; name="functionsWorker-0.44243127329263143.js"; filename="functionsWorker-0.44243127329263143.js"
 Content-Type: application/javascript+module
 
 var __defProp = Object.defineProperty;
@@ -1189,7 +1189,7 @@ var SECTIONS = Object.freeze(["stories", "author"]);
 var LANGUAGES = Object.freeze(["GE", "UA", "EN", "DE", "RU"]);
 var TRACK_COLUMNS = `id, legacy_key, title, original_title, titles_json, descriptions_json,
   section, language, audio_url, cover_url, artwork_json, lyrics_json, translation_json,
-  artist, album, category_json, tags_json, duration_label, duration, audio_quality_json,
+  artist, album, category_json, story_category_ids_json, tags_json, duration_label, duration, audio_quality_json,
   sort_order, featured, published, archived, schema_version, created_at, updated_at,
   published_at, last_edited_by`;
 var JSON_FIELDS = Object.freeze({
@@ -1304,6 +1304,7 @@ function rowToTrack(row, { admin = false } = {}) {
     artist: row.artist || "TuneWrap",
     album: row.album || "",
     category: parseJson(row.category_json, {}),
+    categoryIds: parseJson(row.story_category_ids_json, []),
     tags: parseJson(row.tags_json, []),
     durationLabel: row.duration_label || "",
     duration: Number(row.duration) || 0,
@@ -1345,6 +1346,10 @@ function validateTrack(input, { publishing = false } = {}) {
   if (publishing && !String(input.audio || "").trim()) errors.push("\u0414\u043B\u044F \u043F\u0443\u0431\u043B\u0438\u043A\u0430\u0446\u0438\u0438 \u043D\u0443\u0436\u0435\u043D MP3");
   if (input.audio && !/^(?:https?:\/\/|\/api\/media\/|content\/tracks\/)/.test(input.audio)) errors.push("\u041D\u0435\u0434\u043E\u043F\u0443\u0441\u0442\u0438\u043C\u044B\u0439 \u0430\u0434\u0440\u0435\u0441 MP3");
   if (input.cover && !/^(?:https?:\/\/|\/api\/media\/|content\/tracks\/|assets\/)/.test(input.cover)) errors.push("\u041D\u0435\u0434\u043E\u043F\u0443\u0441\u0442\u0438\u043C\u044B\u0439 \u0430\u0434\u0440\u0435\u0441 \u043E\u0431\u043B\u043E\u0436\u043A\u0438");
+  if (input.categoryIds !== void 0) {
+    if (!Array.isArray(input.categoryIds)) errors.push("\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438 \u0438\u0441\u0442\u043E\u0440\u0438\u0438 \u0434\u043E\u043B\u0436\u043D\u044B \u0431\u044B\u0442\u044C \u043C\u0430\u0441\u0441\u0438\u0432\u043E\u043C");
+    else if (input.categoryIds.length > 12) errors.push("\u0423 \u0442\u0440\u0435\u043A\u0430 \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u043C\u0430\u043A\u0441\u0438\u043C\u0443\u043C 12 \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0439");
+  }
   const order = Number(input.order);
   if (!Number.isInteger(order) || order < 1) errors.push("\u041F\u043E\u0440\u044F\u0434\u043E\u043A \u0434\u043E\u043B\u0436\u0435\u043D \u0431\u044B\u0442\u044C \u043F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u043C \u0446\u0435\u043B\u044B\u043C \u0447\u0438\u0441\u043B\u043E\u043C");
   return errors;
@@ -1375,9 +1380,9 @@ function insertStatement(db, track, editor, now = (/* @__PURE__ */ new Date()).t
   return db.prepare(`INSERT INTO tracks (
     id, legacy_key, title, original_title, titles_json, descriptions_json, section, language,
     audio_url, cover_url, artwork_json, lyrics_json, translation_json, artist, album,
-    category_json, tags_json, duration_label, duration, audio_quality_json, sort_order,
+    category_json, story_category_ids_json, tags_json, duration_label, duration, audio_quality_json, sort_order,
     featured, published, archived, schema_version, created_at, updated_at, published_at, last_edited_by
-  ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(
+  ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(
     track.id,
     track.legacyKey || null,
     String(track.title).trim(),
@@ -1394,6 +1399,7 @@ function insertStatement(db, track, editor, now = (/* @__PURE__ */ new Date()).t
     track.artist || "TuneWrap",
     track.album || "",
     asJson(track.category, {}),
+    asJson(track.categoryIds, []),
     asJson(track.tags, []),
     track.durationLabel || "",
     Number(track.duration) || 0,
@@ -1414,7 +1420,7 @@ function updateStatement(db, id, track, editor, now = (/* @__PURE__ */ new Date(
   return db.prepare(`UPDATE tracks SET
     title=?, original_title=?, titles_json=?, descriptions_json=?, section=?, language=?,
     audio_url=?, cover_url=?, artwork_json=?, lyrics_json=?, translation_json=?, artist=?, album=?,
-    category_json=?, tags_json=?, duration_label=?, duration=?, audio_quality_json=?, sort_order=?,
+    category_json=?, story_category_ids_json=?, tags_json=?, duration_label=?, duration=?, audio_quality_json=?, sort_order=?,
     featured=?, archived=?, updated_at=?, last_edited_by=? WHERE id=?`).bind(
     String(track.title).trim(),
     track.originalTitle || track.title,
@@ -1430,6 +1436,7 @@ function updateStatement(db, id, track, editor, now = (/* @__PURE__ */ new Date(
     track.artist || "TuneWrap",
     track.album || "",
     asJson(track.category, {}),
+    asJson(track.categoryIds, []),
     asJson(track.tags, []),
     track.durationLabel || "",
     Number(track.duration) || 0,
@@ -1459,6 +1466,7 @@ function mergeTrack(current, input) {
     "artist",
     "album",
     "category",
+    "categoryIds",
     "tags",
     "durationLabel",
     "duration",
@@ -1712,6 +1720,7 @@ __name(onRequestDelete, "onRequestDelete");
 var ORDER_STATUSES = Object.freeze(["new", "in_progress", "waiting_client", "done", "archived"]);
 var ORDER_TYPES = Object.freeze(["order", "certificate", "wedding", "corporate"]);
 var ORDER_LANGUAGES = Object.freeze(["ru", "uk", "ka", "en", "de"]);
+var ORDER_VOCALS = Object.freeze(["male", "female", "duet", "any"]);
 function parseJson2(value, fallback) {
   try {
     return JSON.parse(value || "");
@@ -1740,6 +1749,17 @@ function goldenAnswers(value) {
   })).filter((item) => item.question && item.answer);
 }
 __name(goldenAnswers, "goldenAnswers");
+function cleanTranslationRu(value) {
+  if (!value || typeof value !== "object") return null;
+  return {
+    occasion: clean(value.occasion, 1200),
+    occasionDetail: clean(value.occasionDetail, 2400),
+    storyCore: clean(value.storyCore, 12e3),
+    description: clean(value.description, 3e4),
+    goldenAnswers: goldenAnswers(value.goldenAnswers)
+  };
+}
+__name(cleanTranslationRu, "cleanTranslationRu");
 function rowToOrder(row) {
   if (!row) return null;
   return {
@@ -1761,6 +1781,9 @@ function rowToOrder(row) {
     styles: parseJson2(row.styles_json, []),
     instruments: parseJson2(row.instruments_json, []),
     soundPrompt: row.sound_prompt || "",
+    vocalChoice: row.vocal_choice || "",
+    translationRu: parseJson2(row.translation_ru_json, null),
+    translationRuAt: row.translation_ru_at || "",
     urgent: Boolean(row.urgent),
     quotedPrice: Number.isFinite(row.quoted_price) ? row.quoted_price : row.quoted_price == null ? null : Number(row.quoted_price),
     rawMessage: row.raw_message,
@@ -1817,13 +1840,20 @@ function normalizePublicOrder(input, request) {
     styles: listStrings(input?.styles, 5, 160),
     instruments: listStrings(input?.instruments, 80, 160),
     soundPrompt: clean(input?.soundPrompt, 12e3, { label: "Sound prompt" }),
+    vocalChoice: (() => {
+      const value = clean(input?.vocalChoice, 40);
+      if ((orderType === "order" || orderType === "wedding") && !ORDER_VOCALS.includes(value)) {
+        throw new HttpError(422, "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u043E\u043A\u0430\u043B");
+      }
+      return ORDER_VOCALS.includes(value) ? value : "";
+    })(),
     urgent: Boolean(input?.urgent),
     quotedPrice,
     rawMessage: clean(input?.rawMessage, 32e3),
     source: clean(input?.source, 40) || "web",
     sourceUrl,
     internalNotes: "",
-    schemaVersion: 2
+    schemaVersion: 3
   };
 }
 __name(normalizePublicOrder, "normalizePublicOrder");
@@ -1848,10 +1878,10 @@ async function insertOrder(db, order, id) {
     INSERT INTO orders (
       id,client_submission_id,status,order_type,interface_language,name,contact,
       occasion,occasion_detail,story_core,description,golden_answers_json,
-      tier_label,wedding_package_id,wedding_package_label,styles_json,instruments_json,sound_prompt,urgent,
+      tier_label,wedding_package_id,wedding_package_label,styles_json,instruments_json,sound_prompt,vocal_choice,urgent,
       quoted_price,raw_message,source,source_url,internal_notes,schema_version,
       created_at,updated_at,last_edited_by
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   `).bind(
     id,
     order.clientSubmissionId,
@@ -1871,6 +1901,7 @@ async function insertOrder(db, order, id) {
     JSON.stringify(order.styles),
     JSON.stringify(order.instruments),
     order.soundPrompt,
+    order.vocalChoice,
     order.urgent ? 1 : 0,
     order.quotedPrice,
     order.rawMessage,
@@ -1891,12 +1922,23 @@ async function updateOrderAdmin(db, id, input, editor) {
   const status = input?.status === void 0 ? current.status : String(input.status);
   if (!ORDER_STATUSES.includes(status)) throw new HttpError(422, "\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B\u0439 \u0441\u0442\u0430\u0442\u0443\u0441 \u0437\u0430\u044F\u0432\u043A\u0438");
   const internalNotes = input?.internalNotes === void 0 ? current.internalNotes : clean(input.internalNotes, 16e3, { label: "\u0412\u043D\u0443\u0442\u0440\u0435\u043D\u043D\u0438\u0435 \u0437\u0430\u043C\u0435\u0442\u043A\u0438" });
+  const translationRu = input?.translationRu === void 0 ? current.translationRu : cleanTranslationRu(input.translationRu);
+  const translationChanged = input?.translationRu !== void 0;
   const now = (/* @__PURE__ */ new Date()).toISOString();
+  const translationRuAt = translationChanged ? now : current.translationRuAt || "";
   await db.prepare(`
     UPDATE orders
-    SET status=?,internal_notes=?,updated_at=?,last_edited_by=?
+    SET status=?,internal_notes=?,translation_ru_json=?,translation_ru_at=?,updated_at=?,last_edited_by=?
     WHERE id=?
-  `).bind(status, internalNotes, now, editor, id).run();
+  `).bind(
+    status,
+    internalNotes,
+    translationRu ? JSON.stringify(translationRu) : "",
+    translationRuAt,
+    now,
+    editor,
+    id
+  ).run();
   return getOrder(db, id);
 }
 __name(updateOrderAdmin, "updateOrderAdmin");
@@ -2291,6 +2333,15 @@ function cleanPaymentLocale(source) {
   };
 }
 __name(cleanPaymentLocale, "cleanPaymentLocale");
+function cleanPaymentSection(value) {
+  const source = value && typeof value === "object" ? value : {};
+  return {
+    // Backward compatible: old Site CMS configs did not have this object,
+    // therefore the payment section stays enabled until Admin turns it off.
+    enabled: source.enabled !== false
+  };
+}
+__name(cleanPaymentSection, "cleanPaymentSection");
 function cleanPayments(value) {
   if (!Array.isArray(value)) return [];
   const used = /* @__PURE__ */ new Set();
@@ -2315,6 +2366,20 @@ function cleanPayments(value) {
   });
 }
 __name(cleanPayments, "cleanPayments");
+function cleanDate(value) {
+  const raw = cleanText2(value, 20);
+  return /^\d{4}-\d{2}-\d{2}$/.test(raw) ? raw : "";
+}
+__name(cleanDate, "cleanDate");
+function cleanAnnouncement(value) {
+  const source = value && typeof value === "object" ? value : {};
+  return {
+    enabled: source.enabled === true,
+    startDate: cleanDate(source.startDate),
+    endDate: cleanDate(source.endDate)
+  };
+}
+__name(cleanAnnouncement, "cleanAnnouncement");
 function normalizeSiteContentConfig(value) {
   if (!value || typeof value !== "object") throw new HttpError(400, "\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430\u044F \u043A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F Site CMS");
   return {
@@ -2322,7 +2387,9 @@ function normalizeSiteContentConfig(value) {
     texts: { locales: cleanLocaleMap(value.texts?.locales, 220, 12e3) },
     placeholders: { locales: cleanLocaleMap(value.placeholders?.locales, 80, 1200) },
     contacts: cleanContacts(value.contacts),
-    payments: cleanPayments(value.payments)
+    payments: cleanPayments(value.payments),
+    paymentSection: cleanPaymentSection(value.paymentSection),
+    announcement: cleanAnnouncement(value.announcement)
   };
 }
 __name(normalizeSiteContentConfig, "normalizeSiteContentConfig");
@@ -2534,8 +2601,132 @@ async function onRequestPut3(context) {
 }
 __name(onRequestPut3, "onRequestPut");
 
-// api/admin/tracks/index.js
+// _shared/story-categories.js
+var STORY_CATEGORY_LOCALES = Object.freeze(["ru", "uk", "ka", "en", "de"]);
+function cleanText4(value, max = 180) {
+  return String(value ?? "").replace(/\u0000/g, "").replace(/\r\n?/g, "\n").trim().slice(0, max);
+}
+__name(cleanText4, "cleanText");
+function cleanId2(value, index) {
+  let id = cleanText4(value, 90).toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-+|-+$/g, "");
+  if (!id) id = `category-${index + 1}`;
+  return id.slice(0, 90);
+}
+__name(cleanId2, "cleanId");
+function cleanLabels(value) {
+  const labels = {};
+  for (const locale of STORY_CATEGORY_LOCALES) {
+    const label = cleanText4(value?.[locale], 100);
+    if (label) labels[locale] = label;
+  }
+  return labels;
+}
+__name(cleanLabels, "cleanLabels");
+function cleanCategories(value) {
+  if (!Array.isArray(value)) return [];
+  const used = /* @__PURE__ */ new Set();
+  return value.slice(0, 40).map((raw, index) => {
+    const source = raw && typeof raw === "object" ? raw : {};
+    const base = cleanId2(source.id, index);
+    let id = base, suffix = 2;
+    while (used.has(id)) id = `${base}-${suffix++}`;
+    used.add(id);
+    return {
+      id,
+      enabled: source.enabled !== false,
+      order: Number.isFinite(Number(source.order)) ? Math.max(1, Math.min(999, Math.round(Number(source.order)))) : index + 1,
+      labels: cleanLabels(source.labels)
+    };
+  }).filter((item) => Object.keys(item.labels).length > 0);
+}
+__name(cleanCategories, "cleanCategories");
+function normalizeStoryCategoriesConfig(value) {
+  if (!value || typeof value !== "object") throw new HttpError(400, "\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430\u044F \u043A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0439 \u0438\u0441\u0442\u043E\u0440\u0438\u0439");
+  return { schemaVersion: 1, categories: cleanCategories(value.categories) };
+}
+__name(normalizeStoryCategoriesConfig, "normalizeStoryCategoriesConfig");
+async function readStoryCategoriesConfig(db) {
+  if (!db) throw new HttpError(503, "D1 binding TUNEWRAP_DB \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D");
+  const row = await db.prepare("SELECT config_json,schema_version,updated_at,last_edited_by FROM story_categories_config WHERE id=?").bind("main").first();
+  if (!row) throw new HttpError(503, "Story Categories CMS \u0435\u0449\u0451 \u043D\u0435 \u0438\u043D\u0438\u0446\u0438\u0430\u043B\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u043D");
+  let parsed;
+  try {
+    parsed = JSON.parse(row.config_json);
+  } catch (error) {
+    throw new HttpError(500, "Story Categories CMS \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442 \u043F\u043E\u0432\u0440\u0435\u0436\u0434\u0451\u043D\u043D\u044B\u0439 JSON");
+  }
+  return { config: normalizeStoryCategoriesConfig(parsed), schemaVersion: Number(row.schema_version) || 1, updatedAt: String(row.updated_at || ""), lastEditedBy: String(row.last_edited_by || "") };
+}
+__name(readStoryCategoriesConfig, "readStoryCategoriesConfig");
+async function cleanRemovedAssignments(db, removedIds) {
+  if (!removedIds.length) return;
+  const result = await db.prepare("SELECT id,story_category_ids_json FROM tracks WHERE story_category_ids_json <> '[]'").all();
+  const statements = [];
+  for (const row of result.results || []) {
+    let ids = [];
+    try {
+      ids = JSON.parse(row.story_category_ids_json || "[]");
+    } catch (error) {
+      ids = [];
+    }
+    if (!Array.isArray(ids)) ids = [];
+    const next = ids.filter((id) => !removedIds.includes(String(id)));
+    if (next.length === ids.length) continue;
+    statements.push(db.prepare("UPDATE tracks SET story_category_ids_json=?,updated_at=? WHERE id=?").bind(JSON.stringify(next), (/* @__PURE__ */ new Date()).toISOString(), row.id));
+  }
+  for (let offset = 0; offset < statements.length; offset += 50) await db.batch(statements.slice(offset, offset + 50));
+}
+__name(cleanRemovedAssignments, "cleanRemovedAssignments");
+async function writeStoryCategoriesConfig(db, value, identity = "admin") {
+  if (!db) throw new HttpError(503, "D1 binding TUNEWRAP_DB \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D");
+  const config = normalizeStoryCategoriesConfig(value);
+  const serialized = JSON.stringify(config);
+  if (serialized.length > 12e4) throw new HttpError(413, "\u041A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0439 \u0441\u043B\u0438\u0448\u043A\u043E\u043C \u0431\u043E\u043B\u044C\u0448\u0430\u044F");
+  let previousIds = [];
+  try {
+    const previous = await readStoryCategoriesConfig(db);
+    previousIds = (previous.config.categories || []).map((item) => item.id);
+  } catch (error) {
+  }
+  const nextIds = config.categories.map((item) => item.id);
+  await cleanRemovedAssignments(db, previousIds.filter((id) => !nextIds.includes(id)));
+  const updatedAt = (/* @__PURE__ */ new Date()).toISOString();
+  const editor = String(identity || "admin").slice(0, 240);
+  await db.prepare(`
+    INSERT INTO story_categories_config(id,config_json,schema_version,updated_at,last_edited_by)
+    VALUES('main',?,1,?,?)
+    ON CONFLICT(id) DO UPDATE SET config_json=excluded.config_json,schema_version=excluded.schema_version,updated_at=excluded.updated_at,last_edited_by=excluded.last_edited_by
+  `).bind(serialized, updatedAt, editor).run();
+  return { config, updatedAt, lastEditedBy: editor };
+}
+__name(writeStoryCategoriesConfig, "writeStoryCategoriesConfig");
+
+// api/admin/story-categories.js
 async function onRequestGet8(context) {
+  try {
+    await requireAdmin(context);
+    const result = await readStoryCategoriesConfig(context.env.TUNEWRAP_DB);
+    return json({ ok: true, ...result });
+  } catch (error) {
+    return handleError(error);
+  }
+}
+__name(onRequestGet8, "onRequestGet");
+async function onRequestPut4(context) {
+  try {
+    requireSameOrigin(context.request);
+    const identity = await requireAdmin(context);
+    const payload = await readJson(context.request);
+    const result = await writeStoryCategoriesConfig(context.env.TUNEWRAP_DB, payload?.config, identity);
+    return json({ ok: true, ...result });
+  } catch (error) {
+    return handleError(error);
+  }
+}
+__name(onRequestPut4, "onRequestPut");
+
+// api/admin/tracks/index.js
+async function onRequestGet9(context) {
   try {
     await requireAdmin(context);
     const url = new URL(context.request.url);
@@ -2552,7 +2743,7 @@ async function onRequestGet8(context) {
     return handleError(error);
   }
 }
-__name(onRequestGet8, "onRequestGet");
+__name(onRequestGet9, "onRequestGet");
 async function onRequestPost8(context) {
   try {
     requireSameOrigin(context.request);
@@ -2927,7 +3118,7 @@ async function serve(context, headOnly = false) {
   }
 }
 __name(serve, "serve");
-var onRequestGet9 = /* @__PURE__ */ __name((context) => serve(context, false), "onRequestGet");
+var onRequestGet10 = /* @__PURE__ */ __name((context) => serve(context, false), "onRequestGet");
 var onRequestHead = /* @__PURE__ */ __name((context) => serve(context, true), "onRequestHead");
 
 // api/orders.js
@@ -2965,13 +3156,13 @@ async function onRequestPost10(context) {
   }
 }
 __name(onRequestPost10, "onRequestPost");
-function onRequestGet10() {
+function onRequestGet11() {
   return json({ ok: false, error: "\u041C\u0435\u0442\u043E\u0434 \u043D\u0435 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442\u0441\u044F" }, 405, { allow: "POST" });
 }
-__name(onRequestGet10, "onRequestGet");
+__name(onRequestGet11, "onRequestGet");
 
 // api/pricing.js
-async function onRequestGet11(context) {
+async function onRequestGet12(context) {
   try {
     const result = await readPricingConfig(context.env.TUNEWRAP_DB);
     return json({
@@ -2984,10 +3175,10 @@ async function onRequestGet11(context) {
     return handleError(error);
   }
 }
-__name(onRequestGet11, "onRequestGet");
+__name(onRequestGet12, "onRequestGet");
 
 // api/site-content.js
-async function onRequestGet12(context) {
+async function onRequestGet13(context) {
   try {
     const result = await readSiteContentConfig(context.env.TUNEWRAP_DB);
     return json({
@@ -3000,10 +3191,10 @@ async function onRequestGet12(context) {
     return handleError(error);
   }
 }
-__name(onRequestGet12, "onRequestGet");
+__name(onRequestGet13, "onRequestGet");
 
 // api/sound-preferences.js
-async function onRequestGet13(context) {
+async function onRequestGet14(context) {
   try {
     const result = await readSoundPreferencesConfig(context.env.TUNEWRAP_DB);
     return json({
@@ -3016,10 +3207,21 @@ async function onRequestGet13(context) {
     return handleError(error);
   }
 }
-__name(onRequestGet13, "onRequestGet");
+__name(onRequestGet14, "onRequestGet");
+
+// api/story-categories.js
+async function onRequestGet15(context) {
+  try {
+    const result = await readStoryCategoriesConfig(context.env.TUNEWRAP_DB);
+    return json({ ok: true, config: result.config, schemaVersion: result.schemaVersion, updatedAt: result.updatedAt });
+  } catch (error) {
+    return handleError(error);
+  }
+}
+__name(onRequestGet15, "onRequestGet");
 
 // api/tracks.js
-async function onRequestGet14(context) {
+async function onRequestGet16(context) {
   try {
     const tracks = await listTracks(context.env.TUNEWRAP_DB);
     return json({
@@ -3033,9 +3235,9 @@ async function onRequestGet14(context) {
     return handleError(error);
   }
 }
-__name(onRequestGet14, "onRequestGet");
+__name(onRequestGet16, "onRequestGet");
 
-// ../.wrangler/tmp/pages-UPiDWy/functionsRoutes-0.5447470550154054.mjs
+// ../.wrangler/tmp/pages-tSP398/functionsRoutes-0.3136393259054079.mjs
 var routes = [
   {
     routePath: "/api/admin/tracks/:id/archive",
@@ -3178,11 +3380,25 @@ var routes = [
     modules: [onRequestPut3]
   },
   {
+    routePath: "/api/admin/story-categories",
+    mountPath: "/api/admin",
+    method: "GET",
+    middlewares: [],
+    modules: [onRequestGet8]
+  },
+  {
+    routePath: "/api/admin/story-categories",
+    mountPath: "/api/admin",
+    method: "PUT",
+    middlewares: [],
+    modules: [onRequestPut4]
+  },
+  {
     routePath: "/api/admin/tracks",
     mountPath: "/api/admin/tracks",
     method: "GET",
     middlewares: [],
-    modules: [onRequestGet8]
+    modules: [onRequestGet9]
   },
   {
     routePath: "/api/admin/tracks",
@@ -3203,7 +3419,7 @@ var routes = [
     mountPath: "/api/media",
     method: "GET",
     middlewares: [],
-    modules: [onRequestGet9]
+    modules: [onRequestGet10]
   },
   {
     routePath: "/api/media/:path*",
@@ -3217,7 +3433,7 @@ var routes = [
     mountPath: "/api",
     method: "GET",
     middlewares: [],
-    modules: [onRequestGet10]
+    modules: [onRequestGet11]
   },
   {
     routePath: "/api/orders",
@@ -3231,28 +3447,35 @@ var routes = [
     mountPath: "/api",
     method: "GET",
     middlewares: [],
-    modules: [onRequestGet11]
+    modules: [onRequestGet12]
   },
   {
     routePath: "/api/site-content",
     mountPath: "/api",
     method: "GET",
     middlewares: [],
-    modules: [onRequestGet12]
+    modules: [onRequestGet13]
   },
   {
     routePath: "/api/sound-preferences",
     mountPath: "/api",
     method: "GET",
     middlewares: [],
-    modules: [onRequestGet13]
+    modules: [onRequestGet14]
+  },
+  {
+    routePath: "/api/story-categories",
+    mountPath: "/api",
+    method: "GET",
+    middlewares: [],
+    modules: [onRequestGet15]
   },
   {
     routePath: "/api/tracks",
     mountPath: "/api",
     method: "GET",
     middlewares: [],
-    modules: [onRequestGet14]
+    modules: [onRequestGet16]
   }
 ];
 
@@ -3705,4 +3928,4 @@ export {
   pages_template_worker_default as default
 };
 
-------formdata-undici-058452861512--
+------formdata-undici-052954823717--

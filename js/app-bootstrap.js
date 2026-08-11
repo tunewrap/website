@@ -341,6 +341,13 @@ try{
   }
 
   if(document.readyState !== 'loading') document.dispatchEvent(new Event('DOMContentLoaded'));
+
+  if(window.TUNEWRAP_BOOT_GUARD_TIMER){
+    clearTimeout(window.TUNEWRAP_BOOT_GUARD_TIMER);
+    window.TUNEWRAP_BOOT_GUARD_TIMER=null;
+  }
+
+  document.documentElement.classList.remove('tw-boot-pending');
   loading.remove();
 }catch(error){
   console.error('TuneWrap catalog bootstrap failed',error);

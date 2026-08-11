@@ -1,0 +1,16 @@
+NEW
+scripts/install-stage-12.13.6-first-paint-guard.js
+scripts/stage-12.13.6-first-paint-guard-test.js
+README-STAGE-12.13.6.txt
+STAGE-12.13.6-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+index.html
+js/app-bootstrap.js
+package.json
+
+NO D1 MIGRATION
+NO DESIGN CHANGE
+NO PLAYER CHANGE
+NO CMS CHANGE
+NO API CHANGE
