@@ -351,37 +351,49 @@
   function validContact(value){
     const v=String(value||'').trim();
 
-    // Stage 12.11 stores the preferred channel in the existing contact field:
-    // "WhatsApp: ...", "Telegram: ..." or "Email: ...".
-    const match=v.match(/^(WhatsApp|Telegram|Email):\\s*(.+)$/i);
-    if(match){
-      const method=match[1].toLowerCase();
-      const detail=String(match[2]||'').trim();
+    const split=v.indexOf(':');
+    if(split>0){
+      const method=v.slice(0,split).trim().toLowerCase();
+      const detail=v.slice(split+1).trim();
 
       if(method==='email'){
-        return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/i.test(detail);
+        const at=detail.indexOf('@');
+        const dot=detail.lastIndexOf('.');
+        return at>0&&dot>at+1&&dot<detail.length-1&&!detail.includes(' ');
       }
 
       if(method==='whatsapp'){
-        const digits=detail.replace(/\\D+/g,'');
+        const digits=Array.from(detail).filter(char=>char>='0'&&char<='9').join('');
         return digits.length>=7&&digits.length<=16;
       }
 
       if(method==='telegram'){
-        const digits=detail.replace(/\\D+/g,'');
+        const digits=Array.from(detail).filter(char=>char>='0'&&char<='9').join('');
         if(digits.length>=7&&digits.length<=16)return true;
 
-        const username=detail
-          .replace(/^https?:\\/\\/(?:www\\.)?t\\.me\\//i,'')
-          .replace(/^@/,'')
-          .trim();
-        return /^[A-Za-z0-9_]{5,32}$/.test(username);
+        let username=detail.trim();
+        const lower=username.toLowerCase();
+        const prefixes=['https://www.t.me/','http://www.t.me/','https://t.me/','http://t.me/','www.t.me/','t.me/'];
+        const prefix=prefixes.find(item=>lower.startsWith(item));
+        if(prefix)username=username.slice(prefix.length);
+        if(username.startsWith('@'))username=username.slice(1);
+        username=username.split('/')[0].split('?')[0].split('#')[0].trim();
+
+        if(username.length<5||username.length>32)return false;
+        return Array.from(username).every(char=>
+          (char>='A'&&char<='Z')||
+          (char>='a'&&char<='z')||
+          (char>='0'&&char<='9')||
+          char==='_'
+        );
       }
     }
 
-    // Legacy orders/old cached form state remain accepted.
-    const email=/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/i.test(v);
-    const digits=v.replace(/\\D+/g,'');
+    // Legacy cached orders / old form values.
+    const at=v.indexOf('@');
+    const dot=v.lastIndexOf('.');
+    const email=at>0&&dot>at+1&&dot<v.length-1&&!v.includes(' ');
+    const digits=Array.from(v).filter(char=>char>='0'&&char<='9').join('');
     const phone=digits.length>=7&&digits.length<=16;
     return email||phone;
   }

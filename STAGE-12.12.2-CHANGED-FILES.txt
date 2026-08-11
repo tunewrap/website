@@ -1,0 +1,16 @@
+NEW
+css/stage-12.12.2-announcement-position.css
+scripts/install-stage-12.12.2-package-announcement-fix.js
+scripts/stage-12.12.2-package-announcement-test.js
+README-STAGE-12.12.2.txt
+STAGE-12.12.2-CHANGED-FILES.txt
+
+MODIFIED BY INSTALLER
+js/ux-critical-fixes.js
+js/site-cms-runtime.js
+js/app-bootstrap.js
+package.json
+
+NO D1 MIGRATION
+NO ORDERS API CHANGE
+NO PRICING CMS CHANGE

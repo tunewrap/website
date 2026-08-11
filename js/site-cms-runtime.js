@@ -296,6 +296,7 @@
 
   function patchAnnouncement(){
     const hero=$('#hero .hero-grid > div:first-child');
+    const heroSection=$('#hero');
     const texts=localized(config.texts)||{};
     const announcement=config.announcement||{};
     if(!hero)return;
@@ -315,10 +316,11 @@
         <strong></strong>
         <p></p>`;
 
-      const eyebrow=hero.querySelector('.eyebrow');
-      if(eyebrow)eyebrow.insertAdjacentElement('afterend',node);
+      if(heroSection)heroSection.prepend(node);
       else hero.prepend(node);
     }
+
+    if(heroSection&&node.parentElement!==heroSection)heroSection.prepend(node);
 
     const active=announcementIsActive(announcement,texts);
     node.hidden=!active;

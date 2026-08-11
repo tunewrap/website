@@ -1,0 +1,36 @@
+/* TuneWrap Stage 12.12.2 — Announcement Top Position */
+
+/*
+The announcement belongs to the Hero itself, not to the vertically composed
+copy column. Keep it visible at the top edge of the Hero on every device.
+*/
+#hero{
+  position:relative!important;
+}
+
+#hero > .hero-announcement{
+  position:absolute!important;
+  z-index:8!important;
+  top:18px!important;
+  left:max(34px,calc((100% - 1280px)/2 + 34px))!important;
+  right:auto!important;
+  width:min(620px,calc(50% - 52px))!important;
+  max-width:none!important;
+  margin:0!important;
+}
+
+@media(max-width:900px){
+  #hero > .hero-announcement{
+    top:16px!important;
+    left:24px!important;
+    width:calc(100% - 48px)!important;
+  }
+}
+
+@media(max-width:620px){
+  #hero > .hero-announcement{
+    top:14px!important;
+    left:20px!important;
+    width:calc(100% - 40px)!important;
+  }
+}

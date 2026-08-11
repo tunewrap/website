@@ -120,6 +120,15 @@ if(!document.getElementById('tunewrapStage1212SitePolish')){
   document.head.append(stage1212);
 }
 
+
+if(!document.getElementById('tunewrapStage12122AnnouncementPosition')){
+  const stage12122=document.createElement('link');
+  stage12122.id='tunewrapStage12122AnnouncementPosition';
+  stage12122.rel='stylesheet';
+  stage12122.href='/css/stage-12.12.2-announcement-position.css?v=12.12.2';
+  document.head.append(stage12122);
+}
+
 if(!document.getElementById('tunewrapStoryCategoryStyles')){
   const storyCategoryStyles=document.createElement('link');storyCategoryStyles.id='tunewrapStoryCategoryStyles';storyCategoryStyles.rel='stylesheet';storyCategoryStyles.href='/css/story-categories.css?v=12.7';document.head.append(storyCategoryStyles);
 }
