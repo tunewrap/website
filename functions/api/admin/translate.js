@@ -2,8 +2,8 @@ import {requireAdmin,requireSameOrigin} from '../../_shared/auth.js';
 import {HttpError,handleError,json,readJson} from '../../_shared/http.js';
 
 const MODEL='@cf/meta/m2m100-1.2b';
-const FALLBACK_MODEL='@cf/zai-org/glm-4.7-flash';
-const SECOND_FALLBACK_MODEL='@cf/qwen/qwen3-30b-a3b-fp8';
+const FALLBACK_MODEL='@cf/meta/llama-3.1-8b-instruct-fast';
+const SECOND_FALLBACK_MODEL='@cf/meta/llama-3.3-70b-instruct-fp8-fast';
 const LANGUAGE_TO_LOCALE=Object.freeze({RU:'ru',UA:'uk',GE:'ka',EN:'en',DE:'de'});
 const ALLOWED_LOCALES=Object.freeze(['ru','uk','ka','en','de']);
 const MAX_ITEMS=8;
@@ -60,56 +60,72 @@ const LANGUAGE_NAMES=Object.freeze({
   de:'German'
 });
 
-function extractGeneratedText(result){
-  const seen=new Set();
+// Stage 12.14.4: translation integrity guard. A reasoning model once returned
+// its English chain-of-thought as the "translation". Only a schema-shaped
+// answer which also passes strict single-line checks may leave this endpoint.
+const TRANSLATION_SCHEMA=Object.freeze({
+  type:'object',
+  properties:{translation:{type:'string'}},
+  required:['translation'],
+  additionalProperties:false
+});
 
-  function walk(value,depth=0){
-    if(value==null||depth>7)return '';
-    if(typeof value==='string'){
-      const text=value.trim();
-      return text;
-    }
-    if(typeof value!=='object'||seen.has(value))return '';
-    seen.add(value);
+const AI_REASONING_PATTERNS=Object.freeze([
+  /\b(?:okay|alright),?\s+let(?:'|’)?s\s+(?:tackle|translate|work through|break\s+(?:this|it)\s+down)/i,
+  /\bthe user(?:'s)?\s+(?:asks|wants|provided|sentence|text)/i,
+  /\b(?:source|original|target)\s+(?:sentence|text|phrase|language)\b/i,
+  /\b(?:translate|translating|translated)\s+(?:this|the|it)\s+(?:sentence|line|phrase|text)\b/i,
+  /\bputting it all together\b/i,
+  /\bi need to\s+(?:translate|make sure|check)\b/i,
+  /\b(?:here(?:'|’)?s|the)\s+(?:final\s+)?translation\b/i,
+  /<\/?think>|```|^\s*(?:analysis|reasoning)\s*:/im
+]);
 
-    // Prefer known completion fields first.
-    const preferred=['response','output_text','translated_text','content','text','answer','result'];
-    for(const key of preferred){
-      const candidate=value?.[key];
-      if(typeof candidate==='string'&&candidate.trim())return candidate.trim();
-      if(Array.isArray(candidate)){
-        for(const item of candidate){
-          const nested=walk(item,depth+1);
-          if(nested)return nested;
-        }
-      }
-    }
-
-    const choice=value?.choices?.[0];
-    if(choice){
-      const nested=walk(choice,depth+1);
-      if(nested)return nested;
-    }
-
-    const message=value?.message;
-    if(message){
-      const nested=walk(message,depth+1);
-      if(nested)return nested;
-    }
-
-    // Last resort: inspect remaining nested objects, but ignore metadata/reasoning.
-    for(const [key,candidate] of Object.entries(value)){
-      if(['id','object','model','created','usage','system_fingerprint','service_tier',
-          'reasoning','reasoning_content','finish_reason'].includes(key))continue;
-      if(candidate&&typeof candidate==='object'){
-        const nested=walk(candidate,depth+1);
-        if(nested)return nested;
-      }
-    }
-    return '';
+function targetScriptShare(value,target){
+  let relevant=0;
+  let matching=0;
+  for(const char of String(value||'')){
+    const latin=/[A-Za-zÄÖÜäöüß]/.test(char);
+    const cyrillic=/[\u0400-\u04ff]/.test(char);
+    const georgian=/[\u10a0-\u10ff]/.test(char);
+    if(!latin&&!cyrillic&&!georgian)continue;
+    relevant+=1;
+    if((target==='ka'&&georgian)||((target==='ru'||target==='uk')&&cyrillic)||((target==='en'||target==='de')&&latin))matching+=1;
   }
+  return relevant?matching/relevant:1;
+}
 
-  return walk(result);
+function validateTranslatedLine(candidate,source,target){
+  let value=String(candidate||'').trim();
+  const original=String(source||'').trim();
+  if(!value)return '';
+  if((value.startsWith('"')&&value.endsWith('"'))||(value.startsWith('“')&&value.endsWith('”'))){
+    value=value.slice(1,-1).trim();
+  }
+  if(!value||/[\r\n]/.test(value))return '';
+  if(AI_REASONING_PATTERNS.some(pattern=>pattern.test(value)))return '';
+  const maxLength=Math.max(180,Math.min(3600,original.length*3+180));
+  if(value.length>maxLength)return '';
+  if(['ru','uk','ka'].includes(target)&&targetScriptShare(value,target)<0.4){
+    const properName=/^[A-Z0-9][A-Za-z0-9 .&'’\-]{0,80}$/.test(original);
+    if(!properName)return '';
+  }
+  return value;
+}
+
+function extractStructuredTranslation(result){
+  const candidates=[result?.response,result?.choices?.[0]?.message?.content,result?.output_text];
+  for(const candidate of candidates){
+    if(candidate&&typeof candidate==='object'&&typeof candidate.translation==='string')return candidate.translation;
+    if(typeof candidate!=='string')continue;
+    const text=candidate.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'');
+    if(!text.startsWith('{'))continue;
+    try{
+      const parsed=JSON.parse(text);
+      if(typeof parsed?.translation==='string')return parsed.translation;
+    }catch(error){}
+  }
+  return '';
 }
 
 async function runPrimaryOnce(ai,value,source,target){
@@ -118,7 +134,8 @@ async function runPrimaryOnce(ai,value,source,target){
     source_lang:source,
     target_lang:target
   });
-  return typeof result?.translated_text==='string' ? result.translated_text.trim() : '';
+  const candidate=typeof result?.translated_text==='string' ? result.translated_text : '';
+  return validateTranslatedLine(candidate,value,target);
 }
 
 async function pivotTranslateText(ai,value,source,target){
@@ -135,8 +152,8 @@ async function fallbackTranslateText(ai,value,source,target){
   const targetName=LANGUAGE_NAMES[target]||target;
   const prompt=[
     `Translate this single line from ${sourceName} to ${targetName}.`,
-    'Return ONLY the translated line.',
-    'Do not explain, do not add quotation marks, labels, notes, or markdown.',
+    'Return the translation in the required JSON field.',
+    'Never explain, analyze, quote the source, add notes, or use markdown.',
     'Preserve the emotional meaning and natural wording.',
     '',
     value
@@ -144,16 +161,16 @@ async function fallbackTranslateText(ai,value,source,target){
 
   const result=await ai.run(FALLBACK_MODEL,{
     messages:[
-      {role:'system',content:'You are a precise professional translator. Return only the translation.'},
+      {role:'system',content:'You are a precise professional translator. Fill only the required JSON schema.'},
       {role:'user',content:prompt}
     ],
     temperature:0,
-    reasoning_effort:'low',
-    max_completion_tokens:1024,
+    max_tokens:512,
+    response_format:{type:'json_schema',json_schema:TRANSLATION_SCHEMA},
     stream:false
   });
 
-  return extractGeneratedText(result);
+  return validateTranslatedLine(extractStructuredTranslation(result),value,target);
 }
 
 async function secondFallbackTranslateText(ai,value,source,target){
@@ -161,19 +178,24 @@ async function secondFallbackTranslateText(ai,value,source,target){
   const targetName=LANGUAGE_NAMES[target]||target;
   const prompt=[
     `Translate the following single line from ${sourceName} to ${targetName}.`,
-    'Output only the translated line. No explanation, no markdown, no quotes.',
+    'Return the translation in the required JSON field.',
+    'Never explain, analyze, quote the source, add notes, or use markdown.',
     '',
     value
   ].join('\n');
 
   const result=await ai.run(SECOND_FALLBACK_MODEL,{
-    prompt,
-    temperature:0.1,
+    messages:[
+      {role:'system',content:'Translate precisely and fill only the required JSON schema.'},
+      {role:'user',content:prompt}
+    ],
+    temperature:0,
     max_tokens:512,
+    response_format:{type:'json_schema',json_schema:TRANSLATION_SCHEMA},
     stream:false
   });
 
-  return extractGeneratedText(result);
+  return validateTranslatedLine(extractStructuredTranslation(result),value,target);
 }
 
 async function translateText(ai,text,source,target){

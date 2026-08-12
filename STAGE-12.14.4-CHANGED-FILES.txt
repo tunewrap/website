@@ -1,0 +1,16 @@
+Stage 12.14.4 changes installed by the self-contained installer:
+
+MODIFIED
+admin/admin.js
+admin/index.html
+functions/api/admin/translate.js
+package.json
+scripts/stage-12.14.3-independent-admin-persistence-test.js
+
+ADDED
+scripts/install-stage-12.14.4-translation-integrity.js
+scripts/stage-12.14.4-translation-integrity-test.js
+README-STAGE-12.14.4.txt
+STAGE-12.14.4-CHANGED-FILES.txt
+
+D1 migration: not required.

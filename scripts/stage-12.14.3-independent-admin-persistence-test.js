@@ -18,7 +18,7 @@ const syntax=spawnSync(process.execPath,['--check',path.join(root,'admin','admin
 assert.equal(syntax.status,0,syntax.stderr||syntax.stdout);
 
 assert.ok(admin.includes('Stage 12.14.3: Independent Admin Persistence'));
-assert.ok(html.includes('/admin/admin.js?v=12.14.3'));
+assert.ok(/\/admin\/admin\.js\?v=12\.14\.(?:3|[4-9]|\d{2,})/.test(html));
 assert.ok(tracksApi.includes("'cache-control':'no-store'"));
 assert.equal(tracksApi.includes('stale-while-revalidate'),false);
 

@@ -281,6 +281,7 @@ function readForm(){
   const category={...(state.current?.category||{})};if(nodes.category.value.trim())category[primary]=nodes.category.value.trim();else delete category[primary];
   return{...(state.current||{}),title:nodes.title.value.trim(),originalTitle:state.current?.originalTitle||nodes.title.value.trim(),titles,descriptions,section:nodes.section.value,language:nodes.language.value,artist:nodes.artist.value.trim()||'TuneWrap',album:nodes.album.value.trim(),category,categoryIds:nodes.section.value==='stories'?selectedStoryCategoryIds():[],tags:nodes.tags.value.split(',').map(value=>value.trim()).filter(Boolean),lyrics,translation,order:Number(nodes.order.value)||state.current?.order||0,featured:nodes.featured.checked,audio:state.current?.audio||'',cover:state.current?.cover||'',artwork:state.current?.artwork||{},duration:state.current?.duration||0,durationLabel:state.current?.durationLabel||''};
 }
+
 // ---------- Stage 12.14.3: Independent Admin Persistence ----------
 // Existing tracks are patched field-by-field. Unchanged values are never sent,
 // so editing one property cannot overwrite a newer value in another property.
@@ -301,9 +302,10 @@ function buildMetadataPatch(current,next){
   return patch;
 }
 
-function needsBackgroundTranslation(isNew,patch){
+function needsBackgroundTranslation(isNew,patch,track){
   if(isNew)return true;
-  return ['title','titles','descriptions','lyrics','language'].some(field=>Object.prototype.hasOwnProperty.call(patch,field));
+  if(['title','titles','descriptions','lyrics','language'].some(field=>Object.prototype.hasOwnProperty.call(patch,field)))return true;
+  return Boolean(track&&hasUnsafeTranslations(track));
 }
 
 function markAudioCommitted(saved){
@@ -338,15 +340,69 @@ function isCollapsedStructuredTranslation(sourceText,targetText){
   return sourceNonEmpty>=6&&sourceBreaks>=5&&targetBreaks<=1;
 }
 
+// Stage 12.14.4: detect reasoning/analysis accidentally returned by an AI
+// model instead of a localized value, so a later publish can repair it.
+const AI_TRANSLATION_CONTAMINATION=Object.freeze([
+  /\b(?:okay|alright),?\s+let(?:'|’)?s\s+(?:tackle|translate|work through|break\s+(?:this|it)\s+down)/i,
+  /\bthe user(?:'s)?\s+(?:asks|wants|provided|sentence|text)/i,
+  /\b(?:source|original|target)\s+(?:sentence|text|phrase|language)\b/i,
+  /\b(?:translate|translating|translated)\s+(?:this|the|it)\s+(?:sentence|line|phrase|text)\b/i,
+  /\bputting it all together\b/i,
+  /\bi need to\s+(?:translate|make sure|check)\b/i,
+  /\b(?:here(?:'|’)?s|the)\s+(?:final\s+)?translation\b/i,
+  /<\/?think>|```|^\s*(?:analysis|reasoning)\s*:/im
+]);
+
+function localizedScriptShare(value,target){
+  let relevant=0;
+  let matching=0;
+  for(const char of String(value||'')){
+    const latin=/[A-Za-zÄÖÜäöüß]/.test(char);
+    const cyrillic=/[\u0400-\u04ff]/.test(char);
+    const georgian=/[\u10a0-\u10ff]/.test(char);
+    if(!latin&&!cyrillic&&!georgian)continue;
+    relevant+=1;
+    if((target==='ka'&&georgian)||((target==='ru'||target==='uk')&&cyrillic)||((target==='en'||target==='de')&&latin))matching+=1;
+  }
+  return relevant?matching/relevant:1;
+}
+
+function isUnsafeMachineTranslation(sourceText,targetText,target){
+  const source=String(sourceText||'').trim();
+  const value=String(targetText||'').trim();
+  if(!source||!value)return false;
+  if(AI_TRANSLATION_CONTAMINATION.some(pattern=>pattern.test(value)))return true;
+  if(value.length>Math.max(420,source.length*4+240))return true;
+  const sourceLines=Math.max(1,source.split(/\r?\n/).filter(line=>line.trim()).length);
+  const targetLines=Math.max(1,value.split(/\r?\n/).filter(line=>line.trim()).length);
+  if(targetLines>sourceLines*3+8&&value.length>source.length*2)return true;
+  if(['ru','uk','ka'].includes(target)&&value.length>120&&localizedScriptShare(value,target)<0.35)return true;
+  return false;
+}
+
+function hasUnsafeTranslations(track){
+  if(!track)return false;
+  const source=PRIMARY_LOCALE[track.language]||'ru';
+  const sourceTitle=track.titles?.[source]||track.title||'';
+  const sourceDescription=track.descriptions?.[source]||'';
+  const sourceLyrics=track.lyrics?.[source]||'';
+  return UI_LOCALES.some(([locale])=>locale!==source&&(
+    isUnsafeMachineTranslation(sourceTitle,track.titles?.[locale],locale)||
+    isUnsafeMachineTranslation(sourceDescription,track.descriptions?.[locale],locale)||
+    isUnsafeMachineTranslation(sourceLyrics,track.lyrics?.[locale],locale)
+  ));
+}
+
 function missingTranslationTargets(track){
   const source=PRIMARY_LOCALE[track.language]||'ru';
+  const sourceTitle=track.titles?.[source]||track.title||'';
   const sourceDescription=track.descriptions?.[source]||'';
   const sourceLyrics=track.lyrics?.[source]||'';
   return UI_LOCALES.map(([locale])=>locale).filter(locale=>{
     if(locale===source)return false;
-    return (track.title&&!track.titles?.[locale]) ||
-      (sourceDescription&&!track.descriptions?.[locale]) ||
-      (sourceLyrics&&(!track.lyrics?.[locale]||isCollapsedStructuredTranslation(sourceLyrics,track.lyrics?.[locale])));
+    return (sourceTitle&&(!track.titles?.[locale]||isUnsafeMachineTranslation(sourceTitle,track.titles?.[locale],locale))) ||
+      (sourceDescription&&(!track.descriptions?.[locale]||isUnsafeMachineTranslation(sourceDescription,track.descriptions?.[locale],locale))) ||
+      (sourceLyrics&&(!track.lyrics?.[locale]||isCollapsedStructuredTranslation(sourceLyrics,track.lyrics?.[locale])||isUnsafeMachineTranslation(sourceLyrics,track.lyrics?.[locale],locale)));
   });
 }
 
@@ -382,19 +438,22 @@ async function translateItemsChunked(sourceLanguage,target,items){
 }
 
 async function translateOneTarget(track,source,target){
+  const sourceTitle=track.titles?.[source]||track.title||'';
   const sourceDescription=track.descriptions?.[source]||'';
   const sourceLyrics=track.lyrics?.[source]||'';
+  const targetTitle=track.titles?.[target]||'';
+  const targetDescription=track.descriptions?.[target]||'';
   const targetLyrics=track.lyrics?.[target]||'';
 
-  const needsTitle=Boolean(track.title&&!track.titles?.[target]);
-  const needsDescription=Boolean(sourceDescription&&!track.descriptions?.[target]);
-  const needsLyrics=Boolean(sourceLyrics&&(!targetLyrics||isCollapsedStructuredTranslation(sourceLyrics,targetLyrics)));
+  const needsTitle=Boolean(sourceTitle&&(!targetTitle||isUnsafeMachineTranslation(sourceTitle,targetTitle,target)));
+  const needsDescription=Boolean(sourceDescription&&(!targetDescription||isUnsafeMachineTranslation(sourceDescription,targetDescription,target)));
+  const needsLyrics=Boolean(sourceLyrics&&(!targetLyrics||isCollapsedStructuredTranslation(sourceLyrics,targetLyrics)||isUnsafeMachineTranslation(sourceLyrics,targetLyrics,target)));
 
   const items=[];
   let descriptionPack=null;
   let lyricsPack=null;
 
-  if(needsTitle)items.push({id:'title',kind:'title',text:track.title});
+  if(needsTitle)items.push({id:'title',kind:'title',text:sourceTitle});
   if(needsDescription){
     descriptionPack=buildLineItems('description',sourceDescription);
     items.push(...descriptionPack.items);
@@ -470,26 +529,37 @@ async function completeMissingTranslations(saved){
   if(!saved?.id)return;
   const targets=missingTranslationTargets(saved);
   if(!targets.length)return;
+  const source=PRIMARY_LOCALE[saved.language]||'ru';
+  let baseline=saved;
+  let repaired=0;
 
-  const translated=await autoTranslateMissing(saved);
-  const latestPayload=await api(`/api/admin/tracks/${encodeURIComponent(saved.id)}`);
-  const latest=latestPayload?.track;
-  if(!latest)return;
+  // Commit each language independently. A later model/rate-limit failure must
+  // not discard translations which were already completed successfully.
+  for(let index=0;index<targets.length;index++){
+    const target=targets[index];
+    const label=UI_LOCALES.find(([code])=>code===target)?.[1]||target.toUpperCase();
+    toast(`Автоперевод ${label} · ${index+1}/${targets.length}`);
+    const translated=await translateOneTarget(baseline,source,target);
+    const latestPayload=await api(`/api/admin/tracks/${encodeURIComponent(saved.id)}`);
+    const latest=latestPayload?.track;
+    if(!latest)continue;
 
-  const patch={};
-  for(const field of ['titles','descriptions','lyrics']){
-    const merged=mergeBackgroundLocaleField(saved[field],translated[field],latest[field]);
-    if(merged)patch[field]=merged;
+    const patch={};
+    for(const field of ['titles','descriptions','lyrics']){
+      const merged=mergeBackgroundLocaleField(baseline[field],translated[field],latest[field]);
+      if(merged)patch[field]=merged;
+    }
+
+    if(Object.keys(patch).length){
+      baseline=(await api(`/api/admin/tracks/${encodeURIComponent(saved.id)}`,{
+        method:'PATCH',
+        body:patch
+      })).track;
+      repaired+=1;
+    }else baseline=latest;
   }
 
-  if(!Object.keys(patch).length)return;
-
-  await api(`/api/admin/tracks/${encodeURIComponent(saved.id)}`,{
-    method:'PATCH',
-    body:patch
-  });
-
-  await loadCatalog('Изменения сохранены · переводы дополнены');
+  await loadCatalog(repaired?'Изменения сохранены · переводы проверены и исправлены':'Переводы уже актуальны');
 }
 
 function queueBackgroundTranslations(saved){
@@ -537,7 +607,7 @@ async function persist(publish){
   if(state.busy)return null;let track=readForm();const errors=validateClient(track,publish);if(errors.length){showErrors(errors);return null;}showErrors([]);const operation=new AbortController();state.editorAbortController=operation;setBusy(true);
   const isNew=!state.current;
   const metadataPatch=isNew?{}:buildMetadataPatch(state.current,track);
-  const translateAfterSave=needsBackgroundTranslation(isNew,metadataPatch);
+  const translateAfterSave=needsBackgroundTranslation(isNew,metadataPatch,track);
   const completed=[];
   try{
     // Metadata, audio and cover are independent commits. A later failure cannot
