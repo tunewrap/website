@@ -1,5 +1,7 @@
 const LANGUAGES=['en','ru','uk','ka','de'];
 const AI_CODES={ru:'RU',uk:'UA',ka:'GE',en:'EN',de:'DE'};
+const TRANSLATION_UNIT_LIMIT=1800;
+const TRANSLATION_BATCH_SIZE=8;
 
 const GROUPS=[
   {
@@ -617,6 +619,89 @@ function translationEntries(source){
   return entries;
 }
 
+function splitLongTranslationLine(value){
+  let remaining=String(value??'').trim();
+  if(!remaining)return [];
+  const output=[];
+
+  while(remaining.length>TRANSLATION_UNIT_LIMIT){
+    const window=remaining.slice(0,TRANSLATION_UNIT_LIMIT+1);
+    const minimum=Math.min(500,Math.floor(TRANSLATION_UNIT_LIMIT/3));
+    let cut=-1;
+
+    // Prefer a sentence boundary so translated legal text remains natural.
+    const sentence=/[.!?;:…][»”’"')\]]?\s+/g;
+    let match;
+    while((match=sentence.exec(window))){
+      const candidate=match.index+match[0].length;
+      if(candidate>=minimum)cut=candidate;
+    }
+    if(cut<minimum)cut=window.lastIndexOf(' ');
+    if(cut<minimum)cut=TRANSLATION_UNIT_LIMIT;
+
+    const part=remaining.slice(0,cut).trim();
+    if(part)output.push(part);
+    remaining=remaining.slice(cut).trimStart();
+  }
+
+  if(remaining)output.push(remaining);
+  return output;
+}
+
+function prepareTranslationEntry(entry){
+  const tokens=[];
+  const units=[];
+  let unitIndex=0;
+
+  String(entry.text??'').split(/(\r?\n)/).forEach(part=>{
+    if(!part)return;
+    if(/^\r?\n$/.test(part)||!part.trim()){
+      tokens.push({literal:part});
+      return;
+    }
+
+    const leading=part.match(/^\s*/)?.[0]||'';
+    const trailing=part.match(/\s*$/)?.[0]||'';
+    if(leading)tokens.push({literal:leading});
+
+    splitLongTranslationLine(part).forEach((text,index)=>{
+      if(index)tokens.push({literal:' '});
+      const id=`${entry.id}::${unitIndex++}`;
+      const unit={id,text};
+      units.push(unit);
+      tokens.push({unit:id});
+    });
+
+    if(trailing)tokens.push({literal:trailing});
+  });
+
+  return {
+    entry,
+    units,
+    compose(translations){
+      return tokens.map(token=>{
+        if(Object.prototype.hasOwnProperty.call(token,'literal'))return token.literal;
+        return translations[token.unit]||'';
+      }).join('');
+    }
+  };
+}
+
+function prepareTranslationEntries(entries){
+  return entries.map(prepareTranslationEntry).filter(item=>item.units.length);
+}
+
+function setTranslationStatus(message,type=''){
+  const status=$('#siteTranslationStatus');
+  if(!status)return;
+  status.hidden=!message;
+  status.textContent=message;
+  status.classList.toggle('is-error',type==='error');
+  status.classList.toggle('is-success',type==='success');
+}
+
+function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
+
 async function translateChunk(source,target,items){
   const response=await fetch('/api/admin/translate',{
     method:'POST',
@@ -628,8 +713,52 @@ async function translateChunk(source,target,items){
     })
   });
   const data=await response.json().catch(()=>null);
-  if(!response.ok||!data?.ok)throw new Error(data?.error||`HTTP ${response.status}`);
+  if(!response.ok||!data?.ok){
+    const error=new Error(data?.error||`HTTP ${response.status}`);
+    error.status=response.status;
+    throw error;
+  }
   return data.translations||{};
+}
+
+async function translateChunkWithRetry(source,target,items){
+  let lastError;
+  for(let attempt=1;attempt<=2;attempt++){
+    try{return await translateChunk(source,target,items);}
+    catch(error){
+      lastError=error;
+      const message=String(error?.message||'');
+      const retryable=[429,502,503,504].includes(Number(error?.status))&&
+        !/(3036|3006|Too many subrequests)/i.test(message);
+      if(!retryable||attempt===2)throw error;
+      await wait(700*attempt);
+    }
+  }
+  throw lastError;
+}
+
+async function translatePreparedTarget(source,target,prepared,button){
+  const units=prepared.flatMap(item=>item.units);
+  const translated={};
+
+  for(let offset=0;offset<units.length;offset+=TRANSLATION_BATCH_SIZE){
+    const chunk=units.slice(offset,offset+TRANSLATION_BATCH_SIZE);
+    const progress=Math.min(offset+chunk.length,units.length);
+    button.textContent=`${AI_CODES[target]} · ${progress}/${units.length}`;
+    setTranslationStatus(`Перевод ${AI_CODES[target]}: ${progress} из ${units.length} частей…`);
+    const result=await translateChunkWithRetry(source,target,chunk);
+    for(const unit of chunk){
+      const value=result[unit.id];
+      if(typeof value!=='string'||!value.trim()){
+        throw new Error(`${AI_CODES[target]}: не переведена часть ${unit.id}`);
+      }
+      translated[unit.id]=value.trim();
+    }
+  }
+
+  // Commit a locale only after every one of its parts succeeded. A failed
+  // target can never leave a half-translated public language in memory.
+  prepared.forEach(item=>item.entry.set(target,item.compose(translated)));
 }
 
 async function autoTranslate(){
@@ -638,30 +767,43 @@ async function autoTranslate(){
   const targets=LANGUAGES.filter(lang=>lang!==source);
   const entries=translationEntries(source);
   if(!entries.length){toast('В текущем языке нет текста для перевода.','error');return;}
+  const prepared=prepareTranslationEntries(entries);
+  if(!prepared.length){toast('В текущем языке нет текста для перевода.','error');return;}
 
   if(!confirm(`Перевести ${AI_CODES[source]} во все остальные языки? Существующие переводы этих полей будут обновлены.`))return;
 
   const button=$('#translateSiteButton');
+  const completed=[];
+  const failed=[];
   state.busy=true;
   button.disabled=true;
+  setTranslationStatus(`Подготовлено ${prepared.flatMap(item=>item.units).length} частей. Начинаем ${targets.map(target=>AI_CODES[target]).join(', ')}…`);
   try{
     for(const target of targets){
-      for(let offset=0;offset<entries.length;offset+=8){
-        const chunk=entries.slice(offset,offset+8);
-        button.textContent=`${AI_CODES[target]} · ${Math.min(offset+8,entries.length)}/${entries.length}`;
-        const translated=await translateChunk(source,target,chunk);
-        chunk.forEach(entry=>{
-          const value=translated[entry.id];
-          if(typeof value==='string'&&value.trim())entry.set(target,value.trim());
-        });
+      try{
+        await translatePreparedTarget(source,target,prepared,button);
+        completed.push(target);
+      }catch(error){
+        console.error(`TuneWrap Site CMS ${AI_CODES[target]} translation failed`,error);
+        failed.push({target,error});
       }
     }
-    markDirty();
-    render();
-    toast('Переводы подготовлены. Нажмите «Сохранить».','success');
-  }catch(error){
-    console.error(error);
-    toast(`Автоперевод остановлен: ${error.message}`,'error');
+
+    if(completed.length){
+      markDirty();
+      render();
+    }
+
+    const done=completed.map(target=>AI_CODES[target]).join(', ')||'—';
+    if(failed.length){
+      const missing=failed.map(item=>AI_CODES[item.target]).join(', ');
+      const firstError=String(failed[0].error?.message||'неизвестная ошибка');
+      setTranslationStatus(`Готово: ${done}. Не переведено: ${missing}. ${firstError}${completed.length?' Сохраните готовые языки.':''}`,'error');
+      toast(`Перевод завершён частично. Не готовы: ${missing}.`,'error');
+    }else{
+      setTranslationStatus(`Переведено: ${done}. Нажмите «Сохранить изменения».`,'success');
+      toast('Все четыре языка переведены. Нажмите «Сохранить».','success');
+    }
   }finally{
     state.busy=false;
     button.disabled=false;

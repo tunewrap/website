@@ -1,6 +1,9 @@
 .site-admin-shell{padding-bottom:112px}
 .site-intro{align-items:flex-end}
 .site-intro-actions{display:flex;gap:10px;flex-wrap:wrap}
+.site-translation-status{display:block;margin:-12px 0 20px;padding:11px 13px;border:1px solid rgba(217,164,65,.2);border-radius:13px;color:#b8b0a6;background:rgba(217,164,65,.045);font-size:11px;line-height:1.5}
+.site-translation-status.is-success{border-color:rgba(112,177,111,.32);color:#add0a9;background:rgba(112,177,111,.07)}
+.site-translation-status.is-error{border-color:rgba(203,99,99,.32);color:#d8a09a;background:rgba(203,99,99,.07)}
 .site-language-bar{position:sticky;z-index:30;top:82px;display:flex;align-items:center;justify-content:space-between;gap:20px;margin:0 0 20px;padding:13px 15px;border:1px solid rgba(217,164,65,.16);border-radius:18px;background:rgba(10,10,11,.96);box-shadow:0 16px 38px rgba(0,0,0,.22);backdrop-filter:blur(18px)}
 .site-language-bar small{display:block;margin-bottom:8px;color:#d9a441;font-size:9px;font-weight:800;letter-spacing:.14em}
 .site-language-bar p{max-width:48ch;color:#8f8992;font-size:11px;line-height:1.5}

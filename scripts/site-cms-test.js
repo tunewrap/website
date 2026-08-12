@@ -35,7 +35,8 @@ assert.match(adminHtml,/Автоперевести язык/);
 
 assert.match(adminJs,/\/api\/admin\/site-content/);
 assert.match(adminJs,/\/api\/admin\/translate/);
-assert.match(adminJs,/offset\+=8/);
+assert.match(adminJs,/TRANSLATION_BATCH_SIZE=8/);
+assert.match(adminJs,/offset\+=TRANSLATION_BATCH_SIZE/);
 assert.match(adminJs,/function addPayment\(/);
 
 assert.match(runtime,/TUNEWRAP_SITE_CMS/);
