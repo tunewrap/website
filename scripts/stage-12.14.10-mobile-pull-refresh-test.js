@@ -13,7 +13,7 @@ const core=read('css/style.css');
 const runtime=read('js/script.js');
 const pkg=JSON.parse(read('package.json'));
 
-assert.ok(html.includes('<meta name="tunewrap-build" content="12.14.10">'));
+assert.match(html,/<meta name="tunewrap-build" content="12\.14\.(?:10|11)">/);
 assert.ok(html.includes('/css/stage-12.14.10-mobile-pull-refresh.css?v=12.14.10'));
 
 // The regression was caused by Stage 6/8 deliberately stopping overscroll at
@@ -28,8 +28,8 @@ assert.match(pull,/html,\s*\n\s*body\{[\s\S]{0,260}?overscroll-behavior-y:auto!i
 assert.match(pull,/\.app-scroll\{[\s\S]{0,180}?overscroll-behavior-y:auto!important;/);
 assert.match(pull,/overscroll-behavior-x:contain!important/);
 
-// No synthetic refresh handler and no touchmove preventDefault are introduced.
-// Existing screen snapping and passive swipe navigation remain authoritative.
+// This CSS-only stage introduces no synthetic handler of its own. The later
+// controlled fallback is isolated in its own Stage 12.14.11 asset.
 assert.doesNotMatch(pull,/touchstart|touchmove|preventDefault|location\.reload/);
 assert.ok(core.includes('scroll-snap-type:y mandatory'));
 assert.ok(runtime.includes("appScroll.addEventListener('touchstart'"));

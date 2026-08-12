@@ -1,0 +1,75 @@
+/* TuneWrap Stage 12.14.11 — visible pull-to-refresh for the fixed phone viewport. */
+
+@media (max-width:620px) and (pointer:coarse){
+  .app-scroll.is-pull-refreshing,
+  .app-scroll.is-pull-settling{
+    transform:translate3d(0,var(--tw-pull-distance,0),0);
+    will-change:transform;
+  }
+
+  .app-scroll.is-pull-refreshing{
+    transition:none!important;
+  }
+
+  .app-scroll.is-pull-settling{
+    transition:transform 220ms cubic-bezier(.22,.78,.22,1)!important;
+  }
+
+  .tune-wrap-pull-refresh{
+    --tw-pull-progress:0;
+    position:fixed;
+    z-index:65;
+    top:calc(var(--app-header-height) + 9px);
+    left:50%;
+    display:flex;
+    min-height:38px;
+    align-items:center;
+    gap:9px;
+    padding:8px 13px;
+    border:1px solid rgba(217,164,65,.3);
+    border-radius:999px;
+    opacity:0;
+    color:#eee7dc;
+    background:rgba(12,12,14,.96);
+    box-shadow:0 12px 30px rgba(0,0,0,.42);
+    font:700 10px/1.2 Manrope,Arial,sans-serif;
+    pointer-events:none;
+    transform:translate3d(-50%,-54px,0) scale(.96);
+    transition:opacity 160ms ease,transform 220ms cubic-bezier(.22,.78,.22,1);
+  }
+
+  .tune-wrap-pull-refresh.is-visible{
+    opacity:calc(.45 + var(--tw-pull-progress)*.55);
+    transform:translate3d(-50%,0,0) scale(1);
+  }
+
+  .tune-wrap-pull-refresh span{
+    width:17px;
+    height:17px;
+    flex:0 0 17px;
+    border:2px solid rgba(217,164,65,.28);
+    border-top-color:#e0ab3c;
+    border-radius:50%;
+    transform:rotate(calc(var(--tw-pull-progress)*260deg));
+  }
+
+  .tune-wrap-pull-refresh.is-ready span{
+    border-color:#e0ab3c;
+  }
+
+  .tune-wrap-pull-refresh.is-loading span{
+    animation:tune-wrap-pull-spin .65s linear infinite;
+  }
+}
+
+@keyframes tune-wrap-pull-spin{
+  to{transform:rotate(360deg)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .app-scroll.is-pull-settling,
+  .tune-wrap-pull-refresh{
+    transition:none!important;
+  }
+}
+
