@@ -77,7 +77,23 @@ async function api(path,options={}){
   if(!response.ok){const details=Array.isArray(payload?.details)?'\n'+payload.details.join('\n'):'';throw new Error((payload?.error||`HTTP ${response.status}`)+details);}
   return payload;
 }
-function setBusy(value){state.busy=value;document.querySelectorAll('button').forEach(button=>button.disabled=value);}
+function setBusy(value){
+  state.busy=value;
+  const keepActive=new Set(['previewButton','closePreviewButton','previewBackdrop']);
+  document.querySelectorAll('button').forEach(button=>{
+    if(keepActive.has(button.id))return;
+    if(value){
+      if(!button.hasAttribute('data-busy-was-disabled')){
+        button.dataset.busyWasDisabled=button.disabled?'1':'0';
+      }
+      button.disabled=true;
+    }else if(button.hasAttribute('data-busy-was-disabled')){
+      button.disabled=button.dataset.busyWasDisabled==='1';
+      delete button.dataset.busyWasDisabled;
+    }
+  });
+  if(nodes.form)nodes.form.setAttribute('aria-busy',String(Boolean(value)));
+}
 function categoryLabel(item){return item?.labels?.ru||item?.labels?.en||item?.id||'Категория';}
 function enabledStoryCategories(){return (state.storyCategories||[]).filter(item=>item?.enabled!==false).slice().sort((a,b)=>(a.order||99)-(b.order||99)||a.id.localeCompare(b.id));}
 function selectedStoryCategoryIds(){return Array.from(state.selectedStoryCategories);}
@@ -365,10 +381,70 @@ async function autoTranslateMissing(track){
 function validateClient(track,publish){const errors=[];if(!track.title)errors.push('Введите название');if(!track.section)errors.push('Выберите раздел');if(!track.language)errors.push('Выберите язык');if(publish&&!track.audio&&!state.audioFile)errors.push('Для публикации выберите MP3');if(state.coverFile&&!state.coverInfo)errors.push('Дождитесь проверки обложки');return errors;}
 function showErrors(errors){nodes.formErrors.textContent=errors.join('\n');nodes.formErrors.hidden=!errors.length;if(errors.length)nodes.formErrors.scrollIntoView({behavior:'smooth',block:'center'});}
 function xhrUpload(path,file,progress,headers={}){return new Promise((resolve,reject)=>{const xhr=new XMLHttpRequest();xhr.open('POST',path);xhr.responseType='json';xhr.setRequestHeader('content-type',file.type||'application/octet-stream');xhr.setRequestHeader('x-file-name',encodeURIComponent(file.name));Object.entries(headers).forEach(([key,value])=>xhr.setRequestHeader(key,String(value)));progress.hidden=false;xhr.upload.onprogress=event=>{if(event.lengthComputable)progress.value=Math.round(event.loaded/event.total*100);};xhr.onload=()=>xhr.status>=200&&xhr.status<300?resolve(xhr.response):reject(new Error(xhr.response?.error||`Upload HTTP ${xhr.status}`));xhr.onerror=()=>reject(new Error('Загрузка прервана сетью'));xhr.send(file);});}
+
+// ---------- Stage 12.14: Admin Editor Reliability ----------
+// Saving/publishing must never wait for Workers AI. The track is persisted first;
+// missing translations are completed afterwards as a best-effort background task.
+function mergeBackgroundLocaleField(beforeField,translatedField,latestField){
+  const before=beforeField&&typeof beforeField==='object'?beforeField:{};
+  const translated=translatedField&&typeof translatedField==='object'?translatedField:{};
+  const latest=latestField&&typeof latestField==='object'?latestField:{};
+  const merged={...latest};
+  let changed=false;
+
+  for(const [locale,value] of Object.entries(translated)){
+    const beforeValue=before[locale]??'';
+    const latestValue=latest[locale]??'';
+    if(value===beforeValue)continue;
+
+    // Never overwrite a localization that the editor changed after this save.
+    if(latestValue===beforeValue){
+      merged[locale]=value;
+      changed=true;
+    }
+  }
+
+  return changed?merged:null;
+}
+
+async function completeMissingTranslations(saved){
+  if(!saved?.id)return;
+  const targets=missingTranslationTargets(saved);
+  if(!targets.length)return;
+
+  const translated=await autoTranslateMissing(saved);
+  const latestPayload=await api(`/api/admin/tracks/${encodeURIComponent(saved.id)}`);
+  const latest=latestPayload?.track;
+  if(!latest)return;
+
+  const patch={};
+  for(const field of ['titles','descriptions','lyrics']){
+    const merged=mergeBackgroundLocaleField(saved[field],translated[field],latest[field]);
+    if(merged)patch[field]=merged;
+  }
+
+  if(!Object.keys(patch).length)return;
+
+  await api(`/api/admin/tracks/${encodeURIComponent(saved.id)}`,{
+    method:'PATCH',
+    body:patch
+  });
+
+  await loadCatalog('Изменения сохранены · переводы дополнены');
+}
+
+function queueBackgroundTranslations(saved){
+  setTimeout(()=>{
+    completeMissingTranslations(saved).catch(error=>{
+      toast(`Изменения уже сохранены. Автоперевод не выполнен: ${error.message}`,true);
+    });
+  },0);
+}
+
 async function persist(publish){
   if(state.busy)return null;let track=readForm();const errors=validateClient(track,publish);if(errors.length){showErrors(errors);return null;}showErrors([]);setBusy(true);
   try{
-    track=await autoTranslateMissing(track);
+    // Stage 12.14: persist the editor changes first; AI translation runs after success.
     let saved;
     if(!state.current){saved=(await api('/api/admin/tracks',{method:'POST',body:track})).track;state.current=saved;nodes.trackId.value=saved.id;}
     else saved=(await api(`/api/admin/tracks/${encodeURIComponent(state.current.id)}`,{method:'PATCH',body:track})).track;
@@ -377,7 +453,7 @@ async function persist(publish){
     if(state.coverFile){const uploaded=await xhrUpload(`/api/admin/upload/cover?trackId=${encodeURIComponent(saved.id)}`,state.coverFile,nodes.coverProgress,{'x-image-width':state.coverInfo.width,'x-image-height':state.coverInfo.height});patch.cover=uploaded.url;patch.artwork=uploaded.artwork;}
     if(Object.keys(patch).length)saved=(await api(`/api/admin/tracks/${encodeURIComponent(saved.id)}`,{method:'PATCH',body:patch})).track;
     if(publish)saved=(await api(`/api/admin/tracks/${encodeURIComponent(saved.id)}/publish`,{method:'POST'})).track;
-    state.current=saved;setBusy(false);await loadCatalog(publish?'Трек опубликован':'Черновик сохранён');closeEditor();return saved;
+    state.current=saved;setBusy(false);await loadCatalog(publish?'Трек опубликован':'Черновик сохранён');closeEditor();queueBackgroundTranslations(saved);return saved;
   }catch(error){showErrors(error.message.split('\n'));toast(error.message,true);return null;}finally{setBusy(false);}
 }
 function showPreview(track=readForm()){
