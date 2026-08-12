@@ -19,7 +19,7 @@ const pkg=JSON.parse(read('package.json'));
 assert.ok(shared.includes('function cleanAnnouncement(value)'));
 assert.ok(shared.includes('announcement:cleanAnnouncement(value.announcement)'));
 
-assert.ok(adminHtml.includes('/admin/site-stage-12.12.css?v=12.12'));
+assert.match(adminHtml,/\/admin\/site-stage-12\.12\.css\?v=12\.(?:12|14\.8)/);
 assert.ok(adminJs.includes('function renderAnnouncement(){'));
 assert.ok(adminJs.includes("document.createTextNode('Показывать на сайте')"));
 assert.ok(adminJs.includes('announcement_label'));

@@ -31,6 +31,9 @@
 .site-announcement-note{
   margin-top:10px;color:#817b83;font-size:11px;line-height:1.5;
 }
+.site-announcement-note.is-warning{
+  color:#d9a441;
+}
 @media(max-width:760px){
   .site-announcement-admin .site-announcement-controls{grid-template-columns:1fr}
 }

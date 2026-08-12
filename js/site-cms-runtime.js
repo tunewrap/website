@@ -307,10 +307,68 @@
     return map[language()]||map.en;
   }
 
+  function normalizedAnnouncementIdentity(value){
+    return String(value??'')
+      .toLocaleLowerCase('ru-RU')
+      .normalize('NFKC')
+      .replace(/[^\p{Letter}\p{Number}]+/gu,' ')
+      .trim();
+  }
+
+  function launchAnnouncementCopy(){
+    const map={
+      en:{label:'COMING SOON!',title:'',text:'We’re launching our project very soon.'},
+      ru:{label:'СКОРО СТАРТ!',title:'',text:'Уже совсем скоро мы запускаем наш проект.'},
+      uk:{label:'НЕЗАБАРОМ СТАРТ!',title:'',text:'Уже зовсім скоро ми запускаємо наш проєкт.'},
+      ka:{label:'მალე ვიწყებთ!',title:'',text:'სულ მალე ჩვენს პროექტს ვიწყებთ.'},
+      de:{label:'BALD GEHT ES LOS!',title:'',text:'Schon sehr bald starten wir unser Projekt.'}
+    };
+    return map[language()]||map.en;
+  }
+
+  function isKnownLaunchAnnouncement(locale){
+    const identity=normalizedAnnouncementIdentity([
+      locale?.announcement_label,
+      locale?.announcement_title,
+      locale?.announcement_text
+    ].filter(Boolean).join(' '));
+    if(!identity)return false;
+    return [
+      'СКОРО СТАРТ! Уже совсем скоро мы запускаем наш проект.',
+      'COMING SOON! We’re launching our project very soon.',
+      'НЕЗАБАРОМ СТАРТ! Уже зовсім скоро ми запускаємо наш проєкт.',
+      'მალე ვიწყებთ! სულ მალე ჩვენს პროექტს ვიწყებთ.',
+      'BALD GEHT ES LOS! Schon sehr bald starten wir unser Projekt.'
+    ].some(value=>identity.includes(normalizedAnnouncementIdentity(value)));
+  }
+
+  function resolvedAnnouncementTexts(){
+    const exact=localized(config.texts)||{};
+    const hasExactContent=Boolean(
+      String(exact.announcement_title||'').trim()||
+      String(exact.announcement_text||'').trim()
+    );
+    if(hasExactContent)return exact;
+
+    const locales=Object.values(config.texts?.locales||{});
+    if(!locales.some(isKnownLaunchAnnouncement))return exact;
+
+    // Stage 12.14.8: the launch announcement existed in D1 only in RU.
+    // Supply its reviewed native copy without reintroducing a general RU/EN
+    // fallback for arbitrary CMS content.
+    const fallback=launchAnnouncementCopy();
+    return {
+      ...exact,
+      announcement_label:String(exact.announcement_label||fallback.label).trim(),
+      announcement_title:String(exact.announcement_title||fallback.title).trim(),
+      announcement_text:String(exact.announcement_text||fallback.text).trim()
+    };
+  }
+
   function patchAnnouncement(){
     const hero=$('#hero .hero-grid > div:first-child');
     const heroSection=$('#hero');
-    const texts=localized(config.texts)||{};
+    const texts=resolvedAnnouncementTexts();
     const announcement=config.announcement||{};
     if(!hero)return;
 

@@ -503,7 +503,17 @@ function renderAnnouncement(){
 
   const note=document.createElement('p');
   note.className='site-announcement-note';
-  note.textContent='Тексты объявления участвуют в кнопке «Автоперевести язык». Если период не указан, объявление показывается постоянно, пока включён переключатель.';
+  const missing=LANGUAGES.filter(code=>{
+    const copy=state.config.texts?.locales?.[code]||{};
+    return !String(copy.announcement_title||'').trim()&&!String(copy.announcement_text||'').trim();
+  });
+  const base='Тексты объявления участвуют в кнопке «Автоперевести язык». Если период не указан, объявление показывается постоянно, пока включён переключатель.';
+  if(announcement.enabled===true&&missing.length){
+    note.classList.add('is-warning');
+    note.textContent=`${base} Не заполнены языки: ${missing.map(code=>AI_CODES[code]).join(', ')}. Текущее стартовое объявление имеет встроенный перевод; перед изменением текста заполните все языки.`;
+  }else{
+    note.textContent=base;
+  }
   section.appendChild(note);
 }
 
