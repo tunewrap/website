@@ -118,7 +118,7 @@ function selectedPricing(){
 
 function localizedPricingName(offer){
   const locales=offer?.locales||{};
-  return locales[lang()]?.name||locales.en?.name||locales.ru?.name||offer?.id||'';
+  return locales[lang()]?.name||window.__tuneWrapPricingFallback?.offer?.(lang(),offer?.id)?.name||offer?.id||'';
 }
 
 function parsePrice(){

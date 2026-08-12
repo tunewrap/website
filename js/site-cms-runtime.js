@@ -22,7 +22,9 @@
   }
 
   function localized(bucket){
-    return bucket?.locales?.[language()]||bucket?.locales?.en||bucket?.locales?.ru||null;
+    // Core already contains complete EN/RU/UA/GE/DE copy. Missing CMS text
+    // must leave that same-language core copy intact, not inject EN or RU.
+    return bucket?.locales?.[language()]||null;
   }
 
   function normalize(value){
@@ -191,7 +193,7 @@
   }
 
   function paymentLocale(item){
-    return item?.locales?.[language()]||item?.locales?.en||item?.locales?.ru||null;
+    return item?.locales?.[language()]||null;
   }
 
   function patchPayments(){
@@ -409,7 +411,7 @@
     const texts=localized(config.texts)||{};
     const panel=ensureTermsPanel();
     const body=String(texts.terms_body||'').trim();
-    setTextContent(panel.querySelector('[data-site-terms-title]'),texts.terms_title||siteFallbackCopy().terms);
+    setTextContent(panel.querySelector('[data-site-terms-title]'),siteFallbackCopy().terms);
     setTextContent(panel.querySelector('[data-site-terms-intro]'),texts.terms_intro||'');
     setTextContent(
       panel.querySelector('[data-site-terms-body]'),
@@ -445,6 +447,9 @@
     node.classList.remove('is-pending');
     node.disabled=false;
     node.removeAttribute('aria-disabled');
+    // Legal navigation has a fixed native label in every supported locale.
+    // Do this after CMS patching so a stale Russian CMS value cannot win.
+    setTextContent(node,siteFallbackCopy().terms);
 
     if(!node.dataset.siteTermsBound){
       node.dataset.siteTermsBound='1';

@@ -14,7 +14,7 @@ const state={open:false,selection:null,restoreFocus:null,bypass:false};
 function lang(){const v=String(window.TuneWrapLanguage?.get?.()||'en').toLowerCase();if(v.startsWith('uk'))return'uk';if(v.startsWith('ka'))return'ka';if(v.startsWith('en'))return'en';if(v.startsWith('de'))return'de';return'ru';}
 function c(){return COPY[lang()]||COPY.ru}
 function money(v){return`$${Number(v)||0}`}
-function loc(map){return map?.[lang()]||map?.en||map?.ru||null}
+function loc(o){return o?.offer?.locales?.[lang()]||window.__tuneWrapPricingFallback?.offer?.(lang(),o?.id)||null}
 function offers(){
  if(!pricingConfig)return[];
  const tiers=(pricingConfig.tiers||[]).filter(x=>x&&x.enabled!==false).map(x=>({type:'tier',id:x.id,offer:x})).sort((a,b)=>(+a.offer.order||99)-(+b.offer.order||99));
@@ -23,10 +23,10 @@ function offers(){
 }
 const key=o=>`${o.type}:${o.id}`;
 function selected(){return offers().find(o=>key(o)===state.selection)||null}
-function name(o){return loc(o?.offer?.locales)?.name||o?.id||''}
-function desc(o){const l=loc(o?.offer?.locales)||{};return o?.type==='wedding'?(l.description||l.short||''):((l.features||[]).filter(Boolean).slice(0,2).join(' · '))}
+function name(o){return loc(o)?.name||o?.id||''}
+function desc(o){const l=loc(o)||{};return o?.type==='wedding'?(l.description||l.short||''):((l.features||[]).filter(Boolean).slice(0,2).join(' · '))}
 function makeCard(o){
- const l=loc(o.offer.locales)||{},active=state.selection===key(o),b=document.createElement('button');
+ const l=loc(o)||{},active=state.selection===key(o),b=document.createElement('button');
  b.type='button';b.className='gift-certificate-card'+(active?' is-selected':'');b.dataset.certificateOffer=key(o);b.setAttribute('aria-pressed',String(active));
  const old=Number(o.offer.oldPrice)||0,price=Number(o.offer.price)||0;
  b.innerHTML=`<span class="gift-certificate-card-type">${c()[o.type==='wedding'?'wedding':'regular']}</span><strong class="gift-certificate-card-name"></strong><span class="gift-certificate-card-description"></span><span class="gift-certificate-card-price">${old>price?`<s>${money(old)}</s>`:''}<b>${money(price)}</b><small>USD</small></span><span class="gift-certificate-card-action">${active?c().selected:c().choose}</span>`;

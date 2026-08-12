@@ -28,10 +28,10 @@ function lang(){
 }
 function copy(){return COPY[lang()]||COPY.ru}
 function config(){return window.__tuneWrapPricing?.config||window.TUNEWRAP_PRICING_CMS||null}
-function localesOf(offer){return offer?.locales?.[lang()]||offer?.locales?.en||offer?.locales?.ru||{}}
+function localesOf(offer){return offer?.locales?.[lang()]||window.__tuneWrapPricingFallback?.offer?.(lang(),offer?.id)||{}}
 function settings(){
   const cfg=config();
-  return cfg?.settings?.locales?.[lang()]||cfg?.settings?.locales?.en||cfg?.settings?.locales?.ru||{};
+  return cfg?.settings?.locales?.[lang()]||window.__tuneWrapPricingFallback?.settings?.(lang())||{};
 }
 function money(value){return'$'+(Number(value)||0)}
 function tierIndex(offer){return Number.isInteger(TIER_INDEX[offer?.id])?TIER_INDEX[offer.id]:-1}

@@ -1425,6 +1425,39 @@ function applyTuneWrapTrackTitles(language){
     ]
   };
 
+  // Stage 12.14.7: one same-language fallback source for every live Pricing
+  // CMS consumer. A missing CMS locale must use the built-in copy for the
+  // requested interface language, never English/Russian from another locale.
+  const PRICING_FALLBACK_SETTINGS = Object.freeze({
+    pricingEyebrow:'pricing_eyebrow',
+    pricingTitle:'pricing_h2',
+    pricingIntro:'pricing_p',
+    promoTitle:'pricing_promo_title',
+    promoUntil:'pricing_promo_until',
+    weddingTitle:'wedding_eyebrow',
+    weddingSubtitle:'wedding_subtitle',
+    detailsLabel:'tier_open_btn',
+    weddingPanelLabel:'wedding_panel_label',
+    whatIncluded:'wedding_what_included',
+    idealFor:'wedding_ideal_for',
+    tierSelect:'tier_detail_select',
+    urgentLabel:'urgent_label'
+  });
+  function builtInPricingSettings(locale){
+    const source=I18N[locale]||I18N.en;
+    return Object.fromEntries(Object.entries(PRICING_FALLBACK_SETTINGS).map(([field,key])=>[field,source[key]||'']));
+  }
+  function builtInPricingOffer(locale,id){
+    const language=I18N[locale]?locale:'en';
+    const tierIndex={simple:0,advanced:1,hit:2}[id];
+    if(Number.isInteger(tierIndex))return TIERS[language]?.[tierIndex]||null;
+    return WEDDING_PACKAGES[language]?.find(item=>item.id===id)||null;
+  }
+  window.__tuneWrapPricingFallback=Object.freeze({
+    settings:builtInPricingSettings,
+    offer:builtInPricingOffer
+  });
+
   const STYLE_IDS = ["pop","disco","funk","rock","trap","industrial","symphonic","indie","jazz","rnb","synthwave","balkan"];
   const STYLES = {
     ru: ["Поп","Диско","Фанк","Рок","Трэп","Индастриал","Симфонический","Инди","Джаз","R&B","Синтвейв","Балканский брасс"],

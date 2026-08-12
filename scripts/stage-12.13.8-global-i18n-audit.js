@@ -104,14 +104,15 @@ for(const token of forbidden){
 }
 
 /* One deploy must not mix stale i18n generations. */
-assert.ok(html.includes('js/app-bootstrap.js?v=12.13.8'));
+const cacheVersion=html.match(/js\/app-bootstrap\.js\?v=([\d.]+)/)?.[1];
+assert.ok(cacheVersion,'versioned app bootstrap is required');
 for(const name of [
   'catalog-runtime.js','script.js','pricing-cms-runtime.js','gift-certificate-overlay.js',
   'site-cms-runtime.js','sound-preferences-runtime.js','order-intake-completion.js',
   'orders-submit.js','playback-engine.js','ux-critical-fixes.js',
   'stage-12.10-package-ui-polish.js','stage-12.11-contact-channel-selector.js'
 ]){
-  assert.ok(bootstrap.includes(`./${name}?v=12.13.8`),`bootstrap cache version missing for ${name}`);
+  assert.ok(bootstrap.includes(`./${name}?v=${cacheVersion}`),`bootstrap cache version mismatch for ${name}`);
 }
 
 assert.equal(pkg.scripts['i18n:audit'],'node scripts/stage-12.13.8-global-i18n-audit.js');

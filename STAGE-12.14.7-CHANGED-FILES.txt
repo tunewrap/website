@@ -1,0 +1,19 @@
+TUNEWRAP STAGE 12.14.7 — CHANGED FILES
+
+index.html
+js/app-bootstrap.js
+js/script.js
+js/pricing-cms-runtime.js
+js/site-cms-runtime.js
+js/stage-12.10-package-ui-polish.js
+js/gift-certificate-overlay.js
+js/ux-critical-fixes.js
+js/orders-submit.js
+package.json
+README-STAGE-12.14.7.txt
+STAGE-12.14.7-CHANGED-FILES.txt
+scripts/install-stage-12.14.7-public-pricing-terms-i18n.js
+scripts/stage-12.13.8-global-i18n-audit.js
+scripts/stage-12.14.7-public-pricing-terms-i18n-test.js
+
+No D1 migration is required.

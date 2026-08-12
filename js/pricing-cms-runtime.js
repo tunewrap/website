@@ -16,15 +16,18 @@
     if(v.startsWith('de'))return 'de';
     return 'ru';
   }
-  const locale=map=>map?.[lang()]||map?.en||map?.ru||null;
-  const settings=()=>locale(config.settings?.locales);
+  // Never let a CMS value from another language overwrite core i18n. If the
+  // exact CMS locale is absent, use the built-in copy of that same language.
+  const locale=map=>map?.[lang()]||null;
+  const fallback=()=>window.__tuneWrapPricingFallback;
+  const settings=()=>locale(config.settings?.locales)||fallback()?.settings?.(lang())||null;
   const money=v=>`$${Number(v)||0}`;
   function tierByIndex(index){
     const id=Object.keys(TIER_INDEX).find(k=>TIER_INDEX[k]===Number(index));
     return config.tiers?.find(x=>x.id===id)||null;
   }
   const weddingById=id=>config.weddings?.find(x=>x.id===id)||null;
-  const offerLocale=offer=>locale(offer?.locales);
+  const offerLocale=offer=>locale(offer?.locales)||fallback()?.offer?.(lang(),offer?.id)||null;
 
   function setTextNode(node,value){
     if(!node||typeof value!=='string'||!value.trim()||node.textContent===value)return;
