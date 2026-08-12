@@ -1,0 +1,19 @@
+/* TuneWrap Stage 12.14.10 — restore native pull-to-refresh.
+   The phone UI scrolls inside .app-scroll, so the vertical boundary must be
+   allowed to chain from that container to the browser viewport. */
+
+@media (max-width:1024px) and (pointer:coarse){
+  html,
+  body{
+    /* Keep horizontal browser navigation isolated, but return the native
+       vertical boundary action (Android Chrome / tablet pull-to-refresh). */
+    overscroll-behavior-x:none!important;
+    overscroll-behavior-y:auto!important;
+  }
+
+  .app-scroll{
+    overscroll-behavior-x:contain!important;
+    overscroll-behavior-y:auto!important;
+  }
+}
+
