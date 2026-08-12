@@ -77,9 +77,9 @@ assert.ok(adminCss.includes('.site-announcement-note.is-warning'));
 assert.ok(adminHtml.includes('/admin/site.js?v=12.14.8'));
 assert.ok(adminHtml.includes('/admin/site-stage-12.12.css?v=12.14.8'));
 
-assert.ok(html.includes('js/app-bootstrap.js?v=12.14.8'));
+assert.match(html,/js\/app-bootstrap\.js\?v=12\.14\.(?:8|9)/);
 for(const name of ['script.js','pricing-cms-runtime.js','site-cms-runtime.js','orders-submit.js','ux-critical-fixes.js']){
-  assert.ok(bootstrap.includes(`./${name}?v=12.14.8`),`cache version missing for ${name}`);
+  assert.match(bootstrap,new RegExp(`\\./${name.replace(/\./g,'\\.')}\\?v=12\\.14\\.(?:8|9)`),`cache version missing for ${name}`);
 }
 
 assert.equal(pkg.scripts['announcementi18n:test'],'node scripts/stage-12.14.8-announcement-native-i18n-test.js');

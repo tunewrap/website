@@ -1,0 +1,24 @@
+TUNEWRAP STAGE 12.14.9 — FILES
+
+NEW
+README-STAGE-12.14.9.txt
+STAGE-12.14.9-CHANGED-FILES.txt
+js/auto-update.js
+scripts/install-stage-12.14.9-mobile-auto-update.js
+scripts/stage-12.14.9-mobile-auto-update-test.js
+
+UPDATED BY INSTALLER
+_headers
+index.html
+js/app-bootstrap.js
+package.json
+scripts/stage-12.14.7-public-pricing-terms-i18n-test.js
+scripts/stage-12.14.8-announcement-native-i18n-test.js
+
+NOT CHANGED
+Admin save/publish behavior
+D1 schema and migrations
+Cloudflare Worker API behavior
+R2 MP3 and cover caching
+translations and locale fallbacks from Stages 12.14.4–12.14.8
+

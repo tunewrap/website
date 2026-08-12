@@ -108,12 +108,12 @@ for(const [relative,source] of [
   assert.doesNotMatch(source,/locales(?:\?|)\.?(?:en|ru).*\|\|.*locales(?:\?|)\.?(?:ru|en)/,`${relative} still cross-falls between CMS languages`);
 }
 
-assert.match(html,/js\/app-bootstrap\.js\?v=12\.14\.(?:7|8)/);
+assert.match(html,/js\/app-bootstrap\.js\?v=12\.14\.(?:7|8|9)/);
 for(const name of [
   'script.js','pricing-cms-runtime.js','gift-certificate-overlay.js',
   'site-cms-runtime.js','orders-submit.js','ux-critical-fixes.js',
   'stage-12.10-package-ui-polish.js'
-])assert.match(bootstrap,new RegExp(`\\./${name.replace(/\./g,'\\.')}\\?v=12\\.14\\.(?:7|8)`),`cache version missing for ${name}`);
+])assert.match(bootstrap,new RegExp(`\\./${name.replace(/\./g,'\\.')}\\?v=12\\.14\\.(?:7|8|9)`),`cache version missing for ${name}`);
 
 assert.equal(pkg.scripts['publici18n:test'],'node scripts/stage-12.14.7-public-pricing-terms-i18n-test.js');
 assert.ok(pkg.scripts.test.includes('publici18n:test'));
