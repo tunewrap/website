@@ -95,7 +95,31 @@ function targetScriptShare(value,target){
   return relevant?matching/relevant:1;
 }
 
-function validateTranslatedLine(candidate,source,target){
+function normalizedComparable(value){
+  return String(value||'').toLocaleLowerCase().normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g,'').replace(/[^\p{Letter}\p{Number}]+/gu,' ').trim();
+}
+
+function isMeaningfulSentence(value){
+  const normalized=normalizedComparable(value);
+  return normalized.length>=18&&normalized.split(/\s+/).filter(Boolean).length>=3;
+}
+
+function looksEnglishInsteadOfGerman(value){
+  const words=normalizedComparable(value).split(/\s+/).filter(Boolean);
+  if(words.length<4)return false;
+  const english=new Set(['the','and','that','this','with','from','for','you','your','was','were','are','have','has','had','but','not','into','when','where','what','who','how','all','can','could','would','should','will','just','never','before','after','about','through','their','they','them','our','his','her','she','he','we','i','me','my','of','to','in','on','is','it','a','an']);
+  const german=new Set(['der','die','das','den','dem','des','ein','eine','einer','einem','einen','und','oder','aber','nicht','mit','von','für','zu','im','in','auf','ist','sind','war','waren','ich','du','er','sie','wir','ihr','mein','meine','dein','deine','sein','seine','unser','unsere','dass','wenn','wie','was','wer','wo','nach','vor','durch','über','noch','schon','hat','haben','wird','werden']);
+  let englishScore=0;
+  let germanScore=0;
+  for(const word of words){
+    if(english.has(word))englishScore+=1;
+    if(german.has(word))germanScore+=1;
+  }
+  return englishScore>=3&&englishScore>=germanScore+2;
+}
+
+function validateTranslatedLine(candidate,source,target,avoidText=''){
   let value=String(candidate||'').trim();
   const original=String(source||'').trim();
   if(!value)return '';
@@ -106,6 +130,12 @@ function validateTranslatedLine(candidate,source,target){
   if(AI_REASONING_PATTERNS.some(pattern=>pattern.test(value)))return '';
   const maxLength=Math.max(180,Math.min(3600,original.length*3+180));
   if(value.length>maxLength)return '';
+  if(target==='de'){
+    const comparable=normalizedComparable(value);
+    const avoided=normalizedComparable(avoidText);
+    if(avoided&&comparable===avoided&&isMeaningfulSentence(value))return '';
+    if(looksEnglishInsteadOfGerman(value))return '';
+  }
   if(['ru','uk','ka'].includes(target)&&targetScriptShare(value,target)<0.4){
     const properName=/^[A-Z0-9][A-Za-z0-9 .&'’\-]{0,80}$/.test(original);
     if(!properName)return '';
@@ -128,26 +158,26 @@ function extractStructuredTranslation(result){
   return '';
 }
 
-async function runPrimaryOnce(ai,value,source,target){
+async function runPrimaryOnce(ai,value,source,target,avoidText=''){
   const result=await ai.run(MODEL,{
     text:value,
     source_lang:source,
     target_lang:target
   });
   const candidate=typeof result?.translated_text==='string' ? result.translated_text : '';
-  return validateTranslatedLine(candidate,value,target);
+  return validateTranslatedLine(candidate,value,target,avoidText);
 }
 
-async function pivotTranslateText(ai,value,source,target){
+async function pivotTranslateText(ai,value,source,target,avoidText=''){
   // A direct source→Georgian inference can occasionally return an empty string.
   // Route only that failed line through a stable intermediate language.
   const pivot=source==='en' ? 'ru' : 'en';
   const first=await runPrimaryOnce(ai,value,source,pivot);
   if(!first)return '';
-  return runPrimaryOnce(ai,first,pivot,target);
+  return runPrimaryOnce(ai,first,pivot,target,avoidText);
 }
 
-async function fallbackTranslateText(ai,value,source,target){
+async function fallbackTranslateText(ai,value,source,target,avoidText=''){
   const sourceName=LANGUAGE_NAMES[source]||source;
   const targetName=LANGUAGE_NAMES[target]||target;
   const prompt=[
@@ -170,10 +200,10 @@ async function fallbackTranslateText(ai,value,source,target){
     stream:false
   });
 
-  return validateTranslatedLine(extractStructuredTranslation(result),value,target);
+  return validateTranslatedLine(extractStructuredTranslation(result),value,target,avoidText);
 }
 
-async function secondFallbackTranslateText(ai,value,source,target){
+async function secondFallbackTranslateText(ai,value,source,target,avoidText=''){
   const sourceName=LANGUAGE_NAMES[source]||source;
   const targetName=LANGUAGE_NAMES[target]||target;
   const prompt=[
@@ -195,10 +225,10 @@ async function secondFallbackTranslateText(ai,value,source,target){
     stream:false
   });
 
-  return validateTranslatedLine(extractStructuredTranslation(result),value,target);
+  return validateTranslatedLine(extractStructuredTranslation(result),value,target,avoidText);
 }
 
-async function translateText(ai,text,source,target){
+async function translateText(ai,text,source,target,avoidText=''){
   const value=String(text||'').trim();
   if(!value)return '';
 
@@ -208,7 +238,7 @@ async function translateText(ai,text,source,target){
   // 1) Direct M2M100 translation, with one retry.
   for(let attempt=1;attempt<=2;attempt++){
     try{
-      const translated=await runPrimaryOnce(ai,value,source,target);
+      const translated=await runPrimaryOnce(ai,value,source,target,avoidText);
       if(translated)return translated;
       gotEmpty=true;
       lastError=new Error(`Translation model returned no text for ${target}`);
@@ -230,7 +260,7 @@ async function translateText(ai,text,source,target){
     // 2) For failed Georgian lines, try M2M100 again through EN/RU pivot.
     if(target==='ka'){
       try{
-        const pivot=await pivotTranslateText(ai,value,source,target);
+        const pivot=await pivotTranslateText(ai,value,source,target,avoidText);
         if(pivot)return pivot;
       }catch(error){
         lastError=error;
@@ -239,7 +269,7 @@ async function translateText(ai,text,source,target){
 
     // 3) Reserve multilingual LLM.
     try{
-      const fallback=await fallbackTranslateText(ai,value,source,target);
+      const fallback=await fallbackTranslateText(ai,value,source,target,avoidText);
       if(fallback)return fallback;
       lastError=new Error(`Fallback translation model returned no text for ${target}`);
     }catch(error){
@@ -248,7 +278,7 @@ async function translateText(ai,text,source,target){
 
     // 4) Second reserve multilingual LLM using a different response family.
     try{
-      const second=await secondFallbackTranslateText(ai,value,source,target);
+      const second=await secondFallbackTranslateText(ai,value,source,target,avoidText);
       if(second)return second;
       lastError=new Error(`Second fallback translation model returned no text for ${target}`);
     }catch(error){
@@ -300,9 +330,11 @@ export async function onRequestPost(context){
       const id=String(item?.id||'').trim();
       const kind=String(item?.kind||'text').trim();
       const text=String(item?.text||'').trim();
+      const avoidText=String(item?.avoidText||'').trim();
       if(!id||!text)throw new HttpError(400,`Некорректная строка перевода #${index+1}`);
       if(text.length>2400)throw new HttpError(413,`Строка #${index+1} слишком длинная`);
-      return {id,kind,text};
+      if(avoidText.length>2400)throw new HttpError(413,`Контрольная строка #${index+1} слишком длинная`);
+      return {id,kind,text,avoidText};
     });
 
     const pairs=await mapWithConcurrency(safeItems,2,async item=>{
@@ -310,7 +342,7 @@ export async function onRequestPost(context){
         const section=localizedSectionLabel(item.text,target);
         if(section)return [item.id,section];
       }
-      const translated=await translateText(context.env.AI,item.text,source,target);
+      const translated=await translateText(context.env.AI,item.text,source,target,item.avoidText);
       return [item.id,translated];
     });
 

@@ -367,7 +367,31 @@ function localizedScriptShare(value,target){
   return relevant?matching/relevant:1;
 }
 
-function isUnsafeMachineTranslation(sourceText,targetText,target){
+function normalizedLocalizedText(value){
+  return String(value||'').toLocaleLowerCase().normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g,'').replace(/[^\p{Letter}\p{Number}]+/gu,' ').trim();
+}
+
+function isMeaningfulLocalizedSentence(value){
+  const normalized=normalizedLocalizedText(value);
+  return normalized.length>=18&&normalized.split(/\s+/).filter(Boolean).length>=3;
+}
+
+function looksEnglishInsteadOfGerman(value){
+  const words=normalizedLocalizedText(value).split(/\s+/).filter(Boolean);
+  if(words.length<4)return false;
+  const english=new Set(['the','and','that','this','with','from','for','you','your','was','were','are','have','has','had','but','not','into','when','where','what','who','how','all','can','could','would','should','will','just','never','before','after','about','through','their','they','them','our','his','her','she','he','we','i','me','my','of','to','in','on','is','it','a','an']);
+  const german=new Set(['der','die','das','den','dem','des','ein','eine','einer','einem','einen','und','oder','aber','nicht','mit','von','für','zu','im','in','auf','ist','sind','war','waren','ich','du','er','sie','wir','ihr','mein','meine','dein','deine','sein','seine','unser','unsere','dass','wenn','wie','was','wer','wo','nach','vor','durch','über','noch','schon','hat','haben','wird','werden']);
+  let englishScore=0;
+  let germanScore=0;
+  for(const word of words){
+    if(english.has(word))englishScore+=1;
+    if(german.has(word))germanScore+=1;
+  }
+  return englishScore>=3&&englishScore>=germanScore+2;
+}
+
+function isUnsafeMachineTranslation(sourceText,targetText,target,englishText=''){
   const source=String(sourceText||'').trim();
   const value=String(targetText||'').trim();
   if(!source||!value)return false;
@@ -376,6 +400,12 @@ function isUnsafeMachineTranslation(sourceText,targetText,target){
   const sourceLines=Math.max(1,source.split(/\r?\n/).filter(line=>line.trim()).length);
   const targetLines=Math.max(1,value.split(/\r?\n/).filter(line=>line.trim()).length);
   if(targetLines>sourceLines*3+8&&value.length>source.length*2)return true;
+  if(target==='de'){
+    const german=normalizedLocalizedText(value);
+    const english=normalizedLocalizedText(englishText);
+    if(english&&german===english&&isMeaningfulLocalizedSentence(value))return true;
+    if(looksEnglishInsteadOfGerman(value))return true;
+  }
   if(['ru','uk','ka'].includes(target)&&value.length>120&&localizedScriptShare(value,target)<0.35)return true;
   return false;
 }
@@ -387,9 +417,9 @@ function hasUnsafeTranslations(track){
   const sourceDescription=track.descriptions?.[source]||'';
   const sourceLyrics=track.lyrics?.[source]||'';
   return UI_LOCALES.some(([locale])=>locale!==source&&(
-    isUnsafeMachineTranslation(sourceTitle,track.titles?.[locale],locale)||
-    isUnsafeMachineTranslation(sourceDescription,track.descriptions?.[locale],locale)||
-    isUnsafeMachineTranslation(sourceLyrics,track.lyrics?.[locale],locale)
+    isUnsafeMachineTranslation(sourceTitle,track.titles?.[locale],locale,locale==='de'?track.titles?.en:'')||
+    isUnsafeMachineTranslation(sourceDescription,track.descriptions?.[locale],locale,locale==='de'?track.descriptions?.en:'')||
+    isUnsafeMachineTranslation(sourceLyrics,track.lyrics?.[locale],locale,locale==='de'?track.lyrics?.en:'')
   ));
 }
 
@@ -400,17 +430,18 @@ function missingTranslationTargets(track){
   const sourceLyrics=track.lyrics?.[source]||'';
   return UI_LOCALES.map(([locale])=>locale).filter(locale=>{
     if(locale===source)return false;
-    return (sourceTitle&&(!track.titles?.[locale]||isUnsafeMachineTranslation(sourceTitle,track.titles?.[locale],locale))) ||
-      (sourceDescription&&(!track.descriptions?.[locale]||isUnsafeMachineTranslation(sourceDescription,track.descriptions?.[locale],locale))) ||
-      (sourceLyrics&&(!track.lyrics?.[locale]||isCollapsedStructuredTranslation(sourceLyrics,track.lyrics?.[locale])||isUnsafeMachineTranslation(sourceLyrics,track.lyrics?.[locale],locale)));
+    return (sourceTitle&&(!track.titles?.[locale]||isUnsafeMachineTranslation(sourceTitle,track.titles?.[locale],locale,locale==='de'?track.titles?.en:''))) ||
+      (sourceDescription&&(!track.descriptions?.[locale]||isUnsafeMachineTranslation(sourceDescription,track.descriptions?.[locale],locale,locale==='de'?track.descriptions?.en:''))) ||
+      (sourceLyrics&&(!track.lyrics?.[locale]||isCollapsedStructuredTranslation(sourceLyrics,track.lyrics?.[locale])||isUnsafeMachineTranslation(sourceLyrics,track.lyrics?.[locale],locale,locale==='de'?track.lyrics?.en:'')));
   });
 }
 
-function buildLineItems(kind,text){
+function buildLineItems(kind,text,avoidText=''){
   const lines=String(text||'').replace(/\r\n/g,'\n').split('\n');
+  const avoidLines=String(avoidText||'').replace(/\r\n/g,'\n').split('\n');
   const items=[];
   lines.forEach((line,index)=>{
-    if(line.trim())items.push({id:`${kind}:${index}`,kind,text:line});
+    if(line.trim())items.push({id:`${kind}:${index}`,kind,text:line,avoidText:avoidLines[index]||''});
   });
   return {lines,items};
 }
@@ -445,21 +476,24 @@ async function translateOneTarget(track,source,target){
   const targetDescription=track.descriptions?.[target]||'';
   const targetLyrics=track.lyrics?.[target]||'';
 
-  const needsTitle=Boolean(sourceTitle&&(!targetTitle||isUnsafeMachineTranslation(sourceTitle,targetTitle,target)));
-  const needsDescription=Boolean(sourceDescription&&(!targetDescription||isUnsafeMachineTranslation(sourceDescription,targetDescription,target)));
-  const needsLyrics=Boolean(sourceLyrics&&(!targetLyrics||isCollapsedStructuredTranslation(sourceLyrics,targetLyrics)||isUnsafeMachineTranslation(sourceLyrics,targetLyrics,target)));
+  const englishTitle=target==='de'?(track.titles?.en||''):'';
+  const englishDescription=target==='de'?(track.descriptions?.en||''):'';
+  const englishLyrics=target==='de'?(track.lyrics?.en||''):'';
+  const needsTitle=Boolean(sourceTitle&&(!targetTitle||isUnsafeMachineTranslation(sourceTitle,targetTitle,target,englishTitle)));
+  const needsDescription=Boolean(sourceDescription&&(!targetDescription||isUnsafeMachineTranslation(sourceDescription,targetDescription,target,englishDescription)));
+  const needsLyrics=Boolean(sourceLyrics&&(!targetLyrics||isCollapsedStructuredTranslation(sourceLyrics,targetLyrics)||isUnsafeMachineTranslation(sourceLyrics,targetLyrics,target,englishLyrics)));
 
   const items=[];
   let descriptionPack=null;
   let lyricsPack=null;
 
-  if(needsTitle)items.push({id:'title',kind:'title',text:sourceTitle});
+  if(needsTitle)items.push({id:'title',kind:'title',text:sourceTitle,avoidText:englishTitle});
   if(needsDescription){
-    descriptionPack=buildLineItems('description',sourceDescription);
+    descriptionPack=buildLineItems('description',sourceDescription,englishDescription);
     items.push(...descriptionPack.items);
   }
   if(needsLyrics){
-    lyricsPack=buildLineItems('lyrics',sourceLyrics);
+    lyricsPack=buildLineItems('lyrics',sourceLyrics,englishLyrics);
     items.push(...lyricsPack.items);
   }
 

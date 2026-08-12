@@ -56,10 +56,10 @@ assert.equal(clientSandbox.result.hasUnsafeTranslations(corruptedTrack),true);
 
 assert.ok(admin.includes('return Boolean(track&&hasUnsafeTranslations(track));'));
 assert.ok(admin.includes('needsBackgroundTranslation(isNew,metadataPatch,track)'));
-assert.ok(admin.includes('isUnsafeMachineTranslation(sourceLyrics,targetLyrics,target)'));
+assert.ok(admin.includes('isUnsafeMachineTranslation(sourceLyrics,targetLyrics,target'));
 assert.ok(admin.includes('Commit each language independently'));
 assert.ok(admin.includes('baseline=(await api(`/api/admin/tracks/${encodeURIComponent(saved.id)}`'));
-assert.ok(html.includes('/admin/admin.js?v=12.14.4'));
+assert.ok(/\/admin\/admin\.js\?v=12\.14\.(?:4|[5-9]|\d{2,})/.test(html));
 assert.equal(pkg.scripts['admintranslation:test'],'node scripts/stage-12.14.4-translation-integrity-test.js');
 assert.ok(pkg.scripts.test.includes('admintranslation:test'));
 
