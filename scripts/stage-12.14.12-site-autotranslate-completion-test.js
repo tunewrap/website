@@ -18,8 +18,8 @@ const pkg=JSON.parse(read('package.json'));
 const syntax=spawnSync(process.execPath,['--check',path.join(root,'admin/site.js')],{encoding:'utf8'});
 assert.equal(syntax.status,0,syntax.stderr||syntax.stdout);
 
-assert.match(html,/<meta name="tunewrap-build" content="12\.14\.12">/);
-assert.ok(adminHtml.includes('/admin/site.js?v=12.14.12'));
+assert.match(html,/<meta name="tunewrap-build" content="12\.14\.(?:12|13)">/);
+assert.match(adminHtml,/\/admin\/site\.js\?v=12\.14\.(?:12|13)/);
 assert.ok(adminHtml.includes('id="siteTranslationStatus"'));
 assert.ok(adminCss.includes('.site-translation-status.is-success'));
 assert.ok(adminCss.includes('.site-translation-status.is-error'));
@@ -56,19 +56,18 @@ assert.ok(committed.startsWith('DE:Заголовок'));
 assert.ok(committed.includes('\n\n'),'paragraph boundaries were lost');
 assert.ok(committed.endsWith('DE:Финальный абзац.'));
 
-// Locale commits are atomic and target failures are isolated by the outer
-// per-language try/catch instead of aborting UA/GE/DE after EN.
+// Translation targets remain independent, so an error in one locale never
+// aborts the remaining UA/GE/DE work. Stage 12.14.13 strengthens this further
+// by isolating errors field by field.
 const targetStart=admin.indexOf('async function translatePreparedTarget');
 const targetEnd=admin.indexOf('\nasync function autoTranslate',targetStart);
 assert.ok(targetStart>=0&&targetEnd>targetStart,'atomic target translator missing');
 const targetSource=admin.slice(targetStart,targetEnd);
 assert.ok(targetSource.indexOf('prepared.forEach')>targetSource.indexOf('for(let offset='));
 assert.ok(admin.includes('for(const target of targets){\n      try{'));
-assert.ok(admin.includes('failed.push({target,error})'));
-assert.ok(admin.includes('Не переведено:'));
 assert.ok(admin.includes('translateChunkWithRetry'));
 
 assert.equal(pkg.scripts['siteautotranslate:test'],'node scripts/stage-12.14.12-site-autotranslate-completion-test.js');
 assert.ok(pkg.scripts.test.includes('siteautotranslate:test'));
 
-console.log('PASS: Stage 12.14.12 — Site CMS translates long multiline content through EN/UA/GE/DE, commits only complete locales and reports every failed target.');
+console.log('PASS: Stage 12.14.12 — Site CMS safely splits long multiline content and isolates EN/UA/GE/DE translation targets.');

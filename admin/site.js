@@ -740,25 +740,84 @@ async function translateChunkWithRetry(source,target,items){
 async function translatePreparedTarget(source,target,prepared,button){
   const units=prepared.flatMap(item=>item.units);
   const translated={};
+  const failures=new Map();
+  const settled=new Set();
 
-  for(let offset=0;offset<units.length;offset+=TRANSLATION_BATCH_SIZE){
-    const chunk=units.slice(offset,offset+TRANSLATION_BATCH_SIZE);
-    const progress=Math.min(offset+chunk.length,units.length);
+  function reportProgress(){
+    const progress=settled.size;
     button.textContent=`${AI_CODES[target]} · ${progress}/${units.length}`;
     setTranslationStatus(`Перевод ${AI_CODES[target]}: ${progress} из ${units.length} частей…`);
-    const result=await translateChunkWithRetry(source,target,chunk);
-    for(const unit of chunk){
-      const value=result[unit.id];
-      if(typeof value!=='string'||!value.trim()){
-        throw new Error(`${AI_CODES[target]}: не переведена часть ${unit.id}`);
+  }
+
+  async function translateResilient(chunk){
+    if(!chunk.length)return;
+    try{
+      const result=await translateChunkWithRetry(source,target,chunk);
+      const missing=[];
+      for(const unit of chunk){
+        const value=result[unit.id];
+        if(typeof value==='string'&&value.trim()){
+          translated[unit.id]=value.trim();
+          settled.add(unit.id);
+        }else{
+          missing.push(unit);
+        }
       }
-      translated[unit.id]=value.trim();
+      reportProgress();
+
+      // A malformed answer for one item must not discard the seven valid
+      // translations returned beside it. Retry only the missing item.
+      for(const unit of missing){
+        if(chunk.length===1){
+          failures.set(unit.id,new Error(`${AI_CODES[target]}: модель не вернула перевод`));
+          settled.add(unit.id);
+          reportProgress();
+        }else{
+          await translateResilient([unit]);
+        }
+      }
+    }catch(error){
+      if(chunk.length===1){
+        failures.set(chunk[0].id,error);
+        settled.add(chunk[0].id);
+        reportProgress();
+        return;
+      }
+
+      // An API error can be caused by one unusual label in a batch. Bisect the
+      // failed batch so all unrelated fields still reach the target locale.
+      const middle=Math.ceil(chunk.length/2);
+      await translateResilient(chunk.slice(0,middle));
+      await translateResilient(chunk.slice(middle));
     }
   }
 
-  // Commit a locale only after every one of its parts succeeded. A failed
-  // target can never leave a half-translated public language in memory.
-  prepared.forEach(item=>item.entry.set(target,item.compose(translated)));
+  for(let offset=0;offset<units.length;offset+=TRANSLATION_BATCH_SIZE){
+    await translateResilient(units.slice(offset,offset+TRANSLATION_BATCH_SIZE));
+  }
+
+  const failedFields=[];
+  let committedFields=0;
+  prepared.forEach(item=>{
+    const failedUnits=item.units.filter(unit=>failures.has(unit.id));
+    if(failedUnits.length){
+      failedFields.push({
+        id:item.entry.id,
+        units:failedUnits.map(unit=>unit.id),
+        error:failures.get(failedUnits[0].id)
+      });
+      return;
+    }
+    item.entry.set(target,item.compose(translated));
+    committedFields+=1;
+  });
+
+  return {
+    target,
+    totalFields:prepared.length,
+    committedFields,
+    failedFields
+  };
 }
 
 async function autoTranslate(){
@@ -773,35 +832,43 @@ async function autoTranslate(){
   if(!confirm(`Перевести ${AI_CODES[source]} во все остальные языки? Существующие переводы этих полей будут обновлены.`))return;
 
   const button=$('#translateSiteButton');
-  const completed=[];
-  const failed=[];
+  const results=[];
   state.busy=true;
   button.disabled=true;
   setTranslationStatus(`Подготовлено ${prepared.flatMap(item=>item.units).length} частей. Начинаем ${targets.map(target=>AI_CODES[target]).join(', ')}…`);
   try{
     for(const target of targets){
       try{
-        await translatePreparedTarget(source,target,prepared,button);
-        completed.push(target);
+        results.push(await translatePreparedTarget(source,target,prepared,button));
       }catch(error){
         console.error(`TuneWrap Site CMS ${AI_CODES[target]} translation failed`,error);
-        failed.push({target,error});
+        results.push({
+          target,totalFields:prepared.length,committedFields:0,
+          failedFields:[{id:'all',error}]
+        });
       }
     }
 
-    if(completed.length){
+    const changed=results.reduce((sum,result)=>sum+result.committedFields,0);
+    if(changed){
       markDirty();
       render();
     }
 
-    const done=completed.map(target=>AI_CODES[target]).join(', ')||'—';
-    if(failed.length){
-      const missing=failed.map(item=>AI_CODES[item.target]).join(', ');
-      const firstError=String(failed[0].error?.message||'неизвестная ошибка');
-      setTranslationStatus(`Готово: ${done}. Не переведено: ${missing}. ${firstError}${completed.length?' Сохраните готовые языки.':''}`,'error');
-      toast(`Перевод завершён частично. Не готовы: ${missing}.`,'error');
+    const summary=results.map(result=>
+      `${AI_CODES[result.target]} ${result.committedFields}/${result.totalFields}`
+    ).join(' · ');
+    const partial=results.filter(result=>result.failedFields.length);
+    if(partial.length){
+      const details=partial.map(result=>{
+        const ids=result.failedFields.map(field=>field.id.replace(/^(text|ph)\./,'')).slice(0,4);
+        const extra=result.failedFields.length>ids.length?` +${result.failedFields.length-ids.length}`:'';
+        return `${AI_CODES[result.target]}: ${ids.join(', ')}${extra}`;
+      }).join('; ');
+      setTranslationStatus(`Обновлено: ${summary}. Не прошли только поля: ${details}. Сохраните готовые поля.`,'error');
+      toast('Перевод завершён. Отдельные поля не прошли — остальные уже готовы.','error');
     }else{
-      setTranslationStatus(`Переведено: ${done}. Нажмите «Сохранить изменения».`,'success');
+      setTranslationStatus(`Переведено: ${summary}. Нажмите «Сохранить изменения».`,'success');
       toast('Все четыре языка переведены. Нажмите «Сохранить».','success');
     }
   }finally{

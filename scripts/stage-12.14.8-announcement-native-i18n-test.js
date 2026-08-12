@@ -74,7 +74,7 @@ assert.equal(Object.keys(resolve('en',{ru:{announcement_label:'ВАЖНО',annou
 assert.ok(admin.includes('Не заполнены языки:'));
 assert.ok(admin.includes('перед изменением текста заполните все языки'));
 assert.ok(adminCss.includes('.site-announcement-note.is-warning'));
-assert.match(adminHtml,/\/admin\/site\.js\?v=12\.14\.(?:8|12)/);
+assert.match(adminHtml,/\/admin\/site\.js\?v=12\.14\.(?:8|12|13)/);
 assert.ok(adminHtml.includes('/admin/site-stage-12.12.css?v=12.14.8'));
 
 assert.match(html,/js\/app-bootstrap\.js\?v=12\.14\.(?:8|9)/);
