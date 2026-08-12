@@ -1,0 +1,13 @@
+TUNEWRAP STAGE 12.14.6 — CHANGED FILES
+
+admin/admin.js
+admin/index.html
+package.json
+README-STAGE-12.14.6.txt
+STAGE-12.14.6-CHANGED-FILES.txt
+scripts/install-stage-12.14.6-complete-locale-matrix.js
+scripts/stage-12.14.4-translation-integrity-test.js
+scripts/stage-12.14.5-german-translation-adaptation-test.js
+scripts/stage-12.14.6-complete-locale-matrix-test.js
+
+No D1 migration is required.

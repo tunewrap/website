@@ -54,7 +54,7 @@ const corruptedTrack={
 };
 assert.equal(clientSandbox.result.hasUnsafeTranslations(corruptedTrack),true);
 
-assert.ok(admin.includes('return Boolean(track&&hasUnsafeTranslations(track));'));
+assert.match(admin,/return Boolean\(track&&\(hasUnsafeTranslations\(track\)(?:\|\|missingTranslationTargets\(track\)\.length)?\)\);/);
 assert.ok(admin.includes('needsBackgroundTranslation(isNew,metadataPatch,track)'));
 assert.ok(admin.includes('isUnsafeMachineTranslation(sourceLyrics,targetLyrics,target'));
 assert.ok(admin.includes('Commit each language independently'));

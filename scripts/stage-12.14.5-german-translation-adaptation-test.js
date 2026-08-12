@@ -56,7 +56,7 @@ assert.equal(clientSandbox.result.hasUnsafeTranslations(copiedTrack),true);
 assert.ok(admin.includes("locale==='de'?track.lyrics?.en:''"));
 assert.ok(admin.includes("buildLineItems('lyrics',sourceLyrics,englishLyrics)"));
 assert.ok(admin.includes("avoidText:englishTitle"));
-assert.ok(html.includes('/admin/admin.js?v=12.14.5'));
+assert.match(html,/\/admin\/admin\.js\?v=12\.14\.(?:[5-9]|\d{2,})/);
 assert.equal(pkg.scripts['admingerman:test'],'node scripts/stage-12.14.5-german-translation-adaptation-test.js');
 assert.ok(pkg.scripts.test.includes('admingerman:test'));
 

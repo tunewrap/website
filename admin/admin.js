@@ -305,7 +305,10 @@ function buildMetadataPatch(current,next){
 function needsBackgroundTranslation(isNew,patch,track){
   if(isNew)return true;
   if(['title','titles','descriptions','lyrics','language'].some(field=>Object.prototype.hasOwnProperty.call(patch,field)))return true;
-  return Boolean(track&&hasUnsafeTranslations(track));
+  // Re-publishing an unchanged track must also resume any language which is
+  // still empty after a previous rate-limit/model failure. The public player
+  // may show its EN fallback, but that is not a completed DE/UA/GE/RU locale.
+  return Boolean(track&&(hasUnsafeTranslations(track)||missingTranslationTargets(track).length));
 }
 
 function markAudioCommitted(saved){
