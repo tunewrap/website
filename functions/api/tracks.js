@@ -10,6 +10,6 @@ export async function onRequestGet(context){
       trackCount:tracks.length,
       publishedCount:tracks.length,
       tracks
-    },200,{'cache-control':'public, max-age=30, stale-while-revalidate=120'});
+    },200,{'cache-control':'no-store'});
   }catch(error){return handleError(error);}
 }

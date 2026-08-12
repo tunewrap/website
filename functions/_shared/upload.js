@@ -11,7 +11,7 @@ export async function verifiedStream(stream,validator,message){
       bytes.push(...value.slice(0,16 - bytes.length));
     }
   }finally{
-    await reader.cancel();
+    reader.cancel().catch(()=>{});
   }
   const signature = new Uint8Array(bytes);
   if(!validator(signature)){

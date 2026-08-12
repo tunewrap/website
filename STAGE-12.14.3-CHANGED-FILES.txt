@@ -1,0 +1,21 @@
+TuneWrap Stage 12.14.3 — changed/generated files
+
+Production
+- admin/admin.js
+- admin/index.html
+- functions/api/tracks.js
+
+Validation and retained backup
+- data/track-catalog.json
+- js/track-catalog.generated.js
+- package.json
+- scripts/stage-12.14-admin-editor-reliability-test.js
+- scripts/stage-12.14.2-incremental-admin-editor-test.js
+- scripts/stage-12.14.3-independent-admin-persistence-test.js
+
+Installer/documentation
+- scripts/install-stage-12.14.3-independent-admin-persistence.js
+- README-STAGE-12.14.3.txt
+- STAGE-12.14.3-CHANGED-FILES.txt
+
+D1 migration: not required.

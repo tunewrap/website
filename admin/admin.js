@@ -2,7 +2,7 @@ const UI_LOCALES = Object.freeze([['en','EN'],['ru','RU'],['uk','UA'],['ka','GE'
 const PRIMARY_LOCALE = Object.freeze({RU:'ru',UA:'uk',GE:'ka',EN:'en',DE:'de'});
 const FALLBACK_COVER = '/assets/covers/tunewrap-placeholder.svg';
 const $ = selector => document.querySelector(selector);
-const state = {tracks:[],summary:null,tab:'all',query:'',current:null,audioFile:null,audioDuration:0,coverFile:null,coverInfo:null,importBackup:null,busy:false,localeTab:'ru',primaryLocale:'ru',storyCategories:[],selectedStoryCategories:new Set()};
+const state = {tracks:[],summary:null,tab:'all',query:'',current:null,audioFile:null,audioDuration:0,coverFile:null,coverInfo:null,importBackup:null,busy:false,localeTab:'ru',primaryLocale:'ru',storyCategories:[],selectedStoryCategories:new Set(),editorAbortController:null};
 
 // ---------- Stage 12: Admin Studio section navigation ----------
 (function installAdminSectionNavigation(){
@@ -79,7 +79,7 @@ async function api(path,options={}){
 }
 function setBusy(value){
   state.busy=value;
-  const keepActive=new Set(['previewButton','closePreviewButton','previewBackdrop']);
+  const keepActive=new Set(['previewButton','closePreviewButton','previewBackdrop','closeEditorButton']);
   document.querySelectorAll('button').forEach(button=>{
     if(keepActive.has(button.id))return;
     if(value){
@@ -223,10 +223,12 @@ function openEditor(track=null){
   state.current=track;resetUploads();nodes.form.reset();nodes.trackId.value=track?.id||'';nodes.title.value=track?.title||'';nodes.section.value=track?.section||'stories';nodes.language.value=track?.language||'RU';nodes.artist.value=track?.artist||'TuneWrap';nodes.album.value=track?.album||'';
   const primary=PRIMARY_LOCALE[track?.language]||'ru';
   state.primaryLocale=primary;
-  nodes.category.value=localizedValue(track?.category,primary,'');nodes.tags.value=(track?.tags||[]).join(',');renderStoryCategoryChoices(track?.categoryIds||[]);
-  nodes.description.value=track?localizedValue(track.descriptions,primary,''):'';
-  nodes.lyrics.value=track?localizedValue(track.lyrics,primary,''):'';
-  nodes.translation.value=track?localizedValue(track.translation,primary,''):'';
+  // Editing must never copy a fallback language into the primary-language field.
+  // All locale maps are loaded below, so an unrelated edit preserves them exactly.
+  nodes.category.value=track?.category?.[primary]||'';nodes.tags.value=(track?.tags||[]).join(',');renderStoryCategoryChoices(track?.categoryIds||[]);
+  nodes.description.value=track?.descriptions?.[primary]||'';
+  nodes.lyrics.value=track?.lyrics?.[primary]||'';
+  nodes.translation.value=track?.translation?.[primary]||'';
   nodes.featured.checked=Boolean(track?.featured);nodes.order.value=track?.order||'';
   for(const [locale] of UI_LOCALES){
     localeField('title',locale).value=track?.titles?.[locale]||'';
@@ -239,7 +241,17 @@ function openEditor(track=null){
   nodes.coverPreview.src=track?.cover||FALLBACK_COVER;nodes.coverLabel.textContent=track?.cover?'Текущая обложка':'Фирменная заглушка';nodes.coverMeta.textContent=track?.artwork?.width?`${track.artwork.width}×${track.artwork.height}`:'Квадратная обложка, до 8 MB';
   nodes.editorMode.textContent=track?(track.published?'Опубликованный трек':'Черновик'):'Новый трек';nodes.editorTitle.textContent=track?.title||'Черновик';nodes.dangerZone.hidden=!track;$('#unpublishButton').hidden=!track?.published;nodes.formErrors.hidden=true;nodes.editor.hidden=false;document.body.style.overflow='hidden';nodes.title.focus();
 }
-function closeEditor(){if(state.busy)return;nodes.editor.hidden=true;document.body.style.overflow='';state.current=null;resetUploads();}
+function closeEditor(){
+  if(state.editorAbortController){
+    try{state.editorAbortController.abort();}catch(error){}
+    state.editorAbortController=null;
+  }
+  setBusy(false);
+  nodes.editor.hidden=true;
+  document.body.style.overflow='';
+  state.current=null;
+  resetUploads();
+}
 function mapsFromForm(){
   const titles={...(state.current?.titles||{})};
   const descriptions={...(state.current?.descriptions||{})};
@@ -266,8 +278,55 @@ function mapsFromForm(){
 }
 function readForm(){
   const{titles,descriptions,lyrics,translation,primary}=mapsFromForm();
-  const category={...(state.current?.category||{})};if(nodes.category.value.trim())category[primary]=nodes.category.value.trim();
+  const category={...(state.current?.category||{})};if(nodes.category.value.trim())category[primary]=nodes.category.value.trim();else delete category[primary];
   return{...(state.current||{}),title:nodes.title.value.trim(),originalTitle:state.current?.originalTitle||nodes.title.value.trim(),titles,descriptions,section:nodes.section.value,language:nodes.language.value,artist:nodes.artist.value.trim()||'TuneWrap',album:nodes.album.value.trim(),category,categoryIds:nodes.section.value==='stories'?selectedStoryCategoryIds():[],tags:nodes.tags.value.split(',').map(value=>value.trim()).filter(Boolean),lyrics,translation,order:Number(nodes.order.value)||state.current?.order||0,featured:nodes.featured.checked,audio:state.current?.audio||'',cover:state.current?.cover||'',artwork:state.current?.artwork||{},duration:state.current?.duration||0,durationLabel:state.current?.durationLabel||''};
+}
+// ---------- Stage 12.14.3: Independent Admin Persistence ----------
+// Existing tracks are patched field-by-field. Unchanged values are never sent,
+// so editing one property cannot overwrite a newer value in another property.
+const EDITABLE_METADATA_FIELDS=Object.freeze([
+  'title','originalTitle','titles','descriptions','section','language','artist','album',
+  'category','categoryIds','tags','lyrics','translation','order','featured'
+]);
+
+function sameEditorValue(left,right){
+  return JSON.stringify(left??null)===JSON.stringify(right??null);
+}
+
+function buildMetadataPatch(current,next){
+  const patch={};
+  for(const field of EDITABLE_METADATA_FIELDS){
+    if(!sameEditorValue(current?.[field],next?.[field]))patch[field]=next[field];
+  }
+  return patch;
+}
+
+function needsBackgroundTranslation(isNew,patch){
+  if(isNew)return true;
+  return ['title','titles','descriptions','lyrics','language'].some(field=>Object.prototype.hasOwnProperty.call(patch,field));
+}
+
+function markAudioCommitted(saved){
+  state.audioFile=null;
+  state.audioDuration=0;
+  nodes.audioFile.value='';
+  nodes.audioProgress.hidden=true;
+  nodes.audioProgress.value=0;
+  nodes.audioLabel.textContent='Текущий MP3 подключён';
+  nodes.audioMeta.textContent=saved.durationLabel||saved.audio||'MP3 сохранён';
+  nodes.audioPreview.src=saved.audio;
+  nodes.audioPreview.hidden=!saved.audio;
+}
+
+function markCoverCommitted(saved){
+  state.coverFile=null;
+  state.coverInfo=null;
+  nodes.coverFile.value='';
+  nodes.coverProgress.hidden=true;
+  nodes.coverProgress.value=0;
+  nodes.coverLabel.textContent='Текущая обложка';
+  nodes.coverMeta.textContent=saved.artwork?.width?`${saved.artwork.width}×${saved.artwork.height}`:'Обложка сохранена';
+  nodes.coverPreview.src=saved.cover||FALLBACK_COVER;
 }
 function isCollapsedStructuredTranslation(sourceText,targetText){
   const source=String(sourceText||'').replace(/\r\n/g,'\n');
@@ -380,7 +439,7 @@ async function autoTranslateMissing(track){
 
 function validateClient(track,publish){const errors=[];if(!track.title)errors.push('Введите название');if(!track.section)errors.push('Выберите раздел');if(!track.language)errors.push('Выберите язык');if(publish&&!track.audio&&!state.audioFile)errors.push('Для публикации выберите MP3');if(state.coverFile&&!state.coverInfo)errors.push('Дождитесь проверки обложки');return errors;}
 function showErrors(errors){nodes.formErrors.textContent=errors.join('\n');nodes.formErrors.hidden=!errors.length;if(errors.length)nodes.formErrors.scrollIntoView({behavior:'smooth',block:'center'});}
-function xhrUpload(path,file,progress,headers={}){return new Promise((resolve,reject)=>{const xhr=new XMLHttpRequest();xhr.open('POST',path);xhr.responseType='json';xhr.setRequestHeader('content-type',file.type||'application/octet-stream');xhr.setRequestHeader('x-file-name',encodeURIComponent(file.name));Object.entries(headers).forEach(([key,value])=>xhr.setRequestHeader(key,String(value)));progress.hidden=false;xhr.upload.onprogress=event=>{if(event.lengthComputable)progress.value=Math.round(event.loaded/event.total*100);};xhr.onload=()=>xhr.status>=200&&xhr.status<300?resolve(xhr.response):reject(new Error(xhr.response?.error||`Upload HTTP ${xhr.status}`));xhr.onerror=()=>reject(new Error('Загрузка прервана сетью'));xhr.send(file);});}
+function xhrUpload(path,file,progress,headers={},signal=null){return new Promise((resolve,reject)=>{const xhr=new XMLHttpRequest();let settled=false;const finish=(fn,value)=>{if(settled)return;settled=true;fn(value);};xhr.open('POST',path);xhr.responseType='json';xhr.timeout=120000;xhr.setRequestHeader('content-type',file.type||'application/octet-stream');xhr.setRequestHeader('x-file-name',encodeURIComponent(file.name));Object.entries(headers).forEach(([key,value])=>xhr.setRequestHeader(key,String(value)));progress.hidden=false;xhr.upload.onprogress=event=>{if(event.lengthComputable)progress.value=Math.round(event.loaded/event.total*100);};xhr.onload=()=>xhr.status>=200&&xhr.status<300?finish(resolve,xhr.response):finish(reject,new Error(xhr.response?.error||`Upload HTTP ${xhr.status}`));xhr.onerror=()=>finish(reject,new Error('Загрузка прервана сетью'));xhr.ontimeout=()=>finish(reject,new Error('Загрузка не завершилась за 120 секунд. Интерфейс разблокирован.'));xhr.onabort=()=>finish(reject,editorAbortError());if(signal){if(signal.aborted){xhr.abort();return;}signal.addEventListener('abort',()=>xhr.abort(),{once:true});}xhr.send(file);});}
 
 // ---------- Stage 12.14: Admin Editor Reliability ----------
 // Saving/publishing must never wait for Workers AI. The track is persisted first;
@@ -441,20 +500,90 @@ function queueBackgroundTranslations(saved){
   },0);
 }
 
-async function persist(publish){
-  if(state.busy)return null;let track=readForm();const errors=validateClient(track,publish);if(errors.length){showErrors(errors);return null;}showErrors([]);setBusy(true);
+// ---------- Stage 12.14.2: Incremental Admin Editor ----------
+function editorAbortError(){
+  const error=new Error('Операция отменена');
+  error.name='AbortError';
+  return error;
+}
+
+async function editorApi(path,options={},timeoutMs=20000){
+  const controller=state.editorAbortController;
+  if(!controller)return api(path,options);
+  if(controller.signal.aborted)throw editorAbortError();
+
+  let timedOut=false;
+  const timer=setTimeout(()=>{
+    timedOut=true;
+    try{controller.abort();}catch(error){}
+  },timeoutMs);
+
   try{
-    // Stage 12.14: persist the editor changes first; AI translation runs after success.
+    return await api(path,{...options,signal:controller.signal});
+  }catch(error){
+    if(timedOut)throw new Error('Сервер не ответил за 20 секунд. Интерфейс разблокирован; проверьте, сохранились ли изменения.');
+    if(controller.signal.aborted||error?.name==='AbortError')throw editorAbortError();
+    throw error;
+  }finally{
+    clearTimeout(timer);
+  }
+}
+
+function editorXhrUpload(path,file,progress,headers={}){
+  return xhrUpload(path,file,progress,headers,state.editorAbortController?.signal||null);
+}
+
+async function persist(publish){
+  if(state.busy)return null;let track=readForm();const errors=validateClient(track,publish);if(errors.length){showErrors(errors);return null;}showErrors([]);const operation=new AbortController();state.editorAbortController=operation;setBusy(true);
+  const isNew=!state.current;
+  const metadataPatch=isNew?{}:buildMetadataPatch(state.current,track);
+  const translateAfterSave=needsBackgroundTranslation(isNew,metadataPatch);
+  const completed=[];
+  try{
+    // Metadata, audio and cover are independent commits. A later failure cannot
+    // roll back an earlier successful field edit or force it to be re-uploaded.
     let saved;
-    if(!state.current){saved=(await api('/api/admin/tracks',{method:'POST',body:track})).track;state.current=saved;nodes.trackId.value=saved.id;}
-    else saved=(await api(`/api/admin/tracks/${encodeURIComponent(state.current.id)}`,{method:'PATCH',body:track})).track;
-    const patch={};
-    if(state.audioFile){const uploaded=await xhrUpload(`/api/admin/upload/audio?trackId=${encodeURIComponent(saved.id)}`,state.audioFile,nodes.audioProgress);patch.audio=uploaded.url;patch.duration=state.audioDuration;patch.durationLabel=formatDuration(state.audioDuration);patch.audioQuality={duration:state.audioDuration,codec:'mp3',source:'admin-upload'};}
-    if(state.coverFile){const uploaded=await xhrUpload(`/api/admin/upload/cover?trackId=${encodeURIComponent(saved.id)}`,state.coverFile,nodes.coverProgress,{'x-image-width':state.coverInfo.width,'x-image-height':state.coverInfo.height});patch.cover=uploaded.url;patch.artwork=uploaded.artwork;}
-    if(Object.keys(patch).length)saved=(await api(`/api/admin/tracks/${encodeURIComponent(saved.id)}`,{method:'PATCH',body:patch})).track;
-    if(publish)saved=(await api(`/api/admin/tracks/${encodeURIComponent(saved.id)}/publish`,{method:'POST'})).track;
-    state.current=saved;setBusy(false);await loadCatalog(publish?'Трек опубликован':'Черновик сохранён');closeEditor();queueBackgroundTranslations(saved);return saved;
-  }catch(error){showErrors(error.message.split('\n'));toast(error.message,true);return null;}finally{setBusy(false);}
+    if(isNew){
+      saved=(await editorApi('/api/admin/tracks',{method:'POST',body:track})).track;
+      state.current=saved;nodes.trackId.value=saved.id;completed.push('карточка трека');
+    }else if(Object.keys(metadataPatch).length){
+      saved=(await editorApi(`/api/admin/tracks/${encodeURIComponent(state.current.id)}`,{method:'PATCH',body:metadataPatch})).track;
+      state.current=saved;completed.push('изменённые поля');
+    }else saved=state.current;
+
+    if(state.audioFile){
+      const audioFile=state.audioFile;
+      const audioDuration=state.audioDuration;
+      const uploaded=await editorXhrUpload(`/api/admin/upload/audio?trackId=${encodeURIComponent(saved.id)}`,audioFile,nodes.audioProgress);
+      const audioPatch={audio:uploaded.url,duration:audioDuration,durationLabel:formatDuration(audioDuration),audioQuality:{duration:audioDuration,codec:'mp3',source:'admin-upload'}};
+      saved=(await editorApi(`/api/admin/tracks/${encodeURIComponent(saved.id)}`,{method:'PATCH',body:audioPatch})).track;
+      state.current=saved;markAudioCommitted(saved);completed.push('MP3');
+    }
+
+    if(state.coverFile){
+      const coverFile=state.coverFile;
+      const coverInfo=state.coverInfo;
+      const uploaded=await editorXhrUpload(`/api/admin/upload/cover?trackId=${encodeURIComponent(saved.id)}`,coverFile,nodes.coverProgress,{'x-image-width':coverInfo.width,'x-image-height':coverInfo.height});
+      saved=(await editorApi(`/api/admin/tracks/${encodeURIComponent(saved.id)}`,{method:'PATCH',body:{cover:uploaded.url,artwork:uploaded.artwork}})).track;
+      state.current=saved;markCoverCommitted(saved);completed.push('обложка');
+    }
+
+    if(publish){
+      if(!saved.published)saved=(await editorApi(`/api/admin/tracks/${encodeURIComponent(saved.id)}/publish`,{method:'POST'})).track;
+    }else if(saved.published){
+      saved=(await editorApi(`/api/admin/tracks/${encodeURIComponent(saved.id)}/unpublish`,{method:'POST'})).track;
+    }
+    state.current=saved;setBusy(false);await loadCatalog(publish?'Трек опубликован':'Черновик сохранён');closeEditor();if(translateAfterSave)queueBackgroundTranslations(saved);return saved;
+  }catch(error){
+    if(error?.name==='AbortError')return null;
+    const partial=completed.length?`Уже сохранено: ${completed.join(', ')}.`:'';
+    showErrors([partial,...String(error?.message||error).split('\n')].filter(Boolean));
+    toast(error?.message||String(error),true);
+    return null;
+  }finally{
+    if(state.editorAbortController===operation)state.editorAbortController=null;
+    setBusy(false);
+  }
 }
 function showPreview(track=readForm()){
   const primary=PRIMARY_LOCALE[track.language]||'ru';

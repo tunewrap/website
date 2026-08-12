@@ -15,7 +15,7 @@ const syntax=spawnSync(process.execPath,['--check',path.join(root,'admin','admin
 assert.equal(syntax.status,0,syntax.stderr||syntax.stdout);
 
 assert.ok(admin.includes('Stage 12.14: Admin Editor Reliability'));
-assert.ok(admin.includes("const keepActive=new Set(['previewButton','closePreviewButton','previewBackdrop'])"));
+assert.ok(admin.includes("const keepActive=new Set(['previewButton','closePreviewButton','previewBackdrop','closeEditorButton'])"));
 assert.ok(admin.includes("button.dataset.busyWasDisabled=button.disabled?'1':'0'"));
 assert.ok(admin.includes("delete button.dataset.busyWasDisabled"));
 
@@ -40,7 +40,7 @@ assert.ok(admin.includes('if(latestValue===beforeValue)'));
 assert.ok(admin.includes("method:'PATCH'"));
 
 assert.ok(
-  html.includes('<script type="module" src="/admin/admin.js?v=12.14"></script>'),
+  /<script type="module" src="\/admin\/admin\.js\?v=12\.14(?:\.\d+)?"><\/script>/.test(html),
   'Admin JS cache version missing'
 );
 
