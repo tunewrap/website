@@ -1,4 +1,4 @@
-// TuneWrap Stage 12.14.11 — controlled pull-to-refresh for the fixed mobile app viewport.
+// TuneWrap Stage 12.14.15 — controlled pull-to-refresh with deterministic Home restore.
 (function(){
   'use strict';
 
@@ -90,7 +90,12 @@
 
   function reloadFresh(){
     const url=new URL(location.href);
+    // Bottom navigation intentionally writes #pricing/#contactHub. A refresh
+    // is a new visit to TuneWrap Home, not a request to reopen that old screen.
+    url.hash='';
     url.searchParams.set('tw-refresh',Date.now().toString(36));
+    if('scrollRestoration' in history)history.scrollRestoration='manual';
+    appScroll.scrollTop=0;
     location.replace(url.href);
   }
 
@@ -154,4 +159,3 @@
 
   window.TuneWrapPullRefresh=Object.freeze({enabled:true,threshold:REFRESH_THRESHOLD});
 })();
-

@@ -25,37 +25,46 @@ if(!document.getElementById('tunewrapStage12133HomeLogoStyles')){
   document.head.append(stage12133);
 }
 
-/* Stage 12.8.5 — desktop refresh starts at top */
+/* Stage 12.14.15 — every real refresh starts deterministically at Home */
 (function(){
   try{
     const navEntry=performance.getEntriesByType?.('navigation')?.[0];
     const isReload=navEntry?.type==='reload';
-    const isWide=window.matchMedia?.('(min-width:621px)').matches;
-    if(!isReload||!isWide)return;
+    const refreshParams=new URLSearchParams(location.search);
+    const explicitRefresh=refreshParams.has('tw-refresh')||refreshParams.has('tw-update');
+    if(!isReload&&!explicitRefresh)return;
     const previousRestoration=('scrollRestoration' in history)?history.scrollRestoration:null;
     if(previousRestoration!==null)history.scrollRestoration='manual';
-    if(location.hash){history.replaceState(history.state,'',location.pathname+location.search);}
+    const cleanUrl=new URL(location.href);
+    cleanUrl.hash='';
+    cleanUrl.searchParams.delete('tw-refresh');
+    cleanUrl.searchParams.delete('tw-update');
+    history.replaceState(history.state,'',cleanUrl.pathname+cleanUrl.search);
     const resetToTop=()=>{
       window.scrollTo({top:0,left:0,behavior:'auto'});
       const app=document.getElementById('appScroll');
       if(app)app.scrollTop=0;
     };
+    const resetAfterLayout=()=>{
+      resetToTop();
+      [0,80,220,500,900,1400].forEach(delay=>setTimeout(resetToTop,delay));
+    };
     resetToTop();
     if(document.readyState==='loading'){
       document.addEventListener('DOMContentLoaded',()=>{
-        resetToTop();
+        resetAfterLayout();
         requestAnimationFrame(()=>requestAnimationFrame(resetToTop));
       },{once:true});
     }else{
+      resetAfterLayout();
       requestAnimationFrame(()=>requestAnimationFrame(resetToTop));
     }
+    window.addEventListener('pageshow',resetAfterLayout,{once:true});
     window.addEventListener('load',()=>{
-      resetToTop();
-      setTimeout(resetToTop,0);
-      setTimeout(resetToTop,120);
-      setTimeout(()=>{if(previousRestoration!==null)history.scrollRestoration=previousRestoration;},700);
+      resetAfterLayout();
+      setTimeout(()=>{if(previousRestoration!==null)history.scrollRestoration=previousRestoration;},1800);
     },{once:true});
-  }catch(error){console.error('TuneWrap Stage 12.8.5 refresh-top failed',error);}
+  }catch(error){console.error('TuneWrap Stage 12.14.15 refresh-home failed',error);}
 })();
 
 const TUNEWRAP_BOOT_COPY={
@@ -243,22 +252,22 @@ try{
   window.TUNEWRAP_TRACK_CATALOG = payload.tracks;
   window.TUNEWRAP_STORY_CATEGORIES = await storyCategoriesPromise;
 
-  await import('./catalog-runtime.js?v=12.14.9');
-  await import('./script.js?v=12.14.9');
+  await import('./catalog-runtime.js?v=12.14.15');
+  await import('./script.js?v=12.14.15');
 
   await import('./wide-copy-polish.js');
   await import('./wedding-detail-wide.js');
 
   window.TUNEWRAP_PRICING_CMS=await pricingPromise;
   try{
-    await import('./pricing-cms-runtime.js?v=12.14.9');
+    await import('./pricing-cms-runtime.js?v=12.14.15');
   }catch(error){
     console.error('TuneWrap Pricing CMS runtime failed',error);
   }
 
   // Gift Certificate uses live Pricing CMS and the existing certificate CRM flow.
   try{
-    await import('./gift-certificate-overlay.js?v=12.14.9');
+    await import('./gift-certificate-overlay.js?v=12.14.15');
   }catch(error){
     console.error('TuneWrap Stage 12.8 gift certificate overlay failed',error);
   }
@@ -268,7 +277,7 @@ try{
   window.TUNEWRAP_SITE_CMS=await siteContentPromise;
   if(window.TUNEWRAP_SITE_CMS){
     try{
-      await import('./site-cms-runtime.js?v=12.14.9');
+      await import('./site-cms-runtime.js?v=12.14.15');
     }catch(error){
       console.error('TuneWrap Site CMS runtime failed',error);
     }
@@ -279,7 +288,7 @@ try{
   window.TUNEWRAP_SOUND_PREFERENCES=await soundPreferencesPromise;
   if(window.TUNEWRAP_SOUND_PREFERENCES){
     try{
-      await import('./sound-preferences-runtime.js?v=12.14.9');
+      await import('./sound-preferences-runtime.js?v=12.14.15');
     }catch(error){
       console.error('TuneWrap Sound Preferences runtime failed',error);
     }
@@ -298,23 +307,23 @@ try{
 
   // Stage 12.6: vocal preference is part of the structured order payload.
   try{
-    await import('./order-intake-completion.js?v=12.14.9');
+    await import('./order-intake-completion.js?v=12.14.15');
   }catch(error){
     console.error('TuneWrap Stage 12.6 order completion runtime failed',error);
   }
 
   // Orders CRM is loaded after Pricing + Site CMS so it sees final price/contact state.
   try{
-    await import('./orders-submit.js?v=12.14.9');
+    await import('./orders-submit.js?v=12.14.15');
   }catch(error){
     console.error('TuneWrap order intake bootstrap failed',error);
   }
 
   await import('./responsive-wide.js');
-  await import('./playback-engine.js?v=12.14.9');
+  await import('./playback-engine.js?v=12.14.15');
 
   try{
-    await import('./ux-critical-fixes.js?v=12.14.9');
+    await import('./ux-critical-fixes.js?v=12.14.15');
   }catch(error){
     console.error('TuneWrap Stage 12.4 UX runtime failed',error);
   }
@@ -339,14 +348,14 @@ try{
 
 
   try{
-    await import('./stage-12.10-package-ui-polish.js?v=12.14.9');
+    await import('./stage-12.10-package-ui-polish.js?v=12.14.15');
   }catch(error){
     console.error('TuneWrap Stage 12.10 package UI polish failed',error);
   }
 
 
   try{
-    await import('./stage-12.11-contact-channel-selector.js?v=12.14.9');
+    await import('./stage-12.11-contact-channel-selector.js?v=12.14.15');
   }catch(error){
     console.error('TuneWrap Stage 12.11 contact channel selector failed',error);
   }

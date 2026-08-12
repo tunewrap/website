@@ -18,8 +18,8 @@ const pkg=JSON.parse(read('package.json'));
 const syntax=spawnSync(process.execPath,['--check',path.join(root,'js/mobile-pull-refresh.js')],{encoding:'utf8'});
 assert.equal(syntax.status,0,syntax.stderr||syntax.stdout);
 
-assert.match(html,/<meta name="tunewrap-build" content="12\.14\.(?:11|12|13|14)">/);
-assert.ok(html.includes('/js/mobile-pull-refresh.js?v=12.14.11'));
+assert.match(html,/<meta name="tunewrap-build" content="12\.14\.(?:11|12|13|14|15)">/);
+assert.match(html,/\/js\/mobile-pull-refresh\.js\?v=12\.14\.(?:11|15)/);
 assert.ok(html.includes('/css/stage-12.14.11-mobile-pull-refresh-control.css?v=12.14.11'));
 
 // The fixed phone viewport cannot trigger the browser's root refresh itself.
@@ -40,6 +40,8 @@ assert.ok(runtime.includes('{capture:true,passive:false}'));
 assert.ok(runtime.includes('gesture.distance>=REFRESH_THRESHOLD'));
 assert.ok(runtime.includes('event.stopImmediatePropagation()'));
 assert.ok(runtime.includes("url.searchParams.set('tw-refresh'"));
+assert.ok(runtime.includes("url.hash=''"));
+assert.ok(runtime.includes("history.scrollRestoration='manual'"));
 assert.ok(runtime.includes('location.replace(url.href)'));
 
 for(const value of [
@@ -86,6 +88,7 @@ const body={classList:classList(),append(node){assert.equal(node,indicator);}};
 const sandbox={
   URL,Date,Object,console,
   location:{href:'https://tunewrap.test/?lang=ru',replace(value){replaced=value;}},
+  history:{scrollRestoration:'auto'},
   document:{
     documentElement,body,
     getElementById(id){return id==='appScroll'?appScroll:null;},

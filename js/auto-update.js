@@ -1,4 +1,4 @@
-// TuneWrap Stage 12.14.9 — mobile-safe deployment and live-content freshness.
+// TuneWrap Stage 12.14.15 — mobile-safe freshness with deterministic Home restore.
 (function(){
   'use strict';
 
@@ -71,7 +71,11 @@
 
   function reloadFresh(token){
     const url=new URL(location.href);
+    url.hash='';
     url.searchParams.set('tw-update',String(token||Date.now()));
+    if('scrollRestoration' in history)history.scrollRestoration='manual';
+    const appScroll=document.getElementById('appScroll');
+    if(appScroll)appScroll.scrollTop=0;
     location.replace(url.href);
   }
 

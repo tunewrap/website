@@ -22,9 +22,9 @@ for(const relative of ['js/auto-update.js','js/app-bootstrap.js']){
 
 // Every new deployment has an explicit build identity. An old restored mobile
 // tab probes fresh HTML instead of trusting its frozen document snapshot.
-assert.match(html,/<meta name="tunewrap-build" content="12\.14\.(?:9|10|11|12|13|14)">/);
-assert.ok(html.includes('<script src="/js/auto-update.js?v=12.14.9" defer></script>'));
-assert.ok(html.includes('js/app-bootstrap.js?v=12.14.9'));
+assert.match(html,/<meta name="tunewrap-build" content="12\.14\.(?:9|10|11|12|13|14|15)">/);
+assert.match(html,/<script src="\/js\/auto-update\.js\?v=12\.14\.(?:9|15)" defer><\/script>/);
+assert.match(html,/js\/app-bootstrap\.js\?v=12\.14\.(?:9|15)/);
 assert.ok(updater.includes("new URL('/',location.origin)"));
 assert.ok(updater.includes("cache:'no-store'"));
 assert.ok(updater.includes("meta\\s+name=[\"']tunewrap-build"));
@@ -40,6 +40,8 @@ for(const endpoint of [
 ])assert.ok(updater.includes(`'${endpoint}'`),`freshness endpoint missing: ${endpoint}`);
 assert.ok(bootstrap.includes('window.TuneWrapAutoUpdate?.setSnapshot({'));
 assert.ok(updater.includes("url.searchParams.set('tw-update'"));
+assert.ok(updater.includes("url.hash=''"));
+assert.ok(updater.includes("history.scrollRestoration='manual'"));
 assert.ok(updater.includes('location.replace(url.href)'));
 
 // Never interrupt playback or discard a partially completed order. In those
@@ -70,7 +72,7 @@ for(const name of [
   'site-cms-runtime.js','sound-preferences-runtime.js','order-intake-completion.js',
   'orders-submit.js','playback-engine.js','ux-critical-fixes.js',
   'stage-12.10-package-ui-polish.js','stage-12.11-contact-channel-selector.js'
-])assert.ok(bootstrap.includes(`./${name}?v=12.14.9`),`cache generation missing: ${name}`);
+])assert.match(bootstrap,new RegExp(`\\./${name.replace(/\./g,'\\.')}\\?v=12\\.14\\.(?:9|15)`),`cache generation missing: ${name}`);
 
 assert.equal(pkg.scripts['mobileupdate:test'],'node scripts/stage-12.14.9-mobile-auto-update-test.js');
 assert.ok(pkg.scripts.test.includes('mobileupdate:test'));

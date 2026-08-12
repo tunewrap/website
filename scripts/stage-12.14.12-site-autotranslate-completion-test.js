@@ -18,7 +18,7 @@ const pkg=JSON.parse(read('package.json'));
 const syntax=spawnSync(process.execPath,['--check',path.join(root,'admin/site.js')],{encoding:'utf8'});
 assert.equal(syntax.status,0,syntax.stderr||syntax.stdout);
 
-assert.match(html,/<meta name="tunewrap-build" content="12\.14\.(?:12|13|14)">/);
+assert.match(html,/<meta name="tunewrap-build" content="12\.14\.(?:12|13|14|15)">/);
 assert.match(adminHtml,/\/admin\/site\.js\?v=12\.14\.(?:12|13|14)/);
 assert.ok(adminHtml.includes('id="siteTranslationStatus"'));
 assert.ok(adminCss.includes('.site-translation-status.is-success'));

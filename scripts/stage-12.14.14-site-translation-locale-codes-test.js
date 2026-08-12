@@ -17,7 +17,7 @@ const pkg=JSON.parse(read('package.json'));
 
 const syntax=spawnSync(process.execPath,['--check',path.join(root,'admin/site.js')],{encoding:'utf8'});
 assert.equal(syntax.status,0,syntax.stderr||syntax.stdout);
-assert.match(html,/<meta name="tunewrap-build" content="12\.14\.14">/);
+assert.match(html,/<meta name="tunewrap-build" content="12\.14\.(?:14|15)">/);
 assert.ok(adminHtml.includes('/admin/site.js?v=12.14.14'));
 assert.ok(endpoint.includes("const ALLOWED_LOCALES=Object.freeze(['ru','uk','ka','en','de'])"));
 
