@@ -708,7 +708,10 @@ async function translateChunk(source,target,items){
     headers:{'content-type':'application/json','accept':'application/json'},
     body:JSON.stringify({
       sourceLanguage:AI_CODES[source],
-      target:AI_CODES[target],
+      // The API accepts ISO locale codes (uk/ka), while AI_CODES contains
+      // display labels (UA/GE). EN and DE hid this mismatch because their
+      // display labels become valid locales after lowercasing.
+      target,
       items:items.map(item=>({id:item.id,text:item.text}))
     })
   });
