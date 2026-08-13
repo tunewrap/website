@@ -18,7 +18,7 @@ const pkg=JSON.parse(read('package.json'));
 const syntax=spawnSync(process.execPath,['--check',path.join(root,'js/mobile-pull-refresh.js')],{encoding:'utf8'});
 assert.equal(syntax.status,0,syntax.stderr||syntax.stdout);
 
-assert.match(html,/<meta name="tunewrap-build" content="12\.14\.(?:11|12|13|14|15)">/);
+assert.match(html,/<meta name="tunewrap-build" content="12\.14\.(?:11|12|13|14|15|16)">/);
 assert.match(html,/\/js\/mobile-pull-refresh\.js\?v=12\.14\.(?:11|15)/);
 assert.ok(html.includes('/css/stage-12.14.11-mobile-pull-refresh-control.css?v=12.14.11'));
 

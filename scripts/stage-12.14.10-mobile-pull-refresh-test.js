@@ -13,7 +13,7 @@ const core=read('css/style.css');
 const runtime=read('js/script.js');
 const pkg=JSON.parse(read('package.json'));
 
-assert.match(html,/<meta name="tunewrap-build" content="12\.14\.(?:10|11|12|13|14|15)">/);
+assert.match(html,/<meta name="tunewrap-build" content="12\.14\.(?:10|11|12|13|14|15|16)">/);
 assert.ok(html.includes('/css/stage-12.14.10-mobile-pull-refresh.css?v=12.14.10'));
 
 // The regression was caused by Stage 6/8 deliberately stopping overscroll at

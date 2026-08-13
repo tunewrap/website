@@ -3,9 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="tunewrap-build" content="12.14.15">
-<meta name="description" content="Turn real memories, people and life stories into personal songs with TuneWrap.">
-<title>TuneWrap — Your Story, Your Song</title>
+<meta name="tunewrap-build" content="12.14.16">
+<meta name="description" content="Turn real memories, relationships and life moments into a personal song created for birthdays, weddings, anniversaries and meaningful gifts.">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="theme-color" content="#070707">
+<title>Custom Songs from Your Story | TuneWrap</title>
 <script src="/js/auto-update.js?v=12.14.15" defer></script>
 <script src="/js/mobile-pull-refresh.js?v=12.14.15" defer></script>
 <script id="tunewrapLanguageBoot">
@@ -54,8 +57,108 @@
       ||'en';
   }
 
-  window.TuneWrapLanguage=Object.freeze({normalize:normalize,get:get});
+window.TuneWrapLanguage=Object.freeze({normalize:normalize,get:get});
 })();
+</script>
+<link id="tunewrapCanonical" rel="canonical" href="https://tunewrap.studio/">
+<link rel="alternate" hreflang="x-default" href="https://tunewrap.studio/">
+<link rel="alternate" hreflang="en" href="https://tunewrap.studio/">
+<link rel="alternate" hreflang="ru" href="https://tunewrap.studio/?lang=ru">
+<link rel="alternate" hreflang="uk" href="https://tunewrap.studio/?lang=uk">
+<link rel="alternate" hreflang="ka" href="https://tunewrap.studio/?lang=ka">
+<link rel="alternate" hreflang="de" href="https://tunewrap.studio/?lang=de">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TuneWrap">
+<meta property="og:url" content="https://tunewrap.studio/">
+<meta property="og:title" content="Custom Songs from Your Story | TuneWrap">
+<meta property="og:description" content="Turn real memories, relationships and life moments into a personal song created for birthdays, weddings, anniversaries and meaningful gifts.">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="uk_UA">
+<meta property="og:locale:alternate" content="ka_GE">
+<meta property="og:locale:alternate" content="de_DE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Custom Songs from Your Story | TuneWrap">
+<meta name="twitter:description" content="Turn real memories, relationships and life moments into a personal song created for birthdays, weddings, anniversaries and meaningful gifts.">
+<script id="tunewrapSeoLocale">
+(function(){
+  var base='https://tunewrap.studio/';
+  var lang=(window.TuneWrapLanguage&&window.TuneWrapLanguage.get())||'en';
+  var pages={
+    en:{
+      title:'Custom Songs from Your Story | TuneWrap',
+      description:'Turn real memories, relationships and life moments into a personal song created for birthdays, weddings, anniversaries and meaningful gifts.',
+      locale:'en_US'
+    },
+    ru:{
+      title:'Песня по вашей истории на заказ | TuneWrap',
+      description:'Превратим реальные воспоминания, отношения и важные моменты жизни в персональную песню для дня рождения, свадьбы, юбилея или особенного подарка.',
+      locale:'ru_RU'
+    },
+    uk:{
+      title:'Пісня за вашою історією на замовлення | TuneWrap',
+      description:'Перетворимо справжні спогади, стосунки та важливі моменти життя на персональну пісню для дня народження, весілля, ювілею чи особливого подарунка.',
+      locale:'uk_UA'
+    },
+    ka:{
+      title:'თქვენი ისტორიის მიხედვით შექმნილი სიმღერა | TuneWrap',
+      description:'თქვენს მოგონებებსა და ცხოვრების მნიშვნელოვან მომენტებს ვაქცევთ პერსონალურ სიმღერად დაბადების დღის, ქორწილის, იუბილესა თუ განსაკუთრებული საჩუქრისთვის.',
+      locale:'ka_GE'
+    },
+    de:{
+      title:'Persönlicher Song aus Ihrer Geschichte | TuneWrap',
+      description:'Wir verwandeln Erinnerungen, Beziehungen und besondere Lebensmomente in einen persönlichen Song für Geburtstag, Hochzeit, Jubiläum oder als besonderes Geschenk.',
+      locale:'de_DE'
+    }
+  };
+  var page=pages[lang]||pages.en;
+  var canonical=lang==='en'?base:base+'?lang='+encodeURIComponent(lang);
+
+  function content(selector,value){
+    var node=document.querySelector(selector);
+    if(node)node.setAttribute('content',value);
+  }
+
+  document.title=page.title;
+  content('meta[name="description"]',page.description);
+  content('meta[property="og:url"]',canonical);
+  content('meta[property="og:title"]',page.title);
+  content('meta[property="og:description"]',page.description);
+  content('meta[property="og:locale"]',page.locale);
+  content('meta[name="twitter:title"]',page.title);
+  content('meta[name="twitter:description"]',page.description);
+
+  var canonicalLink=document.getElementById('tunewrapCanonical');
+  if(canonicalLink)canonicalLink.setAttribute('href',canonical);
+})();
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://tunewrap.studio/#organization",
+      "name": "TuneWrap",
+      "url": "https://tunewrap.studio/",
+      "logo": "https://tunewrap.studio/favicon.svg",
+      "sameAs": [
+        "https://www.instagram.com/tunewrap.studio/",
+        "https://t.me/tunewrap"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://tunewrap.studio/#website",
+      "url": "https://tunewrap.studio/",
+      "name": "TuneWrap",
+      "description": "Personal songs created from real memories and life stories.",
+      "inLanguage": ["en", "ru", "uk", "ka", "de"],
+      "publisher": {"@id": "https://tunewrap.studio/#organization"}
+    }
+  ]
+}
 </script>
 <style id="tunewrapFirstPaintGuard">
   /*

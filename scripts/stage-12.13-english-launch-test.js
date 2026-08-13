@@ -16,7 +16,7 @@ for(const rel of ['js/script.js','js/app-bootstrap.js','js/site-cms-runtime.js']
   assert.equal(syntax.status,0,`${rel}\n${syntax.stderr||syntax.stdout}`);
 }
 assert.ok(html.includes('<html lang="en">'));
-assert.ok(html.includes('<title>TuneWrap — Your Story, Your Song</title>'));
+assert.ok(html.includes('<title>Custom Songs from Your Story | TuneWrap</title>'));
 assert.ok(html.includes('id="tunewrapLanguageBoot"'));
 assert.ok(html.includes('class="lang-btn active" data-lang="en"'));
 assert.ok(html.includes('data-i18n="hero_eyebrow">YOUR STORY<'));

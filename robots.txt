@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /api/
+Disallow: /content/
+Disallow: /data/
+Disallow: /functions/
+Disallow: /migrations/
+Disallow: /scripts/
+
+Sitemap: https://tunewrap.studio/sitemap.xml

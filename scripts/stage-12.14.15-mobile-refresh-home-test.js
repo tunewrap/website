@@ -18,7 +18,7 @@ for(const relative of ['js/app-bootstrap.js','js/mobile-pull-refresh.js']){
   const syntax=spawnSync(process.execPath,['--check',path.join(root,relative)],{encoding:'utf8'});
   assert.equal(syntax.status,0,`${relative}\n${syntax.stderr||syntax.stdout}`);
 }
-assert.match(html,/<meta name="tunewrap-build" content="12\.14\.15">/);
+assert.match(html,/<meta name="tunewrap-build" content="12\.14\.(?:15|16)">/);
 assert.ok(html.includes('/js/mobile-pull-refresh.js?v=12.14.15'));
 assert.ok(html.includes('/js/auto-update.js?v=12.14.15'));
 assert.ok(html.includes('js/app-bootstrap.js?v=12.14.15'));

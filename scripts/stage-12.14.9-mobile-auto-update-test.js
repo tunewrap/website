@@ -22,7 +22,7 @@ for(const relative of ['js/auto-update.js','js/app-bootstrap.js']){
 
 // Every new deployment has an explicit build identity. An old restored mobile
 // tab probes fresh HTML instead of trusting its frozen document snapshot.
-assert.match(html,/<meta name="tunewrap-build" content="12\.14\.(?:9|10|11|12|13|14|15)">/);
+assert.match(html,/<meta name="tunewrap-build" content="12\.14\.(?:9|10|11|12|13|14|15|16)">/);
 assert.match(html,/<script src="\/js\/auto-update\.js\?v=12\.14\.(?:9|15)" defer><\/script>/);
 assert.match(html,/js\/app-bootstrap\.js\?v=12\.14\.(?:9|15)/);
 assert.ok(updater.includes("new URL('/',location.origin)"));
